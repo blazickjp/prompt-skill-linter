@@ -1,6 +1,6 @@
 # Release notes
 
-## 1.0.0 — local Studio release candidate
+## 1.0.0 — local Studio release (October 10, 2026)
 
 - Local browser workbench, offline installation and one-command launch.
 - Source intake with inspectable candidates, explicit acceptance and visible untranslated/excluded coverage.
@@ -11,7 +11,7 @@
 - API safety defenses, bounded compute, source-path guards and adversarial regression coverage.
 - Versioned scientific/evaluation materials; provisional native-model evidence is not human ground truth or a superiority result.
 
-Release gates remain in `docs/PRODUCT.md`. A release candidate is not declared accepted until integrated CI/browser and package evidence is recorded.
+Release gates are accepted in `docs/PRODUCT.md`. Functional commit `e8eb17c142eed2c95d90b7d3a1a7ccdd616ed4f9` passed all four CI jobs, including 89 core tests, 7 evaluation tests on three Python versions, installed-wheel smoke and 17 browser journeys. See the linked CI evidence in `docs/STATUS.md`. Live-provider and human-gold gaps remain explicitly outside this acceptance.
 
 ## 0.1.0 — initial prototype
 

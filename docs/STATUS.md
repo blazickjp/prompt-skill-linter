@@ -1,6 +1,6 @@
 # Local product status
 
-Updated October 10, 2026. Version 1.0.0 is a release candidate pending current-commit integrated CI/browser confirmation.
+Updated October 10, 2026. Version 1.0.0 passed the local-product release gates. This acceptance is for the documented reviewed-contract/annotation Studio, not arbitrary-English verification or an untested live model provider.
 
 ## Implemented
 
@@ -15,14 +15,21 @@ Updated October 10, 2026. Version 1.0.0 is a release candidate pending current-c
 
 ## Local verification, latest working tree
 
-- `python -m unittest discover -s tests -q`: **84 passed**.
+- `python -m unittest discover -s tests -q`: **89 passed**.
 - `python -m unittest evaluation.test_evaluation -q`: **7 passed**.
 - `python -m evaluation.run verify`: **40 frozen files verified**.
 - Compilation and `git diff --check`: passed.
 - Wheel build/install outside the checkout: packaged Studio assets and real bulk analysis passed.
 - Independent reviewer additionally checked seeded SAT and planner cases, API attacks and source/export boundaries. Review findings have dedicated regressions.
 
-The first published CI snapshot passed all three Python-version/package jobs and the adversarial browser suite. Its happy-path browser suite exposed a test-only CSP wait issue; that test uses locator assertions now, without weakening the security policy. Current-commit browser rerun is still required. Local rendered Chromium is blocked by the execution environment; browser evidence comes from normal GitHub Actions runners, not a bypass.
+Functional commit [`e8eb17c142eed2c95d90b7d3a1a7ccdd616ed4f9`](https://github.com/blazickjp/prompt-skill-linter/commit/e8eb17c142eed2c95d90b7d3a1a7ccdd616ed4f9) passed all four jobs in [the verified CI run](https://github.com/blazickjp/prompt-skill-linter/actions/runs/38062286853):
+
+- Python 3.10, 3.12 and 3.13: 89 backend/API/security tests, 7 evaluation tests, frozen fixture verification, synthetic replay, JavaScript syntax/state checks and installed-wheel assets/analysis.
+- Browser: 8 happy-path/visual cases and 9 adversarial cases, all passed.
+- Desktop and mobile screenshot artifacts were reviewed; the browser suites exercise actual backend routes.
+
+Earlier failures produced regressions and fixes without weakening the security policy. This run, not an earlier partial pass, is the functional release evidence. Final documentation-only revisions do not alter the tested application code.
+ Local rendered Chromium is blocked by the execution environment; browser evidence comes from normal GitHub Actions runners, not a bypass.
 
 Ruff is unavailable locally. Compilation, tests and whitespace checks are not represented as a Ruff pass.
 
@@ -34,4 +41,4 @@ Ruff is unavailable locally. Compilation, tests and whitespace checks are not re
 
 Consult `docs/EVALUATION.md` for exact case-level results and reference uncertainty. The pilot is selected development evidence with native-model labels, synthetic positive issues, human-ground-truth gaps and bounded checker coverage. It is not a superiority result. Offline extraction does not translate arbitrary English; optional-provider mocks do not validate live model quality.
 
-The complete supplied handoff remains in `docs/HANDOFF.md`. Product release gates are in `docs/PRODUCT.md`; publication and current CI evidence are coordinated separately.
+The complete supplied handoff remains in `docs/HANDOFF.md`. Accepted product gates are recorded in `docs/PRODUCT.md`; the release artifact records the final published documentation snapshot separately from the tested functional commit.

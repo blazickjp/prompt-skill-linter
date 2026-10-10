@@ -1,6 +1,6 @@
 # Prompt and Skill Linter
 
-A local verification Studio and Python CLI for **reviewed instruction contracts**. It finds reproducible specification problems before agent execution. It does not score prompt quality, extract arbitrary English, execute tool calls, or certify runtime compliance.
+A local verification Studio and Python CLI for **reviewed instruction contracts**. It finds reproducible specification problems before agent execution. It does not score prompt quality, certify arbitrary-English interpretations, execute declared tool calls, or guarantee runtime compliance.
 
 ## Launch the local Studio
 
@@ -77,4 +77,4 @@ No validated arbitrary-English extraction, general SMT solver, unconstrained tem
 
 [Acceptance gates](docs/PRODUCT.md) · [Architecture](docs/ARCHITECTURE.md) · [Model card and soundness envelope](docs/MODEL_CARD.md) · [Local API](docs/API.md) · [Release notes](CHANGELOG.md)
 
-This repository is private. No open-source license has been selected. CI verifies supported Python versions, installed-wheel assets and headless-browser user journeys; inspect the actual run before treating a release candidate as accepted.
+This repository is private. No open-source license has been selected. Version 1.0 passed [all four release CI jobs](https://github.com/blazickjp/prompt-skill-linter/actions/runs/38062286853), including three Python versions, installed-wheel assets and 17 headless-browser user journeys. See [the acceptance scope](docs/PRODUCT.md).
