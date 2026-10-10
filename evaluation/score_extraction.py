@@ -1,5 +1,6 @@
 """Score source-fragment extraction and synthetic downstream probes."""
 from collections import Counter
+from copy import deepcopy
 from pathlib import Path
 import tempfile
 from .run import ROOT,read,write,verify_freeze,stamp,digest
@@ -24,6 +25,14 @@ def score(directory=DIRECTORY):
   metric[field]=ratio(sum(r[field] is True for r in rows),len(shared))
  result={'version':1,'generated_at':stamp(),'scope':'Six hinted source fragments, supplied action vocabulary; provisional native-model references, not NLP product accuracy.','reference_sha256':digest(directory/'reference.json'),'predictions_sha256':digest(directory/'predictions.json'),'metrics':metric,'details':rows,'missing_atoms':[list(k) for k in refs.keys()-preds.keys()],'extra_atoms':[list(k) for k in preds.keys()-refs.keys()],'reference_metadata':ref.get('reviewer'),'prediction_metadata':{k:v for k,v in prediction.items() if k not in ('rules','unsupported')},'unsupported_reference':ref.get('unsupported',[]),'unsupported_predictions':prediction.get('unsupported',[])}
  result['downstream_probes']=downstream(refs,preds,source)
+ review_path=directory/'manual_acceptance.json'
+ if review_path.exists():
+  review=read(review_path);accepted={(x['source_id'],x['action']) for x in review['accepted_actions']}
+  reviewed=deepcopy(preds)
+  for k,p in reviewed.items():p['binding_supported']=k in accepted
+  result['manually_reviewed_downstream_probes']=downstream(refs,reviewed,source)
+  result['manual_acceptance_sha256']=digest(review_path)
+  result['manual_review_disclosure']='Evaluation-author acceptance of structural Boolean rules for synthetic probes only; raw predictions unchanged, runtime grounding remains false.'
  return result
 
 def downstream(refs,preds,sources):

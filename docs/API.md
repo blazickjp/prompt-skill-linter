@@ -44,3 +44,6 @@ Set `OPENAI_API_KEY` and `LINTER_OPENAI_MODEL` in the local server environment. 
 Responses use `text.format` JSON Schema, then local type/span/quote validation and mandatory review. Unknown/incomplete/refused responses do not become findings. Provider omissions remain incomplete coverage. Live requests were not run during development; mock integration tests do not establish real model accuracy, pricing or account compatibility.
 
 Official references, checked October 10, 2026: [Responses create](https://developers.openai.com/api/reference/resources/responses/methods/create), [Structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs?api-mode=responses).
+
+
+Candidate evidence states are separate: `representation_supported` means the candidate fits the implemented grammar/schema, `interpretation_reviewed` records explicit acceptance, and `runtime_grounded` remains false because no live observations or tools are executed. `supported` remains a compatibility alias for representation support only. Reports similarly identify runtime grounding as a declared snapshot, not verified telemetry. Source input objects accept only id/name/text; hidden extra metadata cannot silently enter a provider payload.

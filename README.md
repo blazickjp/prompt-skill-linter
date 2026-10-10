@@ -1,6 +1,6 @@
 # Prompt and Skill Linter
 
-A small, offline Python CLI for **reviewed, declared instruction contracts**. It finds reproducible specification problems before agent execution. It does not score prompt quality, extract arbitrary English, execute tool calls, or certify runtime compliance.
+A local verification Studio and Python CLI for **reviewed instruction contracts**. It finds reproducible specification problems before agent execution. It does not score prompt quality, extract arbitrary English, execute tool calls, or certify runtime compliance.
 
 ## Launch the local Studio
 
@@ -13,7 +13,7 @@ prompt-skill-linter serve
 
 Open http://127.0.0.1:8765. Or launch directly from this checkout with `python -m prompt_skill_linter serve`.
 
-The Studio provides source intake and reviewed extraction, source-linked diagnostics, finite-state workflow paths, scoped CNF truth tables, deletion-checked cores, explicit repair what-if, contract differences and replay ZIPs. Three built-in examples demonstrate bulk capacity, three-way rule composition and compliant refusal. Everything works locally; model-assisted extraction is optional and off by default.
+The Studio provides source intake and reviewed extraction, source-linked diagnostics, finite-state workflow paths, scoped CNF truth tables, deletion-checked cores, explicit repair what-if, contract differences and replay ZIPs. Three built-in examples demonstrate bulk capacity, three-way rule composition and compliant refusal. The core Studio and analysis run locally. Model-assisted extraction is optional, off by default and not live-validated.
 
 Offline extraction handles explicit annotation lines such as `REQUIRE approved=true` and `CLAUSE approved | !upload`. Other English remains visibly untranslated. An optional OpenAI structured-candidate adapter requires local environment configuration, explicit source/cost opt-in and mandatory review; only mocked integration tests have run. See [API and extraction modes](docs/API.md).
 
@@ -65,7 +65,7 @@ Hierarchy is resolved before Boolean conflicts. Permissions do not demand action
 
 ## Evaluation status
 
-Five observations from three pinned external repositories, including three executable hand-encoded cases, are separate from synthetic fixtures. Blind model review is recorded with uncertainty and an unresolved disagreement; these are **not human gold labels**. The OpenHands source remains ambiguous even though one manual abstraction collides. A CLI model error is a statement about that abstraction.
+The initial external seed contains five observations from three pinned repositories, including three executable hand-encoded cases. The expanded frozen pilot has 24 cases, including 8 natural cases from 5 independently maintained repositories; natural evidence remains separate from synthetic mutations and controls. Blind model review is recorded with uncertainty and an unresolved disagreement; these are **not human gold labels**. The OpenHands source remains ambiguous even though one manual abstraction collides. A CLI model error is a statement about that abstraction.
 
 A provisional matched native-model pilot and separate extraction measurements are documented in [the evaluation report](docs/EVALUATION.md), with unresolved ambiguity and explicit coverage limits. Held-out human ground truth, live-provider accuracy, production usefulness and any superiority claim remain unavailable. No paid model calls, production updates or historical tool replays are performed.
 

@@ -22,7 +22,7 @@ def extract(sources, provider='offline'):
         raise ContractError('Provide 1–32 source objects.')
     source_map, declarations, candidates, unsupported = {}, [], [], []
     for index, item in enumerate(sources):
-        if not isinstance(item, dict) or not isinstance(item.get('text'), str):
+        if not isinstance(item, dict) or set(item) - {'id', 'name', 'text'} or not isinstance(item.get('text'), str) or ('name' in item and not isinstance(item['name'], str)):
             raise ContractError('Each source needs id, name and text strings.')
         sid = item.get('id', f'source_{index + 1}')
         if not isinstance(sid, str) or not re.fullmatch(r'[A-Za-z0-9_.-]{1,80}', sid) or sid in source_map:
@@ -65,7 +65,7 @@ def extract(sources, provider='offline'):
                 rule['semantic_warnings'] = [reason]
             candidates.append({'id': rid, 'source': span, 'rule': rule, 'interpretation': rule.get('effect', rule.get('clause', {'review_only': True})),
                                'confidence_label': 'explicit_syntax' if supported else 'untranslated_prose',
-                               'requires_review': True, 'supported': supported, 'reason': reason})
+                               'requires_review': True, 'supported': supported, 'representation_supported': supported, 'interpretation_reviewed': False, 'runtime_grounded': False, 'reason': reason})
             if len(candidates) > 256:
                 raise ContractError('Source yields more than 256 review candidates; split it into smaller bundles.')
     if sum(len(s.encode('utf-8')) for s in source_map.values()) > 1_500_000:
@@ -99,4 +99,5 @@ def accept(draft, accepted_candidate_ids):
     bundle['contract']['interpretation'] = {'status': 'accepted', 'excluded_candidate_ids': excluded, 'untranslated_line_count': len(draft.get('unsupported', [])), 'total_candidate_count': len(candidates), 'unsupported_spans': [x['source'] for x in draft.get('unsupported', [])[:256]], 'method': draft['contract'].get('interpretation', {}).get('method', 'reviewed-candidates'), 'accepted_candidate_ids': accepted_candidate_ids}
     bundle['contract']['assumptions'].append(f'{len(excluded)} candidate(s) excluded by reviewer; {len(draft.get("unsupported", []))} source line(s) remain outside the annotation grammar.')
     return {'bundle': bundle, 'accepted_candidate_ids': accepted_candidate_ids, 'excluded_candidate_ids': excluded,
-            'unsupported': draft.get('unsupported', []), 'notice': 'Acceptance records an explicit review action, not semantic truth or complete source coverage.'}
+            'unsupported': draft.get('unsupported', []), 'candidate_statuses': [{'id': cid, 'representation_supported': bool(candidate.get('supported')), 'interpretation_reviewed': cid in accepted_candidate_ids, 'runtime_grounded': False} for cid, candidate in candidates.items()],
+            'notice': 'Acceptance records an explicit review action, not semantic truth, runtime grounding or complete source coverage.'}

@@ -7,7 +7,7 @@ from pathlib import Path
 import random
 import threading
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 import zipfile
 
 from prompt_skill_linter.engine import ContractError
@@ -44,6 +44,28 @@ class ProductTests(unittest.TestCase):
         self.assertEqual(report['analysis_status'], 'incomplete')
         self.assertIn('INCOMPLETE_SOURCE_COVERAGE', report['report_text'])
         self.assertEqual(report['coverage']['interpretation']['untranslated_line_count'], 2)
+
+    def test_extra_source_fields_cannot_hide_provider_payload(self):
+        for source in ({'id':'s','text':'REQUIRE x=true','hidden_metadata':'do not transmit'}, {'id':'s','text':'REQUIRE x=true','name':{'bad':'shape'}}):
+            with self.assertRaises(ContractError): extract([source])
+
+    def test_hidden_source_metadata_rejected_before_provider_transport(self):
+        transport = Mock()
+        with patch.dict(os.environ, {'OPENAI_API_KEY':'test-not-real','LINTER_OPENAI_MODEL':'test-model'}):
+            with self.assertRaises(ContractError):
+                model_extract([{'id':'s','text':'REQUIRE x=true','hidden_metadata':'FAKE_PRIVATE_SENTINEL'}], {'send_sources':True,'destination':ENDPOINT,'acknowledge_cost':True}, transport)
+        transport.assert_not_called()
+
+    def test_representation_review_runtime_grounding_distinct(self):
+        result = extract([{'id':'s','text':'REQUIRE x=true'}])
+        candidate = result['candidates'][0]
+        self.assertTrue(candidate['representation_supported'])
+        self.assertFalse(candidate['interpretation_reviewed'])
+        self.assertFalse(candidate['runtime_grounded'])
+        accepted = accept(result['draft'], [candidate['id']])
+        self.assertTrue(accepted['candidate_statuses'][0]['interpretation_reviewed'])
+        self.assertFalse(accepted['candidate_statuses'][0]['runtime_grounded'])
+        self.assertFalse(analyze(accepted['bundle'])['coverage']['runtime_observations_verified'])
 
     def test_unknown_acceptance_id_rejected(self):
         result = extract([{'id': 's', 'text': 'REQUIRE x=true'}])

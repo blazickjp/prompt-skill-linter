@@ -93,7 +93,7 @@ def model_extract(sources, consent, transport=None):
             if item['uncertainty']:
                 rule['semantic_warnings'] = [item['uncertainty']]
         candidates.append({'id': rid, 'source': span, 'rule': rule, 'interpretation': rule.get('effect', {'review_only': True}),
-                           'requires_review': True, 'supported': modality != 'unsupported', 'confidence_label': 'unverified_model_inference',
+                           'requires_review': True, 'supported': modality != 'unsupported', 'representation_supported': modality != 'unsupported', 'interpretation_reviewed': False, 'runtime_grounded': False, 'confidence_label': 'unverified_model_inference',
                            'reason': item['uncertainty'] or 'Model inference; review modality, literal, scope, exceptions and priority.'})
     covered = {(c['source']['source_id'], c['source']['start_line']) for c in candidates if c['supported']}
     unsupported = []

@@ -521,7 +521,7 @@ def lint(contract, manifest, runtime, root):
     if any(d['class'] == 'semantic_warning' and d['code'] != 'INCOMPLETE_SOURCE_COVERAGE' for d in diagnostics):
         incomplete_reasons.append('semantic_review')
     return {'version': 1, 'contract': contract, 'diagnostics': diagnostics, 'resource_checks': checks, 'workflow_checks': workflow_checks, 'constraint_checks': constraint_checks,
-            'coverage': {'translation': 'declared_only', 'incomplete': bool(incomplete_reasons), 'incomplete_reasons': incomplete_reasons, 'interpretation': interpretation, 'context_count': len(contract['contexts']),
+            'coverage': {'translation': 'declared_only', 'runtime_grounding': 'declared_snapshot_only', 'runtime_observations_verified': False, 'interpretation_review_recorded': interpretation.get('status') == 'accepted', 'incomplete': bool(incomplete_reasons), 'incomplete_reasons': incomplete_reasons, 'interpretation': interpretation, 'context_count': len(contract['contexts']),
                          'plan_bound': runtime.get('max_plan_steps', 20),
                          'universal_prompt_correctness_certified': False},
             'summary': {level: sum(d['severity'] == level for d in diagnostics) for level in ('error', 'warning', 'info')}}

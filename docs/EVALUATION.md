@@ -44,7 +44,17 @@ Across the same **24 raw policy-text fields**, it yields **zero binding translat
 
 Results: `evaluation/pilot/extraction_results.json`. Natural-language semantic precision/recall are null because no binding English translations were made. The optional remote extraction adapter has not been exercised using a live provider in this evaluation; mocked transport/validation tests are not model-quality evidence.
 
-A separate six-fragment, hinted native-model extraction pilot is prepared in `evaluation/extraction_pilot/`. At this snapshot its reference/prediction collection is **pending**. It will measure exact source alignment, atomic coverage, modality, conditions/exceptions, unsupported numeric semantics and matched downstream probes. It is not a runtime integration and will not establish full-policy recall.
+### Separate native-model extraction pilot
+
+A fresh native worker extracted six source fragments held out from the feasibility-case snippets, using supplied action vocabulary and context hints. A separate native reference annotator produced nine atoms. **All 9 predicted atoms match those references** in action identity, exact quoted fragment/local lines, modality, conditions and exceptions. This is model-reference agreement on a small hinted set, not unrestricted extraction accuracy or full-policy recall. Source families overlap the feasibility pilot. The extractor could not retrieve Codex context for two fragments and relied on supplied context; Gemini and Anthropic context were independently read.
+
+A real schema problem emerged: `binding_supported` was underspecified. The reference used it for structural representability after review; the predictor used it for verified executable grounding and conservatively marked every atom false. Agreement on that field was 2/9. This is an **interpretation disagreement, not seven established extraction errors**. Before acceptance, the predicted interpretations provide no analysis-ready bindings, so downstream probes abstain.
+
+The raw predictions and initial metrics are unchanged. A separately recorded, **post-hoc evaluation-author acceptance demonstration** accepts seven structurally representable prohibitions for synthetic Boolean probes only. On 14 reference-supported probes, reviewed predicted clauses and reference clauses yield the same outcomes. Four additional probes tied to typography/active-voice measurement remain unsupported. This demonstration is not a blind improvement result, production grounding, or human adjudication; its predicates are explicit synthetic observations. See `manual_acceptance.json` for the exact boundary.
+
+The product lesson is to keep structural representability, grounding to declared entities/actions, author acceptance, and eligibility for analysis distinct. No Boolean flag should silently imply an installed detector. Native-worker extraction is **not the product's live provider integration**, which remains unmeasured with a live API.
+
+Artifacts and raw disagreement: `evaluation/extraction_pilot/reference.json`, `predictions.json`, `results.json`, and `manual_acceptance.json`. The batch took 97 seconds; identity, token usage and cost are unknown.
 
 ## What the proof artifacts provide
 
@@ -74,6 +84,7 @@ python -m evaluation.run verify
 python -m evaluation.run mechanical --output evaluation/pilot/predictions/mechanical_reviewed_contract.json
 python -m evaluation.extraction
 python -m evaluation.certificates
+python -m evaluation.score_extraction
 python -m evaluation.run score --output evaluation/pilot/results.json
 python -m unittest evaluation.test_evaluation -v
 ```

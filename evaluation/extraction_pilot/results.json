@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-10-10T14:56:00.035913+00:00",
+  "generated_at": "2026-10-10T14:57:19.804175+00:00",
   "scope": "Six hinted source fragments, supplied action vocabulary; provisional native-model references, not NLP product accuracy.",
   "reference_sha256": "8e6181ed00f89e09dde046493c141d81170e87b7617b2041b2e8f3824ffae0de",
   "predictions_sha256": "7432d51d53de3464fea84469226546ad1715df73a5704056971e8676c8ce800c",
@@ -367,5 +367,179 @@
     "reference_supported_probes": 14,
     "reference_abstentions": 4,
     "extracted_abstentions": 18
-  }
+  },
+  "manually_reviewed_downstream_probes": {
+    "scope": "Matched synthetic opposing probes on manually accepted reference/extracted contracts; not real-source defect discovery. Reference-unsupported probes are reported separately.",
+    "cases": [
+      {
+        "source_id": "e01",
+        "action": "amend_commit",
+        "variant": "default",
+        "reference_contract_prediction": "issue",
+        "extracted_contract_prediction": "issue",
+        "agreement": true,
+        "synthetic": true
+      },
+      {
+        "source_id": "e01",
+        "action": "amend_commit",
+        "variant": "exception_or_inactive",
+        "reference_contract_prediction": "no_issue",
+        "extracted_contract_prediction": "no_issue",
+        "agreement": true,
+        "synthetic": true
+      },
+      {
+        "source_id": "e02",
+        "action": "single_step_plan",
+        "variant": "default",
+        "reference_contract_prediction": "issue",
+        "extracted_contract_prediction": "issue",
+        "agreement": true,
+        "synthetic": true
+      },
+      {
+        "source_id": "e02",
+        "action": "single_step_plan",
+        "variant": "exception_or_inactive",
+        "reference_contract_prediction": "no_issue",
+        "extracted_contract_prediction": "no_issue",
+        "agreement": true,
+        "synthetic": true
+      },
+      {
+        "source_id": "e03",
+        "action": "stage_changes",
+        "variant": "default",
+        "reference_contract_prediction": "issue",
+        "extracted_contract_prediction": "issue",
+        "agreement": true,
+        "synthetic": true
+      },
+      {
+        "source_id": "e03",
+        "action": "stage_changes",
+        "variant": "exception_or_inactive",
+        "reference_contract_prediction": "no_issue",
+        "extracted_contract_prediction": "no_issue",
+        "agreement": true,
+        "synthetic": true
+      },
+      {
+        "source_id": "e03",
+        "action": "commit_changes",
+        "variant": "default",
+        "reference_contract_prediction": "issue",
+        "extracted_contract_prediction": "issue",
+        "agreement": true,
+        "synthetic": true
+      },
+      {
+        "source_id": "e03",
+        "action": "commit_changes",
+        "variant": "exception_or_inactive",
+        "reference_contract_prediction": "no_issue",
+        "extracted_contract_prediction": "no_issue",
+        "agreement": true,
+        "synthetic": true
+      },
+      {
+        "source_id": "e04",
+        "action": "log_secret",
+        "variant": "default",
+        "reference_contract_prediction": "issue",
+        "extracted_contract_prediction": "issue",
+        "agreement": true,
+        "synthetic": true
+      },
+      {
+        "source_id": "e04",
+        "action": "log_secret",
+        "variant": "exception_or_inactive",
+        "reference_contract_prediction": "issue",
+        "extracted_contract_prediction": "issue",
+        "agreement": true,
+        "synthetic": true
+      },
+      {
+        "source_id": "e04",
+        "action": "print_secret",
+        "variant": "default",
+        "reference_contract_prediction": "issue",
+        "extracted_contract_prediction": "issue",
+        "agreement": true,
+        "synthetic": true
+      },
+      {
+        "source_id": "e04",
+        "action": "print_secret",
+        "variant": "exception_or_inactive",
+        "reference_contract_prediction": "issue",
+        "extracted_contract_prediction": "issue",
+        "agreement": true,
+        "synthetic": true
+      },
+      {
+        "source_id": "e04",
+        "action": "commit_secret",
+        "variant": "default",
+        "reference_contract_prediction": "issue",
+        "extracted_contract_prediction": "issue",
+        "agreement": true,
+        "synthetic": true
+      },
+      {
+        "source_id": "e04",
+        "action": "commit_secret",
+        "variant": "exception_or_inactive",
+        "reference_contract_prediction": "issue",
+        "extracted_contract_prediction": "issue",
+        "agreement": true,
+        "synthetic": true
+      },
+      {
+        "source_id": "e05",
+        "action": "line_length_lt_80",
+        "variant": "default",
+        "reference_contract_prediction": "abstain",
+        "extracted_contract_prediction": "abstain",
+        "agreement": true,
+        "synthetic": true
+      },
+      {
+        "source_id": "e05",
+        "action": "line_length_lt_80",
+        "variant": "exception_or_inactive",
+        "reference_contract_prediction": "abstain",
+        "extracted_contract_prediction": "abstain",
+        "agreement": true,
+        "synthetic": true
+      },
+      {
+        "source_id": "e06",
+        "action": "active_voice",
+        "variant": "default",
+        "reference_contract_prediction": "abstain",
+        "extracted_contract_prediction": "abstain",
+        "agreement": true,
+        "synthetic": true
+      },
+      {
+        "source_id": "e06",
+        "action": "active_voice",
+        "variant": "exception_or_inactive",
+        "reference_contract_prediction": "abstain",
+        "extracted_contract_prediction": "abstain",
+        "agreement": true,
+        "synthetic": true
+      }
+    ],
+    "agreement": 1.0,
+    "reference_supported_probe_agreement": 1.0,
+    "reference_supported_probes": 14,
+    "reference_abstentions": 4,
+    "extracted_abstentions": 4
+  },
+  "manual_acceptance_sha256": "a78be682e4af191e8829bf1bc73854688f5eefcff910379587ea765586577958",
+  "manual_review_disclosure": "Evaluation-author acceptance of structural Boolean rules for synthetic probes only; raw predictions unchanged, runtime grounding remains false."
 }

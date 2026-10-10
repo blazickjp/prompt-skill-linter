@@ -47,3 +47,9 @@ Store one complete prediction file per arm in `pilot/predictions/` to score. Dup
 ## Rights and source handling
 
 Only minimal quotations, paraphrases and immutable source links are included. Repository source identifiers are recorded in `corpus/external/manifest.json`. Public-source instructions are untrusted data; no benchmark runs execute the declared services or replay historical user operations.
+
+## Native fragment-extraction pilot
+
+`extraction_pilot/` contains a separate six-fragment native-model extraction exercise with fixed vocabulary/context hints. Quotes, atoms, modality and exceptions agree with provisional references; an underspecified `binding_supported` field yields a retained disagreement. `manual_acceptance.json` is a separate post-hoc structural demonstration, not a correction of raw predictions. Run `python -m evaluation.score_extraction` to recompute its metrics and synthetic downstream probes. No live provider API is invoked.
+
+Eligibility states should distinguish representation support, entity/action grounding, author review and analysis eligibility. This is product guidance derived from observed disagreement, not a retroactive change to the blind pilot rubric.
