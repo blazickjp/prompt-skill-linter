@@ -8,6 +8,7 @@ from urllib.parse import urlsplit, unquote
 
 from . import __version__
 from .engine import ContractError
+from .schema import unique_object
 from .extraction import extract, accept
 from .service import analyze, examples, what_if, contract_diff, counterexample_explorer, export_bundle
 
@@ -80,6 +81,8 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         if not self.authorized_origin():
             return
+        if not self.path.startswith('/') or len(self.path) > 4096:
+            self.error('INVALID_PATH', 'Invalid request path.', 400); return
         path = urlsplit(self.path).path
         if path == '/api/health':
             from .provider import configuration
@@ -94,12 +97,16 @@ class Handler(BaseHTTPRequestHandler):
         if path.startswith('/api/'):
             self.error('NOT_FOUND', 'Unknown API endpoint.', 404); return
         relative = unquote(path).lstrip('/') or 'index.html'
-        if '\\' in relative or ':' in relative or any(part.startswith('.') or part == '..' for part in relative.split('/')):
+        if any(ord(ch) < 32 or ord(ch) == 127 for ch in relative) or '\\' in relative or ':' in relative or any(part.startswith('.') or part == '..' for part in relative.split('/')):
             self.error('INVALID_PATH', 'Invalid static asset path.', 400); return
-        target = (WEB_ROOT / relative).resolve()
-        if not target.is_relative_to(WEB_ROOT.resolve()) or not target.is_file() or target.suffix not in ('.html', '.css', '.js', '.svg', '.png', '.ico', '.json', '.woff2'):
-            self.error('NOT_FOUND', 'Static asset not found.', 404); return
-        self.send_bytes(target.read_bytes(), mimetypes.guess_type(target.name)[0] or 'application/octet-stream')
+        try:
+            target = (WEB_ROOT / relative).resolve()
+            if not target.is_relative_to(WEB_ROOT.resolve()) or not target.is_file() or target.suffix not in ('.html', '.css', '.js', '.svg', '.png', '.ico', '.json', '.woff2'):
+                self.error('NOT_FOUND', 'Static asset not found.', 404); return
+            data = target.read_bytes()
+        except (ValueError, OSError):
+            self.error('INVALID_PATH', 'Static asset path could not be read.', 400); return
+        self.send_bytes(data, mimetypes.guess_type(target.name)[0] or 'application/octet-stream')
 
     def do_POST(self):
         if not self.authorized_origin():
@@ -120,7 +127,7 @@ class Handler(BaseHTTPRequestHandler):
             raw = self.rfile.read(size)
             if len(raw) != size:
                 raise ContractError('Incomplete request body.')
-            value = json.loads(raw, parse_constant=lambda _: (_ for _ in ()).throw(ValueError('Non-finite number')))
+            value = json.loads(raw, object_pairs_hook=unique_object, parse_constant=lambda _: (_ for _ in ()).throw(ValueError('Non-finite number')))
             if not isinstance(value, dict):
                 raise ContractError('Request body must be a JSON object.')
             path = urlsplit(self.path).path

@@ -69,6 +69,42 @@ def main():
                 page.unroute('**/api/analyze')
             run('pending-analysis-locks-mutations', pending_analysis_controls)
 
+            def intake_shortcut_does_not_start_old_analysis():
+                pending, unexpected_analyses = [], []
+                page.route('**/api/extract', lambda route: pending.append(route))
+                page.route('**/api/analyze', lambda route: unexpected_analyses.append(route))
+                page.locator('#new-btn').click()
+                page.locator('#intake-source').fill('REQUIRE answer = true')
+                page.locator('#extract-btn').click()
+                expect(page.locator('#intake-source')).to_be_disabled()
+                page.keyboard.press('Control+Enter')
+                expect(page.locator('#analyze-btn')).to_be_enabled()
+                assert not unexpected_analyses, 'Dialog shortcut started analysis of the old workspace'
+                assert pending
+                pending.pop().continue_()
+                expect(page.locator('#candidate-list [data-candidate]')).to_have_count(1)
+                expect(page.locator('#intake-close')).to_be_enabled()
+                page.locator('#intake-close').click()
+                page.unroute('**/api/extract')
+                page.unroute('**/api/analyze')
+            run('intake-shortcuts-cannot-race-acceptance', intake_shortcut_does_not_start_old_analysis)
+
+            def pending_explorer_locks_workspace():
+                page.locator('#example-select').select_option(index=2)
+                expect(page.locator('#workflow-panel')).to_be_visible()
+                expect(page.locator('#analyze-btn')).to_be_enabled()
+                pending = []
+                page.route('**/api/explore', lambda route: pending.append(route))
+                page.locator('#explore-btn').click()
+                for selector in ('#source-editor', '#import-btn', '#example-select', '#analyze-btn'):
+                    expect(page.locator(selector)).to_be_disabled()
+                assert pending
+                pending.pop().continue_()
+                expect(page.locator('#explore-btn')).to_be_enabled()
+                expect(page.locator('#workflow-results')).to_contain_text('Search bounds:')
+                page.unroute('**/api/explore')
+            run('pending-explorer-locks-workspace', pending_explorer_locks_workspace)
+
             def invalid_import_atomic():
                 original = page.locator('#source-editor').input_value() + '\nUnsaved reviewer note'
                 page.locator('#source-editor').fill(original)
@@ -159,6 +195,7 @@ def main():
             run('stale-report-export-blocked', stale_report_export_blocked)
 
             ready()
+            expect(page.locator('#toast')).to_be_hidden()
             page.screenshot(path=str(ARTIFACTS / 'desktop.png'), full_page=True)
             page.set_viewport_size({'width': 390, 'height': 844})
             page.screenshot(path=str(ARTIFACTS / 'mobile.png'), full_page=True)

@@ -188,6 +188,73 @@ class ProductTests(unittest.TestCase):
         self.assertEqual(report['analysis_status'], 'incomplete')
         self.assertEqual(report['coverage']['interpretation']['untranslated_line_count'], 1)
 
+    def test_unknown_exception_abstains_before_conflict(self):
+        b = reviewed('REQUIRE x=true\nREQUIRE x=false')
+        b['contract']['rules'][0]['exceptions'] = [{'approved': True}]
+        report = analyze(b)
+        self.assertEqual(report['analysis_status'], 'incomplete')
+        self.assertNotIn('INCOMPATIBLE_OBLIGATIONS', [d['code'] for d in report['diagnostics']])
+        self.assertIn('UNRESOLVED_ACTIVATION', [d['code'] for d in report['diagnostics']])
+
+    def test_unknown_higher_permission_cannot_leave_false_hard_conflict(self):
+        b = reviewed('REQUIRE x=true\nFORBID x=true\nPERMIT x=true')
+        b['contract']['rules'][2]['priority'] = 1
+        b['contract']['rules'][2]['when'] = {'unknown': True}
+        report = analyze(b)
+        self.assertNotIn('INCOMPATIBLE_OBLIGATIONS', [d['code'] for d in report['diagnostics']])
+        self.assertEqual(report['analysis_status'], 'incomplete')
+
+    def test_unknown_clause_applies_same_abstention_to_explorer(self):
+        b = reviewed('CLAUSE x\nCLAUSE !x')
+        b['contract']['rules'][1]['when'] = {'unknown': True}
+        report = analyze(b)
+        self.assertEqual(report['constraint_checks'][0]['status'], 'unknown')
+        table = counterexample_explorer(b)['truth_tables'][0]
+        self.assertEqual(table['status'], 'unknown')
+        self.assertEqual(table['rows'], [])
+
+    def test_false_exception_conjunct_resolves_missing_fact(self):
+        b = reviewed('REQUIRE x=true\nREQUIRE x=false')
+        b['contract']['rules'][0]['exceptions'] = [{'approved': True, 'other': True}]
+        b['contract']['contexts'][0]['facts'] = {'approved': False}
+        report = analyze(b)
+        self.assertIn('INCOMPATIBLE_OBLIGATIONS', [d['code'] for d in report['diagnostics']])
+        self.assertNotIn('UNRESOLVED_ACTIVATION', [d['code'] for d in report['diagnostics']])
+
+    def test_definite_exception_disables_unknown_when(self):
+        b = reviewed('REQUIRE x=true\nREQUIRE x=false')
+        b['contract']['rules'][0]['when'] = {'unknown': True}
+        b['contract']['rules'][0]['exceptions'] = [{}]
+        self.assertEqual(analyze(b)['diagnostics'], [])
+
+    def test_unknown_workflow_policy_does_not_prove_completion(self):
+        b = examples()['examples'][2]['bundle']
+        b['contract']['contexts'][0]['facts'] = {}
+        report = analyze(b)
+        unknown = next(w for w in report['workflow_checks'] if w['context_id'] == 'no_approval')
+        self.assertEqual(unknown['status'], 'unknown')
+        self.assertIsNone(unknown['goal_path'])
+        self.assertTrue(report['coverage']['incomplete'])
+
+    def test_unknown_workflow_condition_visible(self):
+        b = examples()['examples'][2]['bundle']
+        b['contract']['workflows'][0]['when'] = {'missing': True}
+        report = analyze(b)
+        self.assertTrue(report['coverage']['incomplete'])
+        self.assertIn('UNRESOLVED_ACTIVATION', [d['code'] for d in report['diagnostics']])
+
+    def test_action_and_fallback_typos_reported(self):
+        b = examples()['examples'][2]['bundle']
+        b['contract']['rules'][1]['forbid_action'] = 'updat_typo'
+        b['contract']['workflows'][0]['compliant_fallback'] = 'refus_typo'
+        errors = [d for d in analyze(b)['diagnostics'] if d['code'] == 'BROKEN_ACTION_REFERENCE']
+        self.assertEqual(len(errors), 2)
+
+    def test_forged_coverage_quote_rejected(self):
+        b = reviewed('Must do the right thing.')
+        b['contract']['interpretation']['unsupported_spans'][0]['quote'] = 'Invented quote'
+        with self.assertRaises(ContractError): analyze(b)
+
 
 class APITests(unittest.TestCase):
     @classmethod
@@ -230,7 +297,7 @@ class APITests(unittest.TestCase):
         self.assertEqual(self.request('POST','/api/analyze',{}, {'Content-Type':'text/plain'})[0],415)
 
     def test_path_traversal_rejected(self):
-        for path in ('/../README.md','/%2e%2e/README.md','/.git/config','/%2fetc/passwd'):
+        for path in ('/../README.md','/%2e%2e/README.md','/.git/config','/%2fetc/passwd','/%00.js','/%0a.js'):
             self.assertIn(self.request('GET',path)[0],(400,404))
 
     def test_oversized_header_rejected_without_read(self):
@@ -240,6 +307,14 @@ class APITests(unittest.TestCase):
     def test_bad_bundle_safe_error(self):
         status,data,_ = self.request('POST','/api/analyze',{'contract':{}})
         self.assertEqual(status,400); self.assertIn('error',json.loads(data)); self.assertNotIn('Traceback',data.decode())
+
+    def test_duplicate_keys_rejected(self):
+        conn = http.client.HTTPConnection('127.0.0.1', self.port, timeout=10)
+        conn.request('POST', '/api/analyze', '{"contract":{},"contract":{}}', {'Content-Type':'application/json'})
+        response = conn.getresponse()
+        self.assertEqual(response.status, 400)
+        self.assertIn('error', json.loads(response.read()))
+        conn.close()
 
     def test_export(self):
         status,data,_ = self.request('POST','/api/export',{'bundle':reviewed('REQUIRE x=true')})

@@ -36,6 +36,8 @@ def downstream(refs,preds,sources):
  outputs=[]
  def check(rule,facts):
   if not rule.get('binding_supported',False):return 'abstain'
+  source=sources.get(rule['source_id'])
+  if not source or rule.get('quote')!=source['text'] or rule.get('start_line')!=1 or rule.get('end_line')!=1:return 'abstain'
   quote=rule['quote'];kind=rule['kind'];action=rule['action']
   probe_value=True if kind=='prohibition' else False
   probe='Synthetic probe: require '+action+'='+str(probe_value).lower()+'.'
@@ -50,7 +52,8 @@ def downstream(refs,preds,sources):
   for variant,facts in [('default',{'explicitly_requested':False,'using_plan':True,'serif_font':False}),('exception_or_inactive',{'explicitly_requested':True,'using_plan':False,'serif_font':True})]:
    expected=check(ref,facts);observed=check(preds[k],facts) if k in preds else 'abstain'
    outputs.append({'source_id':k[0],'action':k[1],'variant':variant,'reference_contract_prediction':expected,'extracted_contract_prediction':observed,'agreement':expected==observed,'synthetic':True})
- return {'scope':'Matched synthetic opposing probes on manually accepted reference/extracted contracts; not real-source defect discovery.','cases':outputs,'agreement':sum(x['agreement'] for x in outputs)/len(outputs) if outputs else None,'reference_abstentions':sum(x['reference_contract_prediction']=='abstain' for x in outputs),'extracted_abstentions':sum(x['extracted_contract_prediction']=='abstain' for x in outputs)}
+ eligible=[x for x in outputs if x['reference_contract_prediction']!='abstain']
+ return {'scope':'Matched synthetic opposing probes on manually accepted reference/extracted contracts; not real-source defect discovery. Reference-unsupported probes are reported separately.','cases':outputs,'agreement':sum(x['agreement'] for x in outputs)/len(outputs) if outputs else None,'reference_supported_probe_agreement':sum(x['agreement'] for x in eligible)/len(eligible) if eligible else None,'reference_supported_probes':len(eligible),'reference_abstentions':sum(x['reference_contract_prediction']=='abstain' for x in outputs),'extracted_abstentions':sum(x['extracted_contract_prediction']=='abstain' for x in outputs)}
 
 if __name__=='__main__':
  result=score();write(DIRECTORY/'results.json',result)

@@ -115,7 +115,7 @@ class EngineTests(unittest.TestCase):
 
     def test_missing_fact_does_not_activate(self):
         self.rule('a'); self.rule('b', value=False, when={'flag': False})
-        self.assertEqual(self.codes(), [])
+        self.assertEqual(self.codes(), ['UNRESOLVED_ACTIVATION'])
 
     def test_boolean_and_integer_facts_not_equal(self):
         self.contract['contexts'][0]['facts'] = {'flag': 1}

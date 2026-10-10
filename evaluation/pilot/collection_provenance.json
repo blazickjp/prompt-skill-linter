@@ -1,0 +1,44 @@
+{
+  "collection_method": "Isolated native model task contexts, one reference reviewer and two prediction arms; no live paid API used.",
+  "model_identity": null,
+  "model_family_independence": "unknown",
+  "frozen_inputs_sha256": "8a1ed34b2935d9a0df7379445edc99dc6add13260cf6fbd70ae22292f36f9f3a",
+  "protocol_sha256": "f1c1c740644591707a5fc3882c0a46e5ad769b1443bef628c86c9972b5f90bd3",
+  "cases_sha256": "ae62046b76c82313d8e7d2f8873545791d45c2781453ae7c41a382110c7f2036",
+  "structured_packet_sha256": "5fc7ac7d6b2f38c86eaf239e84aa3d9f14741651eb211fffa5c11f481565c991",
+  "reference_sha256": "58930561d42d4131464f2c1b81c7926e3a3d83fe59eef258eda03fb56a57dc30",
+  "prediction_sha256": {
+    "native_judge_structured.json": "e0954cea42cf4d3fb11f34f43042fe66bc0820f6597d3945f4825df6b8488061",
+    "native_judge.json": "a8b7b0a141fb426ae643beed89291963b1dd55f2a0d9c1ef8cf97f89ddc2c38f",
+    "mechanical_reviewed_contract.json": "3dd0120fafa6c3dc140e52dd3e3ea13dfd6bfed5d6df239b5837f3983ae00717"
+  },
+  "input_access": {
+    "reference": [
+      "protocol.json",
+      "cases.json",
+      "pinned primary source URLs"
+    ],
+    "native_judge": [
+      "protocol.json",
+      "cases.json",
+      "pinned primary source URLs"
+    ],
+    "native_judge_structured": [
+      "protocol.json",
+      "structured_packet.json",
+      "same pinned primary source URLs"
+    ]
+  },
+  "forbidden_access_for_model_predictions": [
+    "reference labels",
+    "other arm predictions",
+    "engine implementation",
+    "running checker"
+  ],
+  "limitations": [
+    "Access isolation was instructed and reported by workers, not enforced via separate filesystem sandboxes.",
+    "Unknown shared model family can correlate errors.",
+    "Model prompts include orchestration context not fully reproducible with this Python runner.",
+    "Reported latencies include source retrieval and task orchestration."
+  ]
+}

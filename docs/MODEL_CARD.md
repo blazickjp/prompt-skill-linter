@@ -15,7 +15,7 @@ These are established techniques applied to narrow explicit contracts. We claim 
 
 ## Soundness envelope
 
-A result is conditional on the contract, source interpretation, tool manifest, runtime snapshot and enumerated activation contexts. Hierarchy is resolved for supported Boolean/action fragments; explicit conditions and exceptions are equality maps. Permissions are not obligations. Contexts absent from the input are not quantified over.
+A result is conditional on the contract, source interpretation, tool manifest, runtime snapshot and enumerated activation contexts. Hierarchy is resolved for supported Boolean/action fragments; explicit conditions and exceptions are equality maps with three-valued applicability. Missing facts that could change an exception or condition produce a visible abstention; a known-false conjunct or known-true exception can resolve inactivity. Permissions are not obligations. Contexts absent from the input are not quantified over.
 
 CNF constraints are scoped, active requirements at one priority; mixed-priority formulas are rejected. A literal cannot simultaneously participate in a CNF and Boolean-effect fragment in the same active scope. Resource rules cannot also act as Boolean/action/tool-call clauses. These restrictions avoid pretending independent fragments are a complete joint semantics.
 

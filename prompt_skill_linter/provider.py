@@ -9,6 +9,7 @@ import urllib.error
 import urllib.request
 
 from .engine import ContractError
+from .schema import unique_object
 from .extraction import extract
 
 ENDPOINT = 'https://api.openai.com/v1/responses'
@@ -55,7 +56,7 @@ def model_extract(sources, consent, transport=None):
                 raw = response.read(1_000_001)
             if len(raw) > 1_000_000:
                 raise ContractError('Provider response exceeded the size limit.')
-            response = json.loads(raw)
+            response = json.loads(raw, object_pairs_hook=unique_object)
         except urllib.error.HTTPError:
             raise ContractError('Provider rejected the request. Check local model/account configuration; response content is not logged.') from None
     else:
@@ -65,7 +66,7 @@ def model_extract(sources, consent, transport=None):
     chunks = [c.get('text', '') for item in response.get('output', []) if item.get('type') == 'message' for c in item.get('content', []) if c.get('type') == 'output_text']
     if not chunks:
         raise ContractError('Provider returned no structured candidate content (possibly a refusal).')
-    parsed = json.loads(''.join(chunks))
+    parsed = json.loads(''.join(chunks), object_pairs_hook=unique_object)
     items = parsed.get('candidates')
     if not isinstance(items, list) or len(items) > 256:
         raise ContractError('Provider returned malformed or too many candidates.')

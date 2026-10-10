@@ -1,7 +1,7 @@
 {
   "version": 1,
   "retrieved_at": "2026-10-10",
-  "label_status": "five_cases_single_blind_model_review_one_unresolved_disagreement_no_gold",
+  "label_status": "Eight task-level native-model references; original source-semantic labels retained separately. No human gold.",
   "sources": [
     {
       "id": "oh",
@@ -102,7 +102,14 @@
       "limitations": [
         "Explicit exception/precedence is absent from this abstraction. An adjudicator may reasonably interpret specificity as resolving the tension.",
         "The second excerpt omits the final non-functionality category; consult the pinned complete source."
-      ]
+      ],
+      "task_level_pilot_reference": {
+        "case_id": "c001",
+        "label": "abstain",
+        "source": "evaluation/pilot/reference_review.json",
+        "status": "native_model_reference_not_human_gold",
+        "target": "Existence of a compliant task completion; distinct from source-authorization tension."
+      }
     },
     {
       "id": "mini_call_count",
@@ -148,7 +155,14 @@
       "limitations": [
         "The Boolean abstraction retains the nonzero lower bound but cannot represent or prove the exactly-one upper bound. It is only a no-false-positive smoke case.",
         "Runtime Jinja branch context must be retained by any full extractor."
-      ]
+      ],
+      "task_level_pilot_reference": {
+        "case_id": "c002",
+        "label": "no_issue",
+        "source": "evaluation/pilot/reference_review.json",
+        "status": "native_model_reference_not_human_gold",
+        "target": "Existence of a compliant task completion; distinct from source-authorization tension."
+      }
     },
     {
       "id": "pdf_subscript",
@@ -195,7 +209,14 @@
       "limitations": [
         "The selected font/rendering assumption is source-specific, not a universal ReportLab theorem.",
         "No PDF was rendered in this corpus exercise."
-      ]
+      ],
+      "task_level_pilot_reference": {
+        "case_id": "c003",
+        "label": "no_issue",
+        "source": "evaluation/pilot/reference_review.json",
+        "status": "native_model_reference_not_human_gold",
+        "target": "Existence of a compliant task completion; distinct from source-authorization tension."
+      }
     },
     {
       "id": "openhands_import_exception",
@@ -230,7 +251,14 @@
       "contract": null,
       "limitations": [
         "Not executable in this corpus slice; tests extraction and exception preservation in the planned evaluation."
-      ]
+      ],
+      "task_level_pilot_reference": {
+        "case_id": "c004",
+        "label": "no_issue",
+        "source": "evaluation/pilot/reference_review.json",
+        "status": "native_model_reference_not_human_gold",
+        "target": "Existence of a compliant task completion; distinct from source-authorization tension."
+      }
     },
     {
       "id": "openhands_pr_consent",
@@ -275,7 +303,14 @@
       "limitations": [
         "Runtime section guards and custom security-policy replacement affect whether both spans are present.",
         "Do not report this as an inevitable hard contradiction."
-      ]
+      ],
+      "task_level_pilot_reference": {
+        "case_id": "c005",
+        "label": "no_issue",
+        "source": "evaluation/pilot/reference_review.json",
+        "status": "native_model_reference_not_human_gold",
+        "target": "Existence of a compliant task completion; distinct from source-authorization tension."
+      }
     },
     {
       "id": "codex_ascii_exception",
@@ -294,7 +329,14 @@
       "pilot_case_id": "c006",
       "limitations": [
         "Source-linked natural case; no executable reviewed finite encoding supplied."
-      ]
+      ],
+      "task_level_pilot_reference": {
+        "case_id": "c006",
+        "label": "no_issue",
+        "source": "evaluation/pilot/reference_review.json",
+        "status": "native_model_reference_not_human_gold",
+        "target": "Existence of a compliant task completion; distinct from source-authorization tension."
+      }
     },
     {
       "id": "codex_dirty_known",
@@ -313,7 +355,14 @@
       "pilot_case_id": "c007",
       "limitations": [
         "Source-linked natural case; no executable reviewed finite encoding supplied."
-      ]
+      ],
+      "task_level_pilot_reference": {
+        "case_id": "c007",
+        "label": "no_issue",
+        "source": "evaluation/pilot/reference_review.json",
+        "status": "native_model_reference_not_human_gold",
+        "target": "Existence of a compliant task completion; distinct from source-authorization tension."
+      }
     },
     {
       "id": "gemini_interactive_exception",
@@ -332,7 +381,14 @@
       "pilot_case_id": "c008",
       "limitations": [
         "Source-linked natural case; no executable reviewed finite encoding supplied."
-      ]
+      ],
+      "task_level_pilot_reference": {
+        "case_id": "c008",
+        "label": "no_issue",
+        "source": "evaluation/pilot/reference_review.json",
+        "status": "native_model_reference_not_human_gold",
+        "target": "Existence of a compliant task completion; distinct from source-authorization tension."
+      }
     }
   ]
 }

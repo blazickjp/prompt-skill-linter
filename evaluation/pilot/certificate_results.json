@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-10T14:49:25.900927+00:00",
+  "generated_at": "2026-10-10T14:55:06.116593+00:00",
   "scope": "Reproducibility, source alignment, finite minimal-core certificates, exact synthetic range, and repair provenance. These are machine-checkable output properties, not an empirical measure of human usefulness or English correctness.",
   "diagnostics": [
     {
@@ -11,6 +11,7 @@
       "repair_count": 0,
       "certificate": {
         "full_core_unsatisfiable": true,
+        "rules_active_in_witness": true,
         "removal_witnesses_valid": true,
         "minimal_core_valid": true
       }
@@ -24,6 +25,7 @@
       "repair_count": 0,
       "certificate": {
         "full_core_unsatisfiable": true,
+        "rules_active_in_witness": true,
         "removal_witnesses_valid": true,
         "minimal_core_valid": true
       }
@@ -37,6 +39,7 @@
       "repair_count": 0,
       "certificate": {
         "full_core_unsatisfiable": true,
+        "rules_active_in_witness": true,
         "removal_witnesses_valid": true,
         "minimal_core_valid": true
       }
@@ -50,6 +53,7 @@
       "repair_count": 0,
       "certificate": {
         "full_core_unsatisfiable": true,
+        "rules_active_in_witness": true,
         "removal_witnesses_valid": true,
         "minimal_core_valid": true
       }
@@ -63,6 +67,7 @@
       "repair_count": 0,
       "certificate": {
         "full_core_unsatisfiable": true,
+        "rules_active_in_witness": true,
         "removal_witnesses_valid": true,
         "minimal_core_valid": true
       }

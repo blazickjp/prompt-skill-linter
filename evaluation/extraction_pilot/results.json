@@ -1,0 +1,371 @@
+{
+  "version": 1,
+  "generated_at": "2026-10-10T14:56:00.035913+00:00",
+  "scope": "Six hinted source fragments, supplied action vocabulary; provisional native-model references, not NLP product accuracy.",
+  "reference_sha256": "8e6181ed00f89e09dde046493c141d81170e87b7617b2041b2e8f3824ffae0de",
+  "predictions_sha256": "7432d51d53de3464fea84469226546ad1715df73a5704056971e8676c8ce800c",
+  "metrics": {
+    "atomic_action_precision": 1.0,
+    "atomic_action_recall": 1.0,
+    "reference_atoms": 9,
+    "predicted_atoms": 9,
+    "matched_atoms": 9,
+    "duplicate_predictions": 0,
+    "exact_quote_rate": 1.0,
+    "exact_local_line_rate": 1.0,
+    "kind_agreement": 1.0,
+    "when_agreement": 1.0,
+    "exception_agreement": 1.0,
+    "binding_supported_agreement": 0.2222222222222222
+  },
+  "details": [
+    {
+      "source_id": "e01",
+      "action": "amend_commit",
+      "matched": true,
+      "exact_quote": true,
+      "exact_local_lines": true,
+      "kind_agreement": true,
+      "when_agreement": true,
+      "exception_agreement": true,
+      "binding_supported_agreement": false
+    },
+    {
+      "source_id": "e02",
+      "action": "single_step_plan",
+      "matched": true,
+      "exact_quote": true,
+      "exact_local_lines": true,
+      "kind_agreement": true,
+      "when_agreement": true,
+      "exception_agreement": true,
+      "binding_supported_agreement": false
+    },
+    {
+      "source_id": "e03",
+      "action": "stage_changes",
+      "matched": true,
+      "exact_quote": true,
+      "exact_local_lines": true,
+      "kind_agreement": true,
+      "when_agreement": true,
+      "exception_agreement": true,
+      "binding_supported_agreement": false
+    },
+    {
+      "source_id": "e03",
+      "action": "commit_changes",
+      "matched": true,
+      "exact_quote": true,
+      "exact_local_lines": true,
+      "kind_agreement": true,
+      "when_agreement": true,
+      "exception_agreement": true,
+      "binding_supported_agreement": false
+    },
+    {
+      "source_id": "e04",
+      "action": "log_secret",
+      "matched": true,
+      "exact_quote": true,
+      "exact_local_lines": true,
+      "kind_agreement": true,
+      "when_agreement": true,
+      "exception_agreement": true,
+      "binding_supported_agreement": false
+    },
+    {
+      "source_id": "e04",
+      "action": "print_secret",
+      "matched": true,
+      "exact_quote": true,
+      "exact_local_lines": true,
+      "kind_agreement": true,
+      "when_agreement": true,
+      "exception_agreement": true,
+      "binding_supported_agreement": false
+    },
+    {
+      "source_id": "e04",
+      "action": "commit_secret",
+      "matched": true,
+      "exact_quote": true,
+      "exact_local_lines": true,
+      "kind_agreement": true,
+      "when_agreement": true,
+      "exception_agreement": true,
+      "binding_supported_agreement": false
+    },
+    {
+      "source_id": "e05",
+      "action": "line_length_lt_80",
+      "matched": true,
+      "exact_quote": true,
+      "exact_local_lines": true,
+      "kind_agreement": true,
+      "when_agreement": true,
+      "exception_agreement": true,
+      "binding_supported_agreement": true
+    },
+    {
+      "source_id": "e06",
+      "action": "active_voice",
+      "matched": true,
+      "exact_quote": true,
+      "exact_local_lines": true,
+      "kind_agreement": true,
+      "when_agreement": true,
+      "exception_agreement": true,
+      "binding_supported_agreement": true
+    }
+  ],
+  "missing_atoms": [],
+  "extra_atoms": [],
+  "reference_metadata": {
+    "kind": "native_model_reference",
+    "model": "unknown",
+    "blind_to_predictions": true
+  },
+  "prediction_metadata": {
+    "provider": "native collaboration agent",
+    "model": null,
+    "started_at_utc": "2026-10-10T14:53:43Z",
+    "completed_at_utc": "2026-10-10T14:55:20Z",
+    "latency_seconds": 97,
+    "tokens": null,
+    "cost": null,
+    "limitations": [
+      "Manual native-model extraction pilot only; not human gold, a live API/provider adapter, or a deployed detector. No reference annotations, earlier predictions, engine/extractor code, local documentation, or manifests were read.",
+      "binding_supported is interpreted conservatively as verified executable grounding. All candidates are false because only an extraction vocabulary and contextual prose were supplied; this does not mean their declarative prohibition or preference cannot be represented after explicit review.",
+      "Exact supplied fragments and local line 1 are preserved for all nine action atoms. Context-derived scope and exceptions are explained separately rather than added to the quotes.",
+      "Relevant Gemini and Anthropic context was checked read-only at the supplied pinned primary-source URLs. The pinned Codex GitHub page and raw URL could not be fetched, so e01 and e02 use the supplied text and context without claiming independent source verification.",
+      "Six selected, context-hinted fragments with a fixed vocabulary are not an unrestricted full-policy extraction benchmark. Source-span holdout does not establish independent policy-family generalization.",
+      "Exceptions only relax the associated rule. Missing executable grounding, a review-only candidate, or an unmodeled scope must not be interpreted as a clean compliance verdict.",
+      "No source policy was executed, no external writes were made, and no paid provider API was called. Token count and cost are unavailable rather than assumed zero."
+    ]
+  },
+  "unsupported_reference": [
+    {
+      "source_id": "e01",
+      "reason": "No installed binding or request-authentication mechanism is supplied. explicitly_requested must be scoped to amending this commit, not any user request. The true binding_supported value means structural Boolean bindability after manual mapping, not verified runtime integration."
+    },
+    {
+      "source_id": "e02",
+      "reason": "The supported vocabulary expresses planning-tool scope but does not identify a concrete tool, payload format, or counting convention. Those must be bound before single_step_plan is measurable."
+    },
+    {
+      "source_id": "e03",
+      "reason": "A single generic explicitly_requested condition cannot faithfully represent independently authorized staging and committing unless evaluated separately for each action. The core-mandates enablement guard is fixed by the supplied context, not encoded as an available condition."
+    },
+    {
+      "source_id": "e04",
+      "reason": "Secret identification, output destinations, and committed-content attribution are not defined by the fragment or action vocabulary. Treat secret predicates as reviewed observations rather than a complete or validated secret-scanning capability. Additional API-key/credential categories from the full sentence are intentionally outside the supplied-fragment denominator."
+    },
+    {
+      "source_id": "e05",
+      "reason": "Numeric rendered line length requires a rendering/measurement model, character-count convention, viewport and font context, and a way to evaluate individual lines. The allowed extra serif length is qualitative and has no extracted numeric bound. Boolean line_length_lt_80 plus serif_font does not encode or validate these semantics; the entire rule remains a soft candidate."
+    },
+    {
+      "source_id": "e06",
+      "reason": "Grammatical active-voice recognition and aggregation are not provided. A Boolean active_voice proposal preserves intent but cannot alone classify sentences or verify a design. The frontend-copy scope is recorded in rationale because the supplied condition vocabulary has no design-copy predicate."
+    }
+  ],
+  "unsupported_predictions": [
+    {
+      "source_id": "e01",
+      "reason": "The vocabulary names an action and exception but supplies no executable binding for commit amendment or action-specific explicit user requests. Retain as a reviewable prohibition; do not treat it as an installed detector."
+    },
+    {
+      "source_id": "e02",
+      "reason": "The scope can be proposed as using_plan only if it is manually grounded in use of the planning tool. The supplied materials do not define how to observe that scope or detect a single-step plan."
+    },
+    {
+      "source_id": "e03",
+      "reason": "No executable bindings establish staging, committing, or the provenance and action-specific scope of a user request. The Boolean exception cannot independently authenticate authorization."
+    },
+    {
+      "source_id": "e04",
+      "reason": "The three named actions preserve the prohibition, but classification of secrets and observation of logging, printing, and committing are not supplied or verified."
+    },
+    {
+      "source_id": "e05",
+      "reason": "Numeric rendered-character measurement is not implemented by naming line_length_lt_80. Typography scope, layout-dependent line measurement, and the qualitative amount of extra length allowed for serif fonts are unrepresented. The serif Boolean can only mark a contextual relaxation of a soft default."
+    },
+    {
+      "source_id": "e06",
+      "reason": "The permitted condition vocabulary does not encode design/interface-writing scope, and no active-voice classifier is supplied. A soft default cannot establish that every sentence must be active or provide executable compliance evidence."
+    }
+  ],
+  "downstream_probes": {
+    "scope": "Matched synthetic opposing probes on manually accepted reference/extracted contracts; not real-source defect discovery. Reference-unsupported probes are reported separately.",
+    "cases": [
+      {
+        "source_id": "e01",
+        "action": "amend_commit",
+        "variant": "default",
+        "reference_contract_prediction": "issue",
+        "extracted_contract_prediction": "abstain",
+        "agreement": false,
+        "synthetic": true
+      },
+      {
+        "source_id": "e01",
+        "action": "amend_commit",
+        "variant": "exception_or_inactive",
+        "reference_contract_prediction": "no_issue",
+        "extracted_contract_prediction": "abstain",
+        "agreement": false,
+        "synthetic": true
+      },
+      {
+        "source_id": "e02",
+        "action": "single_step_plan",
+        "variant": "default",
+        "reference_contract_prediction": "issue",
+        "extracted_contract_prediction": "abstain",
+        "agreement": false,
+        "synthetic": true
+      },
+      {
+        "source_id": "e02",
+        "action": "single_step_plan",
+        "variant": "exception_or_inactive",
+        "reference_contract_prediction": "no_issue",
+        "extracted_contract_prediction": "abstain",
+        "agreement": false,
+        "synthetic": true
+      },
+      {
+        "source_id": "e03",
+        "action": "stage_changes",
+        "variant": "default",
+        "reference_contract_prediction": "issue",
+        "extracted_contract_prediction": "abstain",
+        "agreement": false,
+        "synthetic": true
+      },
+      {
+        "source_id": "e03",
+        "action": "stage_changes",
+        "variant": "exception_or_inactive",
+        "reference_contract_prediction": "no_issue",
+        "extracted_contract_prediction": "abstain",
+        "agreement": false,
+        "synthetic": true
+      },
+      {
+        "source_id": "e03",
+        "action": "commit_changes",
+        "variant": "default",
+        "reference_contract_prediction": "issue",
+        "extracted_contract_prediction": "abstain",
+        "agreement": false,
+        "synthetic": true
+      },
+      {
+        "source_id": "e03",
+        "action": "commit_changes",
+        "variant": "exception_or_inactive",
+        "reference_contract_prediction": "no_issue",
+        "extracted_contract_prediction": "abstain",
+        "agreement": false,
+        "synthetic": true
+      },
+      {
+        "source_id": "e04",
+        "action": "log_secret",
+        "variant": "default",
+        "reference_contract_prediction": "issue",
+        "extracted_contract_prediction": "abstain",
+        "agreement": false,
+        "synthetic": true
+      },
+      {
+        "source_id": "e04",
+        "action": "log_secret",
+        "variant": "exception_or_inactive",
+        "reference_contract_prediction": "issue",
+        "extracted_contract_prediction": "abstain",
+        "agreement": false,
+        "synthetic": true
+      },
+      {
+        "source_id": "e04",
+        "action": "print_secret",
+        "variant": "default",
+        "reference_contract_prediction": "issue",
+        "extracted_contract_prediction": "abstain",
+        "agreement": false,
+        "synthetic": true
+      },
+      {
+        "source_id": "e04",
+        "action": "print_secret",
+        "variant": "exception_or_inactive",
+        "reference_contract_prediction": "issue",
+        "extracted_contract_prediction": "abstain",
+        "agreement": false,
+        "synthetic": true
+      },
+      {
+        "source_id": "e04",
+        "action": "commit_secret",
+        "variant": "default",
+        "reference_contract_prediction": "issue",
+        "extracted_contract_prediction": "abstain",
+        "agreement": false,
+        "synthetic": true
+      },
+      {
+        "source_id": "e04",
+        "action": "commit_secret",
+        "variant": "exception_or_inactive",
+        "reference_contract_prediction": "issue",
+        "extracted_contract_prediction": "abstain",
+        "agreement": false,
+        "synthetic": true
+      },
+      {
+        "source_id": "e05",
+        "action": "line_length_lt_80",
+        "variant": "default",
+        "reference_contract_prediction": "abstain",
+        "extracted_contract_prediction": "abstain",
+        "agreement": true,
+        "synthetic": true
+      },
+      {
+        "source_id": "e05",
+        "action": "line_length_lt_80",
+        "variant": "exception_or_inactive",
+        "reference_contract_prediction": "abstain",
+        "extracted_contract_prediction": "abstain",
+        "agreement": true,
+        "synthetic": true
+      },
+      {
+        "source_id": "e06",
+        "action": "active_voice",
+        "variant": "default",
+        "reference_contract_prediction": "abstain",
+        "extracted_contract_prediction": "abstain",
+        "agreement": true,
+        "synthetic": true
+      },
+      {
+        "source_id": "e06",
+        "action": "active_voice",
+        "variant": "exception_or_inactive",
+        "reference_contract_prediction": "abstain",
+        "extracted_contract_prediction": "abstain",
+        "agreement": true,
+        "synthetic": true
+      }
+    ],
+    "agreement": 0.2222222222222222,
+    "reference_supported_probe_agreement": 0.0,
+    "reference_supported_probes": 14,
+    "reference_abstentions": 4,
+    "extracted_abstentions": 18
+  }
+}

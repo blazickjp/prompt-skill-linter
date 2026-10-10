@@ -13,3 +13,8 @@ This is the release gate, not a claim of completion. Each item needs integrated 
 9. Quickstart, architecture/model card, release notes and reproducibility instructions.
 
 No paid provider calls, external credentials or public hosted deployment are part of this local release. Publication and CI evidence are coordinated separately. A solver witness is conditional on the reviewed model; no release certifies arbitrary prose, all possible contexts or runtime obedience.
+
+
+## Current evidence checkpoint
+
+Core/API and evaluation-schema tests pass locally; installed-wheel assets and built-in analysis pass. Studio is integrated with real routes and has happy-path/visual plus adversarial Playwright suites. First remote Python/package jobs and adversarial browser run passed; current happy-path rerun is pending after a test-only locator correction. The selected native-model pilot is measured with prominent limitations. Remaining release gate: record the full current-commit CI/browser outcome, review screenshots and package the exact accepted snapshot. Do not equate this checkpoint with certification of arbitrary English or live-provider validation.

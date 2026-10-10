@@ -46,3 +46,13 @@ def check(value, schema, path='$'):
 def validate_shape(contract):
     schema = json.loads(Path(__file__).with_name('contract.schema.json').read_text())
     check(contract, schema)
+
+
+def unique_object(pairs):
+    """Reject ambiguous duplicate JSON keys at untrusted input boundaries."""
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ShapeError('Duplicate JSON object keys are unsupported.')
+        result[key] = value
+    return result

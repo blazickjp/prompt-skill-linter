@@ -5,11 +5,14 @@ from pathlib import Path
 import sys
 
 from .engine import ContractError, lint
+from .schema import unique_object
 
 
 def load(path):
+    if Path(path).stat().st_size > 16_000_000:
+        raise ContractError('JSON input exceeds the 16 MB CLI limit.')
     with open(path, encoding='utf-8') as stream:
-        value = json.load(stream)
+        value = json.load(stream, object_pairs_hook=unique_object, parse_constant=lambda value: (_ for _ in ()).throw(ContractError('Non-finite JSON numbers are unsupported.')))
     if not isinstance(value, dict):
         raise ContractError(f'{path}: expected a JSON object')
     return value

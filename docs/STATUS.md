@@ -1,48 +1,37 @@
-# Prototype status
+# Local product status
 
-Verified locally on October 10, 2026, Python 3.12.14.
+Updated October 10, 2026. Version 1.0.0 is a release candidate pending current-commit integrated CI/browser confirmation.
 
-## Completed
+## Implemented
 
-- End-to-end source + reviewed contract + tool manifest + runtime CLI.
-- Strict accepted-contract schema; exact quoted-line verification; inspectable contract export.
-- Exact reference/argument/dependency checks and dedicated synthetic integer-resource checks.
-- Conditional same-scope Boolean hierarchy, modality, exception and coactivation checks.
-- Bounded deterministic workflow reachability with explicitly declared fallback handling.
-- JSON/readable diagnostics with witness, provenance, interpretation, assumptions, responsible rules, regression context and resource repair suggestions that identify changed requirements.
-- Four reproducible synthetic run configurations, with JSON and readable reports in `corpus/synthetic/`.
-- External research corpus and evidence in `corpus/external/`, kept distinct from synthetic cases.
-- Full supplied handoff retained in `docs/HANDOFF.md`.
+- Dependency-free local Studio and CLI; source intake, offline annotation candidates, explicit acceptance, corrected interpretation editing and untranslated/omitted coverage.
+- Exact source/tool/argument/dependency checks, dedicated integer lower bound, scoped Boolean hierarchy, tri-state activation and explicit exceptions.
+- Bounded CNF search with checked deletion cores and scope-separated truth tables.
+- Bounded prerequisite/effect workflow paths/graphs, unavailable tool actions, compliant refusal and explicit unknown outcomes.
+- Hypothetical named-requirement repairs, contract/evidence diffs and replay ZIPs with inert generated source filenames.
+- Optional fixed-endpoint OpenAI structured candidates, environment-only key, per-request source/cost opt-in and mandatory review. Live-provider integration remains unrun.
+- Strict local API boundaries, origin/host guards, body/concurrency/compute limits, inert source processing, no telemetry or historical tool execution.
+- Scientific model card, versioned independent-source corpus, provisional matched native-model pilot and separate extraction evidence.
 
-## Verification
+## Local verification, latest working tree
 
-- `python -m unittest discover -s tests -v`: **39 passed**.
-- `python scripts/reproduce.py`: all four run configurations matched expected results.
-- `python -m compileall -q prompt_skill_linter tests scripts`: passed.
-- Independent adversarial review checked hierarchy after shadowing, integer precision, conditional resource rejection, permission modality, advertisement activation and entity isolation. Reported no remaining blocker within documented scope.
-- Independent wheel installation with `pip --no-deps --no-build-isolation --target ... .`: succeeded, packaged schema present, installed CLI ran outside the checkout and produced expected bulk finding exit status 1.
-- Installed external `jsonschema` library independently validated the shipped JSON Schema and four contract fixtures. This is a development cross-check, not a runtime dependency.
-- Ruff/pytest are not installed in the environment. No Ruff result is claimed; unittest supplies the test runner. Compilation is not style linting.
+- `python -m unittest discover -s tests -q`: **84 passed**.
+- `python -m unittest evaluation.test_evaluation -q`: **7 passed**.
+- `python -m evaluation.run verify`: **40 frozen files verified**.
+- Compilation and `git diff --check`: passed.
+- Wheel build/install outside the checkout: packaged Studio assets and real bulk analysis passed.
+- Independent reviewer additionally checked seeded SAT and planner cases, API attacks and source/export boundaries. Review findings have dedicated regressions.
 
-## Observed arithmetic
+The first published CI snapshot passed all three Python-version/package jobs and the adversarial browser suite. Its happy-path browser suite exposed a test-only CSP wait issue; that test uses locator assertions now, without weakening the security policy. Current-commit browser rerun is still required. Local rendered Chromium is blocked by the execution environment; browser evidence comes from normal GitHub Actions runners, not a bypass.
 
-| Request | Budget | Lower bound | Result |
-|---|---:|---:|---|
-| 150 | 30 | 30 | Lower-bound pass |
-| 151 | 30 | 32 | UNREACHABLE_COMPLETION |
-| 184 | 30 | 38 | UNREACHABLE_COMPLETION |
-| 151 | 32 | 32 | Lower-bound pass |
-| 184 | 38 | 38 | Lower-bound pass |
-| 200 | 40 | 40 | Lower-bound pass |
+Ruff is unavailable locally. Compilation, tests and whitespace checks are not represented as a Ruff pass.
 
-The advertised infeasible range under budget 30 is 151–200. At 151, each pair of the three constraints is satisfiable but the triple is not. Core removal witnesses are serialized. Nothing here guarantees completion at the passing boundary.
+## Canonical arithmetic
 
-## Research and evaluation limits
+150 nodes need at least 30 calls; 151 need 32; 184 need 38. At budget 30 the advertised infeasible range is 151–200. Every pair of the 151-node constraints is satisfiable while their conjunction is not. Increasing the budget to 32/38/40 passes the lower-bound controls for 151/184/200 respectively. None is a completion guarantee.
 
-Five pinned-source observations across three independently maintained repositories; three executable hand-encoded contracts. Separate blind model review and disagreements are recorded, not treated as human gold. The OpenHands natural source is ambiguous even though its particular abstraction contains a Boolean collision. Full-policy extraction and implied-exception reasoning remain unimplemented.
+## Evaluation limits
 
-No matched strong-judge versus structured-evidence-judge versus mechanical-checker evaluation has run. No extraction precision/recall, independently adjudicated whole-pipeline false-positive/miss rates, diagnostic-usefulness score, realistic coverage estimate, model/API cost/latency comparison or superiority claim is available. The research protocol enumerates these remaining milestones. Synthetic/unit passing counts are implementation checks, not these missing evaluation metrics.
+Consult `docs/EVALUATION.md` for exact case-level results and reference uncertainty. The pilot is selected development evidence with native-model labels, synthetic positive issues, human-ground-truth gaps and bounded checker coverage. It is not a superiority result. Offline extraction does not translate arbitrary English; optional-provider mocks do not validate live model quality.
 
-The prototype has no external credentials, paid model calls, tool execution, live updates or historical update-call replays. It uses no inaccessible historical artifacts as evidence. Remote creation/publication is coordinated separately by the parent task and is not established by this local status file.
-
-Local repository initialized on branch `main` without creating an author identity, commit or remote push. `git diff --check` passed on the deliverable sources. The source archive omits Git metadata, caches, environment directories, package-build intermediates and credentials.
+The complete supplied handoff remains in `docs/HANDOFF.md`. Product release gates are in `docs/PRODUCT.md`; publication and current CI evidence are coordinated separately.

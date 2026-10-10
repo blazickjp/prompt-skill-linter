@@ -1,0 +1,172 @@
+{
+  "provider": "native collaboration agent",
+  "model": null,
+  "started_at_utc": "2026-10-10T14:53:43Z",
+  "completed_at_utc": "2026-10-10T14:55:20Z",
+  "latency_seconds": 97,
+  "tokens": null,
+  "cost": null,
+  "rules": [
+    {
+      "source_id": "e01",
+      "start_line": 1,
+      "end_line": 1,
+      "quote": "Do not amend a commit unless explicitly requested to do so.",
+      "kind": "prohibition",
+      "action": "amend_commit",
+      "when": {},
+      "exceptions": [
+        {
+          "explicitly_requested": true
+        }
+      ],
+      "binding_supported": false,
+      "rationale": "Prohibits amending a commit unless that specific action was explicitly requested. The exception removes this prohibition; it does not establish an unconditional permission overriding other rules. The editing context is supplied by the case. No executable action or request-provenance binding was provided or verified."
+    },
+    {
+      "source_id": "e02",
+      "start_line": 1,
+      "end_line": 1,
+      "quote": "Do not make single-step plans.",
+      "kind": "prohibition",
+      "action": "single_step_plan",
+      "when": {
+        "using_plan": true
+      },
+      "exceptions": [],
+      "binding_supported": false,
+      "rationale": "Prohibits a single-step plan only when using the planning tool. The using_plan condition comes from the supplied section context, not from the quoted fragment alone, and must mean planning-tool use rather than every informal plan. No executable plan detector or scope binding was provided or verified."
+    },
+    {
+      "source_id": "e03",
+      "start_line": 1,
+      "end_line": 1,
+      "quote": "Do not stage or commit changes unless specifically requested by the user.",
+      "kind": "prohibition",
+      "action": "stage_changes",
+      "when": {},
+      "exceptions": [
+        {
+          "explicitly_requested": true
+        }
+      ],
+      "binding_supported": false,
+      "rationale": "Atomic prohibition on staging changes, split from the compound source. The exception requires a specific request by the user for this action; mere general task approval does not supply that exception. Core mandates are enabled by the case context. The pinned primary source confirms the wording. No executable action or user-request binding was provided or verified."
+    },
+    {
+      "source_id": "e03",
+      "start_line": 1,
+      "end_line": 1,
+      "quote": "Do not stage or commit changes unless specifically requested by the user.",
+      "kind": "prohibition",
+      "action": "commit_changes",
+      "when": {},
+      "exceptions": [
+        {
+          "explicitly_requested": true
+        }
+      ],
+      "binding_supported": false,
+      "rationale": "Atomic prohibition on committing changes, split from the compound source. The exception requires a specific request by the user for this action; mere general task approval does not supply that exception. Core mandates are enabled by the case context. The pinned primary source confirms the wording. No executable action or user-request binding was provided or verified."
+    },
+    {
+      "source_id": "e04",
+      "start_line": 1,
+      "end_line": 1,
+      "quote": "Never log, print, or commit secrets",
+      "kind": "prohibition",
+      "action": "log_secret",
+      "when": {},
+      "exceptions": [],
+      "binding_supported": false,
+      "rationale": "Atomic unconditional prohibition on logging secrets, split from the three coordinated actions. No exception is stated in the supplied fragment. The pinned primary source confirms the wording; other protected categories and nearby requirements are outside this extraction scope. No executable secret classifier or action binding was provided or verified."
+    },
+    {
+      "source_id": "e04",
+      "start_line": 1,
+      "end_line": 1,
+      "quote": "Never log, print, or commit secrets",
+      "kind": "prohibition",
+      "action": "print_secret",
+      "when": {},
+      "exceptions": [],
+      "binding_supported": false,
+      "rationale": "Atomic unconditional prohibition on printing secrets, split from the three coordinated actions. No exception is stated in the supplied fragment. The pinned primary source confirms the wording; other protected categories and nearby requirements are outside this extraction scope. No executable secret classifier or action binding was provided or verified."
+    },
+    {
+      "source_id": "e04",
+      "start_line": 1,
+      "end_line": 1,
+      "quote": "Never log, print, or commit secrets",
+      "kind": "prohibition",
+      "action": "commit_secret",
+      "when": {},
+      "exceptions": [],
+      "binding_supported": false,
+      "rationale": "Atomic unconditional prohibition on committing secrets, split from the three coordinated actions. No exception is stated in the supplied fragment. The pinned primary source confirms the wording; other protected categories and nearby requirements are outside this extraction scope. No executable secret classifier or action binding was provided or verified."
+    },
+    {
+      "source_id": "e05",
+      "start_line": 1,
+      "end_line": 1,
+      "quote": "Default to line lengths of less than 80 characters.",
+      "kind": "preference",
+      "action": "line_length_lt_80",
+      "when": {},
+      "exceptions": [
+        {
+          "serif_font": true
+        }
+      ],
+      "binding_supported": false,
+      "rationale": "Default expresses a soft typography preference for fewer than 80 characters per rendered line, not a hard cap. The serif exception is context-derived and verified in the pinned primary source: serif typefaces may have slightly longer lines. That exception records relaxation of this default, not permission for unlimited length. The Boolean atom cannot measure numeric rendered line length, and the qualitative serif allowance has no supplied numeric bound. Typography scope and measurement require review; no executable binding was verified."
+    },
+    {
+      "source_id": "e06",
+      "start_line": 1,
+      "end_line": 1,
+      "quote": "Use active voice as default.",
+      "kind": "preference",
+      "action": "active_voice",
+      "when": {},
+      "exceptions": [],
+      "binding_supported": false,
+      "rationale": "As default expresses a soft preference, not an unconditional requirement. The pinned primary source places it under writing in design, so it applies to design/interface copy in that source context. No explicit exception appears in the supplied fragment. The condition vocabulary cannot encode this writing scope, and no linguistic detector or executable binding was provided or verified."
+    }
+  ],
+  "unsupported": [
+    {
+      "source_id": "e01",
+      "reason": "The vocabulary names an action and exception but supplies no executable binding for commit amendment or action-specific explicit user requests. Retain as a reviewable prohibition; do not treat it as an installed detector."
+    },
+    {
+      "source_id": "e02",
+      "reason": "The scope can be proposed as using_plan only if it is manually grounded in use of the planning tool. The supplied materials do not define how to observe that scope or detect a single-step plan."
+    },
+    {
+      "source_id": "e03",
+      "reason": "No executable bindings establish staging, committing, or the provenance and action-specific scope of a user request. The Boolean exception cannot independently authenticate authorization."
+    },
+    {
+      "source_id": "e04",
+      "reason": "The three named actions preserve the prohibition, but classification of secrets and observation of logging, printing, and committing are not supplied or verified."
+    },
+    {
+      "source_id": "e05",
+      "reason": "Numeric rendered-character measurement is not implemented by naming line_length_lt_80. Typography scope, layout-dependent line measurement, and the qualitative amount of extra length allowed for serif fonts are unrepresented. The serif Boolean can only mark a contextual relaxation of a soft default."
+    },
+    {
+      "source_id": "e06",
+      "reason": "The permitted condition vocabulary does not encode design/interface-writing scope, and no active-voice classifier is supplied. A soft default cannot establish that every sentence must be active or provide executable compliance evidence."
+    }
+  ],
+  "limitations": [
+    "Manual native-model extraction pilot only; not human gold, a live API/provider adapter, or a deployed detector. No reference annotations, earlier predictions, engine/extractor code, local documentation, or manifests were read.",
+    "binding_supported is interpreted conservatively as verified executable grounding. All candidates are false because only an extraction vocabulary and contextual prose were supplied; this does not mean their declarative prohibition or preference cannot be represented after explicit review.",
+    "Exact supplied fragments and local line 1 are preserved for all nine action atoms. Context-derived scope and exceptions are explained separately rather than added to the quotes.",
+    "Relevant Gemini and Anthropic context was checked read-only at the supplied pinned primary-source URLs. The pinned Codex GitHub page and raw URL could not be fetched, so e01 and e02 use the supplied text and context without claiming independent source verification.",
+    "Six selected, context-hinted fragments with a fixed vocabulary are not an unrestricted full-policy extraction benchmark. Source-span holdout does not establish independent policy-family generalization.",
+    "Exceptions only relax the associated rule. Missing executable grounding, a review-only candidate, or an unmodeled scope must not be interpreted as a clean compliance verdict.",
+    "No source policy was executed, no external writes were made, and no paid provider API was called. Token count and cost are unavailable rather than assumed zero."
+  ]
+}

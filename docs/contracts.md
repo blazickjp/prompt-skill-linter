@@ -4,7 +4,7 @@ The normative accepted shape is `prompt_skill_linter/contract.schema.json`. Runt
 
 ## Modality and hierarchy
 
-A rule has an ID, source, integer priority (larger wins), literal scope `{entity, temporal}`, optional skill conjunction, equality-map `when`, and exception equality maps. Conditions require present, type-equal facts; missing facts never count as false. All skills on a rule must be explicitly active. Any matching exception disables the rule. There is no inference from installed skills, text similarity, or presumed precedence/specificity.
+A rule has an ID, source, integer priority (larger wins), literal scope `{entity, temporal}`, optional skill conjunction, equality-map `when`, and exception equality maps. Conditions use three-valued evaluation. Known type-equal facts establish true; a known mismatching conjunct establishes false; otherwise missing facts leave applicability unknown. Unknown exceptions are not assumed absent. Binding checks abstain with source-linked UNRESOLVED_ACTIVATION diagnostics when missing facts can change applicability. All skills on a rule must be explicitly active. Any matching exception disables the rule. There is no inference from installed skills, text similarity, or presumed precedence/specificity.
 
 `effect: {literal: "x", value: true}` means:
 - requirement: x must be true;

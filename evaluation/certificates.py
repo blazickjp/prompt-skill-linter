@@ -12,17 +12,21 @@ def verify_bulk(w,capacity=10):
  pairs={name:all(constraints[c](v['s'],v['p']) for c in name.split('+')) for name,v in w['pairwise_witnesses'].items()}
  expected_sub=(n+capacity-1)//capacity
  range_ok=all((2*((request+capacity-1)//capacity)>b)==(w['affected_advertised_range'][0]<=request<=w['affected_advertised_range'][1]) for request in range(1,201))
- return {'full_system_unsatisfiable':full_unsat,'removal_witnesses_valid':all(removals.values()),'pairwise_witnesses_valid':all(pairs.values()),'lower_bound_valid':w['minimum_submissions']==w['minimum_polls']==expected_sub and w['lower_bound_calls']==2*expected_sub,'affected_range_valid_for_1_to_200':range_ok,'minimal_core_valid':full_unsat and all(removals.values())}
+ return {'full_system_unsatisfiable':full_unsat,'removal_witnesses_valid':all(removals.values()),'pairwise_witnesses_valid':all(pairs.values()),'lower_bound_valid':w['minimum_submissions']==w['minimum_polls']==expected_sub and w['lower_bound_calls']==2*expected_sub,'affected_range_valid_for_1_to_200':range_ok,'minimal_core_valid':full_unsat and set(removals)==set(constraints) and all(removals.values())}
 
 def verify_boolean(diag):
  rules=diag['interpreted_rules'];literal=diag['witness']['literal']
  desired={r['id']:(not r['effect']['value'] if r['kind']=='prohibition' else r['effect']['value']) for r in rules}
  # Fixed witness has already activated/resolved the rules; this validates only
  # the Boolean core, not source interpretation or global activation extraction.
+ facts=diag.get('triggering_context',{}).get('facts',{})
+ def matches(cond):return all(k in facts and type(facts[k]) is type(v) and facts[k]==v for k,v in cond.items())
+ hard_same_surface=all(r['kind'] in ('requirement','prohibition') and r['effect']['literal']==literal and r['scope']==rules[0]['scope'] and r['priority']==rules[0]['priority'] for r in rules)
+ activated=all(matches(r.get('when',{})) and not any(matches(e) for e in r.get('exceptions',[])) for r in rules)
  unsat=not any(all(value==want for want in desired.values()) for value in (False,True))
  removals=diag['witness']['removal_witnesses']
  valid=all(all(v[literal]==want for rid,want in desired.items() if rid!=removed) for removed,v in removals.items())
- return {'full_core_unsatisfiable':unsat,'removal_witnesses_valid':valid,'minimal_core_valid':unsat and valid and set(removals)==set(desired)}
+ return {'full_core_unsatisfiable':unsat,'rules_active_in_witness':activated,'removal_witnesses_valid':valid,'minimal_core_valid':unsat and activated and hard_same_surface and valid and set(removals)==set(desired)}
 
 def run():
  from prompt_skill_linter.engine import lint

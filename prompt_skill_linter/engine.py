@@ -47,6 +47,18 @@ def validate(contract, manifest, runtime, root):
             raise ContractError(f'{group} need unique nonempty string IDs')
     sources = {s['id']: s for s in contract['sources']}
     root = Path(root).resolve()
+    coverage_spans = contract.get('interpretation', {}).get('unsupported_spans', [])
+    if len(coverage_spans) > 256:
+        raise ContractError('At most 256 untranslated source spans can be displayed.')
+    for span in coverage_spans:
+        if span['source_id'] not in sources:
+            raise ContractError('Coverage span references an unknown source.')
+        span_path = (root / sources[span['source_id']]['path']).resolve()
+        if not span_path.is_relative_to(root) or span_path.stat().st_size > 1_500_000:
+            raise ContractError('Invalid coverage source path or size.')
+        lines = span_path.read_text(encoding='utf-8').splitlines()
+        if not 1 <= span['start_line'] <= span['end_line'] <= len(lines) or span['quote'] != '\n'.join(lines[span['start_line']-1:span['end_line']]):
+            raise ContractError('Coverage source quote does not match its exact line span.')
     for rule in contract['rules']:
         src = rule.get('source', {})
         if src.get('source_id') not in sources:
@@ -163,15 +175,31 @@ def validate(contract, manifest, runtime, root):
     return contract
 
 
+def condition_status(condition, facts):
+    if any(k in facts and (type(facts[k]) is not type(v) or facts[k] != v) for k, v in condition.items()):
+        return 'false'
+    return 'unknown' if any(k not in facts for k in condition) else 'true'
+
+
 def matches(condition, facts):
-    # Missing facts are unknown/nonactivating, never silently false literals.
-    return all(k in facts and type(facts[k]) is type(v) and facts[k] == v for k, v in condition.items())
+    return condition_status(condition, facts) == 'true'
+
+
+def activation_status(rule, context):
+    if not set(rule.get('skills', [])) <= set(context.get('active_skills', [])):
+        return 'inactive'
+    facts = context.get('facts', {})
+    when = condition_status(rule.get('when', {}), facts)
+    exceptions = [condition_status(e, facts) for e in rule.get('exceptions', [])]
+    if when == 'false' or 'true' in exceptions:
+        return 'inactive'
+    if when == 'unknown' or 'unknown' in exceptions:
+        return 'unknown'
+    return 'active'
 
 
 def active(rule, context):
-    return (set(rule.get('skills', [])) <= set(context.get('active_skills', []))
-            and matches(rule.get('when', {}), context.get('facts', {}))
-            and not any(matches(e, context.get('facts', {})) for e in rule.get('exceptions', [])))
+    return activation_status(rule, context) == 'active'
 
 
 def diagnostic(code, category, severity, rules, context, witness, assumptions=None, repairs=None):
@@ -284,6 +312,23 @@ def check_references(contract, manifest):
                 missing = sorted(set(skills[sid].get('requires', [])) - active_ids)
                 if missing:
                     diagnostics.append(diagnostic('INACTIVE_DEPENDENCY', 'exact', 'error', [], context, {'skill': sid, 'missing_active_dependencies': missing}))
+    by_id = {r['id']: r for r in contract['rules']}
+    scoped_actions = {}
+    for workflow in contract.get('workflows', []):
+        ad = by_id[workflow['advertisement_rule']]
+        key = (ad['scope']['entity'], ad['scope']['temporal'])
+        ids = {a['id'] for a in workflow['actions']}
+        scoped_actions.setdefault(key, set()).update(ids)
+        fallback = workflow.get('compliant_fallback')
+        if fallback and fallback not in ids:
+            diagnostics.append(diagnostic('BROKEN_ACTION_REFERENCE', 'exact', 'error', [ad], {},
+                {'workflow': workflow['id'], 'missing_fallback_action': fallback}))
+    for rule in contract['rules']:
+        key = (rule['scope']['entity'], rule['scope']['temporal'])
+        for field in ('forbid_action', 'allow_action'):
+            if field in rule and key in scoped_actions and rule[field] not in scoped_actions[key]:
+                diagnostics.append(diagnostic('BROKEN_ACTION_REFERENCE', 'exact', 'error', [rule], {},
+                    {'field': field, 'missing_action': rule[field], 'scope': rule['scope']}))
     return diagnostics
 
 
@@ -296,6 +341,10 @@ def check_obligations(contract):
                 key = (rule['scope']['entity'], rule['scope']['temporal'], rule['effect']['literal'])
                 groups.setdefault(key, []).append(rule)
         for key, rules in groups.items():
+            unresolved = [r for r in contract['rules'] if 'effect' in r and activation_status(r, context) == 'unknown' and (r['scope']['entity'], r['scope']['temporal'], r['effect']['literal']) == key]
+            if unresolved:
+                # Unknown applicability can change hierarchy; do not prove a conflict from a guessed effective set.
+                continue
             # Explicit permissions can override a lower-priority prohibition of
             # the same literal/value, but never require that action to occur.
             effective = []
@@ -358,8 +407,14 @@ def workflow_analysis(contract, manifest, runtime):
     for workflow in contract.get('workflows', []):
         for context in contract['contexts']:
             advertised = by_id[workflow['advertisement_rule']]
-            if not active(advertised, context) or not matches(workflow.get('when', {}), context.get('facts', {})):
+            if not active(advertised, context):
                 continue
+            condition = condition_status(workflow.get('when', {}), context.get('facts', {}))
+            if condition != 'true':
+                if condition == 'unknown':
+                    diagnostics.append(diagnostic('UNRESOLVED_ACTIVATION', 'semantic_warning', 'warning', [advertised], context, {'workflow': workflow['id'], 'missing_facts': sorted(set(workflow.get('when', {})) - set(context.get('facts', {})))}))
+                continue
+            unknown_policy = [r for r in contract['rules'] if activation_status(r, context) == 'unknown' and r['scope'] == advertised['scope'] and any(k in r for k in ('forbid_action', 'allow_action'))]
             applicable = [r for r in contract['rules'] if active(r, context) and r['scope'] == advertised['scope']]
             restrictions = [r for r in applicable if r.get('forbid_action') and not any(
                 p.get('allow_action') == r['forbid_action'] and p['priority'] > r['priority'] for p in applicable)]
@@ -375,6 +430,8 @@ def workflow_analysis(contract, manifest, runtime):
                     forbidden.add(action['id'])
                     unavailable.append({'action': action['id'], 'tool': call['tool']})
             result = explore(workflow, forbidden, max_steps)
+            if unknown_policy:
+                result.update({'status': 'unknown', 'reason': 'unresolved_activation', 'candidate_path': result['goal_path'], 'goal_path': None, 'fallback_path': None, 'search_exhaustive': False})
             result.update({'workflow': workflow['id'], 'context_id': context['id'], 'unavailable_actions': unavailable,
                            'resolved_restriction_ids': [r['id'] for r in restrictions],
                            'compliant_fallback_reachable': result['fallback_path'] is not None,
@@ -386,7 +443,7 @@ def workflow_analysis(contract, manifest, runtime):
                     ['Tool IDs and argument names are checked against the supplied manifest; no tool is executed.']))
             if result['status'] == 'reachable':
                 continue
-            code = 'PLAN_BOUND_EXHAUSTED' if result['status'] == 'unknown' else ('UNSUPPORTED_WORKFLOW' if result['fallback_path'] is not None else 'MISSING_FALLBACK_PATH')
+            code = 'WORKFLOW_ACTIVATION_UNKNOWN' if unknown_policy else ('PLAN_BOUND_EXHAUSTED' if result['status'] == 'unknown' else ('UNSUPPORTED_WORKFLOW' if result['fallback_path'] is not None else 'MISSING_FALLBACK_PATH'))
             diagnostics.append(diagnostic(code, 'model_based', 'warning', [advertised] + restrictions, context,
                 {k: v for k, v in result.items() if k != 'graph'},
                 ['Closed-world deterministic finite boolean-state actions; only listed actions exist.',
@@ -408,6 +465,10 @@ def check_clauses(contract):
                 key = (rule['scope']['entity'], rule['scope']['temporal'])
                 groups.setdefault(key, []).append(rule)
         for scope, rules in groups.items():
+            unresolved = [r for r in contract['rules'] if 'clause' in r and activation_status(r, context) == 'unknown' and (r['scope']['entity'], r['scope']['temporal']) == scope]
+            if unresolved:
+                checks.append({'context_id': context['id'], 'scope': dict(zip(('entity', 'temporal'), scope)), 'rule_ids': [r['id'] for r in rules + unresolved], 'status': 'unknown', 'reason': 'unresolved_activation'})
+                continue
             core = checked_core(rules)
             result = core['result']
             checks.append({'context_id': context['id'], 'scope': dict(zip(('entity', 'temporal'), scope)),
@@ -425,6 +486,12 @@ def check_clauses(contract):
 def lint(contract, manifest, runtime, root):
     validate(contract, manifest, runtime, root)
     diagnostics = check_references(contract, manifest)
+    for context in contract['contexts']:
+        for rule in contract['rules']:
+            if activation_status(rule, context) == 'unknown':
+                conditions = [rule.get('when', {})] + rule.get('exceptions', [])
+                missing = sorted({k for condition in conditions for k in condition if k not in context.get('facts', {})})
+                diagnostics.append(diagnostic('UNRESOLVED_ACTIVATION', 'semantic_warning', 'warning', [rule], context, {'missing_facts': missing, 'binding_interpretation_skipped': True}, ['Missing conditions/exception facts can change applicability; no closed-world assumption is made.']))
     interpretation = contract.get('interpretation', {})
     if interpretation.get('untranslated_line_count', 0) or interpretation.get('excluded_candidate_ids'):
         warning = diagnostic('INCOMPLETE_SOURCE_COVERAGE', 'semantic_warning', 'warning', [], {},
@@ -451,7 +518,7 @@ def lint(contract, manifest, runtime, root):
         incomplete_reasons.append('source_coverage')
     if any(d['code'] in ('PLAN_BOUND_EXHAUSTED', 'SOLVER_BOUND_EXHAUSTED') for d in diagnostics):
         incomplete_reasons.append('search_bounds')
-    if any(d['code'] == 'SEMANTIC_REVIEW_NEEDED' for d in diagnostics):
+    if any(d['class'] == 'semantic_warning' and d['code'] != 'INCOMPLETE_SOURCE_COVERAGE' for d in diagnostics):
         incomplete_reasons.append('semantic_review')
     return {'version': 1, 'contract': contract, 'diagnostics': diagnostics, 'resource_checks': checks, 'workflow_checks': workflow_checks, 'constraint_checks': constraint_checks,
             'coverage': {'translation': 'declared_only', 'incomplete': bool(incomplete_reasons), 'incomplete_reasons': incomplete_reasons, 'interpretation': interpretation, 'context_count': len(contract['contexts']),

@@ -126,7 +126,7 @@ def counterexample_explorer(bundle, workflow_id=None, context_id=None):
         if not matches:
             raise ContractError('No active workflow matches the requested ID/context.')
         return {'workflows': matches, 'notice': report['analysis_notice']}
-    from .engine import active
+    from .engine import active, activation_status
     tables = []
     for context in report['contract']['contexts']:
         if context_id is not None and context['id'] != context_id:
@@ -137,6 +137,10 @@ def counterexample_explorer(bundle, workflow_id=None, context_id=None):
                 key = (rule['scope']['entity'], rule['scope']['temporal'])
                 groups.setdefault(key, []).append(rule)
         for scope, rules in groups.items():
+            unresolved = [r for r in report['contract']['rules'] if 'clause' in r and activation_status(r, context) == 'unknown' and (r['scope']['entity'], r['scope']['temporal']) == scope]
+            if unresolved:
+                tables.append({'context_id': context['id'], 'scope': dict(zip(('entity', 'temporal'), scope)), 'rule_ids': [r['id'] for r in rules + unresolved], 'status': 'unknown', 'reason': 'unresolved_activation', 'rows': [], 'variables': [], 'truncated': False})
+                continue
             tables.append({'context_id': context['id'], 'scope': dict(zip(('entity', 'temporal'), scope)),
                            'rule_ids': [r['id'] for r in rules], **truth_table([r['clause'] for r in rules])})
     return {'truth_tables': tables, 'resource_checks': report['resource_checks'], 'notice': report['analysis_notice']}
