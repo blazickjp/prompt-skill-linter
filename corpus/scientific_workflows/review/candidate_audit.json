@@ -1,0 +1,421 @@
+{
+  "kind": "offline_source_and_transition_audit",
+  "runtime_operations": "None. Only standard-library JSON/text validation and finite set transition simulation.",
+  "source_checks": [
+    {
+      "clause_id": "scanpy-count-input",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "scanpy-independent-representations",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "scanpy-hvg-input",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "scanpy-marker-input",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "scanpy-de-design",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "scanpy-integration-effects",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "scanpy-backed",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "scanpy-r-conversion",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "scanpy-tool-preference",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "anndata-copy-counts",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "anndata-raw-snapshot",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "scvi-scvi-input",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "scvi-sysvi-input",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "scvi-preflight",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "scvi-register-train",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "scvi-count-failure",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "scvi-registration-invalidation",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "writing-advertisement",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "writing-confidentiality",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "writing-no-fabrication",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "writing-human-evidence",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "writing-intake",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "writing-human-reverification",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "writing-outline",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "writing-reference-boundary",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "writing-ai-disclosure",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "writing-optional-displays",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "writing-human-approval",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "citation-enrichment",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "citation-untrusted-metadata",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "citation-validation",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "citation-diagram-conditional",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "literature-search",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "literature-prisma",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "literature-screening",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "literature-citation-support",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "schematics-restricted-prompt",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "schematics-generation",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "schematics-review-not-proof",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "schematics-flow-accounting",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "scvi-sysvi-specialized",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "writing-scaffold",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "writing-local-audits",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "writing-cli-scaffold-boundary",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "citation-registration-boundary",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "literature-local-support",
+      "quote_exact": true,
+      "file_hash_exact": true
+    },
+    {
+      "clause_id": "schematics-bounded-loop",
+      "quote_exact": true,
+      "file_hash_exact": true
+    }
+  ],
+  "source_check_summary": {
+    "total": 47,
+    "exact_quotes": 47,
+    "exact_file_hashes": 47
+  },
+  "adversarial_traces": [
+    {
+      "case_id": "KD-LR-04",
+      "probe": "repeat_first_generation",
+      "trace": [
+        {
+          "action": "compare_citations_claims_to_local_sources",
+          "enabled": true,
+          "missing": []
+        },
+        {
+          "action": "synthesize_narrative_review",
+          "enabled": true,
+          "missing": []
+        },
+        {
+          "action": "generate_first_png",
+          "enabled": true,
+          "missing": []
+        },
+        {
+          "action": "generate_first_png",
+          "enabled": true,
+          "missing": []
+        },
+        {
+          "action": "generate_first_png",
+          "enabled": true,
+          "missing": []
+        }
+      ],
+      "all_actions_enabled": true,
+      "goal_met": false,
+      "final_state": [
+        "actual_reports_available",
+        "first_png_saved",
+        "first_review_below_threshold",
+        "generation_success_declared",
+        "local_python_requests",
+        "local_source_comparison_complete",
+        "markdown_available",
+        "network_available",
+        "openrouter_credential_available",
+        "png_saved",
+        "public_prompt_authorized",
+        "review_text_ready",
+        "search_extraction_available",
+        "second_review_below_threshold"
+      ],
+      "generation_action_count": 3
+    },
+    {
+      "case_id": "KD-LR-04",
+      "probe": "replenish_second_generation",
+      "trace": [
+        {
+          "action": "compare_citations_claims_to_local_sources",
+          "enabled": true,
+          "missing": []
+        },
+        {
+          "action": "synthesize_narrative_review",
+          "enabled": true,
+          "missing": []
+        },
+        {
+          "action": "generate_first_png",
+          "enabled": true,
+          "missing": []
+        },
+        {
+          "action": "record_first_low_review",
+          "enabled": true,
+          "missing": []
+        },
+        {
+          "action": "generate_second_png",
+          "enabled": true,
+          "missing": []
+        },
+        {
+          "action": "record_second_low_review",
+          "enabled": true,
+          "missing": []
+        },
+        {
+          "action": "record_first_low_review",
+          "enabled": true,
+          "missing": []
+        },
+        {
+          "action": "generate_second_png",
+          "enabled": true,
+          "missing": []
+        }
+      ],
+      "all_actions_enabled": true,
+      "goal_met": false,
+      "final_state": [
+        "actual_reports_available",
+        "first_png_saved",
+        "first_review_below_threshold",
+        "first_review_recorded",
+        "generation_success_declared",
+        "local_python_requests",
+        "local_source_comparison_complete",
+        "markdown_available",
+        "max_iterations_reached",
+        "network_available",
+        "openrouter_credential_available",
+        "png_saved",
+        "public_prompt_authorized",
+        "review_text_ready",
+        "search_extraction_available",
+        "second_png_saved",
+        "second_review_below_threshold"
+      ],
+      "generation_action_count": 3
+    },
+    {
+      "case_id": "KD-WR-01",
+      "probe": "approve_stale_prose",
+      "trace": [
+        {
+          "action": "create_evidence_outline",
+          "enabled": true,
+          "missing": []
+        },
+        {
+          "action": "draft_manuscript",
+          "enabled": true,
+          "missing": []
+        },
+        {
+          "action": "human_reverify_changed_prose",
+          "enabled": true,
+          "missing": []
+        },
+        {
+          "action": "run_local_consistency_audits",
+          "enabled": true,
+          "missing": []
+        },
+        {
+          "action": "draft_manuscript",
+          "enabled": true,
+          "missing": []
+        },
+        {
+          "action": "human_approve_ready_and_remove_banner",
+          "enabled": true,
+          "missing": []
+        }
+      ],
+      "all_actions_enabled": true,
+      "goal_met": true,
+      "final_state": [
+        "banner_removed",
+        "changed_prose_human_verified",
+        "draft_inputs_available",
+        "draft_prose_ready",
+        "evidence_human_verified",
+        "fresh_output_directory_selectable",
+        "human_available",
+        "local_audits_pass",
+        "local_cli_available",
+        "metadata_checks_pass",
+        "reverification_due",
+        "submission_ready_true",
+        "venue_declarations_complete",
+        "verified_outline_ready"
+      ],
+      "generation_action_count": 0
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "arm": "native_plain",
+  "completed_at": "2026-10-10T16:59:13.550038+00:00",
+  "neutral_cases_path": "/workspace/shared/kdense-testbed/neutral-cases.json",
+  "freeze_sha256": "5961623150fd553c830d4915c940dab70a3d8b9aa98e512204e9f79e5811526b",
+  "coactivation_excerpts_path": "/workspace/shared/kdense-testbed/coactivation-excerpts.json",
+  "coactivation_excerpts_sha256": "4c2c2c52c98003eeb62106f35059c849e0f3d0cb877f4a84ad53d0f642bdfbd5",
+  "source_commit": "92ace75ac21efe19a620434e0ca4e356081fe807",
+  "source_hashes": {
+    "skills/anndata/SKILL.md": "bd953fff1771c5a32aad1892ca3ea2ca41e97804041bc5e36af55a155f5e199c",
+    "skills/citation-management/SKILL.md": "44d04609133c295dbd65eb0b9813579d7a397200f58aac8307cfcf9389f28477",
+    "skills/literature-review/SKILL.md": "ab8a895458cc9d4cf5eb0555e941081c09c75cb829b48b3b13964bd97cdf45b9",
+    "skills/literature-review/references/core_workflow.md": "bdc54633630056f7d94400e36854adecccafbbc09b891e9930d5515b26c9ce13",
+    "skills/scanpy/SKILL.md": "7f11e14c6b7d98034329dd518dda625746bd2ea1d743e406b3835f695c79439e",
+    "skills/scientific-schematics/SKILL.md": "3a3bb9a5c60785c46401f8bad22af551c550d7be37e824aad14e49a430f3c220",
+    "skills/scientific-writing/SKILL.md": "28656c6ea70c01ab15977891814a421807f83504d4f6297ff1cd0e9067ec90ea",
+    "skills/scientific-writing/references/cli_reference.md": "bb4eb53a782b23ab6059201a817098227e55df839675cda38656b6f4709eaed4",
+    "skills/scientific-writing/references/evidence_workflow.md": "0ced09190075f8c2a357daa4c20d253d573b0d6b0f4633609f87c0776ed4d4f2",
+    "skills/scvi-tools/SKILL.md": "1b152d2613894767f8b451bab5ef351ab7d838f285139ae6af7bc0e524631958",
+    "skills/scvi-tools/references/models-specialized.md": "509ca420cc735169a14ee22ada12f9f3d28e1df22a811373906b430204e7ab55"
+  },
+  "prompt_path": "/workspace/shared/kdense-model/plain_prompt.txt",
+  "prompt_sha256": "ab4ab9df5bc0f0ba444554104138367d8023c15663e818a229ff8236eb704c08",
+  "prediction_path": "/workspace/shared/kdense-model/plain_predictions.json",
+  "predictions_sha256": "14f06fec8bb63767195b038302827b593b3447450a61b4c0c30ad09fcecebe3b",
+  "read_boundary": "Neutral cases, coactivation excerpts and pinned source documentation only. Directory names were enumerated for discovery; tree.json and label/review/extraction/checker files were not read.",
+  "instrumentation": {
+    "model": null,
+    "tokens": null,
+    "cost": null,
+    "latency_seconds": null
+  },
+  "validation": "Artifact schema, unique and complete case order, frozen case hash and quoted source spans checked locally using evaluator-authored Python. This is output-integrity validation only, not the product mechanical checker."
+}

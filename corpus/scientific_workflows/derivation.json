@@ -1,0 +1,728 @@
+{
+  "stage": "post_independent_audit_pre_checker",
+  "original_extraction_freeze_sha256": "1e9a94d35b4862ab27c5679c777130a63d141f073a327a7dfdbbf4b1f7d73a45",
+  "candidate_status_retained": true,
+  "changes": [
+    {
+      "id": "KD-LR-01",
+      "original_bundle_sha256": "2225355e6ef1ad681072cabd54f4a9904a8fe02a6571fb0ec76bbc30aec7642e",
+      "changes": [
+        {
+          "path": "/contract/assumptions",
+          "before": [
+            "Native model extraction, not product provider execution or human gold. Independent labels and checker predictions were not consulted.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "Only declared scenario capabilities and outcomes are modeled. No repository scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"A narrative review's relevant full reports, completed search records and extraction notes are locally available; citation identity and claim support can be checked against actual sources.\", \"Local Python and requests are installed. The artifact is Markdown; no PDF, systematic-review PRISMA figure or journal-specific image requirement applies. Public non-sensitive content only.\", \"No network, OpenRouter credential or AI image-generation service is available; no diagram is requested.\"], \"family\": \"review_diagrams\", \"id\": \"KD-LR-01\", \"origin\": \"synthetic_control\", \"scenario\": \"Finish a text-only narrative literature review; a conceptual diagram is optional.\", \"selection_rationale\": \"Test optional dependency scope.\"}"
+          ],
+          "after": [
+            "ORIGINAL EXTRACTION PROVENANCE ONLY: Native model extraction, not provider execution or human gold; frozen originals were prepared without reference labels/checker results. This derivative incorporates independent source/transition audit and the integrator has seen provisional labels.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "DERIVATIVE SCOPE: Scenario facts plus separately named possible-success/optimistic abstractions are modeled. No scientific scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"A narrative review's relevant full reports, completed search records and extraction notes are locally available; citation identity and claim support can be checked against actual sources.\", \"Local Python and requests are installed. The artifact is Markdown; no PDF, systematic-review PRISMA figure or journal-specific image requirement applies. Public non-sensitive content only.\", \"No network, OpenRouter credential or AI image-generation service is available; no diagram is requested.\"], \"family\": \"review_diagrams\", \"id\": \"KD-LR-01\", \"origin\": \"synthetic_control\", \"scenario\": \"Finish a text-only narrative literature review; a conceptual diagram is optional.\", \"selection_rationale\": \"Test optional dependency scope.\"}"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KD-LR-02",
+      "original_bundle_sha256": "a3134e6cf9cc5b09514d6c5f3ebc53c71a504ee1585b0faa664baa843777e3bb",
+      "changes": [
+        {
+          "path": "/contract/assumptions",
+          "before": [
+            "Native model extraction, not product provider execution or human gold. Independent labels and checker predictions were not consulted.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "Only declared scenario capabilities and outcomes are modeled. No repository scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"A narrative review's relevant full reports, completed search records and extraction notes are locally available; citation identity and claim support can be checked against actual sources.\", \"Local Python and requests are installed. The artifact is Markdown; no PDF, systematic-review PRISMA figure or journal-specific image requirement applies. Public non-sensitive content only.\", \"No network or OpenRouter credential is available. Bundled OpenRouter generation is a required requested deliverable and cannot be replaced with another drawing method.\"], \"family\": \"review_diagrams\", \"id\": \"KD-LR-02\", \"origin\": \"deployment_probe\", \"scenario\": \"Finish the same review including a PNG conceptual schematic generated by the bundled OpenRouter helper.\", \"selection_rationale\": \"Test unavailable service only when branch is explicitly required.\"}"
+          ],
+          "after": [
+            "ORIGINAL EXTRACTION PROVENANCE ONLY: Native model extraction, not provider execution or human gold; frozen originals were prepared without reference labels/checker results. This derivative incorporates independent source/transition audit and the integrator has seen provisional labels.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "DERIVATIVE SCOPE: Scenario facts plus separately named possible-success/optimistic abstractions are modeled. No scientific scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"A narrative review's relevant full reports, completed search records and extraction notes are locally available; citation identity and claim support can be checked against actual sources.\", \"Local Python and requests are installed. The artifact is Markdown; no PDF, systematic-review PRISMA figure or journal-specific image requirement applies. Public non-sensitive content only.\", \"No network or OpenRouter credential is available. Bundled OpenRouter generation is a required requested deliverable and cannot be replaced with another drawing method.\"], \"family\": \"review_diagrams\", \"id\": \"KD-LR-02\", \"origin\": \"deployment_probe\", \"scenario\": \"Finish the same review including a PNG conceptual schematic generated by the bundled OpenRouter helper.\", \"selection_rationale\": \"Test unavailable service only when branch is explicitly required.\"}",
+            "AUDITED DERIVATIVE: this is one invocation of the documented generator. First attempt and first review are one-shot; deliberate new runs are outside the modeled case and cannot replenish its attempt tokens.",
+            "AUDITED DERIVATIVE: unstated public-prompt authorization and stochastic success are optimistically overapproximated only to isolate the decisive missing-network/key blocker. They are not known absent; restoring network/key is not a certified repair or authorization."
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-lr-02-workflow/actions/generate_first_png/adds",
+          "before": [
+            "first_png_saved",
+            "png_saved"
+          ],
+          "after": [
+            "first_png_saved",
+            "png_saved",
+            "first_review_pending"
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-lr-02-workflow/actions/generate_first_png/removes",
+          "before": [],
+          "after": [
+            "first_attempt_available"
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-lr-02-workflow/actions/generate_first_png/requires",
+          "before": [
+            "review_text_ready",
+            "local_python_requests",
+            "network_available",
+            "openrouter_credential_available",
+            "public_prompt_authorized",
+            "generation_success_declared"
+          ],
+          "after": [
+            "review_text_ready",
+            "local_python_requests",
+            "network_available",
+            "openrouter_credential_available",
+            "first_attempt_available"
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-lr-02-workflow/initial",
+          "before": [
+            "actual_reports_available",
+            "search_extraction_available",
+            "local_python_requests",
+            "markdown_available"
+          ],
+          "after": [
+            "actual_reports_available",
+            "search_extraction_available",
+            "local_python_requests",
+            "markdown_available",
+            "first_attempt_available"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KD-LR-03",
+      "original_bundle_sha256": "4c25a882a108f851e6e0e1540faa10538967fa1d78a8903caf2942848282e4cf",
+      "changes": [
+        {
+          "path": "/contract/assumptions",
+          "before": [
+            "Native model extraction, not product provider execution or human gold. Independent labels and checker predictions were not consulted.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "Only declared scenario capabilities and outcomes are modeled. No repository scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"A narrative review's relevant full reports, completed search records and extraction notes are locally available; citation identity and claim support can be checked against actual sources.\", \"Local Python and requests are installed. The artifact is Markdown; no PDF, systematic-review PRISMA figure or journal-specific image requirement applies. Public non-sensitive content only.\", \"Network, OpenRouter credential and permission for the public prompt are provided. First generation succeeds. Automated review is unavailable. The user accepts an unchecked draft and log; scientific acceptance is not requested.\"], \"family\": \"review_diagrams\", \"id\": \"KD-LR-03\", \"origin\": \"synthetic_control\", \"scenario\": \"Deliver the review plus the latest successful schematic draft and honest review-status log.\", \"selection_rationale\": \"Exercise documented review-unavailable partial-output semantics.\"}"
+          ],
+          "after": [
+            "ORIGINAL EXTRACTION PROVENANCE ONLY: Native model extraction, not provider execution or human gold; frozen originals were prepared without reference labels/checker results. This derivative incorporates independent source/transition audit and the integrator has seen provisional labels.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "DERIVATIVE SCOPE: Scenario facts plus separately named possible-success/optimistic abstractions are modeled. No scientific scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"A narrative review's relevant full reports, completed search records and extraction notes are locally available; citation identity and claim support can be checked against actual sources.\", \"Local Python and requests are installed. The artifact is Markdown; no PDF, systematic-review PRISMA figure or journal-specific image requirement applies. Public non-sensitive content only.\", \"Network, OpenRouter credential and permission for the public prompt are provided. First generation succeeds. Automated review is unavailable. The user accepts an unchecked draft and log; scientific acceptance is not requested.\"], \"family\": \"review_diagrams\", \"id\": \"KD-LR-03\", \"origin\": \"synthetic_control\", \"scenario\": \"Deliver the review plus the latest successful schematic draft and honest review-status log.\", \"selection_rationale\": \"Exercise documented review-unavailable partial-output semantics.\"}",
+            "AUDITED DERIVATIVE: this is one invocation of the documented generator. First attempt and first review are one-shot; deliberate new runs are outside the modeled case and cannot replenish its attempt tokens."
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-lr-03-workflow/actions/generate_first_png/adds",
+          "before": [
+            "first_png_saved",
+            "png_saved"
+          ],
+          "after": [
+            "first_png_saved",
+            "png_saved",
+            "first_review_pending"
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-lr-03-workflow/actions/generate_first_png/removes",
+          "before": [],
+          "after": [
+            "first_attempt_available"
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-lr-03-workflow/actions/generate_first_png/requires",
+          "before": [
+            "review_text_ready",
+            "local_python_requests",
+            "network_available",
+            "openrouter_credential_available",
+            "public_prompt_authorized",
+            "generation_success_declared"
+          ],
+          "after": [
+            "review_text_ready",
+            "local_python_requests",
+            "network_available",
+            "openrouter_credential_available",
+            "public_prompt_authorized",
+            "generation_success_declared",
+            "first_attempt_available"
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-lr-03-workflow/actions/record_unavailable_review/removes",
+          "before": [],
+          "after": [
+            "first_review_pending"
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-lr-03-workflow/actions/record_unavailable_review/requires",
+          "before": [
+            "first_png_saved",
+            "review_unavailable_declared"
+          ],
+          "after": [
+            "first_png_saved",
+            "review_unavailable_declared",
+            "first_review_pending"
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-lr-03-workflow/initial",
+          "before": [
+            "actual_reports_available",
+            "search_extraction_available",
+            "local_python_requests",
+            "markdown_available",
+            "network_available",
+            "openrouter_credential_available",
+            "public_prompt_authorized",
+            "generation_success_declared",
+            "review_unavailable_declared"
+          ],
+          "after": [
+            "actual_reports_available",
+            "search_extraction_available",
+            "local_python_requests",
+            "markdown_available",
+            "network_available",
+            "openrouter_credential_available",
+            "public_prompt_authorized",
+            "generation_success_declared",
+            "review_unavailable_declared",
+            "first_attempt_available"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KD-LR-04",
+      "original_bundle_sha256": "a2d39fb7bc2bdcbc60b9bce43d651873b7a1cecc552f46401e6eacbb2721a0d1",
+      "changes": [
+        {
+          "path": "/contract/assumptions",
+          "before": [
+            "Native model extraction, not product provider execution or human gold. Independent labels and checker predictions were not consulted.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "Only declared scenario capabilities and outcomes are modeled. No repository scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"A narrative review's relevant full reports, completed search records and extraction notes are locally available; citation identity and claim support can be checked against actual sources.\", \"Local Python and requests are installed. The artifact is Markdown; no PDF, systematic-review PRISMA figure or journal-specific image requirement applies. Public non-sensitive content only.\", \"Network and authenticated services work, but both permitted generations receive below-threshold reviews. No third generation or alternative image is available; uncertified draft does not satisfy the requested outcome.\"], \"family\": \"review_diagrams\", \"id\": \"KD-LR-04\", \"origin\": \"deployment_probe\", \"scenario\": \"Deliver a schematic certified by the automated reviewer as meeting the requested quality threshold.\", \"selection_rationale\": \"Exercise the bounded retry branch without assuming retry can guarantee quality.\"}"
+          ],
+          "after": [
+            "ORIGINAL EXTRACTION PROVENANCE ONLY: Native model extraction, not provider execution or human gold; frozen originals were prepared without reference labels/checker results. This derivative incorporates independent source/transition audit and the integrator has seen provisional labels.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "DERIVATIVE SCOPE: Scenario facts plus separately named possible-success/optimistic abstractions are modeled. No scientific scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"A narrative review's relevant full reports, completed search records and extraction notes are locally available; citation identity and claim support can be checked against actual sources.\", \"Local Python and requests are installed. The artifact is Markdown; no PDF, systematic-review PRISMA figure or journal-specific image requirement applies. Public non-sensitive content only.\", \"Network and authenticated services work, but both permitted generations receive below-threshold reviews. No third generation or alternative image is available; uncertified draft does not satisfy the requested outcome.\"], \"family\": \"review_diagrams\", \"id\": \"KD-LR-04\", \"origin\": \"deployment_probe\", \"scenario\": \"Deliver a schematic certified by the automated reviewer as meeting the requested quality threshold.\", \"selection_rationale\": \"Exercise the bounded retry branch without assuming retry can guarantee quality.\"}",
+            "AUDITED DERIVATIVE: this is one invocation of the documented generator. First attempt and first review are one-shot; deliberate new runs are outside the modeled case and cannot replenish its attempt tokens."
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-lr-04-workflow/actions/generate_first_png/adds",
+          "before": [
+            "first_png_saved",
+            "png_saved"
+          ],
+          "after": [
+            "first_png_saved",
+            "png_saved",
+            "first_review_pending"
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-lr-04-workflow/actions/generate_first_png/removes",
+          "before": [],
+          "after": [
+            "first_attempt_available"
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-lr-04-workflow/actions/generate_first_png/requires",
+          "before": [
+            "review_text_ready",
+            "local_python_requests",
+            "network_available",
+            "openrouter_credential_available",
+            "public_prompt_authorized",
+            "generation_success_declared"
+          ],
+          "after": [
+            "review_text_ready",
+            "local_python_requests",
+            "network_available",
+            "openrouter_credential_available",
+            "public_prompt_authorized",
+            "generation_success_declared",
+            "first_attempt_available"
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-lr-04-workflow/actions/generate_second_png/adds",
+          "before": [
+            "second_png_saved"
+          ],
+          "after": [
+            "second_png_saved",
+            "second_review_pending"
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-lr-04-workflow/actions/record_first_low_review/removes",
+          "before": [],
+          "after": [
+            "first_review_pending"
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-lr-04-workflow/actions/record_first_low_review/requires",
+          "before": [
+            "first_png_saved",
+            "first_review_below_threshold"
+          ],
+          "after": [
+            "first_png_saved",
+            "first_review_below_threshold",
+            "first_review_pending"
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-lr-04-workflow/actions/record_second_low_review/removes",
+          "before": [],
+          "after": [
+            "second_review_pending"
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-lr-04-workflow/actions/record_second_low_review/requires",
+          "before": [
+            "second_png_saved",
+            "second_review_below_threshold"
+          ],
+          "after": [
+            "second_png_saved",
+            "second_review_below_threshold",
+            "second_review_pending"
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-lr-04-workflow/initial",
+          "before": [
+            "actual_reports_available",
+            "search_extraction_available",
+            "local_python_requests",
+            "markdown_available",
+            "network_available",
+            "openrouter_credential_available",
+            "public_prompt_authorized",
+            "generation_success_declared",
+            "first_review_below_threshold",
+            "second_review_below_threshold"
+          ],
+          "after": [
+            "actual_reports_available",
+            "search_extraction_available",
+            "local_python_requests",
+            "markdown_available",
+            "network_available",
+            "openrouter_credential_available",
+            "public_prompt_authorized",
+            "generation_success_declared",
+            "first_review_below_threshold",
+            "second_review_below_threshold",
+            "first_attempt_available"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KD-LR-05",
+      "original_bundle_sha256": "d48d2974d3dd29a7cda194eb330f78698ce0022a5cf2f86603563348d03cdf71",
+      "changes": [
+        {
+          "path": "/contract/assumptions",
+          "before": [
+            "Native model extraction, not product provider execution or human gold. Independent labels and checker predictions were not consulted.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "Only declared scenario capabilities and outcomes are modeled. No repository scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"Figure requirement, credential availability, network access, review type, source access and output format are unspecified.\"], \"family\": \"review_diagrams\", \"id\": \"KD-LR-05\", \"origin\": \"natural\", \"scenario\": \"Use literature-review with scientific-schematics as appropriate to produce a review.\", \"selection_rationale\": \"Observe the branch ambiguity in an intended integration.\"}"
+          ],
+          "after": [
+            "ORIGINAL EXTRACTION PROVENANCE ONLY: Native model extraction, not provider execution or human gold; frozen originals were prepared without reference labels/checker results. This derivative incorporates independent source/transition audit and the integrator has seen provisional labels.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "DERIVATIVE SCOPE: Scenario facts plus separately named possible-success/optimistic abstractions are modeled. No scientific scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"Figure requirement, credential availability, network access, review type, source access and output format are unspecified.\"], \"family\": \"review_diagrams\", \"id\": \"KD-LR-05\", \"origin\": \"natural\", \"scenario\": \"Use literature-review with scientific-schematics as appropriate to produce a review.\", \"selection_rationale\": \"Observe the branch ambiguity in an intended integration.\"}"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KD-SC-01",
+      "original_bundle_sha256": "3f310c207bc3f04c9b5e7581576b2ff5a39cc56e4a0c38f383c3f52692092377",
+      "changes": [
+        {
+          "path": "/contract/assumptions",
+          "before": [
+            "Native model extraction, not product provider execution or human gold. Independent labels and checker predictions were not consulted.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "Only declared scenario capabilities and outcomes are modeled. No repository scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"All named Python packages and selected model dependencies are already installed and compatible with pinned skill versions; CPU, memory, local file access and sufficient training time are available.\", \"Cells/features are unique, batch metadata complete, dataset nondegenerate and QC/feature selection criteria valid. Outcome concerns a mechanically completed model fit/export, not biological validation or convergence guarantees.\", \"Measured unnormalized counts and provenance are available; normalization modifies X only, while layers['counts'] remains available.\"], \"family\": \"single_cell\", \"id\": \"KD-SC-01\", \"origin\": \"synthetic_control\", \"scenario\": \"Preprocess measured RNA counts with Scanpy, preserve counts in AnnData, fit SCVI using the count layer, and export its representation.\", \"selection_rationale\": \"Exercise documented intended coactivation with separate matrix representations.\"}"
+          ],
+          "after": [
+            "ORIGINAL EXTRACTION PROVENANCE ONLY: Native model extraction, not provider execution or human gold; frozen originals were prepared without reference labels/checker results. This derivative incorporates independent source/transition audit and the integrator has seen provisional labels.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "DERIVATIVE SCOPE: Scenario facts plus separately named possible-success/optimistic abstractions are modeled. No scientific scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"All named Python packages and selected model dependencies are already installed and compatible with pinned skill versions; CPU, memory, local file access and sufficient training time are available.\", \"Cells/features are unique, batch metadata complete, dataset nondegenerate and QC/feature selection criteria valid. Outcome concerns a mechanically completed model fit/export, not biological validation or convergence guarantees.\", \"Measured unnormalized counts and provenance are available; normalization modifies X only, while layers['counts'] remains available.\"], \"family\": \"single_cell\", \"id\": \"KD-SC-01\", \"origin\": \"synthetic_control\", \"scenario\": \"Preprocess measured RNA counts with Scanpy, preserve counts in AnnData, fit SCVI using the count layer, and export its representation.\", \"selection_rationale\": \"Exercise documented intended coactivation with separate matrix representations.\"}"
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-sc-01-workflow/actions/fit_scvi/provenance/assumptions",
+          "before": [
+            "Finite declared-state abstraction; does not execute code or verify underlying data/human act.",
+            "Scenario declares mechanical fit success; this is not convergence or biological validation."
+          ],
+          "after": [
+            "Finite declared-state abstraction; does not execute code or verify underlying data/human act.",
+            "Possible mechanical fit is an explicit deterministic abstraction assumption, not observed success or a guarantee supplied by the scenario."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KD-SC-02",
+      "original_bundle_sha256": "1a7901b664a0d846da9190cca94b077c49aa4afc34807193d7c694c986710377",
+      "changes": [
+        {
+          "path": "/contract/assumptions",
+          "before": [
+            "Native model extraction, not product provider execution or human gold. Independent labels and checker predictions were not consulted.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "Only declared scenario capabilities and outcomes are modeled. No repository scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"All named Python packages and selected model dependencies are already installed and compatible with pinned skill versions; CPU, memory, local file access and sufficient training time are available.\", \"Cells/features are unique, batch metadata complete, dataset nondegenerate and QC/feature selection criteria valid. Outcome concerns a mechanically completed model fit/export, not biological validation or convergence guarantees.\", \"Only normalized log1p expression remains. No measured counts or counts layer exist; there is no route to retrieve the originals. Completion must use SCVI, not a substitute model.\"], \"family\": \"single_cell\", \"id\": \"KD-SC-02\", \"origin\": \"deployment_probe\", \"scenario\": \"Fit SCVI and export its representation using the only available RNA dataset.\", \"selection_rationale\": \"Assess a bounded missing-input deployment.\"}"
+          ],
+          "after": [
+            "ORIGINAL EXTRACTION PROVENANCE ONLY: Native model extraction, not provider execution or human gold; frozen originals were prepared without reference labels/checker results. This derivative incorporates independent source/transition audit and the integrator has seen provisional labels.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "DERIVATIVE SCOPE: Scenario facts plus separately named possible-success/optimistic abstractions are modeled. No scientific scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"All named Python packages and selected model dependencies are already installed and compatible with pinned skill versions; CPU, memory, local file access and sufficient training time are available.\", \"Cells/features are unique, batch metadata complete, dataset nondegenerate and QC/feature selection criteria valid. Outcome concerns a mechanically completed model fit/export, not biological validation or convergence guarantees.\", \"Only normalized log1p expression remains. No measured counts or counts layer exist; there is no route to retrieve the originals. Completion must use SCVI, not a substitute model.\"], \"family\": \"single_cell\", \"id\": \"KD-SC-02\", \"origin\": \"deployment_probe\", \"scenario\": \"Fit SCVI and export its representation using the only available RNA dataset.\", \"selection_rationale\": \"Assess a bounded missing-input deployment.\"}"
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-sc-02-workflow/actions/fit_scvi/provenance/assumptions",
+          "before": [
+            "Finite declared-state abstraction; does not execute code or verify underlying data/human act.",
+            "Scenario declares mechanical fit success; this is not convergence or biological validation."
+          ],
+          "after": [
+            "Finite declared-state abstraction; does not execute code or verify underlying data/human act.",
+            "Possible mechanical fit is an explicit deterministic abstraction assumption, not observed success or a guarantee supplied by the scenario."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KD-SC-03",
+      "original_bundle_sha256": "22ac5953bfc23faa1d16422c37c544bc5af9faaecf4dcaceb8e19c9f9c580bc6",
+      "changes": [
+        {
+          "path": "/contract/assumptions",
+          "before": [
+            "Native model extraction, not product provider execution or human gold. Independent labels and checker predictions were not consulted.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "Only declared scenario capabilities and outcomes are modeled. No repository scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"All named Python packages and selected model dependencies are already installed and compatible with pinned skill versions; CPU, memory, local file access and sufficient training time are available.\", \"Cells/features are unique, batch metadata complete, dataset nondegenerate and QC/feature selection criteria valid. Outcome concerns a mechanically completed model fit/export, not biological validation or convergence guarantees.\", \"The SysVI-specific input is normalized log1p expression with known provenance and complete system metadata. No requirement to use SCVI.\"], \"family\": \"single_cell\", \"id\": \"KD-SC-03\", \"origin\": \"synthetic_control\", \"scenario\": \"Fit SysVI for substantial cross-system effects using normalized log1p expression and export its representation.\", \"selection_rationale\": \"Exercise the explicit model-specific representation exception.\"}"
+          ],
+          "after": [
+            "ORIGINAL EXTRACTION PROVENANCE ONLY: Native model extraction, not provider execution or human gold; frozen originals were prepared without reference labels/checker results. This derivative incorporates independent source/transition audit and the integrator has seen provisional labels.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "DERIVATIVE SCOPE: Scenario facts plus separately named possible-success/optimistic abstractions are modeled. No scientific scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"All named Python packages and selected model dependencies are already installed and compatible with pinned skill versions; CPU, memory, local file access and sufficient training time are available.\", \"Cells/features are unique, batch metadata complete, dataset nondegenerate and QC/feature selection criteria valid. Outcome concerns a mechanically completed model fit/export, not biological validation or convergence guarantees.\", \"The SysVI-specific input is normalized log1p expression with known provenance and complete system metadata. No requirement to use SCVI.\"], \"family\": \"single_cell\", \"id\": \"KD-SC-03\", \"origin\": \"synthetic_control\", \"scenario\": \"Fit SysVI for substantial cross-system effects using normalized log1p expression and export its representation.\", \"selection_rationale\": \"Exercise the explicit model-specific representation exception.\"}"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KD-SC-04",
+      "original_bundle_sha256": "3ecbf1344c8a9466261bc39a100f1194e504e98aae94f786bcdc5d23569c62b7",
+      "changes": [
+        {
+          "path": "/contract/assumptions",
+          "before": [
+            "Native model extraction, not product provider execution or human gold. Independent labels and checker predictions were not consulted.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "Only declared scenario capabilities and outcomes are modeled. No repository scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"Only the public skill documentation and the task description are known. Data provenance, available layers, chosen model, installed dependencies, and runtime resources are unspecified.\"], \"family\": \"single_cell\", \"id\": \"KD-SC-04\", \"origin\": \"natural\", \"scenario\": \"A user requests Scanpy preprocessing followed by scvi-tools integration; no model or available data representation is specified.\", \"selection_rationale\": \"Observe intended workflow without inventing deployment capabilities.\"}"
+          ],
+          "after": [
+            "ORIGINAL EXTRACTION PROVENANCE ONLY: Native model extraction, not provider execution or human gold; frozen originals were prepared without reference labels/checker results. This derivative incorporates independent source/transition audit and the integrator has seen provisional labels.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "DERIVATIVE SCOPE: Scenario facts plus separately named possible-success/optimistic abstractions are modeled. No scientific scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"Only the public skill documentation and the task description are known. Data provenance, available layers, chosen model, installed dependencies, and runtime resources are unspecified.\"], \"family\": \"single_cell\", \"id\": \"KD-SC-04\", \"origin\": \"natural\", \"scenario\": \"A user requests Scanpy preprocessing followed by scvi-tools integration; no model or available data representation is specified.\", \"selection_rationale\": \"Observe intended workflow without inventing deployment capabilities.\"}"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KD-WR-01",
+      "original_bundle_sha256": "95d122afaee56dd4cac1d85c7b21cd56d503528baa05327b9fa6c69aaaa476d3",
+      "changes": [
+        {
+          "path": "/contract/assumptions",
+          "before": [
+            "Native model extraction, not product provider execution or human gold. Independent labels and checker predictions were not consulted.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "Only declared scenario capabilities and outcomes are modeled. No repository scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"Local Python 3.11+ and all documented offline scientific-writing CLIs are available. The requested artifact contains public, non-sensitive material only.\", \"Venue policy, reporting coverage, authorship, declarations and results are complete and accurate unless otherwise stated. No actual submission or external transmission is requested.\", \"An accountable human has opened every source, checked each exact claim and locator, recorded identity/time, and will reverify changed wording and perform final submission_ready/banner decisions.\"], \"family\": \"evidence_writing\", \"id\": \"KD-WR-01\", \"origin\": \"synthetic_control\", \"scenario\": \"Prepare a submission-ready scientific manuscript from citation-management metadata and a verified evidence record, with final approval performed by the accountable human.\", \"selection_rationale\": \"Test full workflow with independently supplied human gates.\"}"
+          ],
+          "after": [
+            "ORIGINAL EXTRACTION PROVENANCE ONLY: Native model extraction, not provider execution or human gold; frozen originals were prepared without reference labels/checker results. This derivative incorporates independent source/transition audit and the integrator has seen provisional labels.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "DERIVATIVE SCOPE: Scenario facts plus separately named possible-success/optimistic abstractions are modeled. No scientific scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"Local Python 3.11+ and all documented offline scientific-writing CLIs are available. The requested artifact contains public, non-sensitive material only.\", \"Venue policy, reporting coverage, authorship, declarations and results are complete and accurate unless otherwise stated. No actual submission or external transmission is requested.\", \"An accountable human has opened every source, checked each exact claim and locator, recorded identity/time, and will reverify changed wording and perform final submission_ready/banner decisions.\"], \"family\": \"evidence_writing\", \"id\": \"KD-WR-01\", \"origin\": \"synthetic_control\", \"scenario\": \"Prepare a submission-ready scientific manuscript from citation-management metadata and a verified evidence record, with final approval performed by the accountable human.\", \"selection_rationale\": \"Test full workflow with independently supplied human gates.\"}",
+            "AUDITED DERIVATIVE: wording changes invalidate current verification, local audits and approval; current human reverification plus fresh audits are required again. These are declared Boolean attestations, not identity or hash validation."
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-wr-01-workflow/actions/draft_manuscript/adds",
+          "before": [
+            "draft_prose_ready",
+            "reverification_due"
+          ],
+          "after": [
+            "banner_retained",
+            "draft_prose_ready",
+            "reverification_due",
+            "submission_ready_false"
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-wr-01-workflow/actions/draft_manuscript/removes",
+          "before": [],
+          "after": [
+            "banner_removed",
+            "changed_prose_human_verified",
+            "local_audits_pass",
+            "submission_ready_true"
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-wr-01-workflow/actions/human_approve_ready_and_remove_banner/removes",
+          "before": [],
+          "after": [
+            "banner_retained",
+            "submission_ready_false"
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-wr-01-workflow/actions/run_local_consistency_audits/requires",
+          "before": [
+            "local_cli_available",
+            "draft_prose_ready",
+            "metadata_checks_pass"
+          ],
+          "after": [
+            "changed_prose_human_verified",
+            "draft_prose_ready",
+            "local_cli_available",
+            "metadata_checks_pass"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KD-WR-02",
+      "original_bundle_sha256": "91252a3beffa43e06fbcae310f648c1687730cc0703bb280c91759aae4a85a8c",
+      "changes": [
+        {
+          "path": "/contract/assumptions",
+          "before": [
+            "Native model extraction, not product provider execution or human gold. Independent labels and checker predictions were not consulted.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "Only declared scenario capabilities and outcomes are modeled. No repository scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"Local Python 3.11+ and all documented offline scientific-writing CLIs are available. The requested artifact contains public, non-sensitive material only.\", \"Venue policy, reporting coverage, authorship, declarations and results are complete and accurate unless otherwise stated. No actual submission or external transmission is requested.\", \"Citation metadata and machine checks succeed, but no accountable human has verified claims or sources and no human is available during completion. The assistant is the only actor.\"], \"family\": \"evidence_writing\", \"id\": \"KD-WR-02\", \"origin\": \"deployment_probe\", \"scenario\": \"Autonomously deliver the same submission-ready manuscript now.\", \"selection_rationale\": \"Distinguish citation metadata validation from human evidence/approval prerequisites.\"}"
+          ],
+          "after": [
+            "ORIGINAL EXTRACTION PROVENANCE ONLY: Native model extraction, not provider execution or human gold; frozen originals were prepared without reference labels/checker results. This derivative incorporates independent source/transition audit and the integrator has seen provisional labels.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "DERIVATIVE SCOPE: Scenario facts plus separately named possible-success/optimistic abstractions are modeled. No scientific scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"Local Python 3.11+ and all documented offline scientific-writing CLIs are available. The requested artifact contains public, non-sensitive material only.\", \"Venue policy, reporting coverage, authorship, declarations and results are complete and accurate unless otherwise stated. No actual submission or external transmission is requested.\", \"Citation metadata and machine checks succeed, but no accountable human has verified claims or sources and no human is available during completion. The assistant is the only actor.\"], \"family\": \"evidence_writing\", \"id\": \"KD-WR-02\", \"origin\": \"deployment_probe\", \"scenario\": \"Autonomously deliver the same submission-ready manuscript now.\", \"selection_rationale\": \"Distinguish citation metadata validation from human evidence/approval prerequisites.\"}",
+            "AUDITED DERIVATIVE: wording changes invalidate current verification, local audits and approval; current human reverification plus fresh audits are required again. These are declared Boolean attestations, not identity or hash validation."
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-wr-02-workflow/actions/draft_manuscript/adds",
+          "before": [
+            "draft_prose_ready",
+            "reverification_due"
+          ],
+          "after": [
+            "banner_retained",
+            "draft_prose_ready",
+            "reverification_due",
+            "submission_ready_false"
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-wr-02-workflow/actions/draft_manuscript/removes",
+          "before": [],
+          "after": [
+            "banner_removed",
+            "changed_prose_human_verified",
+            "local_audits_pass",
+            "submission_ready_true"
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-wr-02-workflow/actions/human_approve_ready_and_remove_banner/removes",
+          "before": [],
+          "after": [
+            "banner_retained",
+            "submission_ready_false"
+          ]
+        },
+        {
+          "path": "/contract/workflows/kd-wr-02-workflow/actions/run_local_consistency_audits/requires",
+          "before": [
+            "local_cli_available",
+            "draft_prose_ready",
+            "metadata_checks_pass"
+          ],
+          "after": [
+            "changed_prose_human_verified",
+            "draft_prose_ready",
+            "local_cli_available",
+            "metadata_checks_pass"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KD-WR-03",
+      "original_bundle_sha256": "a8516b8d6b8093a8df484e6eb5cbad58561e33f81a50240c2d9c9edade95903d",
+      "changes": [
+        {
+          "path": "/contract/assumptions",
+          "before": [
+            "Native model extraction, not product provider execution or human gold. Independent labels and checker predictions were not consulted.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "Only declared scenario capabilities and outcomes are modeled. No repository scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"Local Python 3.11+ and all documented offline scientific-writing CLIs are available. The requested artifact contains public, non-sensitive material only.\", \"Venue policy, reporting coverage, authorship, declarations and results are complete and accurate unless otherwise stated. No actual submission or external transmission is requested.\", \"No human verifier is available. Unverified assertions are omitted from manuscript prose and retained only as unresolved issues. The artifact retains its draft banner and submission_ready=false.\"], \"family\": \"evidence_writing\", \"id\": \"KD-WR-03\", \"origin\": \"synthetic_control\", \"scenario\": \"Deliver a clearly marked incomplete draft scaffold and unresolved-evidence checklist for later human review, without unsupported factual prose.\", \"selection_rationale\": \"Exercise documented draft-stage outcome rather than final approval.\"}"
+          ],
+          "after": [
+            "ORIGINAL EXTRACTION PROVENANCE ONLY: Native model extraction, not provider execution or human gold; frozen originals were prepared without reference labels/checker results. This derivative incorporates independent source/transition audit and the integrator has seen provisional labels.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "DERIVATIVE SCOPE: Scenario facts plus separately named possible-success/optimistic abstractions are modeled. No scientific scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"Local Python 3.11+ and all documented offline scientific-writing CLIs are available. The requested artifact contains public, non-sensitive material only.\", \"Venue policy, reporting coverage, authorship, declarations and results are complete and accurate unless otherwise stated. No actual submission or external transmission is requested.\", \"No human verifier is available. Unverified assertions are omitted from manuscript prose and retained only as unresolved issues. The artifact retains its draft banner and submission_ready=false.\"], \"family\": \"evidence_writing\", \"id\": \"KD-WR-03\", \"origin\": \"synthetic_control\", \"scenario\": \"Deliver a clearly marked incomplete draft scaffold and unresolved-evidence checklist for later human review, without unsupported factual prose.\", \"selection_rationale\": \"Exercise documented draft-stage outcome rather than final approval.\"}"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KD-WR-04",
+      "original_bundle_sha256": "291bdf530c34481ec62164d83a691f9341408bf1149ac78dfb4d98433c3a6cfc",
+      "changes": [
+        {
+          "path": "/contract/assumptions",
+          "before": [
+            "Native model extraction, not product provider execution or human gold. Independent labels and checker predictions were not consulted.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "Only declared scenario capabilities and outcomes are modeled. No repository scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"Source access, human verification status, manuscript stage and accountable author availability are unspecified.\"], \"family\": \"evidence_writing\", \"id\": \"KD-WR-04\", \"origin\": \"natural\", \"scenario\": \"Use citation-management and scientific-writing to prepare a manuscript from discovered sources.\", \"selection_rationale\": \"Observe an intended coactivation without supplying missing stage/capability facts.\"}"
+          ],
+          "after": [
+            "ORIGINAL EXTRACTION PROVENANCE ONLY: Native model extraction, not provider execution or human gold; frozen originals were prepared without reference labels/checker results. This derivative incorporates independent source/transition audit and the integrator has seen provisional labels.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "DERIVATIVE SCOPE: Scenario facts plus separately named possible-success/optimistic abstractions are modeled. No scientific scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"Source access, human verification status, manuscript stage and accountable author availability are unspecified.\"], \"family\": \"evidence_writing\", \"id\": \"KD-WR-04\", \"origin\": \"natural\", \"scenario\": \"Use citation-management and scientific-writing to prepare a manuscript from discovered sources.\", \"selection_rationale\": \"Observe an intended coactivation without supplying missing stage/capability facts.\"}"
+          ]
+        }
+      ]
+    }
+  ]
+}

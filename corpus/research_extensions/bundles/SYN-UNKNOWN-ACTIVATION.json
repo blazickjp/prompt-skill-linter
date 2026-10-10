@@ -1,0 +1,137 @@
+{
+  "contract": {
+    "version": 1,
+    "sources": [
+      {
+        "id": "skill",
+        "path": "sources/gh-fix-ci.SKILL.md"
+      },
+      {
+        "id": "cli",
+        "path": "sources/gh-pr-checks.go.txt"
+      },
+      {
+        "id": "review",
+        "path": "sources/synthetic-controls.txt"
+      }
+    ],
+    "rules": [],
+    "contexts": [
+      {
+        "id": "manual-failing-record",
+        "facts": {
+          "branch": "manual",
+          "failing_record": true,
+          "implicit_alias": false,
+          "supported_cli_projection": true
+        },
+        "active_skills": []
+      }
+    ],
+    "assumptions": [
+      "Offline reviewed projection only; no upstream scripts, commands, tools, accounts or network actions are executed."
+    ],
+    "interpretation": {
+      "status": "accepted",
+      "method": "Manual source-pinned research development projection; not independent human gold.",
+      "accepted_candidate_ids": [
+        "SYN-UNKNOWN-ACTIVATION"
+      ]
+    },
+    "field_contracts": [
+      {
+        "id": "manual-check-to-run-id",
+        "scope": {
+          "entity": "one-failing-pr-check-record",
+          "temporal": "selected-manual-fallback"
+        },
+        "when": {
+          "branch": "manual",
+          "failing_record": true,
+          "literal_property_read": true,
+          "implicit_alias": false,
+          "supported_cli_projection": true
+        },
+        "producer": {
+          "required_fields": [
+            "name",
+            "state",
+            "bucket",
+            "link",
+            "startedAt",
+            "completedAt",
+            "workflow"
+          ],
+          "optional_fields": [],
+          "additional_fields": false,
+          "provenance": {
+            "source_spans": [
+              {
+                "source_id": "skill",
+                "start_line": 39,
+                "end_line": 41,
+                "quote": "   - Manual fallback:\n     - `gh pr checks <pr> --json name,state,bucket,link,startedAt,completedAt,workflow`\n       - If a field is rejected, rerun with the available fields reported by `gh`."
+              },
+              {
+                "source_id": "cli",
+                "start_line": 23,
+                "end_line": 33,
+                "quote": "var prCheckFields = []string{\n\t\"name\",\n\t\"state\",\n\t\"startedAt\",\n\t\"completedAt\",\n\t\"link\",\n\t\"bucket\",\n\t\"event\",\n\t\"workflow\",\n\t\"description\",\n}"
+              },
+              {
+                "source_id": "cli",
+                "start_line": 123,
+                "end_line": 123,
+                "quote": "\tcmdutil.AddJSONFlags(cmd, &opts.Exporter, prCheckFields)"
+              },
+              {
+                "source_id": "cli",
+                "start_line": 189,
+                "end_line": 190,
+                "quote": "\tif opts.Exporter != nil {\n\t\treturn opts.Exporter.Write(opts.IO, checks)"
+              }
+            ],
+            "assumptions": [
+              "The selected gh pr checks command succeeds and each item follows exactly the requested seven-key projection.",
+              "The pinned CLI field list and exporter registration support link; detailsUrl is not in the selected output shape."
+            ]
+          }
+        },
+        "consumer": {
+          "required_fields": [
+            "detailsUrl"
+          ],
+          "optional_fields": [],
+          "provenance": {
+            "source_spans": [
+              {
+                "source_id": "skill",
+                "start_line": 42,
+                "end_line": 44,
+                "quote": "     - For each failing check, extract the run id from `detailsUrl` and run:\n       - `gh run view <run_id> --json name,workflowName,conclusion,status,url,event,headBranch,headSha`\n       - `gh run view <run_id> --log`"
+              }
+            ],
+            "assumptions": [
+              "In this active manual branch, detailsUrl means a literal item property, not prose shorthand for link.",
+              "When this consumer branch is active, at least one failing check item is consumed, with no undeclared adapter or implicit alias."
+            ]
+          }
+        },
+        "adapters": [],
+        "assumptions": [
+          "Fixed per-edge entity and temporal scope; no additional priority resolution is claimed.",
+          "This conditional declaration mismatch is not evidence of inevitable agent failure or whole-skill infeasibility."
+        ]
+      }
+    ]
+  },
+  "sources": {
+    "skill": "---\nname: \"gh-fix-ci\"\ndescription: \"Use when a user asks to debug or fix failing GitHub PR checks that run in GitHub Actions; use `gh` to inspect checks and logs, summarize failure context, draft a fix plan, and implement only after explicit approval. Treat external providers (for example Buildkite) as out of scope and report only the details URL.\"\n---\n\n\n# Gh Pr Checks Plan Fix\n\n## Overview\n\nUse gh to locate failing PR checks, fetch GitHub Actions logs for actionable failures, summarize the failure snippet, then propose a fix plan and implement after explicit approval.\n- If a plan-oriented skill (for example `create-plan`) is available, use it; otherwise draft a concise plan inline and request approval before implementing.\n\nPrereq: authenticate with the standard GitHub CLI once (for example, run `gh auth login`), then confirm with `gh auth status` (repo + workflow scopes are typically required).\n\n## Inputs\n\n- `repo`: path inside the repo (default `.`)\n- `pr`: PR number or URL (optional; defaults to current branch PR)\n- `gh` authentication for the repo host\n\n## Quick start\n\n- `python \"<path-to-skill>/scripts/inspect_pr_checks.py\" --repo \".\" --pr \"<number-or-url>\"`\n- Add `--json` if you want machine-friendly output for summarization.\n\n## Workflow\n\n1. Verify gh authentication.\n   - Run `gh auth status` in the repo.\n   - If unauthenticated, ask the user to run `gh auth login` (ensuring repo + workflow scopes) before proceeding.\n2. Resolve the PR.\n   - Prefer the current branch PR: `gh pr view --json number,url`.\n   - If the user provides a PR number or URL, use that directly.\n3. Inspect failing checks (GitHub Actions only).\n   - Preferred: run the bundled script (handles gh field drift and job-log fallbacks):\n     - `python \"<path-to-skill>/scripts/inspect_pr_checks.py\" --repo \".\" --pr \"<number-or-url>\"`\n     - Add `--json` for machine-friendly output.\n   - Manual fallback:\n     - `gh pr checks <pr> --json name,state,bucket,link,startedAt,completedAt,workflow`\n       - If a field is rejected, rerun with the available fields reported by `gh`.\n     - For each failing check, extract the run id from `detailsUrl` and run:\n       - `gh run view <run_id> --json name,workflowName,conclusion,status,url,event,headBranch,headSha`\n       - `gh run view <run_id> --log`\n     - If the run log says it is still in progress, fetch job logs directly:\n       - `gh api \"/repos/<owner>/<repo>/actions/jobs/<job_id>/logs\" > \"<path>\"`\n4. Scope non-GitHub Actions checks.\n   - If `detailsUrl` is not a GitHub Actions run, label it as external and only report the URL.\n   - Do not attempt Buildkite or other providers; keep the workflow lean.\n5. Summarize failures for the user.\n   - Provide the failing check name, run URL (if any), and a concise log snippet.\n   - Call out missing logs explicitly.\n6. Create a plan.\n   - Use the `create-plan` skill to draft a concise plan and request approval.\n7. Implement after approval.\n   - Apply the approved plan, summarize diffs/tests, and ask about opening a PR.\n8. Recheck status.\n   - After changes, suggest re-running the relevant tests and `gh pr checks` to confirm.\n\n## Bundled Resources\n\n### scripts/inspect_pr_checks.py\n\nFetch failing PR checks, pull GitHub Actions logs, and extract a failure snippet. Exits non-zero when failures remain so it can be used in automation.\n\nUsage examples:\n- `python \"<path-to-skill>/scripts/inspect_pr_checks.py\" --repo \".\" --pr \"123\"`\n- `python \"<path-to-skill>/scripts/inspect_pr_checks.py\" --repo \".\" --pr \"https://github.com/org/repo/pull/123\" --json`\n- `python \"<path-to-skill>/scripts/inspect_pr_checks.py\" --repo \".\" --max-lines 200 --context 40`\n",
+    "cli": "package checks\n\nimport (\n\t\"errors\"\n\t\"fmt\"\n\t\"net/http\"\n\t\"time\"\n\n\t\"github.com/MakeNowJust/heredoc\"\n\t\"github.com/cli/cli/v2/api\"\n\t\"github.com/cli/cli/v2/internal/browser\"\n\tfd \"github.com/cli/cli/v2/internal/featuredetection\"\n\t\"github.com/cli/cli/v2/internal/ghrepo\"\n\t\"github.com/cli/cli/v2/internal/text\"\n\t\"github.com/cli/cli/v2/pkg/cmd/pr/shared\"\n\t\"github.com/cli/cli/v2/pkg/cmdutil\"\n\t\"github.com/cli/cli/v2/pkg/iostreams\"\n\t\"github.com/spf13/cobra\"\n)\n\nconst defaultInterval time.Duration = 10 * time.Second\n\nvar prCheckFields = []string{\n\t\"name\",\n\t\"state\",\n\t\"startedAt\",\n\t\"completedAt\",\n\t\"link\",\n\t\"bucket\",\n\t\"event\",\n\t\"workflow\",\n\t\"description\",\n}\n\ntype ChecksOptions struct {\n\tHttpClient func() (*http.Client, error)\n\tIO         *iostreams.IOStreams\n\tBrowser    browser.Browser\n\tExporter   cmdutil.Exporter\n\n\tFinder   shared.PRFinder\n\tDetector fd.Detector\n\n\tSelectorArg string\n\tWebMode     bool\n\tInterval    time.Duration\n\tWatch       bool\n\tFailFast    bool\n\tRequired    bool\n}\n\nfunc NewCmdChecks(f *cmdutil.Factory, runF func(*ChecksOptions) error) *cobra.Command {\n\tvar interval int\n\topts := &ChecksOptions{\n\t\tHttpClient: f.HttpClient,\n\t\tIO:         f.IOStreams,\n\t\tBrowser:    f.Browser,\n\t\tInterval:   defaultInterval,\n\t}\n\n\tcmd := &cobra.Command{\n\t\tUse:   \"checks [<number> | <url> | <branch>]\",\n\t\tShort: \"Show CI status for a single pull request\",\n\t\tLong: heredoc.Docf(`\n\t\t\tShow CI status for a single pull request.\n\n\t\t\tWithout an argument, the pull request that belongs to the current branch\n\t\t\tis selected.\n\n\t\t\tWhen the %[1]s--json%[1]s flag is used, it includes a %[1]sbucket%[1]s field, which categorizes\n\t\t\tthe %[1]sstate%[1]s field into %[1]spass%[1]s, %[1]sfail%[1]s, %[1]spending%[1]s, %[1]sskipping%[1]s, or %[1]scancel%[1]s.\n\n\t\t\tAdditional exit codes:\n\t\t\t\t8: Checks pending\n\t\t`, \"`\"),\n\t\tArgs: cobra.MaximumNArgs(1),\n\t\tRunE: func(cmd *cobra.Command, args []string) error {\n\t\t\topts.Finder = shared.NewFinder(f)\n\n\t\t\tif opts.Exporter != nil && opts.Watch {\n\t\t\t\treturn cmdutil.FlagErrorf(\"cannot use `--watch` with `--json` flag\")\n\t\t\t}\n\n\t\t\tif repoOverride, _ := cmd.Flags().GetString(\"repo\"); repoOverride != \"\" && len(args) == 0 {\n\t\t\t\treturn cmdutil.FlagErrorf(\"argument required when using the `--repo` flag\")\n\t\t\t}\n\n\t\t\tif opts.FailFast && !opts.Watch {\n\t\t\t\treturn cmdutil.FlagErrorf(\"cannot use `--fail-fast` flag without `--watch` flag\")\n\t\t\t}\n\n\t\t\tintervalChanged := cmd.Flags().Changed(\"interval\")\n\t\t\tif !opts.Watch && intervalChanged {\n\t\t\t\treturn cmdutil.FlagErrorf(\"cannot use `--interval` flag without `--watch` flag\")\n\t\t\t}\n\n\t\t\tif intervalChanged {\n\t\t\t\tvar err error\n\t\t\t\topts.Interval, err = time.ParseDuration(fmt.Sprintf(\"%ds\", interval))\n\t\t\t\tif err != nil {\n\t\t\t\t\treturn cmdutil.FlagErrorf(\"could not parse `--interval` flag: %w\", err)\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tif len(args) > 0 {\n\t\t\t\topts.SelectorArg = args[0]\n\t\t\t}\n\n\t\t\tif runF != nil {\n\t\t\t\treturn runF(opts)\n\t\t\t}\n\n\t\t\treturn checksRun(opts)\n\t\t},\n\t}\n\n\tcmd.Flags().BoolVarP(&opts.WebMode, \"web\", \"w\", false, \"Open the web browser to show details about checks\")\n\tcmd.Flags().BoolVarP(&opts.Watch, \"watch\", \"\", false, \"Watch checks until they finish\")\n\tcmd.Flags().BoolVarP(&opts.FailFast, \"fail-fast\", \"\", false, \"Exit watch mode on first check failure\")\n\tcmd.Flags().IntVarP(&interval, \"interval\", \"i\", 10, \"Refresh interval in seconds in watch mode\")\n\tcmd.Flags().BoolVar(&opts.Required, \"required\", false, \"Only show checks that are required\")\n\n\tcmdutil.AddJSONFlags(cmd, &opts.Exporter, prCheckFields)\n\n\treturn cmd\n}\n\nfunc checksRunWebMode(opts *ChecksOptions) error {\n\tfindOptions := shared.FindOptions{\n\t\tSelector: opts.SelectorArg,\n\t\tFields:   []string{\"number\"},\n\t}\n\tpr, baseRepo, err := opts.Finder.Find(findOptions)\n\tif err != nil {\n\t\treturn err\n\t}\n\n\tisTerminal := opts.IO.IsStdoutTTY()\n\topenURL := ghrepo.GenerateRepoURL(baseRepo, \"pull/%d/checks\", pr.Number)\n\n\tif isTerminal {\n\t\tfmt.Fprintf(opts.IO.ErrOut, \"Opening %s in your browser.\\n\", text.DisplayURL(openURL))\n\t}\n\n\treturn opts.Browser.Browse(openURL)\n}\n\nfunc checksRun(opts *ChecksOptions) error {\n\tif opts.WebMode {\n\t\treturn checksRunWebMode(opts)\n\t}\n\n\tfindOptions := shared.FindOptions{\n\t\tSelector: opts.SelectorArg,\n\t\tFields:   []string{\"number\", \"headRefName\"},\n\t}\n\n\tvar pr *api.PullRequest\n\tpr, repo, findErr := opts.Finder.Find(findOptions)\n\tif findErr != nil {\n\t\treturn findErr\n\t}\n\n\tclient, clientErr := opts.HttpClient()\n\tif clientErr != nil {\n\t\treturn clientErr\n\t}\n\n\tvar checks []check\n\tvar counts checkCounts\n\tvar err error\n\tvar includeEvent bool\n\n\tif opts.Detector == nil {\n\t\tcachedClient := api.NewCachedHTTPClient(client, time.Hour*24)\n\t\topts.Detector = fd.NewDetector(cachedClient, repo.RepoHost())\n\t}\n\tif features, featuresErr := opts.Detector.PullRequestFeatures(); featuresErr != nil {\n\t\treturn featuresErr\n\t} else {\n\t\tincludeEvent = features.CheckRunEvent\n\t}\n\n\tchecks, counts, err = populateStatusChecks(client, repo, pr, opts.Required, includeEvent)\n\tif err != nil {\n\t\treturn err\n\t}\n\n\tif opts.Exporter != nil {\n\t\treturn opts.Exporter.Write(opts.IO, checks)\n\t}\n\n\tif opts.Watch {\n\t\topts.IO.StartAlternateScreenBuffer()\n\t} else {\n\t\t// Only start pager in non-watch mode\n\t\tif err := opts.IO.StartPager(); err == nil {\n\t\t\tdefer opts.IO.StopPager()\n\t\t} else {\n\t\t\tfmt.Fprintf(opts.IO.ErrOut, \"failed to start pager: %v\\n\", err)\n\t\t}\n\t}\n\n\t// Do not return err until we can StopAlternateScreenBuffer()\n\tfor {\n\t\tif counts.Pending != 0 && opts.Watch {\n\t\t\topts.IO.RefreshScreen()\n\t\t\tcs := opts.IO.ColorScheme()\n\t\t\tfmt.Fprintln(opts.IO.Out, cs.Boldf(\"Refreshing checks status every %v seconds. Press Ctrl+C to quit.\\n\", opts.Interval.Seconds()))\n\t\t}\n\n\t\tprintSummary(opts.IO, counts)\n\t\terr = printTable(opts.IO, checks)\n\t\tif err != nil {\n\t\t\tbreak\n\t\t}\n\n\t\tif counts.Pending == 0 || !opts.Watch {\n\t\t\tbreak\n\t\t}\n\n\t\tif opts.FailFast && counts.Failed > 0 {\n\t\t\tbreak\n\t\t}\n\n\t\ttime.Sleep(opts.Interval)\n\n\t\tchecks, counts, err = populateStatusChecks(client, repo, pr, opts.Required, includeEvent)\n\t\tif err != nil {\n\t\t\tbreak\n\t\t}\n\t}\n\n\topts.IO.StopAlternateScreenBuffer()\n\tif err != nil {\n\t\treturn err\n\t}\n\n\tif opts.Watch {\n\t\t// Print final summary to original screen buffer\n\t\tprintSummary(opts.IO, counts)\n\t\terr = printTable(opts.IO, checks)\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t}\n\n\tif counts.Failed > 0 {\n\t\treturn cmdutil.SilentError\n\t} else if counts.Pending > 0 {\n\t\treturn cmdutil.PendingError\n\t}\n\n\treturn nil\n}\n\nfunc populateStatusChecks(client *http.Client, repo ghrepo.Interface, pr *api.PullRequest, requiredChecks bool, includeEvent bool) ([]check, checkCounts, error) {\n\tapiClient := api.NewClientFromHTTP(client)\n\n\ttype response struct {\n\t\tNode *api.PullRequest\n\t}\n\n\tquery := fmt.Sprintf(`\n\tquery PullRequestStatusChecks($id: ID!, $endCursor: String) {\n\t\tnode(id: $id) {\n\t\t\t...on PullRequest {\n\t\t\t\t%s\n\t\t\t}\n\t\t}\n\t}`, api.RequiredStatusCheckRollupGraphQL(\"$id\", \"$endCursor\", includeEvent))\n\n\tvariables := map[string]any{\n\t\t\"id\": pr.ID,\n\t}\n\n\tstatusCheckRollup := api.CheckContexts{}\n\n\tfor {\n\t\tvar resp response\n\t\terr := apiClient.GraphQL(repo.RepoHost(), query, variables, &resp)\n\t\tif err != nil {\n\t\t\treturn nil, checkCounts{}, err\n\t\t}\n\n\t\tif len(resp.Node.StatusCheckRollup.Nodes) == 0 {\n\t\t\treturn nil, checkCounts{}, errors.New(\"no commit found on the pull request\")\n\t\t}\n\n\t\tresult := resp.Node.StatusCheckRollup.Nodes[0].Commit.StatusCheckRollup.Contexts\n\t\tstatusCheckRollup.Nodes = append(\n\t\t\tstatusCheckRollup.Nodes,\n\t\t\tresult.Nodes...,\n\t\t)\n\n\t\tif !result.PageInfo.HasNextPage {\n\t\t\tbreak\n\t\t}\n\t\tvariables[\"endCursor\"] = result.PageInfo.EndCursor\n\t}\n\n\tif len(statusCheckRollup.Nodes) == 0 {\n\t\treturn nil, checkCounts{}, fmt.Errorf(\"no checks reported on the '%s' branch\", pr.HeadRefName)\n\t}\n\n\tchecks, counts := aggregateChecks(statusCheckRollup.Nodes, requiredChecks)\n\tif len(checks) == 0 && requiredChecks {\n\t\treturn checks, counts, fmt.Errorf(\"no required checks reported on the '%s' branch\", pr.HeadRefName)\n\t}\n\treturn checks, counts, nil\n}\n",
+    "review": "Synthetic control: copy the literal key link to detailsUrl, preserving link.\nSynthetic control: rename the literal key link to detailsUrl.\nSynthetic control: consume link instead of detailsUrl.\nSynthetic control: treat detailsUrl consumption as optional.\nSynthetic trace: each deliver event needs fresh verification.\nSynthetic trace: count every generate event, including repetitions.\nSynthetic control: producer guarantees the seven selected keys but allows additional keys.\nSynthetic control: producer guarantees the seven selected keys and optionally includes detailsUrl; other keys remain excluded.\n"
+  },
+  "tools": {
+    "tools": {}
+  },
+  "runtime": {}
+}

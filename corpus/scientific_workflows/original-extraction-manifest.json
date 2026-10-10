@@ -1,0 +1,524 @@
+{
+  "format": "kdense-native-extraction-manifest-v1",
+  "repository": "K-Dense-AI/scientific-agent-skills",
+  "commit": "92ace75ac21efe19a620434e0ca4e356081fe807",
+  "provenance": {
+    "method": "native-model extraction in this session",
+    "provider_pipeline_run": false,
+    "human_gold": false,
+    "independent_reference_seen": false,
+    "checker_predictions_seen": false
+  },
+  "cases": [
+    {
+      "id": "KD-SC-01",
+      "bundle": "bundles/KD-SC-01.json",
+      "analysis_eligibility": "partial",
+      "eligibility_reason": "Finite scenario reachability only; full natural-language/typed/epistemic semantics unsupported.",
+      "assumption_ids": [
+        "A-native",
+        "A-peer-priority",
+        "A-declared-capabilities",
+        "A-finite-abstraction",
+        "A-no-invented-tool",
+        "A-review-required"
+      ],
+      "exclusion_ids": [
+        "X-complete-prose",
+        "X-live-execution",
+        "X-biological-validity",
+        "X-human-gold"
+      ],
+      "raw_extraction_path": "raw-extraction.json",
+      "candidate_rule_ids": [
+        "scanpy-count-input",
+        "scanpy-independent-representations",
+        "scanpy-hvg-input",
+        "scanpy-marker-input",
+        "scanpy-de-design",
+        "scanpy-integration-effects",
+        "scanpy-backed",
+        "scanpy-r-conversion",
+        "scanpy-tool-preference",
+        "anndata-copy-counts",
+        "anndata-raw-snapshot",
+        "scvi-scvi-input",
+        "scvi-sysvi-input",
+        "scvi-preflight",
+        "scvi-register-train",
+        "scvi-count-failure",
+        "scvi-registration-invalidation",
+        "scvi-sysvi-specialized"
+      ],
+      "scenario_provenance": "neutral-cases.json#KD-SC-01"
+    },
+    {
+      "id": "KD-SC-02",
+      "bundle": "bundles/KD-SC-02.json",
+      "analysis_eligibility": "partial",
+      "eligibility_reason": "Finite scenario reachability only; full natural-language/typed/epistemic semantics unsupported.",
+      "assumption_ids": [
+        "A-native",
+        "A-peer-priority",
+        "A-declared-capabilities",
+        "A-finite-abstraction",
+        "A-no-invented-tool",
+        "A-review-required"
+      ],
+      "exclusion_ids": [
+        "X-complete-prose",
+        "X-live-execution",
+        "X-biological-validity",
+        "X-human-gold"
+      ],
+      "raw_extraction_path": "raw-extraction.json",
+      "candidate_rule_ids": [
+        "scanpy-count-input",
+        "scanpy-independent-representations",
+        "scanpy-hvg-input",
+        "scanpy-marker-input",
+        "scanpy-de-design",
+        "scanpy-integration-effects",
+        "scanpy-backed",
+        "scanpy-r-conversion",
+        "scanpy-tool-preference",
+        "anndata-copy-counts",
+        "anndata-raw-snapshot",
+        "scvi-scvi-input",
+        "scvi-sysvi-input",
+        "scvi-preflight",
+        "scvi-register-train",
+        "scvi-count-failure",
+        "scvi-registration-invalidation",
+        "scvi-sysvi-specialized"
+      ],
+      "scenario_provenance": "neutral-cases.json#KD-SC-02"
+    },
+    {
+      "id": "KD-SC-03",
+      "bundle": "bundles/KD-SC-03.json",
+      "analysis_eligibility": "partial",
+      "eligibility_reason": "Finite scenario reachability only; full natural-language/typed/epistemic semantics unsupported.",
+      "assumption_ids": [
+        "A-native",
+        "A-peer-priority",
+        "A-declared-capabilities",
+        "A-finite-abstraction",
+        "A-no-invented-tool",
+        "A-review-required"
+      ],
+      "exclusion_ids": [
+        "X-complete-prose",
+        "X-live-execution",
+        "X-biological-validity",
+        "X-human-gold"
+      ],
+      "raw_extraction_path": "raw-extraction.json",
+      "candidate_rule_ids": [
+        "scanpy-count-input",
+        "scanpy-independent-representations",
+        "scanpy-hvg-input",
+        "scanpy-marker-input",
+        "scanpy-de-design",
+        "scanpy-integration-effects",
+        "scanpy-backed",
+        "scanpy-r-conversion",
+        "scanpy-tool-preference",
+        "anndata-copy-counts",
+        "anndata-raw-snapshot",
+        "scvi-scvi-input",
+        "scvi-sysvi-input",
+        "scvi-preflight",
+        "scvi-register-train",
+        "scvi-count-failure",
+        "scvi-registration-invalidation",
+        "scvi-sysvi-specialized"
+      ],
+      "scenario_provenance": "neutral-cases.json#KD-SC-03"
+    },
+    {
+      "id": "KD-SC-04",
+      "bundle": "bundles/KD-SC-04.json",
+      "analysis_eligibility": "abstain",
+      "eligibility_reason": "Essential scenario inputs absent; no closed-world workflow invented.",
+      "assumption_ids": [
+        "A-native",
+        "A-peer-priority",
+        "A-declared-capabilities",
+        "A-finite-abstraction",
+        "A-no-invented-tool",
+        "A-review-required"
+      ],
+      "exclusion_ids": [
+        "X-complete-prose",
+        "X-live-execution",
+        "X-biological-validity",
+        "X-human-gold"
+      ],
+      "raw_extraction_path": "raw-extraction.json",
+      "candidate_rule_ids": [
+        "scanpy-count-input",
+        "scanpy-independent-representations",
+        "scanpy-hvg-input",
+        "scanpy-marker-input",
+        "scanpy-de-design",
+        "scanpy-integration-effects",
+        "scanpy-backed",
+        "scanpy-r-conversion",
+        "scanpy-tool-preference",
+        "anndata-copy-counts",
+        "anndata-raw-snapshot",
+        "scvi-scvi-input",
+        "scvi-sysvi-input",
+        "scvi-preflight",
+        "scvi-register-train",
+        "scvi-count-failure",
+        "scvi-registration-invalidation",
+        "scvi-sysvi-specialized"
+      ],
+      "scenario_provenance": "neutral-cases.json#KD-SC-04"
+    },
+    {
+      "id": "KD-WR-01",
+      "bundle": "bundles/KD-WR-01.json",
+      "analysis_eligibility": "partial",
+      "eligibility_reason": "Finite scenario reachability only; full natural-language/typed/epistemic semantics unsupported.",
+      "assumption_ids": [
+        "A-native",
+        "A-peer-priority",
+        "A-declared-capabilities",
+        "A-finite-abstraction",
+        "A-no-invented-tool",
+        "A-review-required"
+      ],
+      "exclusion_ids": [
+        "X-complete-prose",
+        "X-live-execution",
+        "X-biological-validity",
+        "X-human-gold"
+      ],
+      "raw_extraction_path": "raw-extraction.json",
+      "candidate_rule_ids": [
+        "writing-advertisement",
+        "writing-confidentiality",
+        "writing-no-fabrication",
+        "writing-human-evidence",
+        "writing-intake",
+        "writing-human-reverification",
+        "writing-outline",
+        "writing-reference-boundary",
+        "writing-ai-disclosure",
+        "writing-optional-displays",
+        "writing-human-approval",
+        "citation-enrichment",
+        "citation-untrusted-metadata",
+        "citation-validation",
+        "citation-diagram-conditional",
+        "writing-scaffold",
+        "writing-local-audits",
+        "writing-cli-scaffold-boundary",
+        "citation-registration-boundary"
+      ],
+      "scenario_provenance": "neutral-cases.json#KD-WR-01"
+    },
+    {
+      "id": "KD-WR-02",
+      "bundle": "bundles/KD-WR-02.json",
+      "analysis_eligibility": "partial",
+      "eligibility_reason": "Finite scenario reachability only; full natural-language/typed/epistemic semantics unsupported.",
+      "assumption_ids": [
+        "A-native",
+        "A-peer-priority",
+        "A-declared-capabilities",
+        "A-finite-abstraction",
+        "A-no-invented-tool",
+        "A-review-required"
+      ],
+      "exclusion_ids": [
+        "X-complete-prose",
+        "X-live-execution",
+        "X-biological-validity",
+        "X-human-gold"
+      ],
+      "raw_extraction_path": "raw-extraction.json",
+      "candidate_rule_ids": [
+        "writing-advertisement",
+        "writing-confidentiality",
+        "writing-no-fabrication",
+        "writing-human-evidence",
+        "writing-intake",
+        "writing-human-reverification",
+        "writing-outline",
+        "writing-reference-boundary",
+        "writing-ai-disclosure",
+        "writing-optional-displays",
+        "writing-human-approval",
+        "citation-enrichment",
+        "citation-untrusted-metadata",
+        "citation-validation",
+        "citation-diagram-conditional",
+        "writing-scaffold",
+        "writing-local-audits",
+        "writing-cli-scaffold-boundary",
+        "citation-registration-boundary"
+      ],
+      "scenario_provenance": "neutral-cases.json#KD-WR-02"
+    },
+    {
+      "id": "KD-WR-03",
+      "bundle": "bundles/KD-WR-03.json",
+      "analysis_eligibility": "partial",
+      "eligibility_reason": "Finite scenario reachability only; full natural-language/typed/epistemic semantics unsupported.",
+      "assumption_ids": [
+        "A-native",
+        "A-peer-priority",
+        "A-declared-capabilities",
+        "A-finite-abstraction",
+        "A-no-invented-tool",
+        "A-review-required"
+      ],
+      "exclusion_ids": [
+        "X-complete-prose",
+        "X-live-execution",
+        "X-biological-validity",
+        "X-human-gold"
+      ],
+      "raw_extraction_path": "raw-extraction.json",
+      "candidate_rule_ids": [
+        "writing-advertisement",
+        "writing-confidentiality",
+        "writing-no-fabrication",
+        "writing-human-evidence",
+        "writing-intake",
+        "writing-human-reverification",
+        "writing-outline",
+        "writing-reference-boundary",
+        "writing-ai-disclosure",
+        "writing-optional-displays",
+        "writing-human-approval",
+        "citation-enrichment",
+        "citation-untrusted-metadata",
+        "citation-validation",
+        "citation-diagram-conditional",
+        "writing-scaffold",
+        "writing-local-audits",
+        "writing-cli-scaffold-boundary",
+        "citation-registration-boundary"
+      ],
+      "scenario_provenance": "neutral-cases.json#KD-WR-03"
+    },
+    {
+      "id": "KD-WR-04",
+      "bundle": "bundles/KD-WR-04.json",
+      "analysis_eligibility": "abstain",
+      "eligibility_reason": "Essential scenario inputs absent; no closed-world workflow invented.",
+      "assumption_ids": [
+        "A-native",
+        "A-peer-priority",
+        "A-declared-capabilities",
+        "A-finite-abstraction",
+        "A-no-invented-tool",
+        "A-review-required"
+      ],
+      "exclusion_ids": [
+        "X-complete-prose",
+        "X-live-execution",
+        "X-biological-validity",
+        "X-human-gold"
+      ],
+      "raw_extraction_path": "raw-extraction.json",
+      "candidate_rule_ids": [
+        "writing-advertisement",
+        "writing-confidentiality",
+        "writing-no-fabrication",
+        "writing-human-evidence",
+        "writing-intake",
+        "writing-human-reverification",
+        "writing-outline",
+        "writing-reference-boundary",
+        "writing-ai-disclosure",
+        "writing-optional-displays",
+        "writing-human-approval",
+        "citation-enrichment",
+        "citation-untrusted-metadata",
+        "citation-validation",
+        "citation-diagram-conditional",
+        "writing-scaffold",
+        "writing-local-audits",
+        "writing-cli-scaffold-boundary",
+        "citation-registration-boundary"
+      ],
+      "scenario_provenance": "neutral-cases.json#KD-WR-04"
+    },
+    {
+      "id": "KD-LR-01",
+      "bundle": "bundles/KD-LR-01.json",
+      "analysis_eligibility": "partial",
+      "eligibility_reason": "Finite scenario reachability only; full natural-language/typed/epistemic semantics unsupported.",
+      "assumption_ids": [
+        "A-native",
+        "A-peer-priority",
+        "A-declared-capabilities",
+        "A-finite-abstraction",
+        "A-no-invented-tool",
+        "A-review-required"
+      ],
+      "exclusion_ids": [
+        "X-complete-prose",
+        "X-live-execution",
+        "X-biological-validity",
+        "X-human-gold"
+      ],
+      "raw_extraction_path": "raw-extraction.json",
+      "candidate_rule_ids": [
+        "literature-search",
+        "literature-prisma",
+        "literature-screening",
+        "literature-citation-support",
+        "schematics-restricted-prompt",
+        "schematics-generation",
+        "schematics-review-not-proof",
+        "schematics-flow-accounting",
+        "literature-local-support",
+        "schematics-bounded-loop"
+      ],
+      "scenario_provenance": "neutral-cases.json#KD-LR-01"
+    },
+    {
+      "id": "KD-LR-02",
+      "bundle": "bundles/KD-LR-02.json",
+      "analysis_eligibility": "partial",
+      "eligibility_reason": "Finite scenario reachability only; full natural-language/typed/epistemic semantics unsupported.",
+      "assumption_ids": [
+        "A-native",
+        "A-peer-priority",
+        "A-declared-capabilities",
+        "A-finite-abstraction",
+        "A-no-invented-tool",
+        "A-review-required"
+      ],
+      "exclusion_ids": [
+        "X-complete-prose",
+        "X-live-execution",
+        "X-biological-validity",
+        "X-human-gold"
+      ],
+      "raw_extraction_path": "raw-extraction.json",
+      "candidate_rule_ids": [
+        "literature-search",
+        "literature-prisma",
+        "literature-screening",
+        "literature-citation-support",
+        "schematics-restricted-prompt",
+        "schematics-generation",
+        "schematics-review-not-proof",
+        "schematics-flow-accounting",
+        "literature-local-support",
+        "schematics-bounded-loop"
+      ],
+      "scenario_provenance": "neutral-cases.json#KD-LR-02"
+    },
+    {
+      "id": "KD-LR-03",
+      "bundle": "bundles/KD-LR-03.json",
+      "analysis_eligibility": "partial",
+      "eligibility_reason": "Finite scenario reachability only; full natural-language/typed/epistemic semantics unsupported.",
+      "assumption_ids": [
+        "A-native",
+        "A-peer-priority",
+        "A-declared-capabilities",
+        "A-finite-abstraction",
+        "A-no-invented-tool",
+        "A-review-required"
+      ],
+      "exclusion_ids": [
+        "X-complete-prose",
+        "X-live-execution",
+        "X-biological-validity",
+        "X-human-gold"
+      ],
+      "raw_extraction_path": "raw-extraction.json",
+      "candidate_rule_ids": [
+        "literature-search",
+        "literature-prisma",
+        "literature-screening",
+        "literature-citation-support",
+        "schematics-restricted-prompt",
+        "schematics-generation",
+        "schematics-review-not-proof",
+        "schematics-flow-accounting",
+        "literature-local-support",
+        "schematics-bounded-loop"
+      ],
+      "scenario_provenance": "neutral-cases.json#KD-LR-03"
+    },
+    {
+      "id": "KD-LR-04",
+      "bundle": "bundles/KD-LR-04.json",
+      "analysis_eligibility": "partial",
+      "eligibility_reason": "Finite scenario reachability only; full natural-language/typed/epistemic semantics unsupported.",
+      "assumption_ids": [
+        "A-native",
+        "A-peer-priority",
+        "A-declared-capabilities",
+        "A-finite-abstraction",
+        "A-no-invented-tool",
+        "A-review-required"
+      ],
+      "exclusion_ids": [
+        "X-complete-prose",
+        "X-live-execution",
+        "X-biological-validity",
+        "X-human-gold"
+      ],
+      "raw_extraction_path": "raw-extraction.json",
+      "candidate_rule_ids": [
+        "literature-search",
+        "literature-prisma",
+        "literature-screening",
+        "literature-citation-support",
+        "schematics-restricted-prompt",
+        "schematics-generation",
+        "schematics-review-not-proof",
+        "schematics-flow-accounting",
+        "literature-local-support",
+        "schematics-bounded-loop"
+      ],
+      "scenario_provenance": "neutral-cases.json#KD-LR-04"
+    },
+    {
+      "id": "KD-LR-05",
+      "bundle": "bundles/KD-LR-05.json",
+      "analysis_eligibility": "abstain",
+      "eligibility_reason": "Essential scenario inputs absent; no closed-world workflow invented.",
+      "assumption_ids": [
+        "A-native",
+        "A-peer-priority",
+        "A-declared-capabilities",
+        "A-finite-abstraction",
+        "A-no-invented-tool",
+        "A-review-required"
+      ],
+      "exclusion_ids": [
+        "X-complete-prose",
+        "X-live-execution",
+        "X-biological-validity",
+        "X-human-gold"
+      ],
+      "raw_extraction_path": "raw-extraction.json",
+      "candidate_rule_ids": [
+        "literature-search",
+        "literature-prisma",
+        "literature-screening",
+        "literature-citation-support",
+        "schematics-restricted-prompt",
+        "schematics-generation",
+        "schematics-review-not-proof",
+        "schematics-flow-accounting",
+        "literature-local-support",
+        "schematics-bounded-loop"
+      ],
+      "scenario_provenance": "neutral-cases.json#KD-LR-05"
+    }
+  ]
+}

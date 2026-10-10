@@ -1,0 +1,684 @@
+{
+  "contract": {
+    "version": 1,
+    "sources": [
+      {
+        "id": "skills__anndata__SKILL",
+        "path": "source_text/skills/anndata/SKILL.md"
+      },
+      {
+        "id": "skills__scanpy__SKILL",
+        "path": "source_text/skills/scanpy/SKILL.md"
+      },
+      {
+        "id": "skills__scvi-tools__SKILL",
+        "path": "source_text/skills/scvi-tools/SKILL.md"
+      },
+      {
+        "id": "skills__scvi-tools__references__models-specialized",
+        "path": "source_text/skills/scvi-tools/references/models-specialized.md"
+      }
+    ],
+    "rules": [
+      {
+        "id": "scanpy-count-input",
+        "source": {
+          "source_id": "skills__scanpy__SKILL",
+          "start_line": 43,
+          "end_line": 45,
+          "quote": "- Input to QC/preprocessing must be identified raw counts. The scripts reject negative,\n  fractional, nonfinite or zero-total cells. Use `--counts-layer counts` when X is already\n  normalized; never infer provenance from integer-looking values alone."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "selected QC/preprocessing matrix",
+          "temporal": "before QC/preprocessing"
+        },
+        "skills": [
+          "scanpy"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Typed matrix provenance and numerical universal predicates."
+        ]
+      },
+      {
+        "id": "scanpy-independent-representations",
+        "source": {
+          "source_id": "skills__scanpy__SKILL",
+          "start_line": 46,
+          "end_line": 48,
+          "quote": "- `layers[\"counts\"]` remains unnormalized; `.raw` is an independent full-gene\n  log-normalized snapshot. Gene subsetting also subsets every layer, but does not subset\n  `.raw` genes. Retain a full-gene object for pseudobulk; the full pipeline does so."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "counts layer / raw snapshot / full-gene object",
+          "temporal": "normalization and gene subsetting"
+        },
+        "skills": [
+          "scanpy"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Object identity, lineage, and differently scoped data representations."
+        ]
+      },
+      {
+        "id": "scanpy-hvg-input",
+        "source": {
+          "source_id": "skills__scanpy__SKILL",
+          "start_line": 49,
+          "end_line": 51,
+          "quote": "- `seurat`/`cell_ranger` HVGs use log-normalized values; `seurat_v3` and\n  `seurat_v3_paper` use counts and require `scanpy[skmisc]`. Scaling/regression are optional,\n  may densify sparse data, and can remove biology along with covariates."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "HVG input matrix",
+          "temporal": "HVG selection"
+        },
+        "skills": [
+          "scanpy"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Model/flavor-dependent typed input and package dependency."
+        ]
+      },
+      {
+        "id": "scanpy-marker-input",
+        "source": {
+          "source_id": "skills__scanpy__SKILL",
+          "start_line": 52,
+          "end_line": 55,
+          "quote": "- Marker ranking defaults to `.raw` when present; `--no-use-raw` selects X and `--layer`\n  selects an explicit log-normalized layer. `--groups`/`--reference` control contrasts.\n  Wilcoxon/t-test adjusted p-values use BH within each comparison; logreg returns ranking\n  scores without p-values. Clusters chosen from the same data yield exploratory markers."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "marker-ranking expression matrix and result interpretation",
+          "temporal": "marker analysis"
+        },
+        "skills": [
+          "scanpy"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "CLI alternatives; p-value semantics; exploratory inferential status."
+        ]
+      },
+      {
+        "id": "scanpy-de-design",
+        "source": {
+          "source_id": "skills__scanpy__SKILL",
+          "start_line": 56,
+          "end_line": 59,
+          "quote": "- Condition DE requires raw-count sums per sample and cell type, independent biological\n  replicates, aligned condition/donor metadata and a full-rank design. Analyze each cell\n  type separately; repeated donor samples require a suitable paired design. Aggregation\n  cannot fix confounding, missing replication, doublets or incorrect annotations."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "sample-by-cell-type counts and biological design",
+          "temporal": "condition DE"
+        },
+        "skills": [
+          "scanpy"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Statistical design validity and biological independence."
+        ]
+      },
+      {
+        "id": "scanpy-integration-effects",
+        "source": {
+          "source_id": "skills__scanpy__SKILL",
+          "start_line": 60,
+          "end_line": 62,
+          "quote": "- Harmony (`harmonypy`) changes PCA coordinates; BBKNN (`bbknn`) changes the graph;\n  ComBat changes X. Keep original expression/counts for DE, and assess biological\n  conservation and batch mixing together. Requested integration/doublet failures stop."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "PCA / graph / X / original counts",
+          "temporal": "integration then DE"
+        },
+        "skills": [
+          "scanpy"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Branch-specific mutations and failure semantics."
+        ]
+      },
+      {
+        "id": "scanpy-backed",
+        "source": {
+          "source_id": "skills__scanpy__SKILL",
+          "start_line": 63,
+          "end_line": 65,
+          "quote": "- The toolkit loads files into memory. For backed data, explicitly call `.to_memory()`\n  on a chosen subset and close the file; backed mode is not a general out-of-core\n  pipeline. Copy views before mutation. Dask support varies by function/array layout."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "backed subset and view",
+          "temporal": "before mutation"
+        },
+        "skills": [
+          "scanpy"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Aliasing, storage lifecycle and memory feasibility."
+        ]
+      },
+      {
+        "id": "scanpy-r-conversion",
+        "source": {
+          "source_id": "skills__scanpy__SKILL",
+          "start_line": 37,
+          "end_line": 39,
+          "quote": "If the input is an R-native single-cell object (`.rds`, `.RData`, Seurat, or SingleCellExperiment), first convert it to `.h5ad` with R tooling, then load it with Scanpy. Read `references/r_interop.md` for agent-run installation and conversion instructions across macOS, Linux, and Windows.\n\nFor AnnData structure and I/O details, use the **anndata** skill. For probabilistic models and batch correction, use **scvi-tools**."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "R-native input",
+          "temporal": "before Scanpy load"
+        },
+        "skills": [
+          "scanpy"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Conversion fidelity is not established by extension change."
+        ]
+      },
+      {
+        "id": "scanpy-tool-preference",
+        "source": {
+          "source_id": "skills__scanpy__SKILL",
+          "start_line": 90,
+          "end_line": 94,
+          "quote": "## Script Toolkit (prefer these over writing code from scratch)\n\nThis skill bundles ready-to-run CLI scripts in `scripts/` for every common step. **Run these instead of hand-writing scanpy code** \u2014 they handle file loading by extension, figure setup, sensible defaults, raw-count preservation, and progress logging. Each reads and writes `.h5ad`, so they chain together, and each has its own `--help`. Only drop down to writing scanpy code when a task isn't covered by a script or needs unusual customization.\n\nAll scripts use a shared `scripts/_common.py` helper (loading, saving, figure config) \u2014 keep it alongside the others. Run from the skill directory or pass full paths; figures default to `./figures/`."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "covered analysis step",
+          "temporal": "implementation selection"
+        },
+        "skills": [
+          "scanpy"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Coverage/customization judgment; filesystem sibling helper dependency."
+        ]
+      },
+      {
+        "id": "anndata-copy-counts",
+        "source": {
+          "source_id": "skills__anndata__SKILL",
+          "start_line": 352,
+          "end_line": 363,
+          "quote": "# 3. Preserve counts explicitly, then normalize X\nadata = adata.copy()\nadata.layers['counts'] = adata.X.copy()\nadata.uns['matrix_semantics'] = {'counts': 'untransformed counts'}\n\n# 4. Normalize and filter\nsc.pp.normalize_total(adata, target_sum=1e4)\nsc.pp.log1p(adata)\nadata.raw = adata.copy()  # Snapshot log-normalized X with all genes\nadata.uns['matrix_semantics']['raw'] = 'log1p library-size normalized expression'\nsc.pp.highly_variable_genes(adata, n_top_genes=2000)\nadata = adata[:, adata.var['highly_variable']].copy()"
+        },
+        "priority": 0,
+        "kind": "preference",
+        "scope": {
+          "entity": "AnnData X/counts/raw",
+          "temporal": "before normalization through HVG subsetting"
+        },
+        "skills": [
+          "anndata"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Example, not unconditional command; actual data semantics and copies require inspection."
+        ]
+      },
+      {
+        "id": "anndata-raw-snapshot",
+        "source": {
+          "source_id": "skills__anndata__SKILL",
+          "start_line": 280,
+          "end_line": 282,
+          "quote": "# Snapshot current X/var before feature filtering (not automatically raw counts)\nadata.raw = adata.copy()\nadata = adata[:, adata.var['highly_variable']]"
+        },
+        "priority": 0,
+        "kind": "preference",
+        "scope": {
+          "entity": "AnnData raw snapshot",
+          "temporal": "before feature filtering"
+        },
+        "skills": [
+          "anndata"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Snapshot values depend on preexisting X."
+        ]
+      },
+      {
+        "id": "scvi-scvi-input",
+        "source": {
+          "source_id": "skills__scvi-tools__SKILL",
+          "start_line": 26,
+          "end_line": 28,
+          "quote": "| Task | Class | Required input |\n| --- | --- | --- |\n| RNA integration | `scvi.model.SCVI` | Unnormalized RNA counts |"
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "SCVI registered RNA input",
+          "temporal": "registration/training"
+        },
+        "skills": [
+          "scvi-tools"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Typed model input cannot be global Boolean rawness."
+        ]
+      },
+      {
+        "id": "scvi-sysvi-input",
+        "source": {
+          "source_id": "skills__scvi-tools__SKILL",
+          "start_line": 35,
+          "end_line": 41,
+          "quote": "| Cytometry | `scvi.external.CYTOVI` | Transformed protein intensities |\n| Large cross-system effects | `scvi.external.SysVI` | Normalized, log-transformed expression |\n| RNA velocity | `scvi.external.VELOVI` | Preprocessed spliced/unspliced abundances |\n\nThe count rule is model-specific: do not feed raw RNA counts to SysVI or replace\nmethylation coverage with ratios. Likewise, never reconstruct counts by exponentiating\nlog-normalized data. Preserve measured counts and preprocessing provenance."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "SysVI input (separate model branch)",
+          "temporal": "registration/training"
+        },
+        "skills": [
+          "scvi-tools"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Distinct model branch; raw count and normalized requirements do not share entity scope."
+        ]
+      },
+      {
+        "id": "scvi-preflight",
+        "source": {
+          "source_id": "skills__scvi-tools__SKILL",
+          "start_line": 64,
+          "end_line": 68,
+          "quote": "1. Confirm modality, raw-data provenance, unique cell/feature IDs, feature order,\n   batch/sample metadata, and the intended biological comparison.\n2. Perform QC and feature selection before model registration. Use count-aware\n   HVG selection for count layers, and preserve a full-gene count object for later\n   analyses outside the selected feature set."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "model-bound data and feature order",
+          "temporal": "before registration"
+        },
+        "skills": [
+          "scvi-tools"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Identity, ordering, provenance and biological comparison cannot be verified from metadata flags."
+        ]
+      },
+      {
+        "id": "scvi-register-train",
+        "source": {
+          "source_id": "skills__scvi-tools__SKILL",
+          "start_line": 69,
+          "end_line": 74,
+          "quote": "3. Register the exact data object with that model's `setup_anndata` or\n   `setup_mudata`; create and train the model. Setup is registration, not normalization.\n4. Inspect validation history, held-out fit, seed stability, batch mixing **and**\n   retention of known biology. A well-mixed UMAP alone does not validate integration.\n5. Extract representations or model-specific normalized outputs; save the model,\n   data, selected feature order, software versions, seed and training parameters."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "registered model/data pair",
+          "temporal": "after QC, before outputs"
+        },
+        "skills": [
+          "scvi-tools"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Training success, fit validation and real runtime not executed."
+        ]
+      },
+      {
+        "id": "scvi-count-failure",
+        "source": {
+          "source_id": "skills__scvi-tools__SKILL",
+          "start_line": 114,
+          "end_line": 123,
+          "quote": "`seurat_v3` needs scikit-misc (included through scvi-tools' Scanpy dependency);\nLeiden with `flavor='igraph'` needs igraph. Tiny or degenerate datasets can fail the\nHVG local regression; reduce the feature-selection ambition, inspect data quality,\nand do not conceal the failure by changing the count layer.\n\nCount validity does not prove count provenance. If filtering removes all expression\nfrom a cell, remove that cell or revise feature selection before setup. Do not add\ncondition, tissue, or donor as nuisance covariates automatically: they may encode\nthe biological signal being investigated, and confounding cannot be repaired by\nregistration alone."
+        },
+        "priority": 0,
+        "kind": "prohibition",
+        "scope": {
+          "entity": "count layer and biological covariates",
+          "temporal": "HVG failure / setup"
+        },
+        "skills": [
+          "scvi-tools"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Numeric checks differ from provenance, revision and scientific decisions."
+        ]
+      },
+      {
+        "id": "scvi-registration-invalidation",
+        "source": {
+          "source_id": "skills__scvi-tools__SKILL",
+          "start_line": 125,
+          "end_line": 128,
+          "quote": "Registration is tied to feature order, layers and category encodings. Finish\nfiltering before setup. If the training object changes, register it again and\ninitialize a new model; use the dedicated query-mapping methods for a trained\nreference rather than changing its registry in place."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "training object registry",
+          "temporal": "after object mutation"
+        },
+        "skills": [
+          "scvi-tools"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Object-version identity and registry invalidation."
+        ]
+      },
+      {
+        "id": "scvi-sysvi-specialized",
+        "source": {
+          "source_id": "skills__scvi-tools__references__models-specialized",
+          "start_line": 84,
+          "end_line": 108,
+          "quote": "SysVI is intended for substantial cross-system effects (for example protocol or\nmodel-system differences). It models approximately normal inputs, commonly\nlibrary-normalized and log1p-transformed RNA, rather than raw RNA counts.\n\n```python\nimport scanpy as sc\n\n# sys_adata starts with measured counts; preserve before transforming.\nsys_adata.layers[\"counts\"] = sys_adata.X.copy()\nsc.pp.normalize_total(sys_adata, target_sum=1e4)\nsc.pp.log1p(sys_adata)\nsys_adata.layers[\"log_normalized\"] = sys_adata.X.copy()\nscvi.external.SysVI.setup_anndata(\n    sys_adata, layer=\"log_normalized\", batch_key=\"system\",\n)\nsysvi = scvi.external.SysVI(sys_adata)\nsysvi.train()\nsys_adata.obsm[\"X_SysVI\"] = sysvi.get_latent_representation()\n```\n\nTune cycle-consistency strength with biological-preservation checks and seeds;\nmore correction is not always better. A system covariate is treated differently\nfrom auxiliary covariates. Gene orthology and shared feature definitions require\nexplicit decisions for cross-species data. SysVI is not a guarantee that confounded\nor nonoverlapping biological states can be aligned safely."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "SysVI exact input/model",
+          "temporal": "registration and interpretation"
+        },
+        "skills": [
+          "scvi-tools"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Example starts with counts but does not require count retrieval when correct normalized data already available."
+        ]
+      }
+    ],
+    "contexts": [
+      {
+        "id": "KD-SC-01",
+        "facts": {
+          "scenario_id": "KD-SC-01"
+        },
+        "active_skills": [
+          "scanpy",
+          "anndata",
+          "scvi-tools"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "id": "scanpy"
+      },
+      {
+        "id": "anndata"
+      },
+      {
+        "id": "scvi-tools"
+      }
+    ],
+    "assumptions": [
+      "Native model extraction, not product provider execution or human gold. Independent labels and checker predictions were not consulted.",
+      "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+      "Only declared scenario capabilities and outcomes are modeled. No repository scripts/services were run.",
+      "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+      "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+      "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+      "{\"assumptions\": [\"All named Python packages and selected model dependencies are already installed and compatible with pinned skill versions; CPU, memory, local file access and sufficient training time are available.\", \"Cells/features are unique, batch metadata complete, dataset nondegenerate and QC/feature selection criteria valid. Outcome concerns a mechanically completed model fit/export, not biological validation or convergence guarantees.\", \"Measured unnormalized counts and provenance are available; normalization modifies X only, while layers['counts'] remains available.\"], \"family\": \"single_cell\", \"id\": \"KD-SC-01\", \"origin\": \"synthetic_control\", \"scenario\": \"Preprocess measured RNA counts with Scanpy, preserve counts in AnnData, fit SCVI using the count layer, and export its representation.\", \"selection_rationale\": \"Exercise documented intended coactivation with separate matrix representations.\"}"
+    ],
+    "workflows": [
+      {
+        "id": "kd-sc-01-workflow",
+        "initial": [
+          "packages_available",
+          "resources_sufficient",
+          "qc_valid",
+          "ids_order_valid",
+          "metadata_valid",
+          "measured_raw_counts_available"
+        ],
+        "goal": [
+          "mechanical_fit_export_complete"
+        ],
+        "actions": [
+          {
+            "id": "preserve_measured_counts",
+            "requires": [
+              "measured_raw_counts_available"
+            ],
+            "adds": [
+              "measured_counts_preserved"
+            ],
+            "removes": [],
+            "provenance": {
+              "source_spans": [
+                {
+                  "source_id": "skills__scanpy__SKILL",
+                  "start_line": 46,
+                  "end_line": 48,
+                  "quote": "- `layers[\"counts\"]` remains unnormalized; `.raw` is an independent full-gene\n  log-normalized snapshot. Gene subsetting also subsets every layer, but does not subset\n  `.raw` genes. Retain a full-gene object for pseudobulk; the full pipeline does so."
+                },
+                {
+                  "source_id": "skills__anndata__SKILL",
+                  "start_line": 352,
+                  "end_line": 363,
+                  "quote": "# 3. Preserve counts explicitly, then normalize X\nadata = adata.copy()\nadata.layers['counts'] = adata.X.copy()\nadata.uns['matrix_semantics'] = {'counts': 'untransformed counts'}\n\n# 4. Normalize and filter\nsc.pp.normalize_total(adata, target_sum=1e4)\nsc.pp.log1p(adata)\nadata.raw = adata.copy()  # Snapshot log-normalized X with all genes\nadata.uns['matrix_semantics']['raw'] = 'log1p library-size normalized expression'\nsc.pp.highly_variable_genes(adata, n_top_genes=2000)\nadata = adata[:, adata.var['highly_variable']].copy()"
+                }
+              ],
+              "assumptions": [
+                "Finite declared-state abstraction; does not execute code or verify underlying data/human act."
+              ]
+            }
+          },
+          {
+            "id": "normalize_X_keep_counts",
+            "requires": [
+              "measured_counts_preserved"
+            ],
+            "adds": [
+              "normalized_expression_available"
+            ],
+            "removes": [],
+            "provenance": {
+              "source_spans": [
+                {
+                  "source_id": "skills__anndata__SKILL",
+                  "start_line": 352,
+                  "end_line": 363,
+                  "quote": "# 3. Preserve counts explicitly, then normalize X\nadata = adata.copy()\nadata.layers['counts'] = adata.X.copy()\nadata.uns['matrix_semantics'] = {'counts': 'untransformed counts'}\n\n# 4. Normalize and filter\nsc.pp.normalize_total(adata, target_sum=1e4)\nsc.pp.log1p(adata)\nadata.raw = adata.copy()  # Snapshot log-normalized X with all genes\nadata.uns['matrix_semantics']['raw'] = 'log1p library-size normalized expression'\nsc.pp.highly_variable_genes(adata, n_top_genes=2000)\nadata = adata[:, adata.var['highly_variable']].copy()"
+                }
+              ],
+              "assumptions": [
+                "Finite declared-state abstraction; does not execute code or verify underlying data/human act."
+              ]
+            }
+          },
+          {
+            "id": "select_count_features",
+            "requires": [
+              "packages_available",
+              "resources_sufficient",
+              "qc_valid",
+              "ids_order_valid",
+              "metadata_valid",
+              "measured_counts_preserved",
+              "normalized_expression_available"
+            ],
+            "adds": [
+              "scvi_feature_object_ready"
+            ],
+            "removes": [],
+            "provenance": {
+              "source_spans": [
+                {
+                  "source_id": "skills__scanpy__SKILL",
+                  "start_line": 46,
+                  "end_line": 48,
+                  "quote": "- `layers[\"counts\"]` remains unnormalized; `.raw` is an independent full-gene\n  log-normalized snapshot. Gene subsetting also subsets every layer, but does not subset\n  `.raw` genes. Retain a full-gene object for pseudobulk; the full pipeline does so."
+                },
+                {
+                  "source_id": "skills__scvi-tools__SKILL",
+                  "start_line": 64,
+                  "end_line": 68,
+                  "quote": "1. Confirm modality, raw-data provenance, unique cell/feature IDs, feature order,\n   batch/sample metadata, and the intended biological comparison.\n2. Perform QC and feature selection before model registration. Use count-aware\n   HVG selection for count layers, and preserve a full-gene count object for later\n   analyses outside the selected feature set."
+                }
+              ],
+              "assumptions": [
+                "Finite declared-state abstraction; does not execute code or verify underlying data/human act."
+              ]
+            }
+          },
+          {
+            "id": "register_scvi_counts",
+            "requires": [
+              "scvi_feature_object_ready",
+              "measured_counts_preserved"
+            ],
+            "adds": [
+              "scvi_registered"
+            ],
+            "removes": [],
+            "provenance": {
+              "source_spans": [
+                {
+                  "source_id": "skills__scvi-tools__SKILL",
+                  "start_line": 26,
+                  "end_line": 28,
+                  "quote": "| Task | Class | Required input |\n| --- | --- | --- |\n| RNA integration | `scvi.model.SCVI` | Unnormalized RNA counts |"
+                },
+                {
+                  "source_id": "skills__scvi-tools__SKILL",
+                  "start_line": 69,
+                  "end_line": 74,
+                  "quote": "3. Register the exact data object with that model's `setup_anndata` or\n   `setup_mudata`; create and train the model. Setup is registration, not normalization.\n4. Inspect validation history, held-out fit, seed stability, batch mixing **and**\n   retention of known biology. A well-mixed UMAP alone does not validate integration.\n5. Extract representations or model-specific normalized outputs; save the model,\n   data, selected feature order, software versions, seed and training parameters."
+                }
+              ],
+              "assumptions": [
+                "Finite declared-state abstraction; does not execute code or verify underlying data/human act."
+              ]
+            }
+          },
+          {
+            "id": "fit_scvi",
+            "requires": [
+              "scvi_registered",
+              "resources_sufficient"
+            ],
+            "adds": [
+              "model_fitted"
+            ],
+            "removes": [],
+            "provenance": {
+              "source_spans": [
+                {
+                  "source_id": "skills__scvi-tools__SKILL",
+                  "start_line": 69,
+                  "end_line": 74,
+                  "quote": "3. Register the exact data object with that model's `setup_anndata` or\n   `setup_mudata`; create and train the model. Setup is registration, not normalization.\n4. Inspect validation history, held-out fit, seed stability, batch mixing **and**\n   retention of known biology. A well-mixed UMAP alone does not validate integration.\n5. Extract representations or model-specific normalized outputs; save the model,\n   data, selected feature order, software versions, seed and training parameters."
+                }
+              ],
+              "assumptions": [
+                "Finite declared-state abstraction; does not execute code or verify underlying data/human act.",
+                "Scenario declares mechanical fit success; this is not convergence or biological validation."
+              ]
+            }
+          },
+          {
+            "id": "export_model_and_representation",
+            "requires": [
+              "model_fitted"
+            ],
+            "adds": [
+              "mechanical_fit_export_complete"
+            ],
+            "removes": [],
+            "provenance": {
+              "source_spans": [
+                {
+                  "source_id": "skills__scvi-tools__SKILL",
+                  "start_line": 69,
+                  "end_line": 74,
+                  "quote": "3. Register the exact data object with that model's `setup_anndata` or\n   `setup_mudata`; create and train the model. Setup is registration, not normalization.\n4. Inspect validation history, held-out fit, seed stability, batch mixing **and**\n   retention of known biology. A well-mixed UMAP alone does not validate integration.\n5. Extract representations or model-specific normalized outputs; save the model,\n   data, selected feature order, software versions, seed and training parameters."
+                }
+              ],
+              "assumptions": [
+                "Finite declared-state abstraction; does not execute code or verify underlying data/human act."
+              ]
+            }
+          }
+        ],
+        "advertisement_rule": "scvi-register-train"
+      }
+    ],
+    "interpretation": {
+      "status": "candidate",
+      "method": "native-model extraction; evidence-only clauses plus declared-state workflow adaptation",
+      "accepted_candidate_ids": [],
+      "excluded_candidate_ids": [],
+      "total_candidate_count": 18,
+      "untranslated_line_count": 1169,
+      "unsupported_spans": [
+        {
+          "source_id": "skills__anndata__SKILL",
+          "start_line": 1,
+          "end_line": 475,
+          "quote": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n# Snapshot current X/var before feature filtering (not automatically raw counts)\nadata.raw = adata.copy()\nadata = adata[:, adata.var['highly_variable']]\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n# 3. Preserve counts explicitly, then normalize X\nadata = adata.copy()\nadata.layers['counts'] = adata.X.copy()\nadata.uns['matrix_semantics'] = {'counts': 'untransformed counts'}\n\n# 4. Normalize and filter\nsc.pp.normalize_total(adata, target_sum=1e4)\nsc.pp.log1p(adata)\nadata.raw = adata.copy()  # Snapshot log-normalized X with all genes\nadata.uns['matrix_semantics']['raw'] = 'log1p library-size normalized expression'\nsc.pp.highly_variable_genes(adata, n_top_genes=2000)\nadata = adata[:, adata.var['highly_variable']].copy()\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+        },
+        {
+          "source_id": "skills__scanpy__SKILL",
+          "start_line": 1,
+          "end_line": 361,
+          "quote": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nIf the input is an R-native single-cell object (`.rds`, `.RData`, Seurat, or SingleCellExperiment), first convert it to `.h5ad` with R tooling, then load it with Scanpy. Read `references/r_interop.md` for agent-run installation and conversion instructions across macOS, Linux, and Windows.\n\nFor AnnData structure and I/O details, use the **anndata** skill. For probabilistic models and batch correction, use **scvi-tools**.\n\n\n\n- Input to QC/preprocessing must be identified raw counts. The scripts reject negative,\n  fractional, nonfinite or zero-total cells. Use `--counts-layer counts` when X is already\n  normalized; never infer provenance from integer-looking values alone.\n- `layers[\"counts\"]` remains unnormalized; `.raw` is an independent full-gene\n  log-normalized snapshot. Gene subsetting also subsets every layer, but does not subset\n  `.raw` genes. Retain a full-gene object for pseudobulk; the full pipeline does so.\n- `seurat`/`cell_ranger` HVGs use log-normalized values; `seurat_v3` and\n  `seurat_v3_paper` use counts and require `scanpy[skmisc]`. Scaling/regression are optional,\n  may densify sparse data, and can remove biology along with covariates.\n- Marker ranking defaults to `.raw` when present; `--no-use-raw` selects X and `--layer`\n  selects an explicit log-normalized layer. `--groups`/`--reference` control contrasts.\n  Wilcoxon/t-test adjusted p-values use BH within each comparison; logreg returns ranking\n  scores without p-values. Clusters chosen from the same data yield exploratory markers.\n- Condition DE requires raw-count sums per sample and cell type, independent biological\n  replicates, aligned condition/donor metadata and a full-rank design. Analyze each cell\n  type separately; repeated donor samples require a suitable paired design. Aggregation\n  cannot fix confounding, missing replication, doublets or incorrect annotations.\n- Harmony (`harmonypy`) changes PCA coordinates; BBKNN (`bbknn`) changes the graph;\n  ComBat changes X. Keep original expression/counts for DE, and assess biological\n  conservation and batch mixing together. Requested integration/doublet failures stop.\n- The toolkit loads files into memory. For backed data, explicitly call `.to_memory()`\n  on a chosen subset and close the file; backed mode is not a general out-of-core\n  pipeline. Copy views before mutation. Dask support varies by function/array layout.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n## Script Toolkit (prefer these over writing code from scratch)\n\nThis skill bundles ready-to-run CLI scripts in `scripts/` for every common step. **Run these instead of hand-writing scanpy code** \u2014 they handle file loading by extension, figure setup, sensible defaults, raw-count preservation, and progress logging. Each reads and writes `.h5ad`, so they chain together, and each has its own `--help`. Only drop down to writing scanpy code when a task isn't covered by a script or needs unusual customization.\n\nAll scripts use a shared `scripts/_common.py` helper (loading, saving, figure config) \u2014 keep it alongside the others. Run from the skill directory or pass full paths; figures default to `./figures/`.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+        },
+        {
+          "source_id": "skills__scvi-tools__SKILL",
+          "start_line": 1,
+          "end_line": 195,
+          "quote": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n| Task | Class | Required input |\n| --- | --- | --- |\n| RNA integration | `scvi.model.SCVI` | Unnormalized RNA counts |\n\n\n\n\n\n\n| Cytometry | `scvi.external.CYTOVI` | Transformed protein intensities |\n| Large cross-system effects | `scvi.external.SysVI` | Normalized, log-transformed expression |\n| RNA velocity | `scvi.external.VELOVI` | Preprocessed spliced/unspliced abundances |\n\nThe count rule is model-specific: do not feed raw RNA counts to SysVI or replace\nmethylation coverage with ratios. Likewise, never reconstruct counts by exponentiating\nlog-normalized data. Preserve measured counts and preprocessing provenance.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n1. Confirm modality, raw-data provenance, unique cell/feature IDs, feature order,\n   batch/sample metadata, and the intended biological comparison.\n2. Perform QC and feature selection before model registration. Use count-aware\n   HVG selection for count layers, and preserve a full-gene count object for later\n   analyses outside the selected feature set.\n3. Register the exact data object with that model's `setup_anndata` or\n   `setup_mudata`; create and train the model. Setup is registration, not normalization.\n4. Inspect validation history, held-out fit, seed stability, batch mixing **and**\n   retention of known biology. A well-mixed UMAP alone does not validate integration.\n5. Extract representations or model-specific normalized outputs; save the model,\n   data, selected feature order, software versions, seed and training parameters.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n`seurat_v3` needs scikit-misc (included through scvi-tools' Scanpy dependency);\nLeiden with `flavor='igraph'` needs igraph. Tiny or degenerate datasets can fail the\nHVG local regression; reduce the feature-selection ambition, inspect data quality,\nand do not conceal the failure by changing the count layer.\n\nCount validity does not prove count provenance. If filtering removes all expression\nfrom a cell, remove that cell or revise feature selection before setup. Do not add\ncondition, tissue, or donor as nuisance covariates automatically: they may encode\nthe biological signal being investigated, and confounding cannot be repaired by\nregistration alone.\n\nRegistration is tied to feature order, layers and category encodings. Finish\nfiltering before setup. If the training object changes, register it again and\ninitialize a new model; use the dedicated query-mapping methods for a trained\nreference rather than changing its registry in place.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+        },
+        {
+          "source_id": "skills__scvi-tools__references__models-specialized",
+          "start_line": 1,
+          "end_line": 138,
+          "quote": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSysVI is intended for substantial cross-system effects (for example protocol or\nmodel-system differences). It models approximately normal inputs, commonly\nlibrary-normalized and log1p-transformed RNA, rather than raw RNA counts.\n\n```python\nimport scanpy as sc\n\n# sys_adata starts with measured counts; preserve before transforming.\nsys_adata.layers[\"counts\"] = sys_adata.X.copy()\nsc.pp.normalize_total(sys_adata, target_sum=1e4)\nsc.pp.log1p(sys_adata)\nsys_adata.layers[\"log_normalized\"] = sys_adata.X.copy()\nscvi.external.SysVI.setup_anndata(\n    sys_adata, layer=\"log_normalized\", batch_key=\"system\",\n)\nsysvi = scvi.external.SysVI(sys_adata)\nsysvi.train()\nsys_adata.obsm[\"X_SysVI\"] = sysvi.get_latent_representation()\n```\n\nTune cycle-consistency strength with biological-preservation checks and seeds;\nmore correction is not always better. A system covariate is treated differently\nfrom auxiliary covariates. Gene orthology and shared feature definitions require\nexplicit decisions for cross-species data. SysVI is not a guarantee that confounded\nor nonoverlapping biological states can be aligned safely.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+        }
+      ]
+    }
+  },
+  "sources": {
+    "skills__anndata__SKILL": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n# Snapshot current X/var before feature filtering (not automatically raw counts)\nadata.raw = adata.copy()\nadata = adata[:, adata.var['highly_variable']]\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n# 3. Preserve counts explicitly, then normalize X\nadata = adata.copy()\nadata.layers['counts'] = adata.X.copy()\nadata.uns['matrix_semantics'] = {'counts': 'untransformed counts'}\n\n# 4. Normalize and filter\nsc.pp.normalize_total(adata, target_sum=1e4)\nsc.pp.log1p(adata)\nadata.raw = adata.copy()  # Snapshot log-normalized X with all genes\nadata.uns['matrix_semantics']['raw'] = 'log1p library-size normalized expression'\nsc.pp.highly_variable_genes(adata, n_top_genes=2000)\nadata = adata[:, adata.var['highly_variable']].copy()\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+    "skills__scanpy__SKILL": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nIf the input is an R-native single-cell object (`.rds`, `.RData`, Seurat, or SingleCellExperiment), first convert it to `.h5ad` with R tooling, then load it with Scanpy. Read `references/r_interop.md` for agent-run installation and conversion instructions across macOS, Linux, and Windows.\n\nFor AnnData structure and I/O details, use the **anndata** skill. For probabilistic models and batch correction, use **scvi-tools**.\n\n\n\n- Input to QC/preprocessing must be identified raw counts. The scripts reject negative,\n  fractional, nonfinite or zero-total cells. Use `--counts-layer counts` when X is already\n  normalized; never infer provenance from integer-looking values alone.\n- `layers[\"counts\"]` remains unnormalized; `.raw` is an independent full-gene\n  log-normalized snapshot. Gene subsetting also subsets every layer, but does not subset\n  `.raw` genes. Retain a full-gene object for pseudobulk; the full pipeline does so.\n- `seurat`/`cell_ranger` HVGs use log-normalized values; `seurat_v3` and\n  `seurat_v3_paper` use counts and require `scanpy[skmisc]`. Scaling/regression are optional,\n  may densify sparse data, and can remove biology along with covariates.\n- Marker ranking defaults to `.raw` when present; `--no-use-raw` selects X and `--layer`\n  selects an explicit log-normalized layer. `--groups`/`--reference` control contrasts.\n  Wilcoxon/t-test adjusted p-values use BH within each comparison; logreg returns ranking\n  scores without p-values. Clusters chosen from the same data yield exploratory markers.\n- Condition DE requires raw-count sums per sample and cell type, independent biological\n  replicates, aligned condition/donor metadata and a full-rank design. Analyze each cell\n  type separately; repeated donor samples require a suitable paired design. Aggregation\n  cannot fix confounding, missing replication, doublets or incorrect annotations.\n- Harmony (`harmonypy`) changes PCA coordinates; BBKNN (`bbknn`) changes the graph;\n  ComBat changes X. Keep original expression/counts for DE, and assess biological\n  conservation and batch mixing together. Requested integration/doublet failures stop.\n- The toolkit loads files into memory. For backed data, explicitly call `.to_memory()`\n  on a chosen subset and close the file; backed mode is not a general out-of-core\n  pipeline. Copy views before mutation. Dask support varies by function/array layout.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n## Script Toolkit (prefer these over writing code from scratch)\n\nThis skill bundles ready-to-run CLI scripts in `scripts/` for every common step. **Run these instead of hand-writing scanpy code** \u2014 they handle file loading by extension, figure setup, sensible defaults, raw-count preservation, and progress logging. Each reads and writes `.h5ad`, so they chain together, and each has its own `--help`. Only drop down to writing scanpy code when a task isn't covered by a script or needs unusual customization.\n\nAll scripts use a shared `scripts/_common.py` helper (loading, saving, figure config) \u2014 keep it alongside the others. Run from the skill directory or pass full paths; figures default to `./figures/`.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+    "skills__scvi-tools__SKILL": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n| Task | Class | Required input |\n| --- | --- | --- |\n| RNA integration | `scvi.model.SCVI` | Unnormalized RNA counts |\n\n\n\n\n\n\n| Cytometry | `scvi.external.CYTOVI` | Transformed protein intensities |\n| Large cross-system effects | `scvi.external.SysVI` | Normalized, log-transformed expression |\n| RNA velocity | `scvi.external.VELOVI` | Preprocessed spliced/unspliced abundances |\n\nThe count rule is model-specific: do not feed raw RNA counts to SysVI or replace\nmethylation coverage with ratios. Likewise, never reconstruct counts by exponentiating\nlog-normalized data. Preserve measured counts and preprocessing provenance.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n1. Confirm modality, raw-data provenance, unique cell/feature IDs, feature order,\n   batch/sample metadata, and the intended biological comparison.\n2. Perform QC and feature selection before model registration. Use count-aware\n   HVG selection for count layers, and preserve a full-gene count object for later\n   analyses outside the selected feature set.\n3. Register the exact data object with that model's `setup_anndata` or\n   `setup_mudata`; create and train the model. Setup is registration, not normalization.\n4. Inspect validation history, held-out fit, seed stability, batch mixing **and**\n   retention of known biology. A well-mixed UMAP alone does not validate integration.\n5. Extract representations or model-specific normalized outputs; save the model,\n   data, selected feature order, software versions, seed and training parameters.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n`seurat_v3` needs scikit-misc (included through scvi-tools' Scanpy dependency);\nLeiden with `flavor='igraph'` needs igraph. Tiny or degenerate datasets can fail the\nHVG local regression; reduce the feature-selection ambition, inspect data quality,\nand do not conceal the failure by changing the count layer.\n\nCount validity does not prove count provenance. If filtering removes all expression\nfrom a cell, remove that cell or revise feature selection before setup. Do not add\ncondition, tissue, or donor as nuisance covariates automatically: they may encode\nthe biological signal being investigated, and confounding cannot be repaired by\nregistration alone.\n\nRegistration is tied to feature order, layers and category encodings. Finish\nfiltering before setup. If the training object changes, register it again and\ninitialize a new model; use the dedicated query-mapping methods for a trained\nreference rather than changing its registry in place.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+    "skills__scvi-tools__references__models-specialized": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSysVI is intended for substantial cross-system effects (for example protocol or\nmodel-system differences). It models approximately normal inputs, commonly\nlibrary-normalized and log1p-transformed RNA, rather than raw RNA counts.\n\n```python\nimport scanpy as sc\n\n# sys_adata starts with measured counts; preserve before transforming.\nsys_adata.layers[\"counts\"] = sys_adata.X.copy()\nsc.pp.normalize_total(sys_adata, target_sum=1e4)\nsc.pp.log1p(sys_adata)\nsys_adata.layers[\"log_normalized\"] = sys_adata.X.copy()\nscvi.external.SysVI.setup_anndata(\n    sys_adata, layer=\"log_normalized\", batch_key=\"system\",\n)\nsysvi = scvi.external.SysVI(sys_adata)\nsysvi.train()\nsys_adata.obsm[\"X_SysVI\"] = sysvi.get_latent_representation()\n```\n\nTune cycle-consistency strength with biological-preservation checks and seeds;\nmore correction is not always better. A system covariate is treated differently\nfrom auxiliary covariates. Gene orthology and shared feature definitions require\nexplicit decisions for cross-species data. SysVI is not a guarantee that confounded\nor nonoverlapping biological states can be aligned safely.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+  },
+  "tools": {
+    "tools": {}
+  },
+  "runtime": {
+    "max_plan_steps": 20
+  }
+}

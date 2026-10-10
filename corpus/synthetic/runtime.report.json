@@ -629,8 +629,17 @@
       "completion_guaranteed": false
     }
   ],
+  "workflow_checks": [],
+  "trace_checks": [],
+  "constraint_checks": [],
   "coverage": {
     "translation": "declared_only",
+    "runtime_grounding": "declared_snapshot_only",
+    "runtime_observations_verified": false,
+    "interpretation_review_recorded": false,
+    "incomplete": false,
+    "incomplete_reasons": [],
+    "interpretation": {},
     "context_count": 1,
     "plan_bound": 20,
     "universal_prompt_correctness_certified": false

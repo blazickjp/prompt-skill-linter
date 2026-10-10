@@ -1,0 +1,127 @@
+{
+  "cases": [
+    {
+      "id": "KD-WR-01-original",
+      "case_id": "KD-WR-01",
+      "stage": "post_audit_regression_not_blind_benchmark",
+      "base_bundle": "candidates/KD-WR-01.json",
+      "base_sha256": "babf1d6a21d2a70570951e646d89947aff69ee9e6ea20d877acb1cc908657c03",
+      "bundle": "post_audit_traces/KD-WR-01-original.json",
+      "expected_trace_status": "violated",
+      "source_assertion": {
+        "id": "post-audit-current-human-verification",
+        "kind": "freshness",
+        "invalidate_actions": [
+          "draft_manuscript"
+        ],
+        "refresh_actions": [
+          "human_reverify_changed_prose"
+        ],
+        "guarded_actions": [
+          "human_approve_ready_and_remove_banner"
+        ],
+        "initially_fresh": false,
+        "source": {
+          "source_id": "skills__scientific-writing__SKILL",
+          "start_line": 143,
+          "end_line": 145,
+          "quote": "Do not mark a source verified until an accountable human has opened it and confirmed\nthe exact support. After changing wording, re-verify the claim before updating its\nhash; see the exact normalization in `references/evidence_workflow.md`."
+        },
+        "assumptions": [
+          "POST-AUDIT declaration manually authored from the cited source after independent review found the model defect. This is not a blind extraction result.",
+          "All modeled allowed prefixes are checked, including after goal completion; goals do not terminate the run. Deliberate new generator runs are outside this one-run case."
+        ]
+      }
+    },
+    {
+      "id": "KD-WR-01-corrected",
+      "case_id": "KD-WR-01",
+      "stage": "post_audit_regression_not_blind_benchmark",
+      "base_bundle": "bundles/KD-WR-01.json",
+      "base_sha256": "502f298c186e6056120a7d52d126dead39331662d0c92effdd4fa315e3f2c1fd",
+      "bundle": "post_audit_traces/KD-WR-01-corrected.json",
+      "expected_trace_status": "safe",
+      "source_assertion": {
+        "id": "post-audit-current-human-verification",
+        "kind": "freshness",
+        "invalidate_actions": [
+          "draft_manuscript"
+        ],
+        "refresh_actions": [
+          "human_reverify_changed_prose"
+        ],
+        "guarded_actions": [
+          "human_approve_ready_and_remove_banner"
+        ],
+        "initially_fresh": false,
+        "source": {
+          "source_id": "skills__scientific-writing__SKILL",
+          "start_line": 143,
+          "end_line": 145,
+          "quote": "Do not mark a source verified until an accountable human has opened it and confirmed\nthe exact support. After changing wording, re-verify the claim before updating its\nhash; see the exact normalization in `references/evidence_workflow.md`."
+        },
+        "assumptions": [
+          "POST-AUDIT declaration manually authored from the cited source after independent review found the model defect. This is not a blind extraction result.",
+          "All modeled allowed prefixes are checked, including after goal completion; goals do not terminate the run. Deliberate new generator runs are outside this one-run case."
+        ]
+      }
+    },
+    {
+      "id": "KD-LR-04-original",
+      "case_id": "KD-LR-04",
+      "stage": "post_audit_regression_not_blind_benchmark",
+      "base_bundle": "candidates/KD-LR-04.json",
+      "base_sha256": "95284ced7431fe34242e4454a9aa58a873b723b0ed481449e56b4fb001139fa7",
+      "bundle": "post_audit_traces/KD-LR-04-original.json",
+      "expected_trace_status": "violated",
+      "source_assertion": {
+        "id": "post-audit-two-attempt-cap",
+        "kind": "action_count",
+        "actions": [
+          "generate_first_png",
+          "generate_second_png"
+        ],
+        "max_count": 2,
+        "source": {
+          "source_id": "skills__scientific-schematics__SKILL",
+          "start_line": 195,
+          "end_line": 195,
+          "quote": "The loop stops when the review passes or is unavailable, or when generation fails. A below-threshold score or an explicit improvement verdict can trigger a second generation; no run makes more than two attempts."
+        },
+        "assumptions": [
+          "POST-AUDIT declaration manually authored from the cited source after independent review found the model defect. This is not a blind extraction result.",
+          "All modeled allowed prefixes are checked, including after goal completion; goals do not terminate the run. Deliberate new generator runs are outside this one-run case."
+        ]
+      }
+    },
+    {
+      "id": "KD-LR-04-corrected",
+      "case_id": "KD-LR-04",
+      "stage": "post_audit_regression_not_blind_benchmark",
+      "base_bundle": "bundles/KD-LR-04.json",
+      "base_sha256": "e62c85a63a23e335012d5bff14075e305dc543ac0d1e89a3fdd8551f6aeb68dd",
+      "bundle": "post_audit_traces/KD-LR-04-corrected.json",
+      "expected_trace_status": "safe",
+      "source_assertion": {
+        "id": "post-audit-two-attempt-cap",
+        "kind": "action_count",
+        "actions": [
+          "generate_first_png",
+          "generate_second_png"
+        ],
+        "max_count": 2,
+        "source": {
+          "source_id": "skills__scientific-schematics__SKILL",
+          "start_line": 195,
+          "end_line": 195,
+          "quote": "The loop stops when the review passes or is unavailable, or when generation fails. A below-threshold score or an explicit improvement verdict can trigger a second generation; no run makes more than two attempts."
+        },
+        "assumptions": [
+          "POST-AUDIT declaration manually authored from the cited source after independent review found the model defect. This is not a blind extraction result.",
+          "All modeled allowed prefixes are checked, including after goal completion; goals do not terminate the run. Deliberate new generator runs are outside this one-run case."
+        ]
+      }
+    }
+  ],
+  "notice": "Assertions were authored after native review found the defects. Mechanical reproduction is not credited as blind discovery."
+}

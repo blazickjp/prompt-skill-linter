@@ -40,7 +40,7 @@ def render(report):
     for check in report['resource_checks']:
         w = check['witness']
         lines.append(f"\nResource check n={check['request_size']}: {check['status']}; lower bound {w['lower_bound_calls']}, budget {w['budget']}")
-    lines.append('\nA lower-bound pass is not a completion guarantee. Prose extraction is not implemented.')
+    lines.append('\nA lower-bound pass is not a completion guarantee. Checks apply to the reviewed contract; semantic fidelity to source prose is not certified.')
     return '\n'.join(lines) + '\n'
 
 

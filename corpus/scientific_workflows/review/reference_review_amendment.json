@@ -1,0 +1,39 @@
+{
+  "stage": "pre_checker_post_reference_review",
+  "neutral_packet_sha256": "5961623150fd553c830d4915c940dab70a3d8b9aa98e512204e9f79e5811526b",
+  "initial_labels_sha256": "3246632e9a5ea5bfd29f40ba3c425da69c862687336f585670f8b36e792f7c45",
+  "packet_consistency": "Final written packet matches relayed frozen descriptions used in initial labels.",
+  "revisions": [
+    {
+      "case_id": "KD-LR-01",
+      "original_label": "feasible",
+      "revised_label": "ambiguous",
+      "confidence": "medium",
+      "rationale": "Optional schematic branch is feasible without key/network. Whole-review completion is underdetermined: the later-arriving core workflow directs DOI registration checks through Handle/Crossref and its quality checklist requires completed registration checks. Scenario supplies local reports/search/extraction and manual identity/claim support, but not DOI presence, existing DOI verification report, or registration completion. Absence of network is explicit; absence of cached verification is not. Do not infer overall completion or a definite missing prerequisite from these unknowns.",
+      "clarification_needed": "Are DOI registration checks applicable and already completed/cached, or is the deliverable explicitly an incomplete review draft?",
+      "evidence": [
+        {
+          "path": "skills/literature-review/references/core_workflow.md",
+          "start_line": 203,
+          "end_line": 224,
+          "quote": "### Phase 6: Citation Verification\n\n**CRITICAL**: All citations must be verified for accuracy before final submission.\n\n1. **Verify All DOIs**:\n   ```bash\n   python scripts/verify_citations.py my_literature_review.md\n   ```\n\n   This script:\n   - Extracts all DOIs from the document\n   - Checks DOI registration via the Handle API\n   - Retrieves available Crossref metadata and preserves unresolved errors\n   - Generates verification report\n   - Does not verify claim support, publisher accessibility, or final citation style\n\n2. **Review Verification Report**:\n   - Check for any failed DOIs\n   - Verify author names, titles, and publication details match\n   - Correct any errors in the original document\n   - Resolve errors against the source; do not delete a reference solely because a service timed out or lacks its metadata\n",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/literature-review/references/core_workflow.md#L203-L224"
+        },
+        {
+          "path": "skills/literature-review/references/core_workflow.md",
+          "start_line": 259,
+          "end_line": 259,
+          "quote": "   - [ ] DOI registration checked; metadata identity and claim support reviewed manually",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/literature-review/references/core_workflow.md#L259"
+        }
+      ]
+    }
+  ],
+  "current_counts": {
+    "feasible": 5,
+    "unsupported": 4,
+    "ambiguous": 4,
+    "contradiction": 0
+  },
+  "restriction": "No checker or extracted contract has been inspected. Revision prompted by additional original source context, not predictions."
+}

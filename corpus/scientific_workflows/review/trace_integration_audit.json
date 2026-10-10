@@ -1,0 +1,1099 @@
+{
+  "method": "Independent source-backed post-audit integration probes; no upstream operations or core edits.",
+  "results": [
+    {
+      "case_id": "KD-LR-04",
+      "variant": "original",
+      "reachability_status": "unreachable",
+      "trace_result": {
+        "assertion_id": "audit-one-run-attempt-cap",
+        "kind": "action_count",
+        "status": "violated",
+        "violation_path": [
+          "compare_citations_claims_to_local_sources",
+          "synthesize_narrative_review",
+          "generate_first_png",
+          "generate_first_png",
+          "generate_first_png"
+        ],
+        "violation": {
+          "action": "generate_first_png",
+          "observed_count": 3,
+          "max_count": 2
+        },
+        "search_exhaustive": false,
+        "visited_states": 6,
+        "bounds": {
+          "max_steps": 20,
+          "max_states": 2000
+        },
+        "cutoff_reasons": [],
+        "aggregate_budget": {
+          "max_visited_states": 20000,
+          "remaining_states": 19994
+        },
+        "workflow": "kd-lr-04-workflow",
+        "context_id": "KD-LR-04",
+        "source": {
+          "source_id": "skills__scientific-schematics__SKILL",
+          "start_line": 195,
+          "end_line": 195,
+          "quote": "The loop stops when the review passes or is unavailable, or when generation fails. A below-threshold score or an explicit improvement verdict can trigger a second generation; no run makes more than two attempts."
+        },
+        "assumptions": [
+          "Post-independent-audit demonstration; reviewer selected action-event mapping. No automatic inference, human gold, upstream bug, or runtime-execution claim. One invocation; goals do not terminate enabled transitions."
+        ],
+        "property_scope": "safety_of_allowed_paths_in_reviewed_transition_model",
+        "completion_feasibility_not_disproved": true,
+        "minimality_not_checked": true,
+        "implicated_actions": [
+          {
+            "id": "compare_citations_claims_to_local_sources",
+            "requires": [
+              "actual_reports_available",
+              "search_extraction_available"
+            ],
+            "adds": [
+              "local_source_comparison_complete"
+            ],
+            "removes": [],
+            "provenance": {
+              "source_spans": [
+                {
+                  "source_id": "skills__literature-review__SKILL",
+                  "start_line": 106,
+                  "end_line": 110,
+                  "quote": "### Quality and Reproducibility\n1. **Assess study quality**: Use appropriate quality assessment tools\n2. **Verify citations and claims**: Run verify_citations.py for DOI registration/metadata, then compare the reference and the cited claim with the actual source\n3. **Document methodology**: Provide enough detail for others to reproduce\n4. **Follow guidelines**: Use PRISMA for systematic reviews"
+                },
+                {
+                  "source_id": "skills__literature-review__references__core_workflow",
+                  "start_line": 203,
+                  "end_line": 229,
+                  "quote": "### Phase 6: Citation Verification\n\n**CRITICAL**: All citations must be verified for accuracy before final submission.\n\n1. **Verify All DOIs**:\n   ```bash\n   python scripts/verify_citations.py my_literature_review.md\n   ```\n\n   This script:\n   - Extracts all DOIs from the document\n   - Checks DOI registration via the Handle API\n   - Retrieves available Crossref metadata and preserves unresolved errors\n   - Generates verification report\n   - Does not verify claim support, publisher accessibility, or final citation style\n\n2. **Review Verification Report**:\n   - Check for any failed DOIs\n   - Verify author names, titles, and publication details match\n   - Correct any errors in the original document\n   - Resolve errors against the source; do not delete a reference solely because a service timed out or lacks its metadata\n\n3. **Format Citations Consistently**:\n   - Choose one citation style and use throughout (see `references/citation_styles.md`)\n   - Common styles: APA, Nature, Vancouver, Chicago, IEEE\n   - Use complete metadata with a CSL processor; the script only provides metadata previews\n   - Ensure in-text citations match reference list format"
+                }
+              ],
+              "assumptions": [
+                "Finite declared-state abstraction; does not execute code or verify underlying data/human act.",
+                "Scope is narrative Markdown completion, not final journal submission; live DOI-helper requirement remains a documented ambiguity, not proven waived."
+              ]
+            }
+          },
+          {
+            "id": "synthesize_narrative_review",
+            "requires": [
+              "local_source_comparison_complete",
+              "markdown_available"
+            ],
+            "adds": [
+              "review_text_ready"
+            ],
+            "removes": [],
+            "provenance": {
+              "source_spans": [
+                {
+                  "source_id": "skills__literature-review__SKILL",
+                  "start_line": 23,
+                  "end_line": 25,
+                  "quote": "Conduct systematic, comprehensive literature reviews following rigorous academic methodology. Search multiple literature databases, synthesize findings thematically, verify all citations for accuracy, and generate professional output documents in markdown and PDF formats.\n\nUse discipline-appropriate bibliographic databases for the reproducible search, with **parallel-web** (`parallel-cli search`) for scoping and supplementary discovery. Ranked web results and extracted excerpts cannot establish exhaustive coverage or substitute for full-text assessment. Bundled scripts process normalized records, check DOI registration, and render documents; they do not run a complete systematic review automatically."
+                },
+                {
+                  "source_id": "skills__literature-review__SKILL",
+                  "start_line": 106,
+                  "end_line": 110,
+                  "quote": "### Quality and Reproducibility\n1. **Assess study quality**: Use appropriate quality assessment tools\n2. **Verify citations and claims**: Run verify_citations.py for DOI registration/metadata, then compare the reference and the cited claim with the actual source\n3. **Document methodology**: Provide enough detail for others to reproduce\n4. **Follow guidelines**: Use PRISMA for systematic reviews"
+                }
+              ],
+              "assumptions": [
+                "Finite declared-state abstraction; does not execute code or verify underlying data/human act."
+              ]
+            }
+          },
+          {
+            "id": "generate_first_png",
+            "requires": [
+              "review_text_ready",
+              "local_python_requests",
+              "network_available",
+              "openrouter_credential_available",
+              "public_prompt_authorized",
+              "generation_success_declared"
+            ],
+            "adds": [
+              "first_png_saved",
+              "png_saved"
+            ],
+            "removes": [],
+            "provenance": {
+              "source_spans": [
+                {
+                  "source_id": "skills__scientific-schematics__SKILL",
+                  "start_line": 46,
+                  "end_line": 54,
+                  "quote": "Save diagrams under `figures/` using `-o figures/name.png`, then inspect every label and relationship before including them in a paper or poster. The output location is the path you choose.\n\n**What the output is:** a raster PNG at whatever resolution the image model returns. This skill has\nno vector path and no DPI control \u2014 if a journal demands PDF, EPS, or 300 dpi TIFF, convert the PNG\ndownstream and check the result at final print size.\n\n## Quick Start: Generate Any Diagram\n\nRun from this skill directory with `requests` installed and `OPENROUTER_API_KEY` set. The following paid-generation examples are illustrative; the request contracts are tested offline. Supply source-backed labels and relationships rather than asking the image model to invent them:"
+                },
+                {
+                  "source_id": "skills__scientific-schematics__SKILL",
+                  "start_line": 101,
+                  "end_line": 104,
+                  "quote": "**Data leaves the machine.** Your prompt is sent to OpenRouter to generate the image, and the\ngenerated image is sent back to OpenRouter for the quality review. Both are subject to OpenRouter's\ndata policies and those of the underlying model providers. Do not describe unpublished data,\npatient information, or anything under embargo in the prompt."
+                }
+              ],
+              "assumptions": [
+                "Finite declared-state abstraction; does not execute code or verify underlying data/human act."
+              ]
+            }
+          }
+        ],
+        "resolved_action_policy": [],
+        "policy_notice": "Hierarchy determines action availability; the reviewer-declared trace property has no intrinsic priority."
+      },
+      "trace_diagnostic": [
+        {
+          "code": "TRACE_ASSERTION_VIOLATED",
+          "class": "model_based",
+          "severity": "error",
+          "source_spans": [
+            {
+              "source_id": "skills__scientific-schematics__SKILL",
+              "start_line": 195,
+              "end_line": 195,
+              "quote": "The loop stops when the review passes or is unavailable, or when generation fails. A below-threshold score or an explicit improvement verdict can trigger a second generation; no run makes more than two attempts."
+            },
+            {
+              "source_id": "skills__literature-review__SKILL",
+              "start_line": 106,
+              "end_line": 110,
+              "quote": "### Quality and Reproducibility\n1. **Assess study quality**: Use appropriate quality assessment tools\n2. **Verify citations and claims**: Run verify_citations.py for DOI registration/metadata, then compare the reference and the cited claim with the actual source\n3. **Document methodology**: Provide enough detail for others to reproduce\n4. **Follow guidelines**: Use PRISMA for systematic reviews"
+            },
+            {
+              "source_id": "skills__literature-review__references__core_workflow",
+              "start_line": 203,
+              "end_line": 229,
+              "quote": "### Phase 6: Citation Verification\n\n**CRITICAL**: All citations must be verified for accuracy before final submission.\n\n1. **Verify All DOIs**:\n   ```bash\n   python scripts/verify_citations.py my_literature_review.md\n   ```\n\n   This script:\n   - Extracts all DOIs from the document\n   - Checks DOI registration via the Handle API\n   - Retrieves available Crossref metadata and preserves unresolved errors\n   - Generates verification report\n   - Does not verify claim support, publisher accessibility, or final citation style\n\n2. **Review Verification Report**:\n   - Check for any failed DOIs\n   - Verify author names, titles, and publication details match\n   - Correct any errors in the original document\n   - Resolve errors against the source; do not delete a reference solely because a service timed out or lacks its metadata\n\n3. **Format Citations Consistently**:\n   - Choose one citation style and use throughout (see `references/citation_styles.md`)\n   - Common styles: APA, Nature, Vancouver, Chicago, IEEE\n   - Use complete metadata with a CSL processor; the script only provides metadata previews\n   - Ensure in-text citations match reference list format"
+            },
+            {
+              "source_id": "skills__literature-review__SKILL",
+              "start_line": 23,
+              "end_line": 25,
+              "quote": "Conduct systematic, comprehensive literature reviews following rigorous academic methodology. Search multiple literature databases, synthesize findings thematically, verify all citations for accuracy, and generate professional output documents in markdown and PDF formats.\n\nUse discipline-appropriate bibliographic databases for the reproducible search, with **parallel-web** (`parallel-cli search`) for scoping and supplementary discovery. Ranked web results and extracted excerpts cannot establish exhaustive coverage or substitute for full-text assessment. Bundled scripts process normalized records, check DOI registration, and render documents; they do not run a complete systematic review automatically."
+            },
+            {
+              "source_id": "skills__scientific-schematics__SKILL",
+              "start_line": 46,
+              "end_line": 54,
+              "quote": "Save diagrams under `figures/` using `-o figures/name.png`, then inspect every label and relationship before including them in a paper or poster. The output location is the path you choose.\n\n**What the output is:** a raster PNG at whatever resolution the image model returns. This skill has\nno vector path and no DPI control \u2014 if a journal demands PDF, EPS, or 300 dpi TIFF, convert the PNG\ndownstream and check the result at final print size.\n\n## Quick Start: Generate Any Diagram\n\nRun from this skill directory with `requests` installed and `OPENROUTER_API_KEY` set. The following paid-generation examples are illustrative; the request contracts are tested offline. Supply source-backed labels and relationships rather than asking the image model to invent them:"
+            },
+            {
+              "source_id": "skills__scientific-schematics__SKILL",
+              "start_line": 101,
+              "end_line": 104,
+              "quote": "**Data leaves the machine.** Your prompt is sent to OpenRouter to generate the image, and the\ngenerated image is sent back to OpenRouter for the quality review. Both are subject to OpenRouter's\ndata policies and those of the underlying model providers. Do not describe unpublished data,\npatient information, or anything under embargo in the prompt."
+            }
+          ],
+          "interpreted_rules": [
+            {
+              "id": "audit-one-run-attempt-cap",
+              "source": {
+                "source_id": "skills__scientific-schematics__SKILL",
+                "start_line": 195,
+                "end_line": 195,
+                "quote": "The loop stops when the review passes or is unavailable, or when generation fails. A below-threshold score or an explicit improvement verdict can trigger a second generation; no run makes more than two attempts."
+              },
+              "trace_assertion": {
+                "id": "audit-one-run-attempt-cap",
+                "kind": "action_count",
+                "actions": [
+                  "generate_first_png",
+                  "generate_second_png"
+                ],
+                "max_count": 2,
+                "source": {
+                  "source_id": "skills__scientific-schematics__SKILL",
+                  "start_line": 195,
+                  "end_line": 195,
+                  "quote": "The loop stops when the review passes or is unavailable, or when generation fails. A below-threshold score or an explicit improvement verdict can trigger a second generation; no run makes more than two attempts."
+                },
+                "assumptions": [
+                  "Post-independent-audit demonstration; reviewer selected action-event mapping. No automatic inference, human gold, upstream bug, or runtime-execution claim. One invocation; goals do not terminate enabled transitions."
+                ]
+              }
+            }
+          ],
+          "resolved_priorities": {},
+          "triggering_context": {
+            "id": "KD-LR-04",
+            "facts": {
+              "scenario_id": "KD-LR-04"
+            },
+            "active_skills": [
+              "literature-review",
+              "scientific-schematics"
+            ]
+          },
+          "witness": {
+            "assertion_id": "audit-one-run-attempt-cap",
+            "kind": "action_count",
+            "status": "violated",
+            "violation_path": [
+              "compare_citations_claims_to_local_sources",
+              "synthesize_narrative_review",
+              "generate_first_png",
+              "generate_first_png",
+              "generate_first_png"
+            ],
+            "violation": {
+              "action": "generate_first_png",
+              "observed_count": 3,
+              "max_count": 2
+            },
+            "search_exhaustive": false,
+            "visited_states": 6,
+            "bounds": {
+              "max_steps": 20,
+              "max_states": 2000
+            },
+            "cutoff_reasons": [],
+            "aggregate_budget": {
+              "max_visited_states": 20000,
+              "remaining_states": 19994
+            },
+            "workflow": "kd-lr-04-workflow",
+            "context_id": "KD-LR-04",
+            "source": {
+              "source_id": "skills__scientific-schematics__SKILL",
+              "start_line": 195,
+              "end_line": 195,
+              "quote": "The loop stops when the review passes or is unavailable, or when generation fails. A below-threshold score or an explicit improvement verdict can trigger a second generation; no run makes more than two attempts."
+            },
+            "assumptions": [
+              "Post-independent-audit demonstration; reviewer selected action-event mapping. No automatic inference, human gold, upstream bug, or runtime-execution claim. One invocation; goals do not terminate enabled transitions."
+            ],
+            "property_scope": "safety_of_allowed_paths_in_reviewed_transition_model",
+            "completion_feasibility_not_disproved": true,
+            "minimality_not_checked": true,
+            "implicated_actions": [
+              {
+                "id": "compare_citations_claims_to_local_sources",
+                "requires": [
+                  "actual_reports_available",
+                  "search_extraction_available"
+                ],
+                "adds": [
+                  "local_source_comparison_complete"
+                ],
+                "removes": [],
+                "provenance": {
+                  "source_spans": [
+                    {
+                      "source_id": "skills__literature-review__SKILL",
+                      "start_line": 106,
+                      "end_line": 110,
+                      "quote": "### Quality and Reproducibility\n1. **Assess study quality**: Use appropriate quality assessment tools\n2. **Verify citations and claims**: Run verify_citations.py for DOI registration/metadata, then compare the reference and the cited claim with the actual source\n3. **Document methodology**: Provide enough detail for others to reproduce\n4. **Follow guidelines**: Use PRISMA for systematic reviews"
+                    },
+                    {
+                      "source_id": "skills__literature-review__references__core_workflow",
+                      "start_line": 203,
+                      "end_line": 229,
+                      "quote": "### Phase 6: Citation Verification\n\n**CRITICAL**: All citations must be verified for accuracy before final submission.\n\n1. **Verify All DOIs**:\n   ```bash\n   python scripts/verify_citations.py my_literature_review.md\n   ```\n\n   This script:\n   - Extracts all DOIs from the document\n   - Checks DOI registration via the Handle API\n   - Retrieves available Crossref metadata and preserves unresolved errors\n   - Generates verification report\n   - Does not verify claim support, publisher accessibility, or final citation style\n\n2. **Review Verification Report**:\n   - Check for any failed DOIs\n   - Verify author names, titles, and publication details match\n   - Correct any errors in the original document\n   - Resolve errors against the source; do not delete a reference solely because a service timed out or lacks its metadata\n\n3. **Format Citations Consistently**:\n   - Choose one citation style and use throughout (see `references/citation_styles.md`)\n   - Common styles: APA, Nature, Vancouver, Chicago, IEEE\n   - Use complete metadata with a CSL processor; the script only provides metadata previews\n   - Ensure in-text citations match reference list format"
+                    }
+                  ],
+                  "assumptions": [
+                    "Finite declared-state abstraction; does not execute code or verify underlying data/human act.",
+                    "Scope is narrative Markdown completion, not final journal submission; live DOI-helper requirement remains a documented ambiguity, not proven waived."
+                  ]
+                }
+              },
+              {
+                "id": "synthesize_narrative_review",
+                "requires": [
+                  "local_source_comparison_complete",
+                  "markdown_available"
+                ],
+                "adds": [
+                  "review_text_ready"
+                ],
+                "removes": [],
+                "provenance": {
+                  "source_spans": [
+                    {
+                      "source_id": "skills__literature-review__SKILL",
+                      "start_line": 23,
+                      "end_line": 25,
+                      "quote": "Conduct systematic, comprehensive literature reviews following rigorous academic methodology. Search multiple literature databases, synthesize findings thematically, verify all citations for accuracy, and generate professional output documents in markdown and PDF formats.\n\nUse discipline-appropriate bibliographic databases for the reproducible search, with **parallel-web** (`parallel-cli search`) for scoping and supplementary discovery. Ranked web results and extracted excerpts cannot establish exhaustive coverage or substitute for full-text assessment. Bundled scripts process normalized records, check DOI registration, and render documents; they do not run a complete systematic review automatically."
+                    },
+                    {
+                      "source_id": "skills__literature-review__SKILL",
+                      "start_line": 106,
+                      "end_line": 110,
+                      "quote": "### Quality and Reproducibility\n1. **Assess study quality**: Use appropriate quality assessment tools\n2. **Verify citations and claims**: Run verify_citations.py for DOI registration/metadata, then compare the reference and the cited claim with the actual source\n3. **Document methodology**: Provide enough detail for others to reproduce\n4. **Follow guidelines**: Use PRISMA for systematic reviews"
+                    }
+                  ],
+                  "assumptions": [
+                    "Finite declared-state abstraction; does not execute code or verify underlying data/human act."
+                  ]
+                }
+              },
+              {
+                "id": "generate_first_png",
+                "requires": [
+                  "review_text_ready",
+                  "local_python_requests",
+                  "network_available",
+                  "openrouter_credential_available",
+                  "public_prompt_authorized",
+                  "generation_success_declared"
+                ],
+                "adds": [
+                  "first_png_saved",
+                  "png_saved"
+                ],
+                "removes": [],
+                "provenance": {
+                  "source_spans": [
+                    {
+                      "source_id": "skills__scientific-schematics__SKILL",
+                      "start_line": 46,
+                      "end_line": 54,
+                      "quote": "Save diagrams under `figures/` using `-o figures/name.png`, then inspect every label and relationship before including them in a paper or poster. The output location is the path you choose.\n\n**What the output is:** a raster PNG at whatever resolution the image model returns. This skill has\nno vector path and no DPI control \u2014 if a journal demands PDF, EPS, or 300 dpi TIFF, convert the PNG\ndownstream and check the result at final print size.\n\n## Quick Start: Generate Any Diagram\n\nRun from this skill directory with `requests` installed and `OPENROUTER_API_KEY` set. The following paid-generation examples are illustrative; the request contracts are tested offline. Supply source-backed labels and relationships rather than asking the image model to invent them:"
+                    },
+                    {
+                      "source_id": "skills__scientific-schematics__SKILL",
+                      "start_line": 101,
+                      "end_line": 104,
+                      "quote": "**Data leaves the machine.** Your prompt is sent to OpenRouter to generate the image, and the\ngenerated image is sent back to OpenRouter for the quality review. Both are subject to OpenRouter's\ndata policies and those of the underlying model providers. Do not describe unpublished data,\npatient information, or anything under embargo in the prompt."
+                    }
+                  ],
+                  "assumptions": [
+                    "Finite declared-state abstraction; does not execute code or verify underlying data/human act."
+                  ]
+                }
+              }
+            ],
+            "resolved_action_policy": [],
+            "policy_notice": "Hierarchy determines action availability; the reviewer-declared trace property has no intrinsic priority."
+          },
+          "responsible_rule_set": [
+            "audit-one-run-attempt-cap"
+          ],
+          "assumptions": [
+            "Native model extraction, not product provider execution or human gold. Independent labels and checker predictions were not consulted.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "Only declared scenario capabilities and outcomes are modeled. No repository scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"A narrative review's relevant full reports, completed search records and extraction notes are locally available; citation identity and claim support can be checked against actual sources.\", \"Local Python and requests are installed. The artifact is Markdown; no PDF, systematic-review PRISMA figure or journal-specific image requirement applies. Public non-sensitive content only.\", \"Network and authenticated services work, but both permitted generations receive below-threshold reviews. No third generation or alternative image is available; uncertified draft does not satisfy the requested outcome.\"], \"family\": \"review_diagrams\", \"id\": \"KD-LR-04\", \"origin\": \"deployment_probe\", \"scenario\": \"Deliver a schematic certified by the automated reviewer as meeting the requested quality threshold.\", \"selection_rationale\": \"Exercise the bounded retry branch without assuming retry can guarantee quality.\"}",
+            "Post-independent-audit demonstration; reviewer selected action-event mapping. No automatic inference, human gold, upstream bug, or runtime-execution claim. One invocation; goals do not terminate enabled transitions.",
+            "Author-declared finite action-event assertion; no prose inference or runtime execution.",
+            "All enabled prefixes are checked, including after the goal; assertion monitors are independent of workflow effects."
+          ],
+          "repairs": [],
+          "regression_case": {
+            "context": {
+              "id": "KD-LR-04",
+              "facts": {
+                "scenario_id": "KD-LR-04"
+              },
+              "active_skills": [
+                "literature-review",
+                "scientific-schematics"
+              ]
+            },
+            "expected_code": "TRACE_ASSERTION_VIOLATED",
+            "assertion_id": "audit-one-run-attempt-cap",
+            "violation_path": [
+              "compare_citations_claims_to_local_sources",
+              "synthesize_narrative_review",
+              "generate_first_png",
+              "generate_first_png",
+              "generate_first_png"
+            ]
+          },
+          "provenance_limitations": [
+            "Exact source text does not prove the assertion or transition abstraction is semantically faithful."
+          ],
+          "interpretation_status": "Conditional on this declared abstraction; not proof that the source prose conflicts."
+        }
+      ],
+      "scope": "Post-audit declared finite trace, not full-prose correctness."
+    },
+    {
+      "case_id": "KD-LR-04",
+      "variant": "original-low-bound",
+      "trace_result": {
+        "assertion_id": "audit-one-run-attempt-cap",
+        "kind": "action_count",
+        "status": "unknown",
+        "violation_path": null,
+        "violation": null,
+        "search_exhaustive": false,
+        "visited_states": 2,
+        "bounds": {
+          "max_steps": 1,
+          "max_states": 2000
+        },
+        "cutoff_reasons": [
+          "max_steps"
+        ],
+        "aggregate_budget": {
+          "max_visited_states": 20000,
+          "remaining_states": 19998
+        },
+        "workflow": "kd-lr-04-workflow",
+        "context_id": "KD-LR-04",
+        "source": {
+          "source_id": "skills__scientific-schematics__SKILL",
+          "start_line": 195,
+          "end_line": 195,
+          "quote": "The loop stops when the review passes or is unavailable, or when generation fails. A below-threshold score or an explicit improvement verdict can trigger a second generation; no run makes more than two attempts."
+        },
+        "assumptions": [
+          "Post-independent-audit demonstration; reviewer selected action-event mapping. No automatic inference, human gold, upstream bug, or runtime-execution claim. One invocation; goals do not terminate enabled transitions."
+        ],
+        "property_scope": "safety_of_allowed_paths_in_reviewed_transition_model",
+        "completion_feasibility_not_disproved": true,
+        "minimality_not_checked": true,
+        "implicated_actions": [],
+        "resolved_action_policy": [],
+        "policy_notice": "Hierarchy determines action availability; the reviewer-declared trace property has no intrinsic priority."
+      }
+    },
+    {
+      "case_id": "KD-LR-04",
+      "variant": "corrected",
+      "reachability_status": "unreachable",
+      "trace_result": {
+        "assertion_id": "audit-one-run-attempt-cap",
+        "kind": "action_count",
+        "status": "safe",
+        "violation_path": null,
+        "violation": null,
+        "search_exhaustive": true,
+        "visited_states": 7,
+        "bounds": {
+          "max_steps": 20,
+          "max_states": 2000
+        },
+        "cutoff_reasons": [],
+        "aggregate_budget": {
+          "max_visited_states": 20000,
+          "remaining_states": 19993
+        },
+        "workflow": "kd-lr-04-workflow",
+        "context_id": "KD-LR-04",
+        "source": {
+          "source_id": "skills__scientific-schematics__SKILL",
+          "start_line": 195,
+          "end_line": 195,
+          "quote": "The loop stops when the review passes or is unavailable, or when generation fails. A below-threshold score or an explicit improvement verdict can trigger a second generation; no run makes more than two attempts."
+        },
+        "assumptions": [
+          "Post-independent-audit demonstration; reviewer selected action-event mapping. No automatic inference, human gold, upstream bug, or runtime-execution claim. One invocation; goals do not terminate enabled transitions."
+        ],
+        "property_scope": "safety_of_allowed_paths_in_reviewed_transition_model",
+        "completion_feasibility_not_disproved": true,
+        "minimality_not_checked": true,
+        "implicated_actions": [],
+        "resolved_action_policy": [],
+        "policy_notice": "Hierarchy determines action availability; the reviewer-declared trace property has no intrinsic priority."
+      },
+      "trace_diagnostic": [],
+      "scope": "Post-audit declared finite trace, not full-prose correctness."
+    },
+    {
+      "case_id": "KD-WR-01",
+      "variant": "original",
+      "reachability_status": "reachable",
+      "trace_result": {
+        "assertion_id": "audit-current-human-verification",
+        "kind": "freshness",
+        "status": "violated",
+        "violation_path": [
+          "create_evidence_outline",
+          "draft_manuscript",
+          "human_reverify_changed_prose",
+          "draft_manuscript",
+          "run_local_consistency_audits",
+          "human_approve_ready_and_remove_banner"
+        ],
+        "violation": {
+          "action": "human_approve_ready_and_remove_banner",
+          "fresh_before_action": false
+        },
+        "search_exhaustive": false,
+        "visited_states": 9,
+        "bounds": {
+          "max_steps": 20,
+          "max_states": 2000
+        },
+        "cutoff_reasons": [],
+        "aggregate_budget": {
+          "max_visited_states": 20000,
+          "remaining_states": 19991
+        },
+        "workflow": "kd-wr-01-workflow",
+        "context_id": "KD-WR-01",
+        "source": {
+          "source_id": "skills__scientific-writing__SKILL",
+          "start_line": 143,
+          "end_line": 145,
+          "quote": "Do not mark a source verified until an accountable human has opened it and confirmed\nthe exact support. After changing wording, re-verify the claim before updating its\nhash; see the exact normalization in `references/evidence_workflow.md`."
+        },
+        "assumptions": [
+          "Post-independent-audit demonstration; reviewer selected action-event mapping. No automatic inference, human gold, upstream bug, or runtime-execution claim. One invocation; goals do not terminate enabled transitions."
+        ],
+        "property_scope": "safety_of_allowed_paths_in_reviewed_transition_model",
+        "completion_feasibility_not_disproved": true,
+        "minimality_not_checked": true,
+        "implicated_actions": [
+          {
+            "id": "create_evidence_outline",
+            "requires": [
+              "evidence_human_verified",
+              "draft_inputs_available"
+            ],
+            "adds": [
+              "verified_outline_ready"
+            ],
+            "removes": [],
+            "provenance": {
+              "source_spans": [
+                {
+                  "source_id": "skills__scientific-writing__SKILL",
+                  "start_line": 149,
+                  "end_line": 164,
+                  "quote": "Outline only from recorded evidence:\n\n- objective or question;\n- section purpose;\n- claim IDs and evidence IDs;\n- methods and result IDs;\n- analysis intent and uncertainty;\n- unresolved conflicts or missing information;\n- applicable reporting topics.\n\nKeep unsupported content in an unresolved-issues list, not manuscript prose.\n\n### 5. Draft without adding facts\n\nTransform the verified outline into venue-appropriate prose. Preserve all IDs during\ndrafting."
+                }
+              ],
+              "assumptions": [
+                "Finite declared-state abstraction; does not execute code or verify underlying data/human act."
+              ]
+            }
+          },
+          {
+            "id": "draft_manuscript",
+            "requires": [
+              "verified_outline_ready"
+            ],
+            "adds": [
+              "draft_prose_ready",
+              "reverification_due"
+            ],
+            "removes": [],
+            "provenance": {
+              "source_spans": [
+                {
+                  "source_id": "skills__scientific-writing__SKILL",
+                  "start_line": 149,
+                  "end_line": 164,
+                  "quote": "Outline only from recorded evidence:\n\n- objective or question;\n- section purpose;\n- claim IDs and evidence IDs;\n- methods and result IDs;\n- analysis intent and uncertainty;\n- unresolved conflicts or missing information;\n- applicable reporting topics.\n\nKeep unsupported content in an unresolved-issues list, not manuscript prose.\n\n### 5. Draft without adding facts\n\nTransform the verified outline into venue-appropriate prose. Preserve all IDs during\ndrafting."
+                },
+                {
+                  "source_id": "skills__scientific-writing__SKILL",
+                  "start_line": 135,
+                  "end_line": 145,
+                  "quote": "Store a hash of claim text in CSV rather than raw claim text. Use one claim per\nphysical Markdown line; the hash binds the entire line after removing claim/evidence\nmarkers and collapsing whitespace. During drafting, append:\n\n```text\n[claim:C001] [evidence:E001,E002]\n```\n\nDo not mark a source verified until an accountable human has opened it and confirmed\nthe exact support. After changing wording, re-verify the claim before updating its\nhash; see the exact normalization in `references/evidence_workflow.md`."
+                }
+              ],
+              "assumptions": [
+                "Finite declared-state abstraction; does not execute code or verify underlying data/human act."
+              ]
+            }
+          },
+          {
+            "id": "human_reverify_changed_prose",
+            "requires": [
+              "draft_prose_ready",
+              "human_available",
+              "reverification_due"
+            ],
+            "adds": [
+              "changed_prose_human_verified"
+            ],
+            "removes": [
+              "reverification_due"
+            ],
+            "provenance": {
+              "source_spans": [
+                {
+                  "source_id": "skills__scientific-writing__SKILL",
+                  "start_line": 135,
+                  "end_line": 145,
+                  "quote": "Store a hash of claim text in CSV rather than raw claim text. Use one claim per\nphysical Markdown line; the hash binds the entire line after removing claim/evidence\nmarkers and collapsing whitespace. During drafting, append:\n\n```text\n[claim:C001] [evidence:E001,E002]\n```\n\nDo not mark a source verified until an accountable human has opened it and confirmed\nthe exact support. After changing wording, re-verify the claim before updating its\nhash; see the exact normalization in `references/evidence_workflow.md`."
+                }
+              ],
+              "assumptions": [
+                "Finite declared-state abstraction; does not execute code or verify underlying data/human act."
+              ]
+            }
+          },
+          {
+            "id": "run_local_consistency_audits",
+            "requires": [
+              "local_cli_available",
+              "draft_prose_ready",
+              "metadata_checks_pass"
+            ],
+            "adds": [
+              "local_audits_pass"
+            ],
+            "removes": [],
+            "provenance": {
+              "source_spans": [
+                {
+                  "source_id": "skills__scientific-writing__references__evidence_workflow",
+                  "start_line": 88,
+                  "end_line": 110,
+                  "quote": "## Final audit\n\nRun:\n\n```bash\npython3 scripts/validate_manifest.py source_manifest.json --kind source --require-verified\npython3 scripts/audit_claims.py manuscript.md claims.csv source_manifest.json\npython3 scripts/check_consistency.py consistency_manifest.json\npython3 scripts/check_references.py source_manifest.json\n```\n\nTool output contains IDs and line numbers, not manuscript or source text. A passing\nmachine audit supports review; it does not replace human scientific judgment.\n\nThe claim audit compares that digest with the current manuscript line and rejects\nchanged text or multiple claim markers on a line. Re-verify the evidence fit before\nreplacing an old digest. A matching hash detects text changes; it proves neither\nscientific truth nor that a human performed the recorded verification. Hashes are\nnot encryption and do not anonymize predictable sensitive statements.\n\nThe lightweight audit skips headings, comment-start lines, and fenced code; numeric\ntext outside these regions must be tagged. It cannot identify every untagged\nnon-numeric assertion or inspect the contents of linked files. Review those manually."
+                },
+                {
+                  "source_id": "skills__scientific-writing__SKILL",
+                  "start_line": 197,
+                  "end_line": 200,
+                  "quote": "The reference checker validates syntax and duplicate identifiers without network\nresolution. A human must still compare every identifier and quotation with the opened\nsource. Follow NLM *Citing Medicine* or the current official style required by the\nvenue [SW-S20, SW-S21]."
+                }
+              ],
+              "assumptions": [
+                "Finite declared-state abstraction; does not execute code or verify underlying data/human act.",
+                "Local syntax/checks never add evidence_human_verified. Scenario explicitly supplies successful local checks."
+              ]
+            }
+          },
+          {
+            "id": "human_approve_ready_and_remove_banner",
+            "requires": [
+              "human_available",
+              "changed_prose_human_verified",
+              "local_audits_pass",
+              "venue_declarations_complete"
+            ],
+            "adds": [
+              "submission_ready_true",
+              "banner_removed"
+            ],
+            "removes": [],
+            "provenance": {
+              "source_spans": [
+                {
+                  "source_id": "skills__scientific-writing__SKILL",
+                  "start_line": 276,
+                  "end_line": 283,
+                  "quote": "Only accountable humans may:\n\n- resolve scientific ambiguities;\n- approve author order and declarations;\n- approve external disclosure or transfer;\n- set `submission_ready` to true;\n- remove the draft banner;\n- authorize submission."
+                }
+              ],
+              "assumptions": [
+                "Finite declared-state abstraction; does not execute code or verify underlying data/human act.",
+                "No actual submission is modeled or authorized; final flags require separate specific human approval."
+              ]
+            }
+          }
+        ],
+        "resolved_action_policy": [],
+        "policy_notice": "Hierarchy determines action availability; the reviewer-declared trace property has no intrinsic priority."
+      },
+      "trace_diagnostic": [
+        {
+          "code": "TRACE_ASSERTION_VIOLATED",
+          "class": "model_based",
+          "severity": "error",
+          "source_spans": [
+            {
+              "source_id": "skills__scientific-writing__SKILL",
+              "start_line": 143,
+              "end_line": 145,
+              "quote": "Do not mark a source verified until an accountable human has opened it and confirmed\nthe exact support. After changing wording, re-verify the claim before updating its\nhash; see the exact normalization in `references/evidence_workflow.md`."
+            },
+            {
+              "source_id": "skills__scientific-writing__SKILL",
+              "start_line": 149,
+              "end_line": 164,
+              "quote": "Outline only from recorded evidence:\n\n- objective or question;\n- section purpose;\n- claim IDs and evidence IDs;\n- methods and result IDs;\n- analysis intent and uncertainty;\n- unresolved conflicts or missing information;\n- applicable reporting topics.\n\nKeep unsupported content in an unresolved-issues list, not manuscript prose.\n\n### 5. Draft without adding facts\n\nTransform the verified outline into venue-appropriate prose. Preserve all IDs during\ndrafting."
+            },
+            {
+              "source_id": "skills__scientific-writing__SKILL",
+              "start_line": 135,
+              "end_line": 145,
+              "quote": "Store a hash of claim text in CSV rather than raw claim text. Use one claim per\nphysical Markdown line; the hash binds the entire line after removing claim/evidence\nmarkers and collapsing whitespace. During drafting, append:\n\n```text\n[claim:C001] [evidence:E001,E002]\n```\n\nDo not mark a source verified until an accountable human has opened it and confirmed\nthe exact support. After changing wording, re-verify the claim before updating its\nhash; see the exact normalization in `references/evidence_workflow.md`."
+            },
+            {
+              "source_id": "skills__scientific-writing__references__evidence_workflow",
+              "start_line": 88,
+              "end_line": 110,
+              "quote": "## Final audit\n\nRun:\n\n```bash\npython3 scripts/validate_manifest.py source_manifest.json --kind source --require-verified\npython3 scripts/audit_claims.py manuscript.md claims.csv source_manifest.json\npython3 scripts/check_consistency.py consistency_manifest.json\npython3 scripts/check_references.py source_manifest.json\n```\n\nTool output contains IDs and line numbers, not manuscript or source text. A passing\nmachine audit supports review; it does not replace human scientific judgment.\n\nThe claim audit compares that digest with the current manuscript line and rejects\nchanged text or multiple claim markers on a line. Re-verify the evidence fit before\nreplacing an old digest. A matching hash detects text changes; it proves neither\nscientific truth nor that a human performed the recorded verification. Hashes are\nnot encryption and do not anonymize predictable sensitive statements.\n\nThe lightweight audit skips headings, comment-start lines, and fenced code; numeric\ntext outside these regions must be tagged. It cannot identify every untagged\nnon-numeric assertion or inspect the contents of linked files. Review those manually."
+            },
+            {
+              "source_id": "skills__scientific-writing__SKILL",
+              "start_line": 197,
+              "end_line": 200,
+              "quote": "The reference checker validates syntax and duplicate identifiers without network\nresolution. A human must still compare every identifier and quotation with the opened\nsource. Follow NLM *Citing Medicine* or the current official style required by the\nvenue [SW-S20, SW-S21]."
+            },
+            {
+              "source_id": "skills__scientific-writing__SKILL",
+              "start_line": 276,
+              "end_line": 283,
+              "quote": "Only accountable humans may:\n\n- resolve scientific ambiguities;\n- approve author order and declarations;\n- approve external disclosure or transfer;\n- set `submission_ready` to true;\n- remove the draft banner;\n- authorize submission."
+            }
+          ],
+          "interpreted_rules": [
+            {
+              "id": "audit-current-human-verification",
+              "source": {
+                "source_id": "skills__scientific-writing__SKILL",
+                "start_line": 143,
+                "end_line": 145,
+                "quote": "Do not mark a source verified until an accountable human has opened it and confirmed\nthe exact support. After changing wording, re-verify the claim before updating its\nhash; see the exact normalization in `references/evidence_workflow.md`."
+              },
+              "trace_assertion": {
+                "id": "audit-current-human-verification",
+                "kind": "freshness",
+                "invalidate_actions": [
+                  "draft_manuscript"
+                ],
+                "refresh_actions": [
+                  "human_reverify_changed_prose"
+                ],
+                "guarded_actions": [
+                  "human_approve_ready_and_remove_banner"
+                ],
+                "initially_fresh": false,
+                "source": {
+                  "source_id": "skills__scientific-writing__SKILL",
+                  "start_line": 143,
+                  "end_line": 145,
+                  "quote": "Do not mark a source verified until an accountable human has opened it and confirmed\nthe exact support. After changing wording, re-verify the claim before updating its\nhash; see the exact normalization in `references/evidence_workflow.md`."
+                },
+                "assumptions": [
+                  "Post-independent-audit demonstration; reviewer selected action-event mapping. No automatic inference, human gold, upstream bug, or runtime-execution claim. One invocation; goals do not terminate enabled transitions."
+                ]
+              }
+            }
+          ],
+          "resolved_priorities": {},
+          "triggering_context": {
+            "id": "KD-WR-01",
+            "facts": {
+              "scenario_id": "KD-WR-01"
+            },
+            "active_skills": [
+              "citation-management",
+              "scientific-writing"
+            ]
+          },
+          "witness": {
+            "assertion_id": "audit-current-human-verification",
+            "kind": "freshness",
+            "status": "violated",
+            "violation_path": [
+              "create_evidence_outline",
+              "draft_manuscript",
+              "human_reverify_changed_prose",
+              "draft_manuscript",
+              "run_local_consistency_audits",
+              "human_approve_ready_and_remove_banner"
+            ],
+            "violation": {
+              "action": "human_approve_ready_and_remove_banner",
+              "fresh_before_action": false
+            },
+            "search_exhaustive": false,
+            "visited_states": 9,
+            "bounds": {
+              "max_steps": 20,
+              "max_states": 2000
+            },
+            "cutoff_reasons": [],
+            "aggregate_budget": {
+              "max_visited_states": 20000,
+              "remaining_states": 19991
+            },
+            "workflow": "kd-wr-01-workflow",
+            "context_id": "KD-WR-01",
+            "source": {
+              "source_id": "skills__scientific-writing__SKILL",
+              "start_line": 143,
+              "end_line": 145,
+              "quote": "Do not mark a source verified until an accountable human has opened it and confirmed\nthe exact support. After changing wording, re-verify the claim before updating its\nhash; see the exact normalization in `references/evidence_workflow.md`."
+            },
+            "assumptions": [
+              "Post-independent-audit demonstration; reviewer selected action-event mapping. No automatic inference, human gold, upstream bug, or runtime-execution claim. One invocation; goals do not terminate enabled transitions."
+            ],
+            "property_scope": "safety_of_allowed_paths_in_reviewed_transition_model",
+            "completion_feasibility_not_disproved": true,
+            "minimality_not_checked": true,
+            "implicated_actions": [
+              {
+                "id": "create_evidence_outline",
+                "requires": [
+                  "evidence_human_verified",
+                  "draft_inputs_available"
+                ],
+                "adds": [
+                  "verified_outline_ready"
+                ],
+                "removes": [],
+                "provenance": {
+                  "source_spans": [
+                    {
+                      "source_id": "skills__scientific-writing__SKILL",
+                      "start_line": 149,
+                      "end_line": 164,
+                      "quote": "Outline only from recorded evidence:\n\n- objective or question;\n- section purpose;\n- claim IDs and evidence IDs;\n- methods and result IDs;\n- analysis intent and uncertainty;\n- unresolved conflicts or missing information;\n- applicable reporting topics.\n\nKeep unsupported content in an unresolved-issues list, not manuscript prose.\n\n### 5. Draft without adding facts\n\nTransform the verified outline into venue-appropriate prose. Preserve all IDs during\ndrafting."
+                    }
+                  ],
+                  "assumptions": [
+                    "Finite declared-state abstraction; does not execute code or verify underlying data/human act."
+                  ]
+                }
+              },
+              {
+                "id": "draft_manuscript",
+                "requires": [
+                  "verified_outline_ready"
+                ],
+                "adds": [
+                  "draft_prose_ready",
+                  "reverification_due"
+                ],
+                "removes": [],
+                "provenance": {
+                  "source_spans": [
+                    {
+                      "source_id": "skills__scientific-writing__SKILL",
+                      "start_line": 149,
+                      "end_line": 164,
+                      "quote": "Outline only from recorded evidence:\n\n- objective or question;\n- section purpose;\n- claim IDs and evidence IDs;\n- methods and result IDs;\n- analysis intent and uncertainty;\n- unresolved conflicts or missing information;\n- applicable reporting topics.\n\nKeep unsupported content in an unresolved-issues list, not manuscript prose.\n\n### 5. Draft without adding facts\n\nTransform the verified outline into venue-appropriate prose. Preserve all IDs during\ndrafting."
+                    },
+                    {
+                      "source_id": "skills__scientific-writing__SKILL",
+                      "start_line": 135,
+                      "end_line": 145,
+                      "quote": "Store a hash of claim text in CSV rather than raw claim text. Use one claim per\nphysical Markdown line; the hash binds the entire line after removing claim/evidence\nmarkers and collapsing whitespace. During drafting, append:\n\n```text\n[claim:C001] [evidence:E001,E002]\n```\n\nDo not mark a source verified until an accountable human has opened it and confirmed\nthe exact support. After changing wording, re-verify the claim before updating its\nhash; see the exact normalization in `references/evidence_workflow.md`."
+                    }
+                  ],
+                  "assumptions": [
+                    "Finite declared-state abstraction; does not execute code or verify underlying data/human act."
+                  ]
+                }
+              },
+              {
+                "id": "human_reverify_changed_prose",
+                "requires": [
+                  "draft_prose_ready",
+                  "human_available",
+                  "reverification_due"
+                ],
+                "adds": [
+                  "changed_prose_human_verified"
+                ],
+                "removes": [
+                  "reverification_due"
+                ],
+                "provenance": {
+                  "source_spans": [
+                    {
+                      "source_id": "skills__scientific-writing__SKILL",
+                      "start_line": 135,
+                      "end_line": 145,
+                      "quote": "Store a hash of claim text in CSV rather than raw claim text. Use one claim per\nphysical Markdown line; the hash binds the entire line after removing claim/evidence\nmarkers and collapsing whitespace. During drafting, append:\n\n```text\n[claim:C001] [evidence:E001,E002]\n```\n\nDo not mark a source verified until an accountable human has opened it and confirmed\nthe exact support. After changing wording, re-verify the claim before updating its\nhash; see the exact normalization in `references/evidence_workflow.md`."
+                    }
+                  ],
+                  "assumptions": [
+                    "Finite declared-state abstraction; does not execute code or verify underlying data/human act."
+                  ]
+                }
+              },
+              {
+                "id": "run_local_consistency_audits",
+                "requires": [
+                  "local_cli_available",
+                  "draft_prose_ready",
+                  "metadata_checks_pass"
+                ],
+                "adds": [
+                  "local_audits_pass"
+                ],
+                "removes": [],
+                "provenance": {
+                  "source_spans": [
+                    {
+                      "source_id": "skills__scientific-writing__references__evidence_workflow",
+                      "start_line": 88,
+                      "end_line": 110,
+                      "quote": "## Final audit\n\nRun:\n\n```bash\npython3 scripts/validate_manifest.py source_manifest.json --kind source --require-verified\npython3 scripts/audit_claims.py manuscript.md claims.csv source_manifest.json\npython3 scripts/check_consistency.py consistency_manifest.json\npython3 scripts/check_references.py source_manifest.json\n```\n\nTool output contains IDs and line numbers, not manuscript or source text. A passing\nmachine audit supports review; it does not replace human scientific judgment.\n\nThe claim audit compares that digest with the current manuscript line and rejects\nchanged text or multiple claim markers on a line. Re-verify the evidence fit before\nreplacing an old digest. A matching hash detects text changes; it proves neither\nscientific truth nor that a human performed the recorded verification. Hashes are\nnot encryption and do not anonymize predictable sensitive statements.\n\nThe lightweight audit skips headings, comment-start lines, and fenced code; numeric\ntext outside these regions must be tagged. It cannot identify every untagged\nnon-numeric assertion or inspect the contents of linked files. Review those manually."
+                    },
+                    {
+                      "source_id": "skills__scientific-writing__SKILL",
+                      "start_line": 197,
+                      "end_line": 200,
+                      "quote": "The reference checker validates syntax and duplicate identifiers without network\nresolution. A human must still compare every identifier and quotation with the opened\nsource. Follow NLM *Citing Medicine* or the current official style required by the\nvenue [SW-S20, SW-S21]."
+                    }
+                  ],
+                  "assumptions": [
+                    "Finite declared-state abstraction; does not execute code or verify underlying data/human act.",
+                    "Local syntax/checks never add evidence_human_verified. Scenario explicitly supplies successful local checks."
+                  ]
+                }
+              },
+              {
+                "id": "human_approve_ready_and_remove_banner",
+                "requires": [
+                  "human_available",
+                  "changed_prose_human_verified",
+                  "local_audits_pass",
+                  "venue_declarations_complete"
+                ],
+                "adds": [
+                  "submission_ready_true",
+                  "banner_removed"
+                ],
+                "removes": [],
+                "provenance": {
+                  "source_spans": [
+                    {
+                      "source_id": "skills__scientific-writing__SKILL",
+                      "start_line": 276,
+                      "end_line": 283,
+                      "quote": "Only accountable humans may:\n\n- resolve scientific ambiguities;\n- approve author order and declarations;\n- approve external disclosure or transfer;\n- set `submission_ready` to true;\n- remove the draft banner;\n- authorize submission."
+                    }
+                  ],
+                  "assumptions": [
+                    "Finite declared-state abstraction; does not execute code or verify underlying data/human act.",
+                    "No actual submission is modeled or authorized; final flags require separate specific human approval."
+                  ]
+                }
+              }
+            ],
+            "resolved_action_policy": [],
+            "policy_notice": "Hierarchy determines action availability; the reviewer-declared trace property has no intrinsic priority."
+          },
+          "responsible_rule_set": [
+            "audit-current-human-verification"
+          ],
+          "assumptions": [
+            "Native model extraction, not product provider execution or human gold. Independent labels and checker predictions were not consulted.",
+            "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+            "Only declared scenario capabilities and outcomes are modeled. No repository scripts/services were run.",
+            "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+            "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+            "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+            "{\"assumptions\": [\"Local Python 3.11+ and all documented offline scientific-writing CLIs are available. The requested artifact contains public, non-sensitive material only.\", \"Venue policy, reporting coverage, authorship, declarations and results are complete and accurate unless otherwise stated. No actual submission or external transmission is requested.\", \"An accountable human has opened every source, checked each exact claim and locator, recorded identity/time, and will reverify changed wording and perform final submission_ready/banner decisions.\"], \"family\": \"evidence_writing\", \"id\": \"KD-WR-01\", \"origin\": \"synthetic_control\", \"scenario\": \"Prepare a submission-ready scientific manuscript from citation-management metadata and a verified evidence record, with final approval performed by the accountable human.\", \"selection_rationale\": \"Test full workflow with independently supplied human gates.\"}",
+            "Post-independent-audit demonstration; reviewer selected action-event mapping. No automatic inference, human gold, upstream bug, or runtime-execution claim. One invocation; goals do not terminate enabled transitions.",
+            "Author-declared finite action-event assertion; no prose inference or runtime execution.",
+            "All enabled prefixes are checked, including after the goal; assertion monitors are independent of workflow effects."
+          ],
+          "repairs": [],
+          "regression_case": {
+            "context": {
+              "id": "KD-WR-01",
+              "facts": {
+                "scenario_id": "KD-WR-01"
+              },
+              "active_skills": [
+                "citation-management",
+                "scientific-writing"
+              ]
+            },
+            "expected_code": "TRACE_ASSERTION_VIOLATED",
+            "assertion_id": "audit-current-human-verification",
+            "violation_path": [
+              "create_evidence_outline",
+              "draft_manuscript",
+              "human_reverify_changed_prose",
+              "draft_manuscript",
+              "run_local_consistency_audits",
+              "human_approve_ready_and_remove_banner"
+            ]
+          },
+          "provenance_limitations": [
+            "Exact source text does not prove the assertion or transition abstraction is semantically faithful."
+          ],
+          "interpretation_status": "Conditional on this declared abstraction; not proof that the source prose conflicts."
+        }
+      ],
+      "scope": "Post-audit declared finite trace, not full-prose correctness."
+    },
+    {
+      "case_id": "KD-WR-01",
+      "variant": "original-low-bound",
+      "trace_result": {
+        "assertion_id": "audit-current-human-verification",
+        "kind": "freshness",
+        "status": "unknown",
+        "violation_path": null,
+        "violation": null,
+        "search_exhaustive": false,
+        "visited_states": 2,
+        "bounds": {
+          "max_steps": 1,
+          "max_states": 2000
+        },
+        "cutoff_reasons": [
+          "max_steps"
+        ],
+        "aggregate_budget": {
+          "max_visited_states": 20000,
+          "remaining_states": 19998
+        },
+        "workflow": "kd-wr-01-workflow",
+        "context_id": "KD-WR-01",
+        "source": {
+          "source_id": "skills__scientific-writing__SKILL",
+          "start_line": 143,
+          "end_line": 145,
+          "quote": "Do not mark a source verified until an accountable human has opened it and confirmed\nthe exact support. After changing wording, re-verify the claim before updating its\nhash; see the exact normalization in `references/evidence_workflow.md`."
+        },
+        "assumptions": [
+          "Post-independent-audit demonstration; reviewer selected action-event mapping. No automatic inference, human gold, upstream bug, or runtime-execution claim. One invocation; goals do not terminate enabled transitions."
+        ],
+        "property_scope": "safety_of_allowed_paths_in_reviewed_transition_model",
+        "completion_feasibility_not_disproved": true,
+        "minimality_not_checked": true,
+        "implicated_actions": [],
+        "resolved_action_policy": [],
+        "policy_notice": "Hierarchy determines action availability; the reviewer-declared trace property has no intrinsic priority."
+      }
+    },
+    {
+      "case_id": "KD-WR-01",
+      "variant": "corrected",
+      "reachability_status": "reachable",
+      "trace_result": {
+        "assertion_id": "audit-current-human-verification",
+        "kind": "freshness",
+        "status": "safe",
+        "violation_path": null,
+        "violation": null,
+        "search_exhaustive": true,
+        "visited_states": 6,
+        "bounds": {
+          "max_steps": 20,
+          "max_states": 2000
+        },
+        "cutoff_reasons": [],
+        "aggregate_budget": {
+          "max_visited_states": 20000,
+          "remaining_states": 19994
+        },
+        "workflow": "kd-wr-01-workflow",
+        "context_id": "KD-WR-01",
+        "source": {
+          "source_id": "skills__scientific-writing__SKILL",
+          "start_line": 143,
+          "end_line": 145,
+          "quote": "Do not mark a source verified until an accountable human has opened it and confirmed\nthe exact support. After changing wording, re-verify the claim before updating its\nhash; see the exact normalization in `references/evidence_workflow.md`."
+        },
+        "assumptions": [
+          "Post-independent-audit demonstration; reviewer selected action-event mapping. No automatic inference, human gold, upstream bug, or runtime-execution claim. One invocation; goals do not terminate enabled transitions."
+        ],
+        "property_scope": "safety_of_allowed_paths_in_reviewed_transition_model",
+        "completion_feasibility_not_disproved": true,
+        "minimality_not_checked": true,
+        "implicated_actions": [],
+        "resolved_action_policy": [],
+        "policy_notice": "Hierarchy determines action availability; the reviewer-declared trace property has no intrinsic priority."
+      },
+      "trace_diagnostic": [],
+      "scope": "Post-audit declared finite trace, not full-prose correctness."
+    }
+  ]
+}

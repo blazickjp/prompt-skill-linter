@@ -1,0 +1,310 @@
+{
+  "contract": {
+    "version": 1,
+    "sources": [
+      {
+        "id": "skills__literature-review__SKILL",
+        "path": "source_text/skills/literature-review/SKILL.md"
+      },
+      {
+        "id": "skills__literature-review__references__core_workflow",
+        "path": "source_text/skills/literature-review/references/core_workflow.md"
+      },
+      {
+        "id": "skills__scientific-schematics__SKILL",
+        "path": "source_text/skills/scientific-schematics/SKILL.md"
+      }
+    ],
+    "rules": [
+      {
+        "id": "literature-search",
+        "source": {
+          "source_id": "skills__literature-review__SKILL",
+          "start_line": 23,
+          "end_line": 25,
+          "quote": "Conduct systematic, comprehensive literature reviews following rigorous academic methodology. Search multiple literature databases, synthesize findings thematically, verify all citations for accuracy, and generate professional output documents in markdown and PDF formats.\n\nUse discipline-appropriate bibliographic databases for the reproducible search, with **parallel-web** (`parallel-cli search`) for scoping and supplementary discovery. Ranked web results and extracted excerpts cannot establish exhaustive coverage or substitute for full-text assessment. Bundled scripts process normalized records, check DOI registration, and render documents; they do not run a complete systematic review automatically."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "review search",
+          "temporal": "discovery and evidence collection"
+        },
+        "skills": [
+          "literature-review"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Coverage and evidence completeness are epistemic/statistical judgments."
+        ]
+      },
+      {
+        "id": "literature-prisma",
+        "source": {
+          "source_id": "skills__literature-review__SKILL",
+          "start_line": 40,
+          "end_line": 42,
+          "quote": "For systematic reviews, use the appropriate [PRISMA 2020 flow template](https://www.prisma-statement.org/prisma-2020-flow-diagram) and reconciled screening counts. Distinguish records, reports, and studies, including reports not retrieved and reasons for full-text exclusions. Use tables or deterministic plotting for exact numbers, effect estimates, and risk-of-bias results.\n\nConceptual schematics are optional. The bundled generator needs `OPENROUTER_API_KEY` and creates a PNG draft with up to two generation/review iterations:"
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "systematic review PRISMA / optional conceptual figure",
+          "temporal": "report assembly"
+        },
+        "skills": [
+          "literature-review"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Count reconciliation and template suitability; no AI schematic obligation."
+        ]
+      },
+      {
+        "id": "literature-screening",
+        "source": {
+          "source_id": "skills__literature-review__SKILL",
+          "start_line": 94,
+          "end_line": 98,
+          "quote": "### Screening and Selection\n1. **Use clear criteria**: Document inclusion/exclusion criteria before screening\n2. **Screen systematically**: Title \u2192 Abstract \u2192 Full text\n3. **Document exclusions**: Record reasons for excluding studies\n4. **Use independent eligibility decisions**: For systematic reviews, use two reviewers for final full-text eligibility and document disagreement resolution; disclose any single-reviewer limitation"
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "full-text study eligibility",
+          "temporal": "screening"
+        },
+        "skills": [
+          "literature-review"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Independent human decisions and disclosed limitation do not automatically equal waived requirement."
+        ]
+      },
+      {
+        "id": "literature-citation-support",
+        "source": {
+          "source_id": "skills__literature-review__SKILL",
+          "start_line": 106,
+          "end_line": 110,
+          "quote": "### Quality and Reproducibility\n1. **Assess study quality**: Use appropriate quality assessment tools\n2. **Verify citations and claims**: Run verify_citations.py for DOI registration/metadata, then compare the reference and the cited claim with the actual source\n3. **Document methodology**: Provide enough detail for others to reproduce\n4. **Follow guidelines**: Use PRISMA for systematic reviews"
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "citations and claims",
+          "temporal": "after DOI registration check"
+        },
+        "skills": [
+          "literature-review"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "DOI metadata availability is insufficient to establish support."
+        ]
+      },
+      {
+        "id": "schematics-restricted-prompt",
+        "source": {
+          "source_id": "skills__scientific-schematics__SKILL",
+          "start_line": 101,
+          "end_line": 104,
+          "quote": "**Data leaves the machine.** Your prompt is sent to OpenRouter to generate the image, and the\ngenerated image is sent back to OpenRouter for the quality review. Both are subject to OpenRouter's\ndata policies and those of the underlying model providers. Do not describe unpublished data,\npatient information, or anything under embargo in the prompt."
+        },
+        "priority": 0,
+        "kind": "prohibition",
+        "scope": {
+          "entity": "OpenRouter generation prompt",
+          "temporal": "at external generation"
+        },
+        "skills": [
+          "scientific-schematics"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Not a global ban on local diagrams or every diagram; exact data classification required."
+        ]
+      },
+      {
+        "id": "schematics-generation",
+        "source": {
+          "source_id": "skills__scientific-schematics__SKILL",
+          "start_line": 46,
+          "end_line": 54,
+          "quote": "Save diagrams under `figures/` using `-o figures/name.png`, then inspect every label and relationship before including them in a paper or poster. The output location is the path you choose.\n\n**What the output is:** a raster PNG at whatever resolution the image model returns. This skill has\nno vector path and no DPI control \u2014 if a journal demands PDF, EPS, or 300 dpi TIFF, convert the PNG\ndownstream and check the result at final print size.\n\n## Quick Start: Generate Any Diagram\n\nRun from this skill directory with `requests` installed and `OPENROUTER_API_KEY` set. The following paid-generation examples are illustrative; the request contracts are tested offline. Supply source-backed labels and relationships rather than asking the image model to invent them:"
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "generated PNG draft",
+          "temporal": "generation then inclusion"
+        },
+        "skills": [
+          "scientific-schematics"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Declared capabilities only; no service executed, quality not guaranteed."
+        ]
+      },
+      {
+        "id": "schematics-review-not-proof",
+        "source": {
+          "source_id": "skills__scientific-schematics__SKILL",
+          "start_line": 83,
+          "end_line": 90,
+          "quote": "**Output**: Versioned images (`name_v1.png`, `name_v2.png`), a copy of the latest successful version at the path you\nasked for, and `name_review_log.json` with the score, critique, and any early-stop reason.\n\n**When the review cannot run** \u2014 a rate limit, a content filter, a reviewer that answers in some\nunexpected shape \u2014 the image is still generated and saved, but no score is invented for it. The log\nrecords `\"score\": null` with the reason in `\"review_error\"`. `\"reviewed\": false` means the reviewer did not return a usable response; a prose answer with no parsable score can have `\"reviewed\": true`. `\"final_reviewed\"` remains false without a numeric score, and the run\nprints `Review unavailable - image kept, quality not verified`. Treat that image as unchecked and\nlook at it yourself and diagnose the review error before spending on another generation. A generation failure ends the loop without automatic replay; if an earlier draft exists, it is retained with its score and the failure in the log."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "saved image and review log",
+          "temporal": "post-generation"
+        },
+        "skills": [
+          "scientific-schematics"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Nondeterministic failure/retry and score conditions beyond deterministic abstraction."
+        ]
+      },
+      {
+        "id": "schematics-flow-accounting",
+        "source": {
+          "source_id": "skills__scientific-schematics__SKILL",
+          "start_line": 112,
+          "end_line": 112,
+          "quote": "For trial flows, use the [CONSORT 2025 template and item 22a](https://www.consort-spirit.org/item-22a-randomized), reconcile enrollment/allocation/follow-up/analysis counts, and report the specified primary outcome. For reviews, choose the appropriate [PRISMA 2020 template](https://www.prisma-statement.org/prisma-2020-flow-diagram); records, reports, and studies are distinct units. An AI score checks neither accounting system."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "trial/review count flow",
+          "temporal": "before reporting"
+        },
+        "skills": [
+          "scientific-schematics"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Accounting relations and scientific evidence are not represented by quality score."
+        ]
+      },
+      {
+        "id": "literature-local-support",
+        "source": {
+          "source_id": "skills__literature-review__references__core_workflow",
+          "start_line": 203,
+          "end_line": 229,
+          "quote": "### Phase 6: Citation Verification\n\n**CRITICAL**: All citations must be verified for accuracy before final submission.\n\n1. **Verify All DOIs**:\n   ```bash\n   python scripts/verify_citations.py my_literature_review.md\n   ```\n\n   This script:\n   - Extracts all DOIs from the document\n   - Checks DOI registration via the Handle API\n   - Retrieves available Crossref metadata and preserves unresolved errors\n   - Generates verification report\n   - Does not verify claim support, publisher accessibility, or final citation style\n\n2. **Review Verification Report**:\n   - Check for any failed DOIs\n   - Verify author names, titles, and publication details match\n   - Correct any errors in the original document\n   - Resolve errors against the source; do not delete a reference solely because a service timed out or lacks its metadata\n\n3. **Format Citations Consistently**:\n   - Choose one citation style and use throughout (see `references/citation_styles.md`)\n   - Common styles: APA, Nature, Vancouver, Chicago, IEEE\n   - Use complete metadata with a CSL processor; the script only provides metadata previews\n   - Ensure in-text citations match reference list format"
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "citation verification",
+          "temporal": "before final submission"
+        },
+        "skills": [
+          "literature-review"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Whether a text-only narrative completion requires live DOI helper in addition to local actual-source verification is not settled by finite abstraction; source wording preserved."
+        ]
+      },
+      {
+        "id": "schematics-bounded-loop",
+        "source": {
+          "source_id": "skills__scientific-schematics__SKILL",
+          "start_line": 190,
+          "end_line": 195,
+          "quote": "The generate-review-refine loop, the Python API and command-line options, prompt\nengineering guidance, and four worked examples (CONSORT flowchart, neural network\narchitecture, biological pathway, system architecture) are in\n[references/iterative_refinement.md](references/iterative_refinement.md).\n\nThe loop stops when the review passes or is unavailable, or when generation fails. A below-threshold score or an explicit improvement verdict can trigger a second generation; no run makes more than two attempts."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "generation-review loop",
+          "temporal": "success/unavailability/failure/second attempt"
+        },
+        "skills": [
+          "scientific-schematics"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Operational loop flattened only for declared fixed-outcome scenarios."
+        ]
+      }
+    ],
+    "contexts": [
+      {
+        "id": "KD-LR-05",
+        "facts": {
+          "scenario_id": "KD-LR-05"
+        },
+        "active_skills": [
+          "literature-review",
+          "scientific-schematics"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "id": "literature-review"
+      },
+      {
+        "id": "scientific-schematics"
+      }
+    ],
+    "assumptions": [
+      "ORIGINAL EXTRACTION PROVENANCE ONLY: Native model extraction, not provider execution or human gold; frozen originals were prepared without reference labels/checker results. This derivative incorporates independent source/transition audit and the integrator has seen provisional labels.",
+      "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+      "DERIVATIVE SCOPE: Scenario facts plus separately named possible-success/optimistic abstractions are modeled. No scientific scripts/services were run.",
+      "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+      "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+      "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+      "{\"assumptions\": [\"Figure requirement, credential availability, network access, review type, source access and output format are unspecified.\"], \"family\": \"review_diagrams\", \"id\": \"KD-LR-05\", \"origin\": \"natural\", \"scenario\": \"Use literature-review with scientific-schematics as appropriate to produce a review.\", \"selection_rationale\": \"Observe the branch ambiguity in an intended integration.\"}"
+    ],
+    "workflows": [],
+    "interpretation": {
+      "status": "candidate",
+      "method": "native-model extraction; evidence-only clauses plus declared-state workflow adaptation",
+      "accepted_candidate_ids": [],
+      "excluded_candidate_ids": [],
+      "total_candidate_count": 10,
+      "untranslated_line_count": 893,
+      "unsupported_spans": [
+        {
+          "source_id": "skills__literature-review__SKILL",
+          "start_line": 1,
+          "end_line": 230,
+          "quote": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nConduct systematic, comprehensive literature reviews following rigorous academic methodology. Search multiple literature databases, synthesize findings thematically, verify all citations for accuracy, and generate professional output documents in markdown and PDF formats.\n\nUse discipline-appropriate bibliographic databases for the reproducible search, with **parallel-web** (`parallel-cli search`) for scoping and supplementary discovery. Ranked web results and extracted excerpts cannot establish exhaustive coverage or substitute for full-text assessment. Bundled scripts process normalized records, check DOI registration, and render documents; they do not run a complete systematic review automatically.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFor systematic reviews, use the appropriate [PRISMA 2020 flow template](https://www.prisma-statement.org/prisma-2020-flow-diagram) and reconciled screening counts. Distinguish records, reports, and studies, including reports not retrieved and reasons for full-text exclusions. Use tables or deterministic plotting for exact numbers, effect estimates, and risk-of-bias results.\n\nConceptual schematics are optional. The bundled generator needs `OPENROUTER_API_KEY` and creates a PNG draft with up to two generation/review iterations:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n### Screening and Selection\n1. **Use clear criteria**: Document inclusion/exclusion criteria before screening\n2. **Screen systematically**: Title \u2192 Abstract \u2192 Full text\n3. **Document exclusions**: Record reasons for excluding studies\n4. **Use independent eligibility decisions**: For systematic reviews, use two reviewers for final full-text eligibility and document disagreement resolution; disclose any single-reviewer limitation\n\n\n\n\n\n\n\n### Quality and Reproducibility\n1. **Assess study quality**: Use appropriate quality assessment tools\n2. **Verify citations and claims**: Run verify_citations.py for DOI registration/metadata, then compare the reference and the cited claim with the actual source\n3. **Document methodology**: Provide enough detail for others to reproduce\n4. **Follow guidelines**: Use PRISMA for systematic reviews\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+        },
+        {
+          "source_id": "skills__literature-review__references__core_workflow",
+          "start_line": 1,
+          "end_line": 269,
+          "quote": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n### Phase 6: Citation Verification\n\n**CRITICAL**: All citations must be verified for accuracy before final submission.\n\n1. **Verify All DOIs**:\n   ```bash\n   python scripts/verify_citations.py my_literature_review.md\n   ```\n\n   This script:\n   - Extracts all DOIs from the document\n   - Checks DOI registration via the Handle API\n   - Retrieves available Crossref metadata and preserves unresolved errors\n   - Generates verification report\n   - Does not verify claim support, publisher accessibility, or final citation style\n\n2. **Review Verification Report**:\n   - Check for any failed DOIs\n   - Verify author names, titles, and publication details match\n   - Correct any errors in the original document\n   - Resolve errors against the source; do not delete a reference solely because a service timed out or lacks its metadata\n\n3. **Format Citations Consistently**:\n   - Choose one citation style and use throughout (see `references/citation_styles.md`)\n   - Common styles: APA, Nature, Vancouver, Chicago, IEEE\n   - Use complete metadata with a CSL processor; the script only provides metadata previews\n   - Ensure in-text citations match reference list format\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+        },
+        {
+          "source_id": "skills__scientific-schematics__SKILL",
+          "start_line": 1,
+          "end_line": 394,
+          "quote": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSave diagrams under `figures/` using `-o figures/name.png`, then inspect every label and relationship before including them in a paper or poster. The output location is the path you choose.\n\n**What the output is:** a raster PNG at whatever resolution the image model returns. This skill has\nno vector path and no DPI control \u2014 if a journal demands PDF, EPS, or 300 dpi TIFF, convert the PNG\ndownstream and check the result at final print size.\n\n## Quick Start: Generate Any Diagram\n\nRun from this skill directory with `requests` installed and `OPENROUTER_API_KEY` set. The following paid-generation examples are illustrative; the request contracts are tested offline. Supply source-backed labels and relationships rather than asking the image model to invent them:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n**Output**: Versioned images (`name_v1.png`, `name_v2.png`), a copy of the latest successful version at the path you\nasked for, and `name_review_log.json` with the score, critique, and any early-stop reason.\n\n**When the review cannot run** \u2014 a rate limit, a content filter, a reviewer that answers in some\nunexpected shape \u2014 the image is still generated and saved, but no score is invented for it. The log\nrecords `\"score\": null` with the reason in `\"review_error\"`. `\"reviewed\": false` means the reviewer did not return a usable response; a prose answer with no parsable score can have `\"reviewed\": true`. `\"final_reviewed\"` remains false without a numeric score, and the run\nprints `Review unavailable - image kept, quality not verified`. Treat that image as unchecked and\nlook at it yourself and diagnose the review error before spending on another generation. A generation failure ends the loop without automatic replay; if an earlier draft exists, it is retained with its score and the failure in the log.\n\n\n\n\n\n\n\n\n\n\n**Data leaves the machine.** Your prompt is sent to OpenRouter to generate the image, and the\ngenerated image is sent back to OpenRouter for the quality review. Both are subject to OpenRouter's\ndata policies and those of the underlying model providers. Do not describe unpublished data,\npatient information, or anything under embargo in the prompt.\n\n\n\n\n\n\n\nFor trial flows, use the [CONSORT 2025 template and item 22a](https://www.consort-spirit.org/item-22a-randomized), reconcile enrollment/allocation/follow-up/analysis counts, and report the specified primary outcome. For reviews, choose the appropriate [PRISMA 2020 template](https://www.prisma-statement.org/prisma-2020-flow-diagram); records, reports, and studies are distinct units. An AI score checks neither accounting system.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThe generate-review-refine loop, the Python API and command-line options, prompt\nengineering guidance, and four worked examples (CONSORT flowchart, neural network\narchitecture, biological pathway, system architecture) are in\n[references/iterative_refinement.md](references/iterative_refinement.md).\n\nThe loop stops when the review passes or is unavailable, or when generation fails. A below-threshold score or an explicit improvement verdict can trigger a second generation; no run makes more than two attempts.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+        }
+      ]
+    }
+  },
+  "sources": {
+    "skills__literature-review__SKILL": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nConduct systematic, comprehensive literature reviews following rigorous academic methodology. Search multiple literature databases, synthesize findings thematically, verify all citations for accuracy, and generate professional output documents in markdown and PDF formats.\n\nUse discipline-appropriate bibliographic databases for the reproducible search, with **parallel-web** (`parallel-cli search`) for scoping and supplementary discovery. Ranked web results and extracted excerpts cannot establish exhaustive coverage or substitute for full-text assessment. Bundled scripts process normalized records, check DOI registration, and render documents; they do not run a complete systematic review automatically.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFor systematic reviews, use the appropriate [PRISMA 2020 flow template](https://www.prisma-statement.org/prisma-2020-flow-diagram) and reconciled screening counts. Distinguish records, reports, and studies, including reports not retrieved and reasons for full-text exclusions. Use tables or deterministic plotting for exact numbers, effect estimates, and risk-of-bias results.\n\nConceptual schematics are optional. The bundled generator needs `OPENROUTER_API_KEY` and creates a PNG draft with up to two generation/review iterations:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n### Screening and Selection\n1. **Use clear criteria**: Document inclusion/exclusion criteria before screening\n2. **Screen systematically**: Title \u2192 Abstract \u2192 Full text\n3. **Document exclusions**: Record reasons for excluding studies\n4. **Use independent eligibility decisions**: For systematic reviews, use two reviewers for final full-text eligibility and document disagreement resolution; disclose any single-reviewer limitation\n\n\n\n\n\n\n\n### Quality and Reproducibility\n1. **Assess study quality**: Use appropriate quality assessment tools\n2. **Verify citations and claims**: Run verify_citations.py for DOI registration/metadata, then compare the reference and the cited claim with the actual source\n3. **Document methodology**: Provide enough detail for others to reproduce\n4. **Follow guidelines**: Use PRISMA for systematic reviews\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+    "skills__literature-review__references__core_workflow": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n### Phase 6: Citation Verification\n\n**CRITICAL**: All citations must be verified for accuracy before final submission.\n\n1. **Verify All DOIs**:\n   ```bash\n   python scripts/verify_citations.py my_literature_review.md\n   ```\n\n   This script:\n   - Extracts all DOIs from the document\n   - Checks DOI registration via the Handle API\n   - Retrieves available Crossref metadata and preserves unresolved errors\n   - Generates verification report\n   - Does not verify claim support, publisher accessibility, or final citation style\n\n2. **Review Verification Report**:\n   - Check for any failed DOIs\n   - Verify author names, titles, and publication details match\n   - Correct any errors in the original document\n   - Resolve errors against the source; do not delete a reference solely because a service timed out or lacks its metadata\n\n3. **Format Citations Consistently**:\n   - Choose one citation style and use throughout (see `references/citation_styles.md`)\n   - Common styles: APA, Nature, Vancouver, Chicago, IEEE\n   - Use complete metadata with a CSL processor; the script only provides metadata previews\n   - Ensure in-text citations match reference list format\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+    "skills__scientific-schematics__SKILL": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSave diagrams under `figures/` using `-o figures/name.png`, then inspect every label and relationship before including them in a paper or poster. The output location is the path you choose.\n\n**What the output is:** a raster PNG at whatever resolution the image model returns. This skill has\nno vector path and no DPI control \u2014 if a journal demands PDF, EPS, or 300 dpi TIFF, convert the PNG\ndownstream and check the result at final print size.\n\n## Quick Start: Generate Any Diagram\n\nRun from this skill directory with `requests` installed and `OPENROUTER_API_KEY` set. The following paid-generation examples are illustrative; the request contracts are tested offline. Supply source-backed labels and relationships rather than asking the image model to invent them:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n**Output**: Versioned images (`name_v1.png`, `name_v2.png`), a copy of the latest successful version at the path you\nasked for, and `name_review_log.json` with the score, critique, and any early-stop reason.\n\n**When the review cannot run** \u2014 a rate limit, a content filter, a reviewer that answers in some\nunexpected shape \u2014 the image is still generated and saved, but no score is invented for it. The log\nrecords `\"score\": null` with the reason in `\"review_error\"`. `\"reviewed\": false` means the reviewer did not return a usable response; a prose answer with no parsable score can have `\"reviewed\": true`. `\"final_reviewed\"` remains false without a numeric score, and the run\nprints `Review unavailable - image kept, quality not verified`. Treat that image as unchecked and\nlook at it yourself and diagnose the review error before spending on another generation. A generation failure ends the loop without automatic replay; if an earlier draft exists, it is retained with its score and the failure in the log.\n\n\n\n\n\n\n\n\n\n\n**Data leaves the machine.** Your prompt is sent to OpenRouter to generate the image, and the\ngenerated image is sent back to OpenRouter for the quality review. Both are subject to OpenRouter's\ndata policies and those of the underlying model providers. Do not describe unpublished data,\npatient information, or anything under embargo in the prompt.\n\n\n\n\n\n\n\nFor trial flows, use the [CONSORT 2025 template and item 22a](https://www.consort-spirit.org/item-22a-randomized), reconcile enrollment/allocation/follow-up/analysis counts, and report the specified primary outcome. For reviews, choose the appropriate [PRISMA 2020 template](https://www.prisma-statement.org/prisma-2020-flow-diagram); records, reports, and studies are distinct units. An AI score checks neither accounting system.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThe generate-review-refine loop, the Python API and command-line options, prompt\nengineering guidance, and four worked examples (CONSORT flowchart, neural network\narchitecture, biological pathway, system architecture) are in\n[references/iterative_refinement.md](references/iterative_refinement.md).\n\nThe loop stops when the review passes or is unavailable, or when generation fails. A below-threshold score or an explicit improvement verdict can trigger a second generation; no run makes more than two attempts.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+  },
+  "tools": {
+    "tools": {}
+  },
+  "runtime": {
+    "max_plan_steps": 20
+  }
+}

@@ -1,0 +1,125 @@
+{
+  "stage": "post_independent_derivative_reaudit_pre_checker",
+  "decisions": [
+    {
+      "case_id": "KD-SC-01",
+      "candidate_decision": "accepted_projection",
+      "reason": "Source-linked finite projection is suitable for conditional reachability comparison; preserve unsupported whole-source semantics.",
+      "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain",
+      "can_claim_upstream_source_contradiction": false,
+      "derivative_scope": "Corrected snapshot with explicitly scoped original-extraction and post-audit derivative provenance. Independent exhaustive finite-state re-audit passed; whole-source semantics remain unsupported.",
+      "derivative_sha256": "a52720d132c3c49e687f55754c2614c93262f560cde6e184a0d2b8644a6b5514"
+    },
+    {
+      "case_id": "KD-SC-02",
+      "candidate_decision": "accepted_projection",
+      "reason": "Source-linked finite projection is suitable for conditional reachability comparison; preserve unsupported whole-source semantics.",
+      "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain",
+      "can_claim_upstream_source_contradiction": false,
+      "derivative_scope": "Corrected snapshot with explicitly scoped original-extraction and post-audit derivative provenance. Independent exhaustive finite-state re-audit passed; whole-source semantics remain unsupported.",
+      "derivative_sha256": "17b043a534ed0d5398c83a9440dedcb0fb59b54a63ac0c2c5076ac906c745a86"
+    },
+    {
+      "case_id": "KD-SC-03",
+      "candidate_decision": "accepted_projection",
+      "reason": "Source-linked finite projection is suitable for conditional reachability comparison; preserve unsupported whole-source semantics.",
+      "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain",
+      "can_claim_upstream_source_contradiction": false,
+      "derivative_scope": "Corrected snapshot with explicitly scoped original-extraction and post-audit derivative provenance. Independent exhaustive finite-state re-audit passed; whole-source semantics remain unsupported.",
+      "derivative_sha256": "cdc4bab0e34ab3a8041f6ee63da002011424fd654c206fc326ed3728714f4812"
+    },
+    {
+      "case_id": "KD-SC-04",
+      "candidate_decision": "abstain",
+      "reason": "Essential scenario facts unknown; correctly no closed-world workflow invented.",
+      "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain",
+      "can_claim_upstream_source_contradiction": false,
+      "derivative_scope": "Corrected snapshot with explicitly scoped original-extraction and post-audit derivative provenance. Independent exhaustive finite-state re-audit passed; whole-source semantics remain unsupported.",
+      "derivative_sha256": "f321ebec22980b7d3061ba53d3738d631a0837e7718fbba5fe936efb92c04607"
+    },
+    {
+      "case_id": "KD-WR-01",
+      "candidate_decision": "accepted_projection",
+      "reason": "Re-audited corrected derivative blocks original adverse traces; exhaustive declared-state traversal satisfies inspected operational invariants. Existential conditional projection only; whole-source semantic warnings remain.",
+      "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain",
+      "can_claim_upstream_source_contradiction": false,
+      "derivative_scope": "Corrected snapshot with explicitly scoped original-extraction and post-audit derivative provenance. Independent exhaustive finite-state re-audit passed; whole-source semantics remain unsupported.",
+      "derivative_sha256": "8429e7338927cb1eebb69defb737ac47714a33f1a901c619a9d573c916e0df3a"
+    },
+    {
+      "case_id": "KD-WR-02",
+      "candidate_decision": "accepted_projection",
+      "reason": "Source-linked finite projection is suitable for conditional reachability comparison; preserve unsupported whole-source semantics.",
+      "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain",
+      "can_claim_upstream_source_contradiction": false,
+      "derivative_scope": "Corrected snapshot with explicitly scoped original-extraction and post-audit derivative provenance. Independent exhaustive finite-state re-audit passed; whole-source semantics remain unsupported.",
+      "derivative_sha256": "3490004a06f5109de00257c1c4e2e38372d2e50cb7d03737a7c6305603beefec"
+    },
+    {
+      "case_id": "KD-WR-03",
+      "candidate_decision": "accepted_projection",
+      "reason": "Source-linked finite projection is suitable for conditional reachability comparison; preserve unsupported whole-source semantics.",
+      "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain",
+      "can_claim_upstream_source_contradiction": false,
+      "derivative_scope": "Corrected snapshot with explicitly scoped original-extraction and post-audit derivative provenance. Independent exhaustive finite-state re-audit passed; whole-source semantics remain unsupported.",
+      "derivative_sha256": "80c10dc4440c1d0eb59ef6899e3dccdf7f9e6e12e16fba42e212faf86590c65c"
+    },
+    {
+      "case_id": "KD-WR-04",
+      "candidate_decision": "abstain",
+      "reason": "Essential scenario facts unknown; correctly no closed-world workflow invented.",
+      "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain",
+      "can_claim_upstream_source_contradiction": false,
+      "derivative_scope": "Corrected snapshot with explicitly scoped original-extraction and post-audit derivative provenance. Independent exhaustive finite-state re-audit passed; whole-source semantics remain unsupported.",
+      "derivative_sha256": "54b7b279afb8cd012c8d5c3f661e094e54b4f9e2926699d2aa69397ac23cb339"
+    },
+    {
+      "case_id": "KD-LR-01",
+      "candidate_decision": "abstain",
+      "reason": "Whole review has unresolved DOI-check applicability/completion. Local-text projection may be reported separately, not as requested completion.",
+      "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain",
+      "can_claim_upstream_source_contradiction": false,
+      "derivative_scope": "Corrected snapshot with explicitly scoped original-extraction and post-audit derivative provenance. Independent exhaustive finite-state re-audit passed; whole-source semantics remain unsupported.",
+      "derivative_sha256": "0659c9c024702e7a66e54c97bb47072c7e5b13b2a2758d99ba206604c0ba55c2"
+    },
+    {
+      "case_id": "KD-LR-02",
+      "candidate_decision": "accepted_projection",
+      "reason": "Source-linked finite projection is suitable for conditional reachability comparison; preserve unsupported whole-source semantics.",
+      "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain",
+      "can_claim_upstream_source_contradiction": false,
+      "derivative_scope": "Corrected snapshot with explicitly scoped original-extraction and post-audit derivative provenance. Independent exhaustive finite-state re-audit passed; whole-source semantics remain unsupported.",
+      "derivative_sha256": "91ed77e11c0a2c04cd93ce6e3733dc47c6c68cc80d8a91302a1043fe7153f3e7"
+    },
+    {
+      "case_id": "KD-LR-03",
+      "candidate_decision": "accepted_projection",
+      "reason": "Source-linked finite projection is suitable for conditional reachability comparison; preserve unsupported whole-source semantics.",
+      "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain",
+      "can_claim_upstream_source_contradiction": false,
+      "derivative_scope": "Corrected snapshot with explicitly scoped original-extraction and post-audit derivative provenance. Independent exhaustive finite-state re-audit passed; whole-source semantics remain unsupported.",
+      "derivative_sha256": "bd693b314db843781e33693578560bf1e2fc94ffcadc7f8d281905d152559cf8"
+    },
+    {
+      "case_id": "KD-LR-04",
+      "candidate_decision": "accepted_projection",
+      "reason": "Re-audited corrected derivative blocks original adverse traces; exhaustive declared-state traversal satisfies inspected operational invariants. Existential conditional projection only; whole-source semantic warnings remain.",
+      "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain",
+      "can_claim_upstream_source_contradiction": false,
+      "derivative_scope": "Corrected snapshot with explicitly scoped original-extraction and post-audit derivative provenance. Independent exhaustive finite-state re-audit passed; whole-source semantics remain unsupported.",
+      "derivative_sha256": "fef1e072605846d98a8a9038a29fe00285edcb325dbb4cdd2672c63dfc12b391"
+    },
+    {
+      "case_id": "KD-LR-05",
+      "candidate_decision": "abstain",
+      "reason": "Essential scenario facts unknown; correctly no closed-world workflow invented.",
+      "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain",
+      "can_claim_upstream_source_contradiction": false,
+      "derivative_scope": "Corrected snapshot with explicitly scoped original-extraction and post-audit derivative provenance. Independent exhaustive finite-state re-audit passed; whole-source semantics remain unsupported.",
+      "derivative_sha256": "b36a1c7e28d347579a04ac1e39201e13646e68393c7ebf0d8bd32e94d9f189dd"
+    }
+  ],
+  "evidence": "derivative_reaudit.json",
+  "important": "Accepted finite projections do not authorize global no_issue, removal of semantic warnings, inference of actual runtime success, or source contradiction claims.",
+  "provenance_qualifier_verified": true
+}

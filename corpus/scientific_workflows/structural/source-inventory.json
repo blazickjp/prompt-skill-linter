@@ -1,0 +1,1423 @@
+{
+  "commit": "92ace75ac21efe19a620434e0ca4e356081fe807",
+  "skills": [
+    {
+      "path": "skills/13c-metabolic-flux/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "aad2ec94ea8d395c5d5d1b6465841a9ebc5f1164aa712bc480f17b2b4cbd8360",
+      "git_blob_sha": "66081586c20b2e042496bee48a4921cf617e7716",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "8318b1c785cc80bf095b8667a96061cd5f4b0b9c4e5fa77fd7f57fd8403f2c0f"
+    },
+    {
+      "path": "skills/adaptyv/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "befcf588eee7f5848fed362b910040005a2a1123b5b2a94c6d0f3550ecfee53d",
+      "git_blob_sha": "da6ae7d3eb08602cf2c02535de7921b9cf790712",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "5de115067c118609dc096f9d582c687fdf331150e3f21c54eedb2ade24d12846"
+    },
+    {
+      "path": "skills/aeon/SKILL.md",
+      "license_frontmatter": "BSD-3-Clause license",
+      "sha256": "829e090c5a28e2062e6ca772e0191935ef3ce10ed5e71699bb9f30271245a813",
+      "git_blob_sha": "2a08747d404a77c7dd7d46ce3e3688d998f36882",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "e1d25cbe0ba5f849299e9e02bd339773bb41529dcece5a6ee68bb080855b97a6"
+    },
+    {
+      "path": "skills/alphagenome/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "fb2f762410e06d6e243fd684309efbe777123ebcd248e05b260f75139c549929",
+      "git_blob_sha": "87117aa6afef6ce92b08120bf7c928f8208d1c8b",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "b133d2a9ff99652b439e0a6f00f93bad49f388be207f7e0241837e001a964947"
+    },
+    {
+      "path": "skills/analytical-method-validation/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "9d2600e41053dac38ee6dc7a15f5b986831351bcf81c198413896c1f64c7e96a",
+      "git_blob_sha": "27f59e7e543d076b55c930c13f776a8612bd7cde",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "7c2cd278bd397f0f85f4fc790b236a61190cff8799c8ece8da923342f4dc0032"
+    },
+    {
+      "path": "skills/anndata/SKILL.md",
+      "license_frontmatter": "BSD-3-Clause license",
+      "sha256": "bd953fff1771c5a32aad1892ca3ea2ca41e97804041bc5e36af55a155f5e199c",
+      "git_blob_sha": "c07814b8785967d62a172692fb5d3a948c3bb12e",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "a619c4088e1be6f6feaa5838c63ff8c4381fa21b4adee2a9276aa61464f3a034"
+    },
+    {
+      "path": "skills/arbor/SKILL.md",
+      "license_frontmatter": "MIT license",
+      "sha256": "0c9362839963f984068be74c201e3d66d4052ce2d83451d6f9e6c299b2393346",
+      "git_blob_sha": "2625b4351b6380d6398a43752c280d70d560d0fe",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "aae219831d92984eb6584831f77509cb8650a3986e8c42474aaa4d118ce080a6"
+    },
+    {
+      "path": "skills/arboreto/SKILL.md",
+      "license_frontmatter": "BSD-3-Clause license",
+      "sha256": "d28c42b71a4b32f38ce83d0da1a39cbf9f9f25515c67c34b1db6a13962d39b26",
+      "git_blob_sha": "c4863e6fc542c2b21f22234a97ae74d801bd5375",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "38ff6f24b8fd4a86e2a57ae7bb7669fe4ce401f7375efcc82a6c004f4c51d344"
+    },
+    {
+      "path": "skills/astropy/SKILL.md",
+      "license_frontmatter": "BSD-3-Clause license",
+      "sha256": "d5f74dfd7f62fa63234c6a502660bda934b2f4b33a9ee5a5a03b8b4ccb012c6c",
+      "git_blob_sha": "4fea5000c63c3b2c4884c070a63f16eb85f13f66",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "2f9d43ae65766a9715112e3b56cb83fb9c12e4e8b6356c0c4c22131c6cfa536f"
+    },
+    {
+      "path": "skills/autoskill/SKILL.md",
+      "license_frontmatter": "MIT license",
+      "sha256": "e34a554ce3448a120031195566a6688538f6a9543feba02a8cc4894ff414840f",
+      "git_blob_sha": "a9eb95dd53035439fa8ef91d90b8522b441f5baa",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "d7fc7db094649f5cd1ee6349110d78197166011e929aecd2d468e251b0542ecc"
+    },
+    {
+      "path": "skills/benchling-integration/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "11923e22249a80d858e1432d962255f231b27187991d4558ab16ab7548763ea6",
+      "git_blob_sha": "fa9539266a9ea41d24bea882da1aeaad4efd0df1",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "115b5418f7c42748918eed922b78010c795920b276063b8b759802eb0172d5de"
+    },
+    {
+      "path": "skills/bgpt-paper-search/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "789f868694a027e63f113b49eb85c9f332ce2985cf9f774d2743c4199d748422",
+      "git_blob_sha": "a9c13151600fd910db786b79b08d4c2ebe4cab75",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "3b7db6956c13ccf24df151f0905ae579ed58230708a4ba19e6d6fb3bf9d4d6b7"
+    },
+    {
+      "path": "skills/bids/SKILL.md",
+      "license_frontmatter": "https://creativecommons.org/licenses/by/4.0/",
+      "sha256": "58e672b9080a77433e8a9d2eb569c23557370b528c9c27db2707a9f8b5cc3b6c",
+      "git_blob_sha": "0436279f5822fa8b5fec1a137eca4bbcdb6aec32",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "e1ae63105ccc2e4da7c40e8a2f40d031dd8f2a77270be626df780f0c39eb0b1b"
+    },
+    {
+      "path": "skills/biopython/SKILL.md",
+      "license_frontmatter": "Biopython License Agreement",
+      "sha256": "82160af92f5807c87e883c30cc8707c5603b649de5f704e1ac7890cb5b6375dc",
+      "git_blob_sha": "0394ffc8a5a03a06c32999ab5fbe3fdc5aa8c185",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "b617561b38a2e3ecc8f8cf3dd8bb0307ac1aaf4d67e6e0432b0c248bc4382245"
+    },
+    {
+      "path": "skills/bioservices/SKILL.md",
+      "license_frontmatter": "GPLv3 license",
+      "sha256": "62a3544ddd6cf9208ee71167190ae9e4ff3d771a0cf50204fc668af9ea2894dc",
+      "git_blob_sha": "f7e598612df1d81d665d54cfaf25007113ed95ee",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "9edc884f0fe216d510417d565ae74cc61608824b52eeb53ed0cdea3dcda5bda3"
+    },
+    {
+      "path": "skills/bulk-rnaseq/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "84ffc3fb90fab69b9eaa660c1cd780440858e283220c0b02d2957f4d4952dabd",
+      "git_blob_sha": "6ff6d3c7c585dd3d1859166cefe5383d304941d6",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "e945e970268505368e20d9ddc0c135de469e86626d67565ae9047fb05f70cdbf"
+    },
+    {
+      "path": "skills/cantera/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "0d7c837bcd8368b9f96fa0a6661cad2ab71432613460fccfbe7308e50b1a6080",
+      "git_blob_sha": "8c004860ef2cdf04ed4e43d654a134a1ec57b68a",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "1dcb22bba51475a69dc93bbefa7d2581f3dfdb6a03a6fc55f8637e398f733a51"
+    },
+    {
+      "path": "skills/cellprofiler/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "7762e9464df9a379bc9f76ffed72362190be965a950067a6128c74129697b4be",
+      "git_blob_sha": "e68a8b4e77871fa31887e90d5d16e4b2e775d971",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "b822ed64acb189d900f59ba69418e5e41261d539fd2fd847e402cded2fc1bb38"
+    },
+    {
+      "path": "skills/cellxgene-census/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "ff10c59da3d0d0857911be60e00da34a8c5cbf533a63310162f6d215178a4a07",
+      "git_blob_sha": "e0caaab56be37dce020cf3c28a4b98061013e827",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "123b66d6701c7c0587d0a615a2394caee52e62745b3fd31176381ea64aaa794a"
+    },
+    {
+      "path": "skills/cirq/SKILL.md",
+      "license_frontmatter": "Apache-2.0 license",
+      "sha256": "472e21a06fe87bba66696b2e36726f62f5172c4446f79a59671de5d79b7ce750",
+      "git_blob_sha": "d83e8bfeb78ba10828f4327c629b41f357b573fc",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "6ab4c57fd133d21013ac0a8cfdbb2235dcc461d6fc82445693ea475c3d5d6bc1"
+    },
+    {
+      "path": "skills/citation-management/SKILL.md",
+      "license_frontmatter": "MIT License",
+      "sha256": "44d04609133c295dbd65eb0b9813579d7a397200f58aac8307cfcf9389f28477",
+      "git_blob_sha": "b63b589d4d423969a63e032e62c2b74969147c1c",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "dc79fe1e8438dcf598040615d5323360c6a7ed0b868fc3ffc82512c871a1e3ff"
+    },
+    {
+      "path": "skills/clinical-decision-support/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "b092302491a81deceed55891a16b1c18a2d50aa89f7d2861943bfe04e94fd7a5",
+      "git_blob_sha": "23622c2917d8a944af861687b068f55d1a09d27d",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "05645e4bc5c73a613ddaeba5bea616739cc0cd71c789c869d97cdfcd8994e072"
+    },
+    {
+      "path": "skills/clinical-reports/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "9c01d3ee87fc632ec17f3ba7eda906439d93e4a4aef681cfee98a37b3a97c73a",
+      "git_blob_sha": "0d8e48e786764da375823906c1ca34f13b660701",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "0d7c821b7857a4a761805e1a8263920a37f181658f77f1397755df0e14125022"
+    },
+    {
+      "path": "skills/cobrapy/SKILL.md",
+      "license_frontmatter": "GPL-2.0 license",
+      "sha256": "ecfa783b6075c084386957302c60711ef0f5f40260e4431ebb908ca359187c62",
+      "git_blob_sha": "fe0f307cde6f81f4a263d5ed998265f60e94fe4c",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "b11365507e183d8e153dd415df3a85a00f34b068bcf8edbad28c0580253564db"
+    },
+    {
+      "path": "skills/consciousness-council/SKILL.md",
+      "license_frontmatter": "MIT license",
+      "sha256": "6ca4cb42b775ee0b657cb18e0aa676ac2aafda48c3fa7926b0a7b6604df76cec",
+      "git_blob_sha": "bbb11c23221ed1d65f3194e9d0ff2202967657e1",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "84b5eb07e5459cc110d7d6f63be48a7a01d374ec618da8e293a88b1d037c0c8c"
+    },
+    {
+      "path": "skills/dask/SKILL.md",
+      "license_frontmatter": "BSD-3-Clause license",
+      "sha256": "72727957b1bb2b8f5c04536b66bfc3c451c47b5289592269b355778e3bfe975e",
+      "git_blob_sha": "db2f8e7b31a219cb40ea2af2d56cfa4e4f6b3072",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "3b563a98f4cb42858bb1cc49832a3fa1ff9483d929af57ebe629473538e5a041"
+    },
+    {
+      "path": "skills/database-lookup/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "820175db36f17a2c14af7b94e0795e3653bfb85d5b5796642c94bbe392c48c3d",
+      "git_blob_sha": "f5f3d4921ed5a0a205f07e643fbaf48fc39521f6",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "ead247f623212ca1560486d863a2d0a8c0555d8d20b975d55053eeb4ed043d37"
+    },
+    {
+      "path": "skills/datalad/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "98a5226a21ab181294785f7d9a3529ffe04d23237707b5fa8cbca15574e1df8f",
+      "git_blob_sha": "7f54f85b7bedc05794a704c0ebc90683cc41b5f1",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "bb902427db0c501db4187aafd3433eea67fa1071348cf07adcea2558ed49debb"
+    },
+    {
+      "path": "skills/datamol/SKILL.md",
+      "license_frontmatter": "Apache-2.0 license",
+      "sha256": "4aa0061e022b8f5557305c620f6b49cb37158bcd2ce1d6f4855b0aa7ad96ebdc",
+      "git_blob_sha": "4dfa8686f63bdc9492dc94a56476ddd95a0c3da2",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "3a0d725456f37c650595a1bdf0cd104936acc5e2bf4146be6829d3fcd4ea6c59"
+    },
+    {
+      "path": "skills/deepchem/SKILL.md",
+      "license_frontmatter": "MIT license",
+      "sha256": "2241d244c83c4f3737f2bd2c5b9f7a58931d8ec46526ca184152032fd7a8f42c",
+      "git_blob_sha": "be31f697f99831a587da25e892e21221ec654cad",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "2965735ee473cf70d63c6170f1c8867bd533539809d4535c162acacc07d0b17d"
+    },
+    {
+      "path": "skills/deepspot-m/SKILL.md",
+      "license_frontmatter": "PolyForm-Noncommercial-1.0.0",
+      "sha256": "d8a0335fe879d3b24c2b4010be08c5c43b81ef66094a58985990479e0c3eaf49",
+      "git_blob_sha": "629487ca20bc9993aa83956d2e9b0f28090f8fc5",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "a917434c523e136ddc1ce45b54acbef8c28398dd293314f72faa278431e67418"
+    },
+    {
+      "path": "skills/deeptools/SKILL.md",
+      "license_frontmatter": "BSD license",
+      "sha256": "67256609a1a78a087577db75373558aa51b5c0e931469e8a0e0dd1a5e42c3a4a",
+      "git_blob_sha": "6d5a7d7a527e3bdb4ab2b2335d2ffd4ec346cfa2",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "f09f32bad2d0c54f4a422cb7bcca7703466e653544b2b6e77a7492e6f29ccf8b"
+    },
+    {
+      "path": "skills/depmap/SKILL.md",
+      "license_frontmatter": "CC-BY-4.0",
+      "sha256": "444f88b25fb3e2ef814f56de7b1cab4cfce7ef93396f115c0066a573d0672f54",
+      "git_blob_sha": "646ee21e9c87d217cf199a139e9851a5b176da19",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "893eb02a2dc8a77e61260dfb74b2acdf6c85e08f33028329d73657a23d398586"
+    },
+    {
+      "path": "skills/dhdna-profiler/SKILL.md",
+      "license_frontmatter": "MIT license",
+      "sha256": "3b15054d69d9b126d92b3193bc20ef3daa19dbb0961be346c2e513f4c293a2fd",
+      "git_blob_sha": "ef30a1b1527abb6f14512019db491e4aa166a06f",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "55cbc0e142ec3e6e6427c601391aeb38b8de6a83897082f46154f5c8273ccf50"
+    },
+    {
+      "path": "skills/diffdock/SKILL.md",
+      "license_frontmatter": "MIT license",
+      "sha256": "6f4e30ee4ddc6e0e55a259d5ad3869bd0362122a3dd3abe9c9f5bb63a05a9215",
+      "git_blob_sha": "a4c6e9c243878274345d234e189b91889812de03",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "5fafc5d9f53fa35a47c498f1cf3bad20fbee7404f248226e76e62bb327749912"
+    },
+    {
+      "path": "skills/dnanexus-integration/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "564bc8938395d915e120fb52d70613b67987ac9735f1818b19c25807d7b11bf2",
+      "git_blob_sha": "aa8ddd97235cbe11cea7554807a436f23676af9c",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "e8fcca26f5558e04256a2253c002cc8c8c024c06614fbd7d6e0161e53c5aa519"
+    },
+    {
+      "path": "skills/esm/SKILL.md",
+      "license_frontmatter": "MIT license",
+      "sha256": "79b24e154eb8629fc09b1b1d199e081520177ee551e8d615fac086a196f8a333",
+      "git_blob_sha": "378c008e0cee28ce8445cced64ded88e98679d0b",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "49da3c6f5c81359d48b7c0b4416a212e7106f777b4c7174b2b42ce0c02bd95f6"
+    },
+    {
+      "path": "skills/etetoolkit/SKILL.md",
+      "license_frontmatter": "GPL-3.0-or-later",
+      "sha256": "f3d2617ca07c335bbbbfe7bb6bc30812c00caad6307aba5a54b81bf686e0ed71",
+      "git_blob_sha": "b43a4a889808234612f52c3670fd7bdd8a7cce07",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "da2e57c0e3677a4219d0629a2c1392470f20bc3ade2809c1f0334fd84441da08"
+    },
+    {
+      "path": "skills/exa-search/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "dea41932a4aba183ca41fe36798127d1142ba73cd67c7479388535033546dca3",
+      "git_blob_sha": "3f9ba4d45b1281832e89236416be1c4da367d911",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "8cdedf5648783a209593ff91024f43bd8d8e066b03f0a72a6cf36d90e1650204"
+    },
+    {
+      "path": "skills/experimental-design/SKILL.md",
+      "license_frontmatter": "MIT license",
+      "sha256": "d1b1e3436c9abf28a11e0e05e33785c5ace071057660834eba628c963c04271b",
+      "git_blob_sha": "ee14f9ed795c791ac80e3ea946858d97d09c3e50",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "db2de0f3d29b7729776a91e923c9c83801298f5ad8e88fe44570045fbefcc248"
+    },
+    {
+      "path": "skills/exploratory-data-analysis/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "5d3299175052a27a1f676782da4fd738ba485696d71951f07ee7bf2bdc4ac267",
+      "git_blob_sha": "c461f99dea057872298ce6f04e7c090a83d80d01",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "955c4cefa49106dd03b55cbd62603bab2d2fb678e627dd452ba62040c7128484"
+    },
+    {
+      "path": "skills/fictiv/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "2393f3a79319deba0314f9345194ddac9b491c0868eb3931828c306ce7a54af9",
+      "git_blob_sha": "5fc90aaaccaf6804578685bb5b131c46b09b84e0",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "c4f9b182d2f4664fe4b729832fff7fe98112b6823eaea3601633fa17112a6164"
+    },
+    {
+      "path": "skills/flowio/SKILL.md",
+      "license_frontmatter": "BSD-3-Clause license",
+      "sha256": "c9234d7a05a7ca3406444f30fd7c3eafb5065cb11cbc80fb384012e2f3a59844",
+      "git_blob_sha": "6cbf727e8d05c422d94a07df7613149941b1dc86",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "24247696d4e9455f4b5509b7bee1856c251fa59181d80aa8de22d54ecd685b62"
+    },
+    {
+      "path": "skills/flowkit/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "8c8a36a5dc86f98f09591d4f16b9f82b87d331cd1d4de811aeb1b99a74fe5816",
+      "git_blob_sha": "29d2f2488ea9ec16b3bb8919432d636c5bb4290a",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "47c4dcb907dc6ec15daa4bdf1855e9c96860ef1a558507bef0084d79c2d1c57c"
+    },
+    {
+      "path": "skills/fluidsim/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "0156b19d6b8b31cfafbab3f2a098eb09b62b36f7a13d299a1aea612c8c20eb86",
+      "git_blob_sha": "28ae0813b2a35438612cb5e748a7860e21f4a51c",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "7784bbf33615014f5965ff1db3d11bcc42e1bc4bb1f18f26208c62892b66df28"
+    },
+    {
+      "path": "skills/folklore-variant-evidence/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "b32772b08fb76278b08935132302ae24568ef90b6420c2e045bf621a870fcd93",
+      "git_blob_sha": "84f3fd02fab81f0aea248b7f8fce4b74e606c609",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "134b5ea684815b99c56fadf92a1cb42d37eaca4245515278e404b8876b7acfe0"
+    },
+    {
+      "path": "skills/generate-image/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "f3acf5e4fed3f512a6b038ac72d74b1c9383340bd7713ba4bf7b7df910216920",
+      "git_blob_sha": "7389c55a049c9dd6ef62fccbe89f23786a3d11ef",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "42438be890c5ba875ddee1bbbf505e623433886a2b180f21b2012f72d038f92a"
+    },
+    {
+      "path": "skills/geniml/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "c607b96c78a27cdb8cb25525486e90e5f497013c95f4898dda32629a40c2f58a",
+      "git_blob_sha": "ddfa31aaa72764cf6cc3c5dec62f927ef974bcbf",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "7fb9ad57657b2fda7dbc3f234af5dab47915953c6678fbc066c9086c83eadd21"
+    },
+    {
+      "path": "skills/genomic-coordinates/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "0ed2c9717a83f313fe256d67f5b1111b1714463fbfca66a2ba5113872a8b829c",
+      "git_blob_sha": "582ef692616a7ac5c4765ea96b1504d80b91616f",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "da3eee43dfee06ee632388ddda0c38bb0bc57ec33420cbf26b14ce86be3c28a0"
+    },
+    {
+      "path": "skills/genomic-intelligence/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "bb72d778b8f9357772b5b555834576ffde94ffe271f142317783d24c0dea2ea8",
+      "git_blob_sha": "a895ee654c6fe5b4d99ef49e2e7b3da405a5a610",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "cdb027004996d313d31b55f6b93306de45306a89b8a4a792e94c36cf2d1dea20"
+    },
+    {
+      "path": "skills/geomaster/SKILL.md",
+      "license_frontmatter": "MIT License",
+      "sha256": "69014c5092af9df216f13b27823f1ff4b3b32226151a2b1d25289ffc1651dc93",
+      "git_blob_sha": "aa91810c5b9be21e0d832d1358e7f700ae8ad635",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "7b3b88f13f0094285372dfcc25a000fb7e74e5fc4b67c1b6999543fff3cadde8"
+    },
+    {
+      "path": "skills/geopandas/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "8844ae6487fbd0edc0e9fee29bd7ff75fb48dc59d6af47799285eb79b5ecec14",
+      "git_blob_sha": "c8f1aa3a3912306b8df89805c6d63c697f27f827",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "c03a46f911535326802af476208a1e04de13ea385f4d5309b022ad931826b222"
+    },
+    {
+      "path": "skills/get-available-resources/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "7bf3eaab81be0f8d12a3fea23d74d1af05bbd2d72e98272cd5128e433e6b1ccf",
+      "git_blob_sha": "f81efbf4cd407dfe6a8aaa53eedc95c0bbefad86",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "54044d598fce28fca2ce50e7895f44423b070493db2f9c96ff0445bee4d3689d"
+    },
+    {
+      "path": "skills/gget/SKILL.md",
+      "license_frontmatter": "BSD-2-Clause license",
+      "sha256": "008ca91aeec800dd4915e25c3fcedfd1abc4816fe203af12ff85a3ae7a4c7a13",
+      "git_blob_sha": "c6a98857462d7df4f5e2fea1cf7e26c99a713464",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "55027a94be8dde013fd17e563ba20ccba92b7131c29c21e9c83e54fbce2b348a"
+    },
+    {
+      "path": "skills/ginkgo-cloud-lab/SKILL.md",
+      "license_frontmatter": "MIT license",
+      "sha256": "6f98be50729d5ff61531d24349ae34573be9c7138af1f0320de697ae6030f746",
+      "git_blob_sha": "f80e48551f6d2ba683dc971e5159562c5ae2d559",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "b3675d3ad36070fd598642fd2b58c36d3cfd09a08eef3f52d77629856e2e845b"
+    },
+    {
+      "path": "skills/glycoengineering/SKILL.md",
+      "license_frontmatter": "Unknown",
+      "sha256": "245c9e15fe45d9a06d4e07a1d158c271387582fe10920953ae87354080372271",
+      "git_blob_sha": "c9ad1e217d693ea0edf61ec4ac978d9122d0d5da",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "b529bde5367cd84175f07db473361c9713a69af8f641cd740a10c0b660b32bc7"
+    },
+    {
+      "path": "skills/gtars/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "f46e08214531bc23e4701d45ef18e882c938c6f450dfda553be1901bb54aeaf0",
+      "git_blob_sha": "a6514dff05372acf9fd56ce14ec40c7cdf11e01b",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "c3586bcfa1e8d89a2abb23d74496d41e68daec5e7a8af6cefb9080a0ed469161"
+    },
+    {
+      "path": "skills/histolab/SKILL.md",
+      "license_frontmatter": "Apache-2.0 license",
+      "sha256": "d1b2350480714c4b73791fa3493a465526ed0a776bced519384e9b3bad292568",
+      "git_blob_sha": "07ecf539e78c381b3633227f8e013f51cb8db6aa",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "af0c6c98951d02cab64e904504a8ab97b815a461e99744134da0e7dd57189331"
+    },
+    {
+      "path": "skills/hugging-science/SKILL.md",
+      "license_frontmatter": null,
+      "sha256": "345d20c1ce33b9d0994b3b3030540bb709567a4576c04c4ce802c78c642df3b2",
+      "git_blob_sha": "9ca2c59dc856c511bb2ca72c7da0f06f4f74030e",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "cff6c7e67d7f1925f008e11f5d0428f08391c35f4294d2c4c70350667b2decb2"
+    },
+    {
+      "path": "skills/hypogenic/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "4f72b33a84cff35a21ef9ef2ae36cd4e35dd2e09fd3e8314358c9086ad6e1367",
+      "git_blob_sha": "cb9cff944a77f2ad5258e65c1cb9c0efe604287b",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "8ad3f55669b7c5e8bbf1c70111259f2782fc26ec39826b011d51799de08b9da5"
+    },
+    {
+      "path": "skills/hypothesis-generation/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "17e7232ea58d2f06ecc28c69013f53b06b861dc022bf5d5d57df75940f7e697a",
+      "git_blob_sha": "cac00e1e0980402f14722af084e9305fdf965a57",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "5bccec0437d96d61821ec2095e7e32b61e8634cd8c02f11f42da953121e92719"
+    },
+    {
+      "path": "skills/imaging-data-commons/SKILL.md",
+      "license_frontmatter": "This skill is provided under the MIT License. IDC data itself has individual licensing (mostly CC-BY, some CC-NC) that must be respected when using the data.",
+      "sha256": "82263b7c47d222f0469c00040886c18796a60e6c73a2fb7d0818aab76b421b98",
+      "git_blob_sha": "9eefc0f2c3bc5beeb0063fd8ddf612b0876d28b6",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "8dd250a80dc6959fcebc9cbae8049b25a83be31647c597f17a9e674c4f2e3685"
+    },
+    {
+      "path": "skills/infographics/SKILL.md",
+      "license_frontmatter": null,
+      "sha256": "f670d00544a39fcbdad736581b5d23c7ec94ae7e3c5c285cf4705096748bcfe3",
+      "git_blob_sha": "075153e7d61cefdae881364210c60cd57ebf9873",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "dcd4ac5b46ac7f88ce8bd4ddf3efc8aa99a3f4bc6cc9ce2067c7d469758f0a8f"
+    },
+    {
+      "path": "skills/iso-standards-readiness/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "47c4b0d4b6ea8d798afbbed387f6864fbb5faea200115539350d1e43a72d2ce3",
+      "git_blob_sha": "c9dffcff25a86111f243e2bcf6450e354748a540",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "0ffd95e86924a698fcd0c806e51f24e2fc500847697d8ff99b255af817e15259"
+    },
+    {
+      "path": "skills/lab-hardware-cad/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "9dc2837dd76548cb0a19b5705f06841ca035be6b5ce421e72e933042ecbb522a",
+      "git_blob_sha": "1d925b978826579707c226ba3fff1e337f913443",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "d3e9c67c3f08bfd7c6bb6c91d6ccc6621a72d2f47248965b4db4e1e296426b18"
+    },
+    {
+      "path": "skills/labarchive-integration/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "06a1e9dc410453dcaa791371b43a5f08606d2cf03b947a38ba5c2de0e47b7767",
+      "git_blob_sha": "cc0fb8ad0eb2d012d01c067116d666769fb5e7f3",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "dcc452099ec0c4db3bf7aa0417bfeb70b14d249650be316b67f4f495461d1c0a"
+    },
+    {
+      "path": "skills/lamindb/SKILL.md",
+      "license_frontmatter": "Apache-2.0 license",
+      "sha256": "69d69d808f5fa2179e8202659a86c1a43980a7b1592e4e2e7a7b560ac4715344",
+      "git_blob_sha": "5ce539ad18332aa2a12e5a136d4cd921e1a3bab6",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "00f1246a7f59b6ec11ca119687ccc3ff384547f40d44f2140f557ac3ddd01b35"
+    },
+    {
+      "path": "skills/latchbio-integration/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "c407dc2a8c4a24999e728548c7c1fc4abdca12b2cd97ea1466c3b3c55d942748",
+      "git_blob_sha": "da04c33b2f9f7b3fd8539c828eabfa5035c31228",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "0f01df45ed4aecb81d672a5576820aee37c32864b4fe84bb4d049471a14d3e5c"
+    },
+    {
+      "path": "skills/latex-posters/SKILL.md",
+      "license_frontmatter": null,
+      "sha256": "e5cb33b19b1fa2338a3a41b18712f7b4aa6825970bb83f3eb6e83767ceba2e0b",
+      "git_blob_sha": "b4e21b6ef09013a494efbeb04c2bfdc1597a74a8",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "4350dc80280fea210f9682991103445e97c58504ddd14e7a26f3d84e2fee5837"
+    },
+    {
+      "path": "skills/liteparse/SKILL.md",
+      "license_frontmatter": "Apache-2.0",
+      "sha256": "a80164556e5c56560b13057c23a31d158ac12d636e1bdc933d8bb3d6315f9a9e",
+      "git_blob_sha": "fbc0e936973baf3ccf52a3df40e825a625288c26",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "02a789c7959670cb8898e329588a41d43fa7b270c768a70c22aed05031d042a4"
+    },
+    {
+      "path": "skills/literature-review/SKILL.md",
+      "license_frontmatter": "MIT license",
+      "sha256": "ab8a895458cc9d4cf5eb0555e941081c09c75cb829b48b3b13964bd97cdf45b9",
+      "git_blob_sha": "5178dce6419cee412155e7b9dd523d5b2ef703f5",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "16a9e85bcdcb9bb859e1646bf836e51b22900445ba2e367d8d75be05b5a5cba8"
+    },
+    {
+      "path": "skills/mageck/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "3ddc2b6f0a8e2a1bc16df14c7f9c01e5fe2e80b729520f3b48114515401fbfb8",
+      "git_blob_sha": "ee44ab1545ed6d81bec2afd46b7b978817d47f49",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "562d7e2cb2febef14ab722bc29cd33983b523da287fb02b64eadf18702d4a9d1"
+    },
+    {
+      "path": "skills/marine-carbonate-chemistry/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "4c9483350bfab7fbe497d0fc86ba36af289e0e23258ab3054579bb4f1b919a25",
+      "git_blob_sha": "3b46a3b83644b09f58dc5377f18f5d26d1fcb0a2",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "03e58c7f9d7df75a323a6a8cf29ec18ae524cc308e5002c27fb5c65e1230f174"
+    },
+    {
+      "path": "skills/markdown-mermaid-writing/SKILL.md",
+      "license_frontmatter": "Apache-2.0",
+      "sha256": "bc76de9ff354982cdb7a5e09a44cc5b09ebf25576ecc069bf2d94ffc86506e0a",
+      "git_blob_sha": "b9ba161092e8dc26584d22111bdadbee2b8f5428",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "c28a9d602fc5b55e9fa80cff493b045bb70d3cec47e2288e38051744337214c4"
+    },
+    {
+      "path": "skills/market-research-reports/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "1e5dda8a04629aa9850a783193451f5ccb55d2f183d08290cd3d3532f1cb35ad",
+      "git_blob_sha": "b49b023b7a95b70d1c61e9cfa820d01ddb79ae83",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "8fba27d8509bb95caade7ef856d83ddbd7e51303590f5f2db149b0270cf6fd40"
+    },
+    {
+      "path": "skills/markitdown/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "84886f6fa2e608483c3898d25a23c67217e3e7c9239988ccc829d9dfff556a67",
+      "git_blob_sha": "e59db02cb8ba0809b2d72f6a423898d38e9e48d1",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "8c165c18ceaddc9367dd74f65fd60e42c1c3de9d180828ae1ff09a001af42339"
+    },
+    {
+      "path": "skills/matchms/SKILL.md",
+      "license_frontmatter": "Apache-2.0",
+      "sha256": "acb9e2fa9ad517b89f359ac8704ae7fb1f8a78327a60268a6590d1db8cb4a2a0",
+      "git_blob_sha": "8afbc206522754c9d4dc7663ae20f8109e759fd7",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "1bde0e20f69f99dfa44800b9e908b0f90aa1256cfdb1d88a36ed0b8064c447ec"
+    },
+    {
+      "path": "skills/matlab/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "794faf7406ab9625674ee483e1a31ae01a0282e3801b7404756a2dabcc5578c1",
+      "git_blob_sha": "7d521444a2b94ff43e3fc32fcb78e023915c658e",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "91afa6ec0f0b3797f51da62b79d44d00a32fcdf3690b9505e5987982a8e6d0e2"
+    },
+    {
+      "path": "skills/matplotlib/SKILL.md",
+      "license_frontmatter": "https://github.com/matplotlib/matplotlib/tree/main/LICENSE",
+      "sha256": "093aeb3c7c1266e73857ed15a8ad5a132c8e77f8c8ce5d0e9a45790d131e1532",
+      "git_blob_sha": "d85bd0d9aab3f9be3240a0530100481cbaa194d6",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "60b80aaa802e1a88db30729611789bf5ee92b3f2a7bb695502bac10dd255ee86"
+    },
+    {
+      "path": "skills/medchem/SKILL.md",
+      "license_frontmatter": "Apache-2.0 license",
+      "sha256": "a0494f27832acfb231466ef11d6aab041cdcd46df5e5b1a0374622263bddf87f",
+      "git_blob_sha": "fd722ce76900260947707428339841d8a10fcd08",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "07e44d0dc965278ab8e4fe9a325e89198bccd7e3ee26c1c454e788e1f4df9c2f"
+    },
+    {
+      "path": "skills/modal/SKILL.md",
+      "license_frontmatter": "Apache-2.0",
+      "sha256": "fce9e3ab4422f94680e12ac89de7b7f5f0e678b5062a11388e961dfe43188226",
+      "git_blob_sha": "75474c9ebd8c4db8e5871fba8cb477130142216a",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "5da5d0a39db4ea5f429ffc40772bbce87e26f778fac363c42873ca6bb84fecd9"
+    },
+    {
+      "path": "skills/molecular-dynamics/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "beafeb883f503f2e66f73084f90c9f3c4c68a7c8f59c6d24c009b6f827d399c7",
+      "git_blob_sha": "e1a81a09291e33467dee3fda41c4581b8db7fe18",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "1efb31165ec1477b37c31394ba04b5fb280d44db8907afdf2a956e48487f1136"
+    },
+    {
+      "path": "skills/molfeat/SKILL.md",
+      "license_frontmatter": "Apache-2.0 license",
+      "sha256": "1ac36d37de0bd54def90388e9bf6f7282e2f4e6865540867e7d6f0b588c42af4",
+      "git_blob_sha": "8bb82b9f85afcc2343ebffc10b93cb51ce3cbf01",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "6bc3c336b58c8c7214042c5679cd793e655c15e703fa5d5ac34e09250d11df5e"
+    },
+    {
+      "path": "skills/ncats-arax/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "7c5aca10f34775c249f335eda28de604189712f352bc8c0d75fc627174fbdc4c",
+      "git_blob_sha": "eff884528e08e31d95fbaf29c0ce8b08576341bf",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "f15f9f9a149a942ab1eaed0115879afa399249e261d7118a6d19e3da834ba74c"
+    },
+    {
+      "path": "skills/networkx/SKILL.md",
+      "license_frontmatter": "3-clause BSD license",
+      "sha256": "0c9236414c57d68626ec3069916d1f88de57fff2ccba93db43fb32f76ba69522",
+      "git_blob_sha": "148367741e1b568eb9a8838931beb7786738e373",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "981a213f33ddca21ec327ecee13e8ef8b85b7986274b84a10268ee73310df5be"
+    },
+    {
+      "path": "skills/neurokit2/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "497d899fe652d1d89179052ceaf304a0231d691f896a6aba75a478ba5f493df5",
+      "git_blob_sha": "3aa8fe2cad25ded70b97b6ae98cbf6303e700fe2",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "6f73a726bdea37723aa68bf7aaf896eb10322e875cbf3bc5ee96707643f1be35"
+    },
+    {
+      "path": "skills/neuropixels-analysis/SKILL.md",
+      "license_frontmatter": "MIT license",
+      "sha256": "6d305d2638e47dfc5d1939d3db035bb14d27028a828a22bc043cf2879e8a61ff",
+      "git_blob_sha": "d66b7b45838808a7ccb8ceaea355c612c77fa057",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "65985e85e9ac2206c92291446f543505b2b568bf1d622448e162ae6255e154dc"
+    },
+    {
+      "path": "skills/nextflow/SKILL.md",
+      "license_frontmatter": "Apache-2.0",
+      "sha256": "a4d901dd61b450e8f697f14a91c11dac7fad148971863b597bd99d5086233e9e",
+      "git_blob_sha": "984e3b0fc06fbad95168d363bcb87d57ca3da8d0",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "daa37795b3fe13ebf1c980acafb8401c4d1d7749dae013acc948f76c50c7379c"
+    },
+    {
+      "path": "skills/nmrglue/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "46ebda70ff87d7b29c8f6128b1a3b65baf693ccc7d04a4fea065e849727cf266",
+      "git_blob_sha": "87c142a5b98e4fca3a82b75bdd08a4577382aa92",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "358b5a5d64d20092e8631aeb8f4a06f11634a9fdeb8c594a93e6c1282b04b10b"
+    },
+    {
+      "path": "skills/nwb-conversion/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "eb21035cce632359c111ce346272251ce1a22a0983b6493945bee9a04c0418e9",
+      "git_blob_sha": "65d262c2ac32bfc2235ad8435adb8daba38281a9",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "e2381f17db5e2b20354186a8a3c85b466afcf534cc1ae6181e87654ba5ed5fc6"
+    },
+    {
+      "path": "skills/omero-integration/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "8263ff0d15688e845511b91e325c8f5cf56ea40a8839531b70504c4bff216230",
+      "git_blob_sha": "62da1ebc27818607f7b07d77184969d6c59e6321",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "c75e73ba447bbf9530f6d3df4ba6224185f3c7728460b37938c8626dab664ad2"
+    },
+    {
+      "path": "skills/onekgpd/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "21df0916a656c5545cf0eb05d725b628034a03957d9f7cf7eeab8650d99a641c",
+      "git_blob_sha": "2045502f2be029cf9da32efbb284acde3a117925",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "6a7c0a90c42e899e818de866e843cf60d5434422fa69b910a7db9a06f25240e9"
+    },
+    {
+      "path": "skills/ontology-term-resolution/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "9e6b73a77b6b54d9659ea6b5cf6d81681cc5b923fbdbfcc37f984b0a6ac047f8",
+      "git_blob_sha": "1a8604e379bac2dd15c242025ddf3c1e5816b83d",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "db310515a230a47023169be207f654458789377c98b30fa593ee420738e4eefb"
+    },
+    {
+      "path": "skills/open-notebook/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "f86c2661f2cdf1840c4e008909f1680642ac6d3bfa24f0306385810f1b90ffde",
+      "git_blob_sha": "42f99386cbbcea03f54a8bb0a83e9ebbb03df8ad",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "39f3bb01946218b53c02e3aedde025e6f8b786307e5ba0c4698c5aed02f9fdd6"
+    },
+    {
+      "path": "skills/openpiv/SKILL.md",
+      "license_frontmatter": "BSD-3-Clause",
+      "sha256": "1c2437b26bb8f5aebf6b5aad4aa17dc2f1127a1abdba8a4315eb7c06e13a6859",
+      "git_blob_sha": "a90338bcef844441101889530224d1d57ec61e8d",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "dc9aeeb18ef4b4832b9405c342ce40abbb09bc8162e35f2c659dd5814b07369a"
+    },
+    {
+      "path": "skills/opentrons-integration/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "81266d590bdc234320e035e6611af07453d901af5ca6f4612d9bd7e4c9c7534a",
+      "git_blob_sha": "af09abc34db631ea2141942b8e2f7ca28108331e",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "3600fece96f89e7cedc23d13e48ce7eb25a90698d7ae3d8bae65035d89f392ff"
+    },
+    {
+      "path": "skills/optimize-for-gpu/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "d97a7453969d7dfff478435ea7c247793b3ed519f8a63dec1cb94617d184787a",
+      "git_blob_sha": "e146e8190fcacc78b26a491a34a9028d0a78712b",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "e31bdb10b8ea66e5ec438583755999b66b9afab90f2583e1d500b8457ef28054"
+    },
+    {
+      "path": "skills/pacsomatic/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "ccab28ebbd68c2840e2afd8ea410bd9ecf7f6f0cf714cc9abb1aedce1a8f7741",
+      "git_blob_sha": "c028aecd746a2afa5899815f64c1549409d311af",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "5425319387beb29684ae5148cba33bd3a6c4306651ba574d47c76a8dc390d45d"
+    },
+    {
+      "path": "skills/paper-lookup/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "e860fe482ad87d44cc0411cce3dc16dbb5aea10367922ba5f69e401003e0a5fa",
+      "git_blob_sha": "d0b277b07be6f2688fcc2bacee1b58c971ece2f7",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "fac99456ad404ff9a0d3043709b956b5d6383838ae8e8394f274a5693d8bd294"
+    },
+    {
+      "path": "skills/paperclip/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "232e5e098275b35c7c4db71dd6334a517c20a6742dd203641c0837c4ef622fca",
+      "git_blob_sha": "0fec767a06a7e1a222467c855872ac7d8a6b3cbe",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "4f6fc05346aefdf5685b11d6d34fbe5b9782fc5156d69702c00dd8c71bf63473"
+    },
+    {
+      "path": "skills/paperzilla/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "ca3aa65ad640062d12981a5a28edfdddd3fd7bb012e7cde8b78a197ce1724f23",
+      "git_blob_sha": "027f88dd90716c309591c45ab93d1c2743950761",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "f1b5feb3c76ce064803e5d44757f0fc468bf670499015b9c6a9d487fca699771"
+    },
+    {
+      "path": "skills/parallel-web/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "e5259844fb73cd9a9ab0b182bd0684fc2fd83005fd294359aa526b4325073c69",
+      "git_blob_sha": "4148a1750c4cca56779633362e510d382ed09f68",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "04b4873674998c4fb47de017397e753d69049609135efed43a82572b9002f52c"
+    },
+    {
+      "path": "skills/pathml/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "05602fa0a4a73464774aaf9b29823635cb69cdb43eb89ed12da366794d8b6154",
+      "git_blob_sha": "b110c57d59bc9dcb89880f5d554bf8dd3b01e758",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "654cef910bd567689b854eab52176628f39184d7cca7a6bf405343f337e58538"
+    },
+    {
+      "path": "skills/pathogen-variant-surveillance/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "3946b5a0f60d4f645a748f8ec70c9a9753db928c6d0cbf614519b9f0974b2eea",
+      "git_blob_sha": "8a1b65361705fd70f96fd3680da858c6aab2c152",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "95510f890a47ab2e2275832fe60e725eca34e5318dcde88b0940d9362b3ab590"
+    },
+    {
+      "path": "skills/pathway-enrichment/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "1550b5fdee71a11377cee113c4df24479b6ed6ee5d8cce3a4c18bb4414482389",
+      "git_blob_sha": "c9d3479b6edb958c17ab0c77f981bb6dfb546bc7",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "82783d8ba63b6b03646492ee75afcdf591903a213decf7e7c9d844eb517acd78"
+    },
+    {
+      "path": "skills/peer-review/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "f8fd031012c028fb0802332f9fe8a076b09a255a81eb20cb5a9bf5ffbc95bf75",
+      "git_blob_sha": "d4f3c3e3b5c19fec2518d569ded7e37ac96a964b",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "a042ccdc76d3399431b9a6c4cd4f98968eab964b1c14baeea4d9e73de82c7d19"
+    },
+    {
+      "path": "skills/pennylane/SKILL.md",
+      "license_frontmatter": "Apache-2.0 license",
+      "sha256": "3adadda436c50d9f03116d18272171969472a8df574b6f08262c925dd80a4ef5",
+      "git_blob_sha": "75a26e2fbb3dab157069a211d8019f21487fa803",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "7908ee374ed9bef310bd7071a175d97e0428cec184cce3e36db9fe3ae8e77c52"
+    },
+    {
+      "path": "skills/phylogenetics/SKILL.md",
+      "license_frontmatter": "Unknown",
+      "sha256": "d8e67888025f293cdfda055d037cc01dca2cebeec4e7294837e6ba8c415594fc",
+      "git_blob_sha": "c09caa7c1918a8049318ed145916f1bf342e7c4d",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "eef2354a8fe6c51c2ad8a506e512326553bda52c731952598adef677ae2d67d5"
+    },
+    {
+      "path": "skills/pi-agent/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "73faa8d8a24cd2100f2fd1d641d985284baa7fd383bbedbe55c3c4deed842e9f",
+      "git_blob_sha": "00f81fdcd9ab784ab32e9b090c3074f39adab295",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "ef84742b6e491b3f65941dbb19fdd508b0aada3b87d95aa28b0f66a111f7c748"
+    },
+    {
+      "path": "skills/pkpd-modeling/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "4471169678b3800b7910df5f0732e4ba7ce9937219ef5339505f457206f68ed6",
+      "git_blob_sha": "e38127b040b5a67187a876cbd443a3dffeec0687",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "fc58aed600d0fe9de911176cb0f2a43e8df6bbae8c2260be6f8abade133a2837"
+    },
+    {
+      "path": "skills/polars/SKILL.md",
+      "license_frontmatter": "https://github.com/pola-rs/polars/blob/main/LICENSE",
+      "sha256": "32a864c98b40e485e83dafb6608038d95b9836ad9851dcf12aebea8673c8beaa",
+      "git_blob_sha": "b72f1b0e334d889023f5524b99379ebe0f9821f1",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "05d64a001190b516bc922bac616483c3109a6d29c3e9950e3e2d6c31b9415e79"
+    },
+    {
+      "path": "skills/polars-bio/SKILL.md",
+      "license_frontmatter": "Apache-2.0",
+      "sha256": "cdeb1323ec302c07d0fd7d8140f4d486e0abda5c7755873c6570d98e50e92d02",
+      "git_blob_sha": "53092285989b21e2457677df5e725eea73b5b797",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "b9dbf93b5d8dbaa3de4541449b828cd6199625c54956e8598f7552eefc30116f"
+    },
+    {
+      "path": "skills/pptx-posters/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "09e2ba00c855227afcbf2a59946ce88603593e82c0ad47daa9c0f4b44b5323f9",
+      "git_blob_sha": "04a323b515537dcbcbea248b6d4c23aba36aa4f3",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "bb4923ec520ac5175f837e75c8b600344cc1eb71490b1fa9c809ac65e64f1fb9"
+    },
+    {
+      "path": "skills/primekg/SKILL.md",
+      "license_frontmatter": "Unknown",
+      "sha256": "1d8d782f2bac18e031781f0a5351ccf37056e814c24c402547e87ee32ce6f385",
+      "git_blob_sha": "f49ba0af63deca43653d1e6d3e0c4c39d965fa7c",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "b20698944fa51b287a13e7dc22ac033b83836b73614a21cff725ad7d6d807226"
+    },
+    {
+      "path": "skills/primer-design/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "a6bf562bc12ead51bcba2289a75609e84130a2d7368fc455318b734442f78651",
+      "git_blob_sha": "f5c795bd29b9918a7d17c3179075e8dab7fe3c4c",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "ea8bed0aa340a5f6538c206bb3d9fe503da6759e68a944a2bce564fa115d25e4"
+    },
+    {
+      "path": "skills/protocolsio-integration/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "2cc8bd1a3ae79d242000332d01182e2a8f5817a0c5a7a83a2557379bce50f85b",
+      "git_blob_sha": "3e1ed368f3ce734e5b48ea045a7b365a9e3917c1",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "4439249ba8cd35a8507463f8be84db511abc23daa00be3f892c47d847d2aeda5"
+    },
+    {
+      "path": "skills/pufferlib/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "9a08ca3b74d2fb70d5a37b90519bb24ce10e0649805011b357f5984ade3a64ac",
+      "git_blob_sha": "b3957bf3a8236e19924f88b88a71d363b65eb8e0",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "031975c6abaabd8237c18b6472886f4a718c509da70fc6ebca06455f8a002fa7"
+    },
+    {
+      "path": "skills/pybamm/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "019869888ec0ab45860fc05fcfc0786781a08f34e03e913756c04365e6372ebc",
+      "git_blob_sha": "65a59a45863c4b44235430ee147de14b34320313",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "9d6f375f4d9def40072ea734f07e1a48c60a1cd906231cab1a4189a75499a1a4"
+    },
+    {
+      "path": "skills/pycalphad/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "3849d5f18dafec06ea794dadb975070742f85f20c5a74a948acab7770d52a575",
+      "git_blob_sha": "c10c2098f3386a2a4bef08e728a2b8b8b41f2667",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "7748a9413e22566316893d882596b5c2a321e9e03de93e6097c59a003e899a24"
+    },
+    {
+      "path": "skills/pydeseq2/SKILL.md",
+      "license_frontmatter": "MIT license",
+      "sha256": "6b38f1355221910c5c0cb57d20b8a5a36b0e22b4f84738c9afff91f47db820ae",
+      "git_blob_sha": "d9499e1f7a2e728dc44cba00b4e3081e917fc97d",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "f06a9f5ece540c05bd8a8208bb3970d000b13cb1032abc9488cfbfe6106cd843"
+    },
+    {
+      "path": "skills/pydicom/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "4ffc6d7613304fe0b61b95087c11b5ebbc6eb47ed3012b6450a35fdd0785794a",
+      "git_blob_sha": "0838076f751c64e4669a3d5e3ab5b94847e36e58",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "e42c35688a3dc7e0faaf1d1e88c8883eabc60ad291d348bfe5aee89a64c95b01"
+    },
+    {
+      "path": "skills/pyhealth/SKILL.md",
+      "license_frontmatter": null,
+      "sha256": "b5201e4f56401234aef1116d9aa5de2a39cf32c1460cebbc51095b4296b84876",
+      "git_blob_sha": "5b9783f1eb09158c788af90a486544e74d720739",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "ec4de54618b71a4f8cfeb086d131c610127784a6839d842a67b3c1e87b66e161"
+    },
+    {
+      "path": "skills/pylabrobot/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "62e4ce4573558f0ff2f93629f7aae90d678933acc08cf4b6edb31a21463e518c",
+      "git_blob_sha": "83647870dcf0e38f0260a5d4432818753f5b3b53",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "b2aab8871006d84e53621fc0f4886d0fd0c671007d112569e444e0a56a564d76"
+    },
+    {
+      "path": "skills/pymatgen/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "e8cc322f49d4e84d75e9dde88388703e5a7e7c088a9db2d63d852860ca3af036",
+      "git_blob_sha": "1d08398cef5cab8950679deef6ea14783a36e317",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "4a106d7682cd9881765700d534cb419458ba407935a59168547da1ae6ea4b6b1"
+    },
+    {
+      "path": "skills/pymc/SKILL.md",
+      "license_frontmatter": "Apache License, Version 2.0",
+      "sha256": "3809cf6437dff9e76c47cab839a0e83527882d8851fcc9a5eb5815343a1a3d0d",
+      "git_blob_sha": "7fe1b3f1942fe27962162ab13193aa47dbce48b9",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "77d29ba7adf73d822329eab576d15a748811633a60bca88f5e93954793b3ea8a"
+    },
+    {
+      "path": "skills/pymoo/SKILL.md",
+      "license_frontmatter": "Apache-2.0 license",
+      "sha256": "a3d227e72356fb65942ffc66f2993971cc54130aeb07e433dbab1176e7670d8e",
+      "git_blob_sha": "d9ed51c8b5f129393c43383b03ba993ec96ea2c4",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "942573e5b8099717487b45cf84798348fb2128516791dcafe2d76aa1bdfed117"
+    },
+    {
+      "path": "skills/pyopenms/SKILL.md",
+      "license_frontmatter": "3 clause BSD license",
+      "sha256": "ac9ed20962efaf9e9bb064b41a063ca8f380a9ba4bfd1eb86622d54d09e860d5",
+      "git_blob_sha": "6040f5f40ae2fbe27a76c07275c89bf1d17fe7e7",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "020e7392adbb000aaab4968ae9a803ca4bd97818ca35e9eebd3abc222766a48f"
+    },
+    {
+      "path": "skills/pysam/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "fad8b0573b6a98910a5efe82df85d93be707783d75a78e5e015d42dfc250fa4b",
+      "git_blob_sha": "d3f6d6e5383890c3c43d8aabcd5074fcde4de087",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "afc275bbeb084553cd6507c4ffee848c46bef94dcd24c3b8a58d8b14d021ea09"
+    },
+    {
+      "path": "skills/pytdc/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "b9a9eae2ef514fffa1556f656e1a3c1c00b40e9ebf8a0f3544f1a5b60863bc57",
+      "git_blob_sha": "702017b5bcb831349af598fb75c93450aa20bb74",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "b7df3f50c1c618a47a81e994b2863ddd8adf695e795aa495c3a8fef5e78a0493"
+    },
+    {
+      "path": "skills/pytorch-lightning/SKILL.md",
+      "license_frontmatter": "Apache-2.0 license",
+      "sha256": "21e926009ef7e4d4cc200ffbfc684a71727ec3842a966844d46012fa63ff958b",
+      "git_blob_sha": "c34088a4cf9d09210ee10cc4cf101bc11ae2252a",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "d8829e74e8a1d908f923cf0c0a850ecfdd9edcb004d2fa90ec32fb1ed0006ce8"
+    },
+    {
+      "path": "skills/pyzotero/SKILL.md",
+      "license_frontmatter": "MIT License",
+      "sha256": "bb2636f2391ce03a405b4a8145a735c29663bcefcb440d658d9f396f5aa0f6b3",
+      "git_blob_sha": "aa3e5da33f1875505f842711d755bea27fa356d2",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "82dec36c7294674f33d9b6003e523d1dc4da33ed1c7427dc4e53731119fc5f74"
+    },
+    {
+      "path": "skills/qiime2-amplicon/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "2e52c91a079aec877244bd5f7bc45d97a93f4c0b15d101fb1f6314c8f02e28a4",
+      "git_blob_sha": "9b0847a056cf76f04f09c485ef244f02117f2fdb",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "605ae0581620f654ca9e12122a2bdb1d62a813841c5fea61b0eacb2031377cf7"
+    },
+    {
+      "path": "skills/qiskit/SKILL.md",
+      "license_frontmatter": "Apache-2.0",
+      "sha256": "11572f63dc92f1808b696ee37e6f14c297e543baecbe66e5c6ace28d9db7580a",
+      "git_blob_sha": "7784f0a19c9e04e5d2671a73be0d94ac7d5f8fdf",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "538e5db262e7c237cff2bac191480f81688b8679167740af7405fcda1340511e"
+    },
+    {
+      "path": "skills/qutip/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "7cfeae83bac614a4a3ed65de4ad7514bcccbbc15809f3a5d7c4283eaa666e573",
+      "git_blob_sha": "ae87536eb5e90c26d1e848cfad1f2b277c454c49",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "6b93a95eb586147b2f1639f7e669dece3182ab4ddd70b1200291073cfd533902"
+    },
+    {
+      "path": "skills/rdkit/SKILL.md",
+      "license_frontmatter": "BSD-3-Clause license",
+      "sha256": "75acf382f7d6c43e3b480416ab54b1cb4ef76ed52ee1431fe49c57d702275615",
+      "git_blob_sha": "c5cd692e59278038cc633b114ca41e5dacdc7d6b",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "9f32d5d229bc1a5bac3e57de5fb87895cdb85dcc99132c57373905db0e1a941e"
+    },
+    {
+      "path": "skills/relion/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "c78390d1da5137c6386074269d6e1e9a9c939a1fffea30852d47601a04f3a271",
+      "git_blob_sha": "c1fde2308f0662dfd1e2e09c0f827ff44abeb5cd",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "3f80369ef73ccb8c20e2e49ad2b9bd71da3ffa4a819c035691ca4a5b26cb8399"
+    },
+    {
+      "path": "skills/relsa-severity-assessment/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "b5dbaab15963ba4cdd96d301302fe6867bfcfe86c9347bb4172902c92817da62",
+      "git_blob_sha": "57e864f610026ece40bc6867e841e1beb1c664d2",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "10ee1a904565f5e9c9d432b3af136db42927d0811f07f646355600fec6633f8a"
+    },
+    {
+      "path": "skills/research-grants/SKILL.md",
+      "license_frontmatter": "MIT license",
+      "sha256": "c168512e9878d491e8b079e755b155f00f06a489120b7bf8a1ddba460cbdede4",
+      "git_blob_sha": "2c936ee59af1bf40481e073574e93636d857ba70",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "3ca7ea8075bbe8008389660cc4a5769d66ac9ec638f3f61a955a5d7b20aeba85"
+    },
+    {
+      "path": "skills/research-lookup/SKILL.md",
+      "license_frontmatter": "MIT license",
+      "sha256": "a7c7c2a5464bfb73f24d808dcc98b2060cd4bcbe41b00d772bb055f2c67642cd",
+      "git_blob_sha": "a337950e3425001a2edc93a531fc420d62b65db7",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "8da1618350bf3434e4569a180a15b7241a50118ee9b79bccc514fa1bf3b4a102"
+    },
+    {
+      "path": "skills/rowan/SKILL.md",
+      "license_frontmatter": "Proprietary (API key required)",
+      "sha256": "9cf579713547b95719bf8abb749c1eef04e219ee7d88511e48fd0b7e8ff1d272",
+      "git_blob_sha": "b4e30e57a1a5f22f4ea9ec2b90751afcf522207b",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "d631f00ae0f9325aa58912bb571b7eb43bc42c553498e4c97f4d65a1683c8599"
+    },
+    {
+      "path": "skills/scanpy/SKILL.md",
+      "license_frontmatter": "BSD-3-Clause",
+      "sha256": "7f11e14c6b7d98034329dd518dda625746bd2ea1d743e406b3835f695c79439e",
+      "git_blob_sha": "8c071306c10ebaf6b23da5d4fbacdaa597e5c8a8",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "4a59f87933a1e9ed49eac603719af1b0c606dd99050fe59ffa1c1bf807900cb8"
+    },
+    {
+      "path": "skills/scholar-evaluation/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "11c9c2245ee3905a6bf89809870a526849aa72a8bb46abf495703bdd34cbb6ba",
+      "git_blob_sha": "900bc621e6165f7ec27ba29095774fa464c4d368",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "9abc66a9ba13f6cf0f61614ddfff17822b5be2cc7118f52ef2631323dac8c94e"
+    },
+    {
+      "path": "skills/scientific-brainstorming/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "e0f492413366cbba5c56e20bc6090f13ed965209dfeb27107e8cab077dbbd696",
+      "git_blob_sha": "487a1a0e31c6bf270b3e80818798bab9b4ebc0b9",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "06f73b71556356a7f488c369b9445d7943543a3f14d159b2168fd3f621d6f8a9"
+    },
+    {
+      "path": "skills/scientific-critical-thinking/SKILL.md",
+      "license_frontmatter": "MIT license",
+      "sha256": "4016db17be9abfb145141eee0b0150f22d7084c1edf6af3e53f9b8e18898d042",
+      "git_blob_sha": "2a2fc151b5b13e4e11ece7410f21a14d5b25e30d",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "563af70571b7dcd6a96bf2e303bedfdcba623b4e9f082d58f04aacbc961fdae4"
+    },
+    {
+      "path": "skills/scientific-schematics/SKILL.md",
+      "license_frontmatter": "MIT license",
+      "sha256": "3a3bb9a5c60785c46401f8bad22af551c550d7be37e824aad14e49a430f3c220",
+      "git_blob_sha": "5f2ff1b3f73818b05c649438e71f50961d01f2eb",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "e15d761ef88013c98fd5b19cc144aba7336e20dbadf340db17bd1ba2227d1d69"
+    },
+    {
+      "path": "skills/scientific-slides/SKILL.md",
+      "license_frontmatter": "MIT license",
+      "sha256": "d9df4a34300affc25b3ebf0b943916883c64862391b73b358e0a3eeaeb47f077",
+      "git_blob_sha": "54587177e2de11324f23f5985ff9d152fb998e03",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "b1d34b81d30789f561bd4ee3ddb373c9fb84bed25086794bebd842af46afbad6"
+    },
+    {
+      "path": "skills/scientific-visualization/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "91c866a99ba7b8fd35f943e4b83717c2fd188c824587a3e860ff617975caf4ef",
+      "git_blob_sha": "44ea38c24fb5015535254bfd9b5ae9a856195408",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "8cbde7cdc10d959cf72cfd08335cc8ce996247eee6ebdb900eb64a4cb0ff34a3"
+    },
+    {
+      "path": "skills/scientific-writing/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "28656c6ea70c01ab15977891814a421807f83504d4f6297ff1cd0e9067ec90ea",
+      "git_blob_sha": "446993fcd4716ae54ab74bc2a91e3bc5af5235c7",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "511a2096bebecd8cf0f8212b9d262d37154ae1ba566eb385d93ac968682edbd1"
+    },
+    {
+      "path": "skills/scikit-bio/SKILL.md",
+      "license_frontmatter": "BSD-3-Clause license",
+      "sha256": "3e049ccc649f0c2567c180ce4706dca658096f3f25cb0b267c8bac39dde0add5",
+      "git_blob_sha": "31046cbe62ba3a7210f1abdd8880acb27d6b34bb",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "4a7a5760adadf32782dc4694028371df13b25472ff8ffe4cef2b2fc564226f6c"
+    },
+    {
+      "path": "skills/scikit-learn/SKILL.md",
+      "license_frontmatter": "BSD-3-Clause license",
+      "sha256": "48346c71ccbe2437fef18da6d6c66baa6ede5e5713493beb2752447ae2032283",
+      "git_blob_sha": "9e26cff8bd282c523b645719c817c1415e0ddb3f",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "a1765797d072ab40094522abe68fb04505d0881f66b7dfceeb8582422dbe488d"
+    },
+    {
+      "path": "skills/scikit-survival/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "fd6ec07d737dee582e154899602b15e51de5bb9aca98c3547dedb570db184c1b",
+      "git_blob_sha": "e736ab76c0188ee3f24814ab10d209d1aa7d5f1e",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "8f99860440f23312d9803d3ac65ae9eb65274597d59499f1021d59378adef2fb"
+    },
+    {
+      "path": "skills/scvelo/SKILL.md",
+      "license_frontmatter": "BSD-3-Clause",
+      "sha256": "1a2ef208b97fbb9a3781cc35aa0bda3f8835de9685fdc3b8322d3eee6fef156d",
+      "git_blob_sha": "c9c905d10529ff69fb547a0302c00cb16453e140",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "c43258bccdbaa5772fd1aeac8d12d6107dd9c9b19c6a3a81fde7d421c0d2609e"
+    },
+    {
+      "path": "skills/scvi-tools/SKILL.md",
+      "license_frontmatter": "BSD-3-Clause license",
+      "sha256": "1b152d2613894767f8b451bab5ef351ab7d838f285139ae6af7bc0e524631958",
+      "git_blob_sha": "9866ed884a40f643a8f2813d8b072520789aba64",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "b22633470d40ddaf31451fbbf811941fc89c3174c404ca359f25378691267e73"
+    },
+    {
+      "path": "skills/seaborn/SKILL.md",
+      "license_frontmatter": "BSD-3-Clause license",
+      "sha256": "5b4c622b9711e78588e8cf0485f7121454961d55c0120ad69f016eaca5807a44",
+      "git_blob_sha": "89aafe0b2b051e017f7340b76c57e37b1d39de0a",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "d1500d1e3d9db1db4c72cd272861378d1b98b0b5a5a98e8a3fca5a45bc0c6b2e"
+    },
+    {
+      "path": "skills/shap/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "7776594fc928f67c1a02f84e58613543a927c27dc6ba8d222e7575b285d9cb8e",
+      "git_blob_sha": "b04b316bc8871705dbbaef72f5f3f88c2972df1f",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "9c395662e608accd60acb62158f1d25299b12ec0e40f9f94b70a46ec527d52c1"
+    },
+    {
+      "path": "skills/simpy/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "b8f1c6e08c6c0bea60208a7d63ff7c9b7da97568bfd76d7999e043e2429307de",
+      "git_blob_sha": "951601caa5bc475d2e3eadc3f2c11e2eaf59ed0c",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "027244a3587e70c3e2f1aed4bfb5d737cb24fdc6b2ad276302ed81c02e38a7fc"
+    },
+    {
+      "path": "skills/stable-baselines3/SKILL.md",
+      "license_frontmatter": "MIT license",
+      "sha256": "3bd1b30e43c3f0950f5cf34ac81f43d4c3928262b22e385087079612d7a46d35",
+      "git_blob_sha": "51a6e672466b1bc7837f361a065bf9e0e6d7dc2b",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "8383ae480e27163b9dbe1d9af822e05f0e85dd05b5bab1f6444588d57f569837"
+    },
+    {
+      "path": "skills/statistical-analysis/SKILL.md",
+      "license_frontmatter": "MIT license",
+      "sha256": "94d790a74b79fde6c18fd87ee87e2d861ee16f77d3be5b340b32e13185fbafe2",
+      "git_blob_sha": "4ea7453a12e63f0dbc31d7a47ed41fe3ff4c4c1a",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "e112848726b3713267cac65e4e2c15491a0a26ee1ed628db01195f7e43f97997"
+    },
+    {
+      "path": "skills/statistical-power/SKILL.md",
+      "license_frontmatter": "MIT license",
+      "sha256": "b47715389e2d7a41b5495ae86cab29ec0c9e597fa5dbf2e1070ac5419d5b90cf",
+      "git_blob_sha": "012cc67f7794ac280ad39383add39afda7ac719a",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "a969660eafdc3504ac36e49bd7ded00e18b00fe5cef5699940d5d8281e24dd3d"
+    },
+    {
+      "path": "skills/statsmodels/SKILL.md",
+      "license_frontmatter": "BSD-3-Clause license",
+      "sha256": "fbe1ba319206a771710e3e7d8934865e17bb2cfb26ea718da3fa9a892574c2be",
+      "git_blob_sha": "0af65089389b2602e857d503c7874154c6c9de4c",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "9e6c034bb4acbf0972fda18892d2feea907885ac5ad7194d220182d8810295a3"
+    },
+    {
+      "path": "skills/sympy/SKILL.md",
+      "license_frontmatter": "https://github.com/sympy/sympy/blob/master/LICENSE",
+      "sha256": "3132d2f22a72c976eca79d246524e9f8873c865f5ddfc57c4c470b83d3151f38",
+      "git_blob_sha": "6eb0e837c3cf88c0b1a8107cfba3cbd18557d9e6",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "bb97087bdddccc845401737ddc7f7a8da1c14ced5e8d40da01271c991ac46e23"
+    },
+    {
+      "path": "skills/tamarind/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "9f657b95526688c6dcd1d438e42414f86b04cbe71f216f0a2aec3442ba3934dd",
+      "git_blob_sha": "86aa865aaa2aaec784a6fcf92f1ceb9c185e7b45",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "aa9bb0aa10acefa52621acd9ba06604997ed2f3d20533359f47d4b24dfdc9494"
+    },
+    {
+      "path": "skills/tellurium/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "d55cbc11c9941a9f5fbc59fe3d10b575c3a21a898b8973fee1cf5e6857fa115d",
+      "git_blob_sha": "833a8d96d580c5c354ba270a96c260383d185c41",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "69faa97aa45e7ad46515acd3e6497b044b7b44624ffd28c74fb40d97c74513a7"
+    },
+    {
+      "path": "skills/tiledbvcf/SKILL.md",
+      "license_frontmatter": "MIT license",
+      "sha256": "42b63e4af55f1f32367c628e5b0d6b34adc7aa5dc35825d92107f9c8052496c8",
+      "git_blob_sha": "3900052a467fdb7d0a06aa48641f6f5422cf636e",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "38e55a6962e14637e82f60be8e53e6d87c78f1a7874b9f832f442a038942f7d5"
+    },
+    {
+      "path": "skills/timesfm-forecasting/SKILL.md",
+      "license_frontmatter": "Apache-2.0 license",
+      "sha256": "51063f93a8baa959f479fbc11c96d74cceec9decdc49981c340f6be189a958ae",
+      "git_blob_sha": "dd484e3f3d9096fedf927995fe5f62e87d04da31",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "6f785fe73b133e9af7720fa46cf9013645198950155624889ef611b7b0dc74b8"
+    },
+    {
+      "path": "skills/torch-geometric/SKILL.md",
+      "license_frontmatter": "MIT license",
+      "sha256": "6b42929010e740f619d2763b0b9e1c85ccf843fdd4b48af5c4bafc773f762622",
+      "git_blob_sha": "49a32f3936ad133d4dd76dcd98f2eb43dec70204",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "89805e17cdbc64ed01426548442b3aa1bda8bcfdd4f9528f5c8dd6e0ea813c96"
+    },
+    {
+      "path": "skills/torchdrug/SKILL.md",
+      "license_frontmatter": "Apache-2.0 license",
+      "sha256": "886909632e15bbd64db133e0ca5e2cb6b7093e77ea791540a3419b05a425e7c1",
+      "git_blob_sha": "46a50e09ea4a835ac8d3c32aea6faf24bcbc08cd",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "03538274e00aad262d159ca5ebed55fe6519d605171569feff44afeb781088fd"
+    },
+    {
+      "path": "skills/transformers/SKILL.md",
+      "license_frontmatter": "Apache-2.0 license",
+      "sha256": "5068ad02b0d654825cc90e7ee8e189dcd3fbb523e5c21617354b29a08e2706f9",
+      "git_blob_sha": "96348190164b67fbe2f565d48f2bb5942deb587a",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "584d1c35d513f87616df9bcf7ddc8c48ab38cfbfad18d55c8481578d1c0d6f1a"
+    },
+    {
+      "path": "skills/treatment-plans/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "8c173a358d6eea119700aff07f6eece99f5e1877f456799d1e6b317d281a7812",
+      "git_blob_sha": "2ebb9995e3702ffca7cc92bbfbf016bdd0386d08",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "ebb509854e12d016475ee6d45834a2a72c16815d1b9d940a9d156e7f024cbed6"
+    },
+    {
+      "path": "skills/umap-learn/SKILL.md",
+      "license_frontmatter": "BSD-3-Clause license",
+      "sha256": "2e47da5de5a4b6f1dc83dcfbaca015732c1443cabc65a26a257e0bc697c850dc",
+      "git_blob_sha": "1c93bb08bf860d2eb891143942ae1c36c6f8d5e8",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "0cfef32ae0e1d52eec6513bafc0ab4387cf38e43121fba715762b2b2c11b6930"
+    },
+    {
+      "path": "skills/uncertainty-and-units/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "d14bcdc4a5965d39417953c05be88c398155050e34dd539088684cc19c304410",
+      "git_blob_sha": "28bcc333961e29f41681a7b7afdd01f402d54646",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "caaafa079a4eaac6012717bcf705dec0417b5434f5dbd1af934a3a36ad375722"
+    },
+    {
+      "path": "skills/usfiscaldata/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "b41e67a6dd0af1939e83b7d8ff81d467b49ee0d60ecf7f1799b31353e232bd2e",
+      "git_blob_sha": "a92c6cd02dc7e4bba3a57cea0653fb9c828d70da",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "7cdcb756489ae8e94a73df1eebfb9abef554e912af6559ebd28dffa021ab63d5"
+    },
+    {
+      "path": "skills/vaex/SKILL.md",
+      "license_frontmatter": "MIT license",
+      "sha256": "a8ab5bcb0ab9c8d372b987e584b5c589a15b1e2b2f73457546d2888988d40b4f",
+      "git_blob_sha": "58cccd31b9a162b204528a711f92efa3a5c4b796",
+      "capture_extra_trailing_newlines": 0,
+      "canonical_sha256": "a8ab5bcb0ab9c8d372b987e584b5c589a15b1e2b2f73457546d2888988d40b4f"
+    },
+    {
+      "path": "skills/venue-templates/SKILL.md",
+      "license_frontmatter": "MIT license",
+      "sha256": "38f80b65110811fe027215995bac443339bc62b8970525e52274eee9a5143098",
+      "git_blob_sha": "74e9d03ff7d3cc4029cbafadf9ab93a27cb66712",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "8607993327f451cc6b9d7ca7502c0e7d5f5060954fec12e2ea779d96841e78b5"
+    },
+    {
+      "path": "skills/waypoint-bio/SKILL.md",
+      "license_frontmatter": "MIT",
+      "sha256": "384810ae92ff3957bfc6e265f0adc8f498c2ae0af9633ef2ea090479468ed648",
+      "git_blob_sha": "6aa6a18feea3097049fbd00c30b09968f9f1b821",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "132d1f33d5d99bd6288a4cb432b277fcbc0f8bc4315e333dcecb840e7adc87a5"
+    },
+    {
+      "path": "skills/what-if-oracle/SKILL.md",
+      "license_frontmatter": "CC BY-NC-SA 4.0",
+      "sha256": "2859a2ecc0fd5a9c7ba70c9ad65f47f5b378dba47c469be4566c0722efaa668c",
+      "git_blob_sha": "dc6b38f8dd501155017f5d23099bdc0513fe5ab9",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "509af149c8cfc8f17dd15608d6337eb8a7ff3f4056fcadeda573c5e527c68a97"
+    },
+    {
+      "path": "skills/zarr-python/SKILL.md",
+      "license_frontmatter": "MIT license",
+      "sha256": "46e3ba03ca7ba7dede278a5139e5eecafd13af756485dfafe63116447be0017c",
+      "git_blob_sha": "780de6f9a4284409d68d91b548dace2815c8dd1c",
+      "capture_extra_trailing_newlines": 1,
+      "canonical_sha256": "1edaabfc3fc618d4c3a16bd70c589c039a3cb3a26683f02bca0ccc140d3c9c4d"
+    }
+  ],
+  "redistribution": "Raw source capture is outside product repo. Per-skill licenses differ; do not replace them with root MIT.",
+  "git_blob_verification_failures": []
+}

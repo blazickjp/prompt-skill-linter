@@ -1,3 +1,24 @@
+# 1.2.0.dev0 local research build
+
+Status: **LOCAL-TESTED / REMOTE-CI-PENDING**.
+
+Local acceptance: 214 core tests, 7 legacy evaluation tests, the 16-case new
+research corpus, independent finite oracles, JavaScript state/syntax checks and
+installed-wheel smoke passed. Browser tests could not launch Chromium because
+the environment denies its required local socket; they are **blocked, not passed**.
+See [LOCAL_VERIFICATION.md](LOCAL_VERIFICATION.md) for exact scope and commands.
+No GitHub publication or remote CI result is claimed for this development build.
+The previous v1.1 status below is historical; new feature scope is in
+[RESEARCH_EXTENSIONS.md](RESEARCH_EXTENSIONS.md).
+
+# Version 1.1 candidate checkpoint
+
+October 10, 2026: host-assisted review, action provenance, bounded trace monitors
+and the 13-case scientific workflow corpus are integrated. See
+[the current acceptance checklist](REAL_WORKFLOW_ACCEPTANCE.md) and
+[the complete case-level report](../corpus/scientific_workflows/README.md).
+Final snapshot remote CI is pending; the release evidence below is historical 1.0.
+
 # Local product status
 
 Updated October 10, 2026. Version 1.0.0 passed the local-product release gates. This acceptance is for the documented reviewed-contract/annotation Studio, not arbitrary-English verification or an untested live model provider.

@@ -1,0 +1,118 @@
+{
+  "version": "1.2.0.dev0",
+  "date": "2026-10-10",
+  "status": "LOCAL-TESTED / REMOTE-CI-PENDING",
+  "published": false,
+  "commands": [
+    {
+      "command": "python -m unittest discover -s tests -q",
+      "status": "passed",
+      "tests": 214
+    },
+    {
+      "command": "python -m unittest evaluation.test_evaluation -q",
+      "status": "passed",
+      "tests": 7
+    },
+    {
+      "command": "python -m evaluation.run verify",
+      "status": "passed",
+      "verified_files": 40
+    },
+    {
+      "command": "python -m evaluation.scientific_workflows verify",
+      "status": "passed",
+      "verified_files": 64,
+      "cases": 13
+    },
+    {
+      "command": "python -m evaluation.scientific_workflows mechanical --output /tmp/scientific-workflows.json",
+      "status": "passed"
+    },
+    {
+      "command": "python -m evaluation.research_extensions verify",
+      "status": "passed",
+      "verified_files": 23
+    },
+    {
+      "command": "python -m evaluation.research_extensions reproduce --output /tmp/research-extensions.json",
+      "status": "passed",
+      "cases": 16
+    },
+    {
+      "command": "python scripts/review_trace_oracle.py",
+      "status": "passed",
+      "enumerated_models": 1000
+    },
+    {
+      "command": "python corpus/scientific_workflows/structural/test_scan_explicit_links.py",
+      "status": "passed"
+    },
+    {
+      "command": "python -m compileall -q prompt_skill_linter tests scripts evaluation",
+      "status": "passed"
+    },
+    {
+      "command": "node web/tests/test_state.js",
+      "status": "passed"
+    },
+    {
+      "command": "find web -name '*.js' -print0 | xargs -0 -n1 node --check",
+      "status": "passed"
+    },
+    {
+      "command": "python scripts/reproduce.py (in isolated temporary source copy)",
+      "status": "passed",
+      "cases": 4
+    },
+    {
+      "command": "python -m pip wheel --no-deps --no-build-isolation . --wheel-dir /tmp/linter-wheel",
+      "status": "passed"
+    },
+    {
+      "command": "Install wheel into isolated target; import outside checkout; inspect version/assets/legacy/manual/helper/trace/source metadata",
+      "status": "passed"
+    },
+    {
+      "command": "python web/tests/test_ui.py --browser /usr/bin/chromium",
+      "status": "blocked_before_browser_launch",
+      "reason": "Chromium process-singleton socket() failed: Operation not permitted; same result after one approved escalation.",
+      "cases_run": 0
+    }
+  ],
+  "independent_audit": {
+    "status": "passed_within_documented_finite_scope",
+    "field_cases": 40800,
+    "trace_cases": 82944,
+    "frozen_safety_equivalence_cases": 82944,
+    "integration_tests": 25,
+    "cli_cases": 6,
+    "manual_context_mutations": 10,
+    "combined_scope_control": true,
+    "browser_tested": false
+  },
+  "wheel": {
+    "filename": "prompt_skill_linter-1.2.0.dev0-py3-none-any.whl",
+    "bytes": 72402,
+    "sha256": "97298daac2285d6510e046652d789be23f0dab049f64ab06e4bab7dffe70fe4e",
+    "installed_smoke": "passed_outside_checkout"
+  },
+  "implementation_sha256": {
+    "prompt_skill_linter/engine.py": "4ac658f704aec9fcd96dd9fdb601d2af0e0df8f2158742e79cae97077fad28db",
+    "prompt_skill_linter/fields.py": "68d52545f9019d84d2f30cf6d3a5608d42b7c9e56ab6c8e2544be0bf1fe1f285",
+    "prompt_skill_linter/trace.py": "e7ce16e6d820e1c0453982200e46ebb5e4d9f63312f2d7b0db9c073fec0bf4e8",
+    "prompt_skill_linter/contract.schema.json": "2694ea02341f36ea49cd79c8d92235e906aa3d0c1c6e2bf2fbb5818b530fc0c7",
+    "web/app.js": "c97eac98ac8f6e05583c1afa3ba15fb8e0109478b74173408d476f4243d851fc"
+  },
+  "research_corpus_freeze_sha256": "00e3fc8fd89a52b7e71496205202b75aa6f75b8b4c96da4aa0d7b655afec5d0b",
+  "preservation": {
+    "original_frozen_source_files_unchanged": 237,
+    "historical_corpus_and_pilot_files_unchanged": true
+  },
+  "limitations": [
+    "Browser acceptance did not run; local JavaScript checks are not a browser pass.",
+    "No remote CI or publication.",
+    "No upstream source-declared code, tools, model APIs or workflow actions executed.",
+    "Finite declared-model controls do not establish arbitrary-English correctness or runtime failure."
+  ]
+}

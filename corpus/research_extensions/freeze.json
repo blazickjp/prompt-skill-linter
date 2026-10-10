@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "sha256": {
+    "bundles/GH-HELPER.json": "1d987f7dba108edfa453e5499b97e01cf47d04eb2c10c40ba6e9fe65c5ac8ee9",
+    "bundles/GH-MANUAL.json": "b32bd1ac04c66c86cc94970acc94e5f5d401ab76644c66f7749226522f6807c2",
+    "bundles/SYN-COPY.json": "7f08ced42f220f6154add9307c256d51d8dd9e15daecda52f6dc4275f7194e3e",
+    "bundles/SYN-CORRECTED-READ.json": "2e9f6cdef2ae8aecc8d90bb92b6fe9e47503ba24871929a71cdeb80840af5efe",
+    "bundles/SYN-INACTIVE.json": "d693555768e551c9420cf923a901993293585e87e7795d305b48dd0baa8adee7",
+    "bundles/SYN-OPEN.json": "7a1a3fe95b7c4882472486163848b6c40f25decbf65217192934acea47be2797",
+    "bundles/SYN-OPTIONAL-CONSUMER.json": "fa1b0e59a3f8a88c835914c31b0ddc4a10b8d183fb85af778f48aff5f7315f2a",
+    "bundles/SYN-OPTIONAL-PRODUCER.json": "902be37055e152897e440cf5aff70faf8a2db5adca35b52b54ff54d205ada1ce",
+    "bundles/SYN-RENAME.json": "ae787a30a0d2400d42b52966e68600ae3d08e3ccd507a60fc739c2d410b6ac07",
+    "bundles/SYN-UNKNOWN-ACTIVATION.json": "49cedd74823763a33c069d78d34642ce15383eb0b071fabede777ed96415c321",
+    "bundles/TRACE-AFTER-GOAL.json": "1bdac54846852124a0007cf5987eabcea4db89306c649dfa27d8c2506402bb05",
+    "bundles/TRACE-DISABLED-ZERO.json": "fa096ccfd1a388f74c1c2949a10d8db2c98d9015b2de5ee249b7a05c47f3eb08",
+    "bundles/TRACE-NOOP.json": "5710b028ef55b5d6e3e254269eae2c01501af437ed35db1a257c43f0bd9a5391",
+    "bundles/TRACE-UNREACHABLE.json": "9297b30c393fdbc9e0c6f3ddd24f0d1b7879cc9a8ce6f59dc8ab6285476a0a68",
+    "bundles/TRACE-VIOLATION.json": "4d76c10f300bfc4e9b9a91bbf75c8d03ad129230c018d04837ecee3444c91a5d",
+    "bundles/TRACE-ZERO-BOUND.json": "1c040247d580293ef687ceb1bdbb46678514e0812640ddfd1cd1230228a02920",
+    "manifest.json": "1de831f20dff52fbe5b0b88397efff07adf0f1919d4a4f757e791d18b2ed46d2",
+    "sources/gh-cli.LICENSE.txt": "6da4adc42392c8485e40b4251c7e332fc3352df1947c9ffade71dd60b14a7a4f",
+    "sources/gh-fix-ci.LICENSE.txt": "4dd13869245e356246a5b770723247bbb80a8f07a181d1d3d873a1734297cdb9",
+    "sources/gh-fix-ci.SKILL.md": "7b326b4a2f0f5f85122144628ec02077e48841e0e0e82efce88b3415bcfb7c26",
+    "sources/gh-pr-checks.go.txt": "1ea61d22b2e6c95e4380c50dbd55cb65c6497cbdf9cc8da074b2fc637d5c2526",
+    "sources/inspect_pr_checks.py.txt": "9459e5b03f86785d184a83e5cd8d621b832e918ec04158a2962d867785812c6c",
+    "sources/synthetic-controls.txt": "710c4cac27fcb5cfb949236a3eba44352bb092d27399234c8c909da5536fc0e6"
+  }
+}

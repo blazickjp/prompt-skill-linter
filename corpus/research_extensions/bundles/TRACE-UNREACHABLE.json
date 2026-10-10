@@ -1,0 +1,142 @@
+{
+  "contract": {
+    "version": 1,
+    "sources": [
+      {
+        "id": "review",
+        "path": "sources/synthetic-controls.txt"
+      }
+    ],
+    "rules": [
+      {
+        "id": "ad",
+        "source": {
+          "source_id": "review",
+          "start_line": 5,
+          "end_line": 5,
+          "quote": "Synthetic trace: each deliver event needs fresh verification."
+        },
+        "kind": "requirement",
+        "priority": 0,
+        "scope": {
+          "entity": "synthetic-run",
+          "temporal": "one-run"
+        }
+      }
+    ],
+    "contexts": [
+      {
+        "id": "c",
+        "facts": {},
+        "active_skills": []
+      }
+    ],
+    "assumptions": [
+      "Offline reviewed projection only; no upstream scripts, commands, tools, accounts or network actions are executed."
+    ],
+    "interpretation": {
+      "status": "accepted",
+      "method": "Manual source-pinned research development projection; not independent human gold.",
+      "accepted_candidate_ids": [
+        "TRACE-UNREACHABLE"
+      ]
+    },
+    "workflows": [
+      {
+        "id": "workflow",
+        "initial": [],
+        "goal": [],
+        "actions": [
+          {
+            "id": "verify",
+            "requires": [
+              "never"
+            ],
+            "provenance": {
+              "source_spans": [
+                {
+                  "source_id": "review",
+                  "start_line": 5,
+                  "end_line": 5,
+                  "quote": "Synthetic trace: each deliver event needs fresh verification."
+                }
+              ],
+              "assumptions": [
+                "Synthetic reviewed transition; no real action is executed."
+              ]
+            }
+          },
+          {
+            "id": "edit",
+            "requires": [
+              "never"
+            ],
+            "provenance": {
+              "source_spans": [
+                {
+                  "source_id": "review",
+                  "start_line": 5,
+                  "end_line": 5,
+                  "quote": "Synthetic trace: each deliver event needs fresh verification."
+                }
+              ],
+              "assumptions": [
+                "Synthetic reviewed transition; no real action is executed."
+              ]
+            }
+          },
+          {
+            "id": "deliver",
+            "provenance": {
+              "source_spans": [
+                {
+                  "source_id": "review",
+                  "start_line": 5,
+                  "end_line": 5,
+                  "quote": "Synthetic trace: each deliver event needs fresh verification."
+                }
+              ],
+              "assumptions": [
+                "Synthetic reviewed transition; no real action is executed."
+              ]
+            },
+            "requires": [
+              "never"
+            ]
+          }
+        ],
+        "advertisement_rule": "ad",
+        "trace_assertions": [
+          {
+            "id": "fresh",
+            "kind": "freshness",
+            "invalidate_actions": [
+              "edit"
+            ],
+            "refresh_actions": [
+              "verify"
+            ],
+            "guarded_actions": [
+              "deliver"
+            ],
+            "initially_fresh": true,
+            "source": {
+              "source_id": "review",
+              "start_line": 5,
+              "end_line": 5,
+              "quote": "Synthetic trace: each deliver event needs fresh verification."
+            },
+            "assumptions": []
+          }
+        ]
+      }
+    ]
+  },
+  "sources": {
+    "review": "Synthetic control: copy the literal key link to detailsUrl, preserving link.\nSynthetic control: rename the literal key link to detailsUrl.\nSynthetic control: consume link instead of detailsUrl.\nSynthetic control: treat detailsUrl consumption as optional.\nSynthetic trace: each deliver event needs fresh verification.\nSynthetic trace: count every generate event, including repetitions.\nSynthetic control: producer guarantees the seven selected keys but allows additional keys.\nSynthetic control: producer guarantees the seven selected keys and optionally includes detailsUrl; other keys remain excluded.\n"
+  },
+  "tools": {
+    "tools": {}
+  },
+  "runtime": {}
+}

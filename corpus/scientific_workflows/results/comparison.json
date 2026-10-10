@@ -1,0 +1,1263 @@
+{
+  "version": 1,
+  "input_freeze_sha256": "e7a88272a5e10cd46b54742c31de213b07f5eb150628c7c77936fd32a4c2f8b9",
+  "arms": {
+    "mechanical_reviewed_projection": {
+      "all": {
+        "counts": {
+          "total": 13,
+          "abstained": 9,
+          "binary_reference": 9,
+          "reference_positive": 4,
+          "reference_negative": 5,
+          "abstained_negative": 5,
+          "tp": 4,
+          "excluded_reference_ambiguous": 4
+        },
+        "precision": 1.0,
+        "recall": 1.0,
+        "false_positive_rate": 0.0,
+        "missed_issues": 0,
+        "coverage": 0.3076923076923077,
+        "abstention_rate": 0.6923076923076923,
+        "selective_accuracy": 1.0,
+        "cases": [
+          {
+            "id": "KD-SC-01",
+            "predicted": "abstain",
+            "reference": "no_issue",
+            "outcome": "abstained_negative"
+          },
+          {
+            "id": "KD-SC-02",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "KD-SC-03",
+            "predicted": "abstain",
+            "reference": "no_issue",
+            "outcome": "abstained_negative"
+          },
+          {
+            "id": "KD-SC-04",
+            "predicted": "abstain",
+            "reference": "abstain",
+            "outcome": "unscored_ambiguous"
+          },
+          {
+            "id": "KD-WR-01",
+            "predicted": "abstain",
+            "reference": "no_issue",
+            "outcome": "abstained_negative"
+          },
+          {
+            "id": "KD-WR-02",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "KD-WR-03",
+            "predicted": "abstain",
+            "reference": "no_issue",
+            "outcome": "abstained_negative"
+          },
+          {
+            "id": "KD-WR-04",
+            "predicted": "abstain",
+            "reference": "abstain",
+            "outcome": "unscored_ambiguous"
+          },
+          {
+            "id": "KD-LR-01",
+            "predicted": "abstain",
+            "reference": "abstain",
+            "outcome": "unscored_ambiguous"
+          },
+          {
+            "id": "KD-LR-02",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "KD-LR-03",
+            "predicted": "abstain",
+            "reference": "no_issue",
+            "outcome": "abstained_negative"
+          },
+          {
+            "id": "KD-LR-04",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "KD-LR-05",
+            "predicted": "abstain",
+            "reference": "abstain",
+            "outcome": "unscored_ambiguous"
+          }
+        ],
+        "selective_false_positive_rate": null,
+        "positive_coverage": 1.0,
+        "negative_coverage": 0.0,
+        "population_false_alarm_rate": 0.0,
+        "false_positive_rate_denominator": "all reference negatives including abstentions; not measured specificity"
+      },
+      "by_origin": {
+        "deployment_probe": {
+          "counts": {
+            "total": 4,
+            "abstained": 0,
+            "binary_reference": 4,
+            "reference_positive": 4,
+            "reference_negative": 0,
+            "tp": 4
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "false_positive_rate": null,
+          "missed_issues": 0,
+          "coverage": 1.0,
+          "abstention_rate": 0.0,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "KD-SC-02",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "KD-WR-02",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "KD-LR-02",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "KD-LR-04",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            }
+          ],
+          "selective_false_positive_rate": null,
+          "positive_coverage": 1.0,
+          "negative_coverage": null,
+          "population_false_alarm_rate": null,
+          "false_positive_rate_denominator": "all reference negatives including abstentions; not measured specificity"
+        },
+        "natural": {
+          "counts": {
+            "total": 3,
+            "abstained": 3,
+            "excluded_reference_ambiguous": 3
+          },
+          "precision": null,
+          "recall": null,
+          "false_positive_rate": null,
+          "missed_issues": 0,
+          "coverage": 0.0,
+          "abstention_rate": 1.0,
+          "selective_accuracy": null,
+          "cases": [
+            {
+              "id": "KD-SC-04",
+              "predicted": "abstain",
+              "reference": "abstain",
+              "outcome": "unscored_ambiguous"
+            },
+            {
+              "id": "KD-WR-04",
+              "predicted": "abstain",
+              "reference": "abstain",
+              "outcome": "unscored_ambiguous"
+            },
+            {
+              "id": "KD-LR-05",
+              "predicted": "abstain",
+              "reference": "abstain",
+              "outcome": "unscored_ambiguous"
+            }
+          ],
+          "selective_false_positive_rate": null,
+          "positive_coverage": null,
+          "negative_coverage": null,
+          "population_false_alarm_rate": null,
+          "false_positive_rate_denominator": "all reference negatives including abstentions; not measured specificity"
+        },
+        "synthetic_control": {
+          "counts": {
+            "total": 6,
+            "abstained": 6,
+            "binary_reference": 5,
+            "reference_positive": 0,
+            "reference_negative": 5,
+            "abstained_negative": 5,
+            "excluded_reference_ambiguous": 1
+          },
+          "precision": null,
+          "recall": null,
+          "false_positive_rate": 0.0,
+          "missed_issues": 0,
+          "coverage": 0.0,
+          "abstention_rate": 1.0,
+          "selective_accuracy": null,
+          "cases": [
+            {
+              "id": "KD-SC-01",
+              "predicted": "abstain",
+              "reference": "no_issue",
+              "outcome": "abstained_negative"
+            },
+            {
+              "id": "KD-SC-03",
+              "predicted": "abstain",
+              "reference": "no_issue",
+              "outcome": "abstained_negative"
+            },
+            {
+              "id": "KD-WR-01",
+              "predicted": "abstain",
+              "reference": "no_issue",
+              "outcome": "abstained_negative"
+            },
+            {
+              "id": "KD-WR-03",
+              "predicted": "abstain",
+              "reference": "no_issue",
+              "outcome": "abstained_negative"
+            },
+            {
+              "id": "KD-LR-01",
+              "predicted": "abstain",
+              "reference": "abstain",
+              "outcome": "unscored_ambiguous"
+            },
+            {
+              "id": "KD-LR-03",
+              "predicted": "abstain",
+              "reference": "no_issue",
+              "outcome": "abstained_negative"
+            }
+          ],
+          "selective_false_positive_rate": null,
+          "positive_coverage": null,
+          "negative_coverage": 0.0,
+          "population_false_alarm_rate": 0.0,
+          "false_positive_rate_denominator": "all reference negatives including abstentions; not measured specificity"
+        }
+      },
+      "by_family": {
+        "evidence_writing": {
+          "counts": {
+            "total": 4,
+            "abstained": 3,
+            "binary_reference": 3,
+            "reference_positive": 1,
+            "reference_negative": 2,
+            "abstained_negative": 2,
+            "tp": 1,
+            "excluded_reference_ambiguous": 1
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "false_positive_rate": 0.0,
+          "missed_issues": 0,
+          "coverage": 0.25,
+          "abstention_rate": 0.75,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "KD-WR-01",
+              "predicted": "abstain",
+              "reference": "no_issue",
+              "outcome": "abstained_negative"
+            },
+            {
+              "id": "KD-WR-02",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "KD-WR-03",
+              "predicted": "abstain",
+              "reference": "no_issue",
+              "outcome": "abstained_negative"
+            },
+            {
+              "id": "KD-WR-04",
+              "predicted": "abstain",
+              "reference": "abstain",
+              "outcome": "unscored_ambiguous"
+            }
+          ],
+          "selective_false_positive_rate": null,
+          "positive_coverage": 1.0,
+          "negative_coverage": 0.0,
+          "population_false_alarm_rate": 0.0,
+          "false_positive_rate_denominator": "all reference negatives including abstentions; not measured specificity"
+        },
+        "review_diagrams": {
+          "counts": {
+            "total": 5,
+            "abstained": 3,
+            "excluded_reference_ambiguous": 2,
+            "binary_reference": 3,
+            "reference_positive": 2,
+            "reference_negative": 1,
+            "tp": 2,
+            "abstained_negative": 1
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "false_positive_rate": 0.0,
+          "missed_issues": 0,
+          "coverage": 0.4,
+          "abstention_rate": 0.6,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "KD-LR-01",
+              "predicted": "abstain",
+              "reference": "abstain",
+              "outcome": "unscored_ambiguous"
+            },
+            {
+              "id": "KD-LR-02",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "KD-LR-03",
+              "predicted": "abstain",
+              "reference": "no_issue",
+              "outcome": "abstained_negative"
+            },
+            {
+              "id": "KD-LR-04",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "KD-LR-05",
+              "predicted": "abstain",
+              "reference": "abstain",
+              "outcome": "unscored_ambiguous"
+            }
+          ],
+          "selective_false_positive_rate": null,
+          "positive_coverage": 1.0,
+          "negative_coverage": 0.0,
+          "population_false_alarm_rate": 0.0,
+          "false_positive_rate_denominator": "all reference negatives including abstentions; not measured specificity"
+        },
+        "single_cell": {
+          "counts": {
+            "total": 4,
+            "abstained": 3,
+            "binary_reference": 3,
+            "reference_positive": 1,
+            "reference_negative": 2,
+            "abstained_negative": 2,
+            "tp": 1,
+            "excluded_reference_ambiguous": 1
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "false_positive_rate": 0.0,
+          "missed_issues": 0,
+          "coverage": 0.25,
+          "abstention_rate": 0.75,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "KD-SC-01",
+              "predicted": "abstain",
+              "reference": "no_issue",
+              "outcome": "abstained_negative"
+            },
+            {
+              "id": "KD-SC-02",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "KD-SC-03",
+              "predicted": "abstain",
+              "reference": "no_issue",
+              "outcome": "abstained_negative"
+            },
+            {
+              "id": "KD-SC-04",
+              "predicted": "abstain",
+              "reference": "abstain",
+              "outcome": "unscored_ambiguous"
+            }
+          ],
+          "selective_false_positive_rate": null,
+          "positive_coverage": 1.0,
+          "negative_coverage": 0.0,
+          "population_false_alarm_rate": 0.0,
+          "false_positive_rate_denominator": "all reference negatives including abstentions; not measured specificity"
+        }
+      },
+      "model": null,
+      "cost": null,
+      "tokens": null
+    },
+    "native_plain": {
+      "all": {
+        "counts": {
+          "total": 13,
+          "abstained": 4,
+          "binary_reference": 9,
+          "reference_positive": 4,
+          "reference_negative": 5,
+          "tn": 5,
+          "tp": 4,
+          "excluded_reference_ambiguous": 4
+        },
+        "precision": 1.0,
+        "recall": 1.0,
+        "false_positive_rate": 0.0,
+        "missed_issues": 0,
+        "coverage": 0.6923076923076923,
+        "abstention_rate": 0.3076923076923077,
+        "selective_accuracy": 1.0,
+        "cases": [
+          {
+            "id": "KD-SC-01",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "KD-SC-02",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "KD-SC-03",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "KD-SC-04",
+            "predicted": "abstain",
+            "reference": "abstain",
+            "outcome": "unscored_ambiguous"
+          },
+          {
+            "id": "KD-WR-01",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "KD-WR-02",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "KD-WR-03",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "KD-WR-04",
+            "predicted": "abstain",
+            "reference": "abstain",
+            "outcome": "unscored_ambiguous"
+          },
+          {
+            "id": "KD-LR-01",
+            "predicted": "abstain",
+            "reference": "abstain",
+            "outcome": "unscored_ambiguous"
+          },
+          {
+            "id": "KD-LR-02",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "KD-LR-03",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "KD-LR-04",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "KD-LR-05",
+            "predicted": "abstain",
+            "reference": "abstain",
+            "outcome": "unscored_ambiguous"
+          }
+        ],
+        "selective_false_positive_rate": 0.0,
+        "positive_coverage": 1.0,
+        "negative_coverage": 1.0,
+        "population_false_alarm_rate": 0.0,
+        "false_positive_rate_denominator": "all reference negatives including abstentions; not measured specificity"
+      },
+      "by_origin": {
+        "deployment_probe": {
+          "counts": {
+            "total": 4,
+            "abstained": 0,
+            "binary_reference": 4,
+            "reference_positive": 4,
+            "reference_negative": 0,
+            "tp": 4
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "false_positive_rate": null,
+          "missed_issues": 0,
+          "coverage": 1.0,
+          "abstention_rate": 0.0,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "KD-SC-02",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "KD-WR-02",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "KD-LR-02",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "KD-LR-04",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            }
+          ],
+          "selective_false_positive_rate": null,
+          "positive_coverage": 1.0,
+          "negative_coverage": null,
+          "population_false_alarm_rate": null,
+          "false_positive_rate_denominator": "all reference negatives including abstentions; not measured specificity"
+        },
+        "natural": {
+          "counts": {
+            "total": 3,
+            "abstained": 3,
+            "excluded_reference_ambiguous": 3
+          },
+          "precision": null,
+          "recall": null,
+          "false_positive_rate": null,
+          "missed_issues": 0,
+          "coverage": 0.0,
+          "abstention_rate": 1.0,
+          "selective_accuracy": null,
+          "cases": [
+            {
+              "id": "KD-SC-04",
+              "predicted": "abstain",
+              "reference": "abstain",
+              "outcome": "unscored_ambiguous"
+            },
+            {
+              "id": "KD-WR-04",
+              "predicted": "abstain",
+              "reference": "abstain",
+              "outcome": "unscored_ambiguous"
+            },
+            {
+              "id": "KD-LR-05",
+              "predicted": "abstain",
+              "reference": "abstain",
+              "outcome": "unscored_ambiguous"
+            }
+          ],
+          "selective_false_positive_rate": null,
+          "positive_coverage": null,
+          "negative_coverage": null,
+          "population_false_alarm_rate": null,
+          "false_positive_rate_denominator": "all reference negatives including abstentions; not measured specificity"
+        },
+        "synthetic_control": {
+          "counts": {
+            "total": 6,
+            "abstained": 1,
+            "binary_reference": 5,
+            "reference_positive": 0,
+            "reference_negative": 5,
+            "tn": 5,
+            "excluded_reference_ambiguous": 1
+          },
+          "precision": null,
+          "recall": null,
+          "false_positive_rate": 0.0,
+          "missed_issues": 0,
+          "coverage": 0.8333333333333334,
+          "abstention_rate": 0.16666666666666666,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "KD-SC-01",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "KD-SC-03",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "KD-WR-01",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "KD-WR-03",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "KD-LR-01",
+              "predicted": "abstain",
+              "reference": "abstain",
+              "outcome": "unscored_ambiguous"
+            },
+            {
+              "id": "KD-LR-03",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            }
+          ],
+          "selective_false_positive_rate": 0.0,
+          "positive_coverage": null,
+          "negative_coverage": 1.0,
+          "population_false_alarm_rate": 0.0,
+          "false_positive_rate_denominator": "all reference negatives including abstentions; not measured specificity"
+        }
+      },
+      "by_family": {
+        "evidence_writing": {
+          "counts": {
+            "total": 4,
+            "abstained": 1,
+            "binary_reference": 3,
+            "reference_positive": 1,
+            "reference_negative": 2,
+            "tn": 2,
+            "tp": 1,
+            "excluded_reference_ambiguous": 1
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "false_positive_rate": 0.0,
+          "missed_issues": 0,
+          "coverage": 0.75,
+          "abstention_rate": 0.25,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "KD-WR-01",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "KD-WR-02",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "KD-WR-03",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "KD-WR-04",
+              "predicted": "abstain",
+              "reference": "abstain",
+              "outcome": "unscored_ambiguous"
+            }
+          ],
+          "selective_false_positive_rate": 0.0,
+          "positive_coverage": 1.0,
+          "negative_coverage": 1.0,
+          "population_false_alarm_rate": 0.0,
+          "false_positive_rate_denominator": "all reference negatives including abstentions; not measured specificity"
+        },
+        "review_diagrams": {
+          "counts": {
+            "total": 5,
+            "abstained": 2,
+            "excluded_reference_ambiguous": 2,
+            "binary_reference": 3,
+            "reference_positive": 2,
+            "reference_negative": 1,
+            "tp": 2,
+            "tn": 1
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "false_positive_rate": 0.0,
+          "missed_issues": 0,
+          "coverage": 0.6,
+          "abstention_rate": 0.4,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "KD-LR-01",
+              "predicted": "abstain",
+              "reference": "abstain",
+              "outcome": "unscored_ambiguous"
+            },
+            {
+              "id": "KD-LR-02",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "KD-LR-03",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "KD-LR-04",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "KD-LR-05",
+              "predicted": "abstain",
+              "reference": "abstain",
+              "outcome": "unscored_ambiguous"
+            }
+          ],
+          "selective_false_positive_rate": 0.0,
+          "positive_coverage": 1.0,
+          "negative_coverage": 1.0,
+          "population_false_alarm_rate": 0.0,
+          "false_positive_rate_denominator": "all reference negatives including abstentions; not measured specificity"
+        },
+        "single_cell": {
+          "counts": {
+            "total": 4,
+            "abstained": 1,
+            "binary_reference": 3,
+            "reference_positive": 1,
+            "reference_negative": 2,
+            "tn": 2,
+            "tp": 1,
+            "excluded_reference_ambiguous": 1
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "false_positive_rate": 0.0,
+          "missed_issues": 0,
+          "coverage": 0.75,
+          "abstention_rate": 0.25,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "KD-SC-01",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "KD-SC-02",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "KD-SC-03",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "KD-SC-04",
+              "predicted": "abstain",
+              "reference": "abstain",
+              "outcome": "unscored_ambiguous"
+            }
+          ],
+          "selective_false_positive_rate": 0.0,
+          "positive_coverage": 1.0,
+          "negative_coverage": 1.0,
+          "population_false_alarm_rate": 0.0,
+          "false_positive_rate_denominator": "all reference negatives including abstentions; not measured specificity"
+        }
+      },
+      "model": null,
+      "cost": null,
+      "tokens": null
+    },
+    "native_structured_evidence": {
+      "all": {
+        "counts": {
+          "total": 13,
+          "abstained": 4,
+          "binary_reference": 9,
+          "reference_positive": 4,
+          "reference_negative": 5,
+          "tn": 5,
+          "tp": 4,
+          "excluded_reference_ambiguous": 4
+        },
+        "precision": 1.0,
+        "recall": 1.0,
+        "false_positive_rate": 0.0,
+        "missed_issues": 0,
+        "coverage": 0.6923076923076923,
+        "abstention_rate": 0.3076923076923077,
+        "selective_accuracy": 1.0,
+        "cases": [
+          {
+            "id": "KD-SC-01",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "KD-SC-02",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "KD-SC-03",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "KD-SC-04",
+            "predicted": "abstain",
+            "reference": "abstain",
+            "outcome": "unscored_ambiguous"
+          },
+          {
+            "id": "KD-WR-01",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "KD-WR-02",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "KD-WR-03",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "KD-WR-04",
+            "predicted": "abstain",
+            "reference": "abstain",
+            "outcome": "unscored_ambiguous"
+          },
+          {
+            "id": "KD-LR-01",
+            "predicted": "abstain",
+            "reference": "abstain",
+            "outcome": "unscored_ambiguous"
+          },
+          {
+            "id": "KD-LR-02",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "KD-LR-03",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "KD-LR-04",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "KD-LR-05",
+            "predicted": "abstain",
+            "reference": "abstain",
+            "outcome": "unscored_ambiguous"
+          }
+        ],
+        "selective_false_positive_rate": 0.0,
+        "positive_coverage": 1.0,
+        "negative_coverage": 1.0,
+        "population_false_alarm_rate": 0.0,
+        "false_positive_rate_denominator": "all reference negatives including abstentions; not measured specificity"
+      },
+      "by_origin": {
+        "deployment_probe": {
+          "counts": {
+            "total": 4,
+            "abstained": 0,
+            "binary_reference": 4,
+            "reference_positive": 4,
+            "reference_negative": 0,
+            "tp": 4
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "false_positive_rate": null,
+          "missed_issues": 0,
+          "coverage": 1.0,
+          "abstention_rate": 0.0,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "KD-SC-02",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "KD-WR-02",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "KD-LR-02",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "KD-LR-04",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            }
+          ],
+          "selective_false_positive_rate": null,
+          "positive_coverage": 1.0,
+          "negative_coverage": null,
+          "population_false_alarm_rate": null,
+          "false_positive_rate_denominator": "all reference negatives including abstentions; not measured specificity"
+        },
+        "natural": {
+          "counts": {
+            "total": 3,
+            "abstained": 3,
+            "excluded_reference_ambiguous": 3
+          },
+          "precision": null,
+          "recall": null,
+          "false_positive_rate": null,
+          "missed_issues": 0,
+          "coverage": 0.0,
+          "abstention_rate": 1.0,
+          "selective_accuracy": null,
+          "cases": [
+            {
+              "id": "KD-SC-04",
+              "predicted": "abstain",
+              "reference": "abstain",
+              "outcome": "unscored_ambiguous"
+            },
+            {
+              "id": "KD-WR-04",
+              "predicted": "abstain",
+              "reference": "abstain",
+              "outcome": "unscored_ambiguous"
+            },
+            {
+              "id": "KD-LR-05",
+              "predicted": "abstain",
+              "reference": "abstain",
+              "outcome": "unscored_ambiguous"
+            }
+          ],
+          "selective_false_positive_rate": null,
+          "positive_coverage": null,
+          "negative_coverage": null,
+          "population_false_alarm_rate": null,
+          "false_positive_rate_denominator": "all reference negatives including abstentions; not measured specificity"
+        },
+        "synthetic_control": {
+          "counts": {
+            "total": 6,
+            "abstained": 1,
+            "binary_reference": 5,
+            "reference_positive": 0,
+            "reference_negative": 5,
+            "tn": 5,
+            "excluded_reference_ambiguous": 1
+          },
+          "precision": null,
+          "recall": null,
+          "false_positive_rate": 0.0,
+          "missed_issues": 0,
+          "coverage": 0.8333333333333334,
+          "abstention_rate": 0.16666666666666666,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "KD-SC-01",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "KD-SC-03",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "KD-WR-01",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "KD-WR-03",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "KD-LR-01",
+              "predicted": "abstain",
+              "reference": "abstain",
+              "outcome": "unscored_ambiguous"
+            },
+            {
+              "id": "KD-LR-03",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            }
+          ],
+          "selective_false_positive_rate": 0.0,
+          "positive_coverage": null,
+          "negative_coverage": 1.0,
+          "population_false_alarm_rate": 0.0,
+          "false_positive_rate_denominator": "all reference negatives including abstentions; not measured specificity"
+        }
+      },
+      "by_family": {
+        "evidence_writing": {
+          "counts": {
+            "total": 4,
+            "abstained": 1,
+            "binary_reference": 3,
+            "reference_positive": 1,
+            "reference_negative": 2,
+            "tn": 2,
+            "tp": 1,
+            "excluded_reference_ambiguous": 1
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "false_positive_rate": 0.0,
+          "missed_issues": 0,
+          "coverage": 0.75,
+          "abstention_rate": 0.25,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "KD-WR-01",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "KD-WR-02",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "KD-WR-03",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "KD-WR-04",
+              "predicted": "abstain",
+              "reference": "abstain",
+              "outcome": "unscored_ambiguous"
+            }
+          ],
+          "selective_false_positive_rate": 0.0,
+          "positive_coverage": 1.0,
+          "negative_coverage": 1.0,
+          "population_false_alarm_rate": 0.0,
+          "false_positive_rate_denominator": "all reference negatives including abstentions; not measured specificity"
+        },
+        "review_diagrams": {
+          "counts": {
+            "total": 5,
+            "abstained": 2,
+            "excluded_reference_ambiguous": 2,
+            "binary_reference": 3,
+            "reference_positive": 2,
+            "reference_negative": 1,
+            "tp": 2,
+            "tn": 1
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "false_positive_rate": 0.0,
+          "missed_issues": 0,
+          "coverage": 0.6,
+          "abstention_rate": 0.4,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "KD-LR-01",
+              "predicted": "abstain",
+              "reference": "abstain",
+              "outcome": "unscored_ambiguous"
+            },
+            {
+              "id": "KD-LR-02",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "KD-LR-03",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "KD-LR-04",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "KD-LR-05",
+              "predicted": "abstain",
+              "reference": "abstain",
+              "outcome": "unscored_ambiguous"
+            }
+          ],
+          "selective_false_positive_rate": 0.0,
+          "positive_coverage": 1.0,
+          "negative_coverage": 1.0,
+          "population_false_alarm_rate": 0.0,
+          "false_positive_rate_denominator": "all reference negatives including abstentions; not measured specificity"
+        },
+        "single_cell": {
+          "counts": {
+            "total": 4,
+            "abstained": 1,
+            "binary_reference": 3,
+            "reference_positive": 1,
+            "reference_negative": 2,
+            "tn": 2,
+            "tp": 1,
+            "excluded_reference_ambiguous": 1
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "false_positive_rate": 0.0,
+          "missed_issues": 0,
+          "coverage": 0.75,
+          "abstention_rate": 0.25,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "KD-SC-01",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "KD-SC-02",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "KD-SC-03",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "KD-SC-04",
+              "predicted": "abstain",
+              "reference": "abstain",
+              "outcome": "unscored_ambiguous"
+            }
+          ],
+          "selective_false_positive_rate": 0.0,
+          "positive_coverage": 1.0,
+          "negative_coverage": 1.0,
+          "population_false_alarm_rate": 0.0,
+          "false_positive_rate_denominator": "all reference negatives including abstentions; not measured specificity"
+        }
+      },
+      "model": null,
+      "cost": null,
+      "tokens": null
+    }
+  },
+  "limitations": [
+    "Selected development corpus, native-model reference labels, correlated errors possible; no human gold.",
+    "Finite reviewed projections and raw-source model review have different preparation costs and coverage.",
+    "Natural findings are separate from synthetic controls and deployment probes.",
+    "No superiority conclusion or live scientific execution validation follows from these scores."
+  ]
+}

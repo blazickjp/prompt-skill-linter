@@ -1,0 +1,243 @@
+{
+  "version": 1,
+  "scope": "Selected development examples of event-trigger coverage and reviewed field presence; not a benchmark or prevalence estimate.",
+  "sources": [
+    {
+      "path": "sources/gh-fix-ci.SKILL.md",
+      "repository": "openai/skills",
+      "commit": "49f948faa9258a0c61caceaf225e179651397431",
+      "upstream_path": "skills/.curated/gh-fix-ci/SKILL.md",
+      "git_blob": "76bdeb6a7bff93cbe924c0652f1fd7a3c3ffc46c",
+      "license": "Apache-2.0",
+      "license_file": "sources/gh-fix-ci.LICENSE.txt",
+      "url": "https://github.com/openai/skills/blob/49f948faa9258a0c61caceaf225e179651397431/skills/.curated/gh-fix-ci/SKILL.md"
+    },
+    {
+      "path": "sources/inspect_pr_checks.py.txt",
+      "repository": "openai/skills",
+      "commit": "49f948faa9258a0c61caceaf225e179651397431",
+      "upstream_path": "skills/.curated/gh-fix-ci/scripts/inspect_pr_checks.py",
+      "git_blob": "06cd03c5fc61c784d082e1c25a533c94e0912b3f",
+      "license": "Apache-2.0",
+      "license_file": "sources/gh-fix-ci.LICENSE.txt",
+      "url": "https://github.com/openai/skills/blob/49f948faa9258a0c61caceaf225e179651397431/skills/.curated/gh-fix-ci/scripts/inspect_pr_checks.py"
+    },
+    {
+      "path": "sources/gh-pr-checks.go.txt",
+      "repository": "cli/cli",
+      "commit": "ec5b512045db67e5a2a4ff4a1b02660b2fb24390",
+      "upstream_path": "pkg/cmd/pr/checks/checks.go",
+      "git_blob": "7329d5744f40f1eb74ce82408e58e9ff2f47ce91",
+      "license": "MIT",
+      "license_file": "sources/gh-cli.LICENSE.txt",
+      "url": "https://github.com/cli/cli/blob/ec5b512045db67e5a2a4ff4a1b02660b2fb24390/pkg/cmd/pr/checks/checks.go"
+    }
+  ],
+  "cases": [
+    {
+      "id": "GH-MANUAL",
+      "origin": "natural_candidate",
+      "family": "field_presence",
+      "bundle": "bundles/GH-MANUAL.json",
+      "expected": {
+        "status": "incompatible",
+        "missing_required_fields": [
+          "detailsUrl"
+        ],
+        "error_count": 1
+      },
+      "review_note": "Selected manual fallback only, under literal-property/no-alias assumptions. Natural source candidate, not an observed failure."
+    },
+    {
+      "id": "GH-HELPER",
+      "origin": "natural_control",
+      "family": "field_presence",
+      "bundle": "bundles/GH-HELPER.json",
+      "expected": {
+        "status": "compatible",
+        "error_count": 0
+      },
+      "review_note": "Actual normalized helper output and its guarded printer, with scope separate from the manual fallback."
+    },
+    {
+      "id": "SYN-COPY",
+      "origin": "synthetic_control",
+      "family": "field_presence",
+      "bundle": "bundles/SYN-COPY.json",
+      "expected": {
+        "status": "compatible",
+        "error_count": 0
+      },
+      "review_note": "Hypothetical explicit copy; not a discovered upstream adapter."
+    },
+    {
+      "id": "SYN-RENAME",
+      "origin": "synthetic_control",
+      "family": "field_presence",
+      "bundle": "bundles/SYN-RENAME.json",
+      "expected": {
+        "status": "compatible",
+        "error_count": 0
+      },
+      "review_note": "Hypothetical explicit rename; not a discovered upstream adapter."
+    },
+    {
+      "id": "SYN-CORRECTED-READ",
+      "origin": "synthetic_control",
+      "family": "field_presence",
+      "bundle": "bundles/SYN-CORRECTED-READ.json",
+      "expected": {
+        "status": "compatible",
+        "error_count": 0
+      },
+      "review_note": "Hypothetical corrected key, not an applied upstream repair."
+    },
+    {
+      "id": "SYN-OPEN",
+      "origin": "synthetic_control",
+      "family": "field_presence",
+      "bundle": "bundles/SYN-OPEN.json",
+      "expected": {
+        "status": "unknown",
+        "error_count": 0
+      },
+      "review_note": "Incomplete/open output schema cannot prove the demanded property absent."
+    },
+    {
+      "id": "SYN-OPTIONAL-PRODUCER",
+      "origin": "synthetic_control",
+      "family": "field_presence",
+      "bundle": "bundles/SYN-OPTIONAL-PRODUCER.json",
+      "expected": {
+        "status": "unknown",
+        "error_count": 0
+      },
+      "review_note": "Possibly present demanded key is not a guaranteed read."
+    },
+    {
+      "id": "SYN-OPTIONAL-CONSUMER",
+      "origin": "synthetic_control",
+      "family": "field_presence",
+      "bundle": "bundles/SYN-OPTIONAL-CONSUMER.json",
+      "expected": {
+        "status": "compatible",
+        "error_count": 0
+      },
+      "review_note": "Optional consumption imposes no key-presence requirement."
+    },
+    {
+      "id": "SYN-INACTIVE",
+      "origin": "synthetic_control",
+      "family": "field_presence",
+      "bundle": "bundles/SYN-INACTIVE.json",
+      "expected": {
+        "status": "inactive",
+        "error_count": 0
+      },
+      "review_note": "No failing record is consumed in the explicitly inactive context."
+    },
+    {
+      "id": "SYN-UNKNOWN-ACTIVATION",
+      "origin": "synthetic_control",
+      "family": "field_presence",
+      "bundle": "bundles/SYN-UNKNOWN-ACTIVATION.json",
+      "expected": {
+        "status": "unknown",
+        "error_count": 0
+      },
+      "review_note": "Missing branch interpretation cannot be treated as disabled or as a proven read."
+    },
+    {
+      "id": "TRACE-NOOP",
+      "origin": "synthetic_control",
+      "family": "trace_trigger",
+      "bundle": "bundles/TRACE-NOOP.json",
+      "expected": {
+        "status": "safe",
+        "trigger_status": "reachable",
+        "first_trigger_path": [
+          "deliver"
+        ],
+        "error_count": 0
+      },
+      "review_note": "Enabled guarded no-op supplies a one-event witness despite deduplicated state."
+    },
+    {
+      "id": "TRACE-ZERO-BOUND",
+      "origin": "synthetic_control",
+      "family": "trace_trigger",
+      "bundle": "bundles/TRACE-ZERO-BOUND.json",
+      "expected": {
+        "status": "safe",
+        "trigger_status": "unknown",
+        "first_trigger_path": null,
+        "error_count": 0
+      },
+      "review_note": "Safety closes on a fresh no-op, while the zero-event bound leaves trigger coverage unknown."
+    },
+    {
+      "id": "TRACE-VIOLATION",
+      "origin": "synthetic_control",
+      "family": "trace_trigger",
+      "bundle": "bundles/TRACE-VIOLATION.json",
+      "expected": {
+        "status": "violated",
+        "trigger_status": "reachable",
+        "first_trigger_path": [
+          "generate"
+        ],
+        "error_count": 1
+      },
+      "review_note": "The violating counted event itself establishes trigger reachability."
+    },
+    {
+      "id": "TRACE-DISABLED-ZERO",
+      "origin": "synthetic_control",
+      "family": "trace_trigger",
+      "bundle": "bundles/TRACE-DISABLED-ZERO.json",
+      "expected": {
+        "status": "safe",
+        "trigger_status": "unreachable",
+        "first_trigger_path": null,
+        "error_count": 0
+      },
+      "review_note": "A zero-event policy with all counted events forbidden is valid safe-plus-neutral-unreachable coverage."
+    },
+    {
+      "id": "TRACE-UNREACHABLE",
+      "origin": "synthetic_control",
+      "family": "trace_trigger",
+      "bundle": "bundles/TRACE-UNREACHABLE.json",
+      "expected": {
+        "status": "safe",
+        "trigger_status": "unreachable",
+        "first_trigger_path": null,
+        "error_count": 0
+      },
+      "review_note": "Exhaustively disabled trigger is informational coverage, not an error."
+    },
+    {
+      "id": "TRACE-AFTER-GOAL",
+      "origin": "synthetic_control",
+      "family": "trace_trigger",
+      "bundle": "bundles/TRACE-AFTER-GOAL.json",
+      "expected": {
+        "status": "safe",
+        "trigger_status": "reachable",
+        "first_trigger_path": [
+          "finish",
+          "deliver"
+        ],
+        "error_count": 0
+      },
+      "review_note": "Declared goal does not terminate explicit action semantics."
+    }
+  ],
+  "limitations": [
+    "Manual reviewed projections; not automatic extraction or independent human gold.",
+    "Natural candidate and natural helper control are reported separately from all synthetic mutations.",
+    "No upstream scripts, gh commands, model APIs or real tools are executed.",
+    "Presence compatibility is not value/type/URL validity, workflow completion or runtime success.",
+    "No historical v1.1 corpus, expectation or result is changed."
+  ]
+}

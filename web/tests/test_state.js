@@ -35,5 +35,8 @@ assert.match(mixed, /1 error-level finding/);
 assert.match(mixed, /Incomplete source coverage/);
 assert.match(mixed, /result unknown/);
 assert.equal(reportStatus({diagnostics:[]}), 'No error-level findings in checked inputs');
+assert.equal(declarationSummary({field_contract:{},scope:{entity:'record',temporal:'manual'}}), 'Reviewed field-presence contract · record / manual');
+assert.equal(declarationSummary({trace_assertion:{}}), 'Reviewed trace assertion');
+assert.equal(declarationSummary({kind:'requirement',priority:0,scope:{entity:'x',temporal:'run'}}), 'Requirement · priority 0 · x / run');
 `, context);
 console.log('PASS: busy-state repair unlock, safe integer parsing, canonical identities, input diffs');

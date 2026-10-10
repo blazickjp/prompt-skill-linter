@@ -47,3 +47,24 @@ Official references, checked October 10, 2026: [Responses create](https://develo
 
 
 Candidate evidence states are separate: `representation_supported` means the candidate fits the implemented grammar/schema, `interpretation_reviewed` records explicit acceptance, and `runtime_grounded` remains false because no live observations or tools are executed. `supported` remains a compatibility alias for representation support only. Reports similarly identify runtime grounding as a declared snapshot, not verified telemetry. Source input objects accept only id/name/text; hidden extra metadata cannot silently enter a provider payload.
+
+## 1.2 development report additions
+
+`/api/analyze`, CLI JSON, local MCP analysis and replay exports share the same
+additive contract/report schema. `field_contracts` is optional input; `field_checks`
+is an output array even when empty. Each field check identifies its fixed scope,
+context, activation, presence-only status, source spans and assumptions; active
+checks expose guaranteed/optional output keys, missing/uncertain mandatory reads
+and explicit adapter removals. See [contract details](contracts.md).
+
+Existing `trace_checks` retain their safety fields and add `trigger_coverage`,
+including a shortest in-bound event prefix when reachable. Coverage may be
+unknown while safety is safe, and absence is informational only. Source-linked
+findings use the existing generic diagnostic UI. A no-findings result never
+certifies arbitrary prose, value correctness or runtime observations.
+
+New codes: `REQUIRED_FIELD_NOT_PRODUCED` (conditional exact error),
+`FIELD_PRESENCE_UNKNOWN` (warning), `TRACE_TRIGGER_UNREACHABLE` (information),
+`TRACE_TRIGGER_COVERAGE_UNKNOWN` (information with incomplete coverage). Mixed
+missing/uncertain field demands keep `coverage.incomplete` true. No extraction
+provider support or arbitrary-English detection is added for these declarations.

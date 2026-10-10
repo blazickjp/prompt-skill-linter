@@ -1,0 +1,743 @@
+{
+  "contract": {
+    "version": 1,
+    "sources": [
+      {
+        "id": "skills__citation-management__SKILL",
+        "path": "source_text/skills/citation-management/SKILL.md"
+      },
+      {
+        "id": "skills__citation-management__references__citation_validation",
+        "path": "source_text/skills/citation-management/references/citation_validation.md"
+      },
+      {
+        "id": "skills__scientific-writing__SKILL",
+        "path": "source_text/skills/scientific-writing/SKILL.md"
+      },
+      {
+        "id": "skills__scientific-writing__references__cli_reference",
+        "path": "source_text/skills/scientific-writing/references/cli_reference.md"
+      },
+      {
+        "id": "skills__scientific-writing__references__evidence_workflow",
+        "path": "source_text/skills/scientific-writing/references/evidence_workflow.md"
+      }
+    ],
+    "rules": [
+      {
+        "id": "writing-advertisement",
+        "source": {
+          "source_id": "skills__scientific-writing__SKILL",
+          "start_line": 16,
+          "end_line": 20,
+          "quote": "Produce clear scientific prose without inventing evidence or concealing uncertainty.\nKeep drafting, evidence verification, and submission approval as separate stages.\n\nThe accountable human authors control scientific decisions and final approval. AI is\nnot an author, and generated fluency is never evidence [SW-S01, SW-S03]."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "manuscript workflow",
+          "temporal": "drafting through approval"
+        },
+        "skills": [
+          "scientific-writing"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "General outcome is not unconditional promise of autonomous submission."
+        ]
+      },
+      {
+        "id": "writing-confidentiality",
+        "source": {
+          "source_id": "skills__scientific-writing__SKILL",
+          "start_line": 26,
+          "end_line": 36,
+          "quote": "Do not send unpublished manuscripts, peer-review or editorial material, sensitive or\nrestricted data, PHI or other personal data, proprietary content, or source documents\nto an external service without:\n\n1. explicit authorization from a person or body empowered to grant it; and\n2. a documented review of journal, institutional, funder, consent, ethics, contractual,\n   legal, and data-use policy.\n\nWhen authorization or policy is unclear, keep processing local and use only the minimum\nmetadata needed. De-identification requires expert review; removing obvious names is\nnot sufficient. See `references/authorship_ai_confidentiality.md`."
+        },
+        "priority": 0,
+        "kind": "prohibition",
+        "scope": {
+          "entity": "protected/source material sent to external service",
+          "temporal": "at proposed external transfer"
+        },
+        "skills": [
+          "scientific-writing"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Recipient/data-specific permissions; conjunctive exception and expert de-identification review."
+        ]
+      },
+      {
+        "id": "writing-no-fabrication",
+        "source": {
+          "source_id": "skills__scientific-writing__SKILL",
+          "start_line": 40,
+          "end_line": 52,
+          "quote": "Never invent or complete:\n\n- citations, references, DOI, PMID, PMCID, ISBN, URLs, or quotations;\n- results, data values, denominators, sample sizes, units, effect estimates,\n  uncertainty, statistical tests, or significance claims;\n- methods, materials, protocol details, software versions, analysis choices, or\n  deviations;\n- registrations, approvals, consent, ethics statements, participant details, or dates;\n- authors, author order, CRediT roles, acknowledgments, or permissions;\n- funding, sponsor roles, conflicts, data or code availability, or AI disclosures.\n\nUse an explicit missing, unverified, or not-applicable state. Do not substitute plausible\nboilerplate."
+        },
+        "priority": 0,
+        "kind": "prohibition",
+        "scope": {
+          "entity": "citations/results/methods/ethics/authorship/declarations",
+          "temporal": "draft or revision"
+        },
+        "skills": [
+          "scientific-writing"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Open-ended domain facts and epistemic provenance."
+        ]
+      },
+      {
+        "id": "writing-human-evidence",
+        "source": {
+          "source_id": "skills__scientific-writing__SKILL",
+          "start_line": 56,
+          "end_line": 61,
+          "quote": "Every factual or numeric manuscript claim must map to verified evidence IDs. A human\nverifier must open the source, confirm the proposition and locator, verify bibliographic\nmetadata, and record who verified it and when.\n\nSearch snippets, generated summaries, memory, and another work's bibliography may aid\ndiscovery but do not verify a claim. See `references/evidence_workflow.md`."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "each factual/numeric claim",
+          "temporal": "before claiming verified support"
+        },
+        "skills": [
+          "scientific-writing"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Universal per-claim quantification; genuine human attestation cannot be derived from API metadata or AI judgment."
+        ]
+      },
+      {
+        "id": "writing-intake",
+        "source": {
+          "source_id": "skills__scientific-writing__SKILL",
+          "start_line": 77,
+          "end_line": 90,
+          "quote": "Before drafting, obtain or mark unresolved:\n\n- document type, study design, stage, audience, and target venue;\n- current author instructions and policy access date;\n- protocol, registration, analysis plan, amendments, and reporting guideline;\n- manuscript or section scope;\n- verified source manifest and claim registry;\n- methods, results, tables, figures, and supplements;\n- authorship, CRediT, declarations, and approval records;\n- confidentiality classification and authorized processing boundary;\n- data, code, materials, and repository constraints.\n\nDo not ask for restricted source material if metadata or a local user-run audit is\nsufficient."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "draft intake record",
+          "temporal": "before drafting"
+        },
+        "skills": [
+          "scientific-writing"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Obtain-or-unresolved alternative; document-specific completeness."
+        ]
+      },
+      {
+        "id": "writing-human-reverification",
+        "source": {
+          "source_id": "skills__scientific-writing__SKILL",
+          "start_line": 135,
+          "end_line": 145,
+          "quote": "Store a hash of claim text in CSV rather than raw claim text. Use one claim per\nphysical Markdown line; the hash binds the entire line after removing claim/evidence\nmarkers and collapsing whitespace. During drafting, append:\n\n```text\n[claim:C001] [evidence:E001,E002]\n```\n\nDo not mark a source verified until an accountable human has opened it and confirmed\nthe exact support. After changing wording, re-verify the claim before updating its\nhash; see the exact normalization in `references/evidence_workflow.md`."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "claim text and evidence registry",
+          "temporal": "after wording change before hash update"
+        },
+        "skills": [
+          "scientific-writing"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Hash/text binding; post-edit human attestation."
+        ]
+      },
+      {
+        "id": "writing-outline",
+        "source": {
+          "source_id": "skills__scientific-writing__SKILL",
+          "start_line": 149,
+          "end_line": 164,
+          "quote": "Outline only from recorded evidence:\n\n- objective or question;\n- section purpose;\n- claim IDs and evidence IDs;\n- methods and result IDs;\n- analysis intent and uncertainty;\n- unresolved conflicts or missing information;\n- applicable reporting topics.\n\nKeep unsupported content in an unresolved-issues list, not manuscript prose.\n\n### 5. Draft without adding facts\n\nTransform the verified outline into venue-appropriate prose. Preserve all IDs during\ndrafting."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "outline and manuscript prose",
+          "temporal": "outline then drafting"
+        },
+        "skills": [
+          "scientific-writing"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Semantic entailment and preservation cannot be checked by state token alone."
+        ]
+      },
+      {
+        "id": "writing-reference-boundary",
+        "source": {
+          "source_id": "skills__scientific-writing__SKILL",
+          "start_line": 197,
+          "end_line": 200,
+          "quote": "The reference checker validates syntax and duplicate identifiers without network\nresolution. A human must still compare every identifier and quotation with the opened\nsource. Follow NLM *Citing Medicine* or the current official style required by the\nvenue [SW-S20, SW-S21]."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "reference/quotation verification",
+          "temporal": "after local reference checking"
+        },
+        "skills": [
+          "scientific-writing"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Local check success cannot stand for human verification."
+        ]
+      },
+      {
+        "id": "writing-ai-disclosure",
+        "source": {
+          "source_id": "skills__scientific-writing__SKILL",
+          "start_line": 204,
+          "end_line": 218,
+          "quote": "Use journal criteria for authorship. Record the standardized CRediT roles as\ncontribution metadata; CRediT does not itself define authorship [SW-S19].\n\nIf AI was used, humans must verify all affected content and disclose the tool and\npurpose according to current journal and publisher policy. ICMJE's January 2026\nRecommendations require transparency and retain human accountability [SW-S01, SW-S02].\n\n```bash\npython3 scripts/validate_authorship.py authorship.json\n```\n\nThe local validator implements ICMJE-style authorship gates and a local guarantor\nrecord; it does not implement every venue policy. Do not generate a disclosure from\nassumptions. See\n`references/authorship_ai_confidentiality.md`."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "authorship and AI disclosure",
+          "temporal": "before final approval"
+        },
+        "skills": [
+          "scientific-writing"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Current venue rules and real human accountability."
+        ]
+      },
+      {
+        "id": "writing-optional-displays",
+        "source": {
+          "source_id": "skills__scientific-writing__SKILL",
+          "start_line": 236,
+          "end_line": 250,
+          "quote": "### 10. Use figures and tables only when warranted\n\nFigures and tables are optional and provenance-bound. This skill does not generate\nimages or schematics.\n\nFor every retained display:\n\n- link source data, code, transformations, and evidence IDs;\n- reconcile values with prose and registries;\n- document image processing, permissions, and licenses;\n- include units, denominators, sample sizes, uncertainty, and analysis population;\n- provide alt text and redundant non-color cues;\n- perform a manual accessibility and scientific check at final size.\n\nSee `references/figures_tables.md`."
+        },
+        "priority": 0,
+        "kind": "permission",
+        "scope": {
+          "entity": "manuscript displays",
+          "temporal": "when warranted"
+        },
+        "skills": [
+          "scientific-writing"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "No mandatory image-generation dependency; scientific and accessibility quality remain human checks."
+        ]
+      },
+      {
+        "id": "writing-human-approval",
+        "source": {
+          "source_id": "skills__scientific-writing__SKILL",
+          "start_line": 276,
+          "end_line": 283,
+          "quote": "Only accountable humans may:\n\n- resolve scientific ambiguities;\n- approve author order and declarations;\n- approve external disclosure or transfer;\n- set `submission_ready` to true;\n- remove the draft banner;\n- authorize submission."
+        },
+        "priority": 0,
+        "kind": "prohibition",
+        "scope": {
+          "entity": "submission-ready state / draft banner / submission",
+          "temporal": "final authorization"
+        },
+        "skills": [
+          "scientific-writing"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Actor identity and nondelegable attestation; tool success cannot establish approval."
+        ]
+      },
+      {
+        "id": "citation-enrichment",
+        "source": {
+          "source_id": "skills__citation-management__SKILL",
+          "start_line": 98,
+          "end_line": 106,
+          "quote": "### Phase 2.5: Metadata Enrichment via Web Search (MANDATORY)\n\nAPIs routinely return incomplete records. Run this **after** extraction and **before**\nformatting. Investigate missing bibliographic fields against the publisher record\nand log each source. Online-first articles may have no volume/pages yet; some use\nan article number or have no DOI. Preserve the actual publication state, use the\nstyle-appropriate article-number field, and never invent pages, volume, or DOI.\nRecord unavailable/not-applicable fields in the audit log; add a rendered `note`\nonly when useful to the reader or required by the citation style."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "bibliographic fields",
+          "temporal": "after extraction before formatting"
+        },
+        "skills": [
+          "citation-management"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Missing versus not-applicable bibliographic state and source truth."
+        ]
+      },
+      {
+        "id": "citation-untrusted-metadata",
+        "source": {
+          "source_id": "skills__citation-management__SKILL",
+          "start_line": 115,
+          "end_line": 120,
+          "quote": "> **Treat extracted metadata as untrusted.** Author, title, and journal strings come\n> verbatim from a record whose contents a publisher controls. A title containing `$(...)`,\n> a backtick, or a quote becomes shell syntax the moment it is pasted into a command.\n> Pass metadata as a `subprocess` argument list rather than building a shell string; if\n> you must use a shell, single-quote every substituted value and escape embedded quotes\n> as `'\\''`. Validate any citation key against `^[A-Za-z0-9]+$` before it reaches a path."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "external metadata entering commands/paths",
+          "temporal": "at command construction"
+        },
+        "skills": [
+          "citation-management"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Taint tracking, shell semantics and regex validation."
+        ]
+      },
+      {
+        "id": "citation-validation",
+        "source": {
+          "source_id": "skills__citation-management__SKILL",
+          "start_line": 139,
+          "end_line": 153,
+          "quote": "### Phase 4: Citation Validation\n\nCheck completeness, venue conformance, and agreement with the manuscript.\n\n```bash\npython scripts/validate_citations.py references.bib --report report.json\npython scripts/validate_citations.py references.bib --venue nature\npython scripts/validate_citations.py references.bib --manuscript paper.tex\npython scripts/validate_citations.py references.bib --check-dois     # slow; hits CrossRef\n```\n\nThe script exits non-zero on high-severity errors \u2014 missing required fields,\nmalformed years, unresolved citations, or a count below an explicit\n`--min-count`. Venue reference-count figures are editorial rules of thumb, not\nsubmission requirements, so falling short of one is only a warning."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "citation set",
+          "temporal": "before citation integration"
+        },
+        "skills": [
+          "citation-management"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Tool checker does not establish factual claim verification or venue acceptance."
+        ]
+      },
+      {
+        "id": "citation-diagram-conditional",
+        "source": {
+          "source_id": "skills__citation-management__SKILL",
+          "start_line": 49,
+          "end_line": 50,
+          "quote": "If a document built from these citations needs a diagram, use the\n**scientific-schematics** skill."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "document needing diagram",
+          "temporal": "only if diagram needed"
+        },
+        "skills": [
+          "citation-management"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Need is contextual, not inferred from citation workflow activation."
+        ]
+      },
+      {
+        "id": "writing-scaffold",
+        "source": {
+          "source_id": "skills__scientific-writing__SKILL",
+          "start_line": 96,
+          "end_line": 107,
+          "quote": "For a new draft, optionally generate fail-closed Markdown, JSON, and CSV scaffolds:\n\n```bash\npython3 scripts/scaffold_manuscript.py \\\n  --output-dir ./draft-workspace \\\n  --document-id local-draft \\\n  --study-design randomized_trial \\\n  --guideline consort-2025\n```\n\nThe generator never overwrites files. Its output is explicitly not submission-ready and\ncontains placeholders that the linter rejects."
+        },
+        "priority": 0,
+        "kind": "permission",
+        "scope": {
+          "entity": "new incomplete draft workspace",
+          "temporal": "initialization"
+        },
+        "skills": [
+          "scientific-writing"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Unstated output-path availability must remain an explicit adaptation assumption."
+        ]
+      },
+      {
+        "id": "writing-local-audits",
+        "source": {
+          "source_id": "skills__scientific-writing__references__evidence_workflow",
+          "start_line": 88,
+          "end_line": 110,
+          "quote": "## Final audit\n\nRun:\n\n```bash\npython3 scripts/validate_manifest.py source_manifest.json --kind source --require-verified\npython3 scripts/audit_claims.py manuscript.md claims.csv source_manifest.json\npython3 scripts/check_consistency.py consistency_manifest.json\npython3 scripts/check_references.py source_manifest.json\n```\n\nTool output contains IDs and line numbers, not manuscript or source text. A passing\nmachine audit supports review; it does not replace human scientific judgment.\n\nThe claim audit compares that digest with the current manuscript line and rejects\nchanged text or multiple claim markers on a line. Re-verify the evidence fit before\nreplacing an old digest. A matching hash detects text changes; it proves neither\nscientific truth nor that a human performed the recorded verification. Hashes are\nnot encryption and do not anonymize predictable sensitive statements.\n\nThe lightweight audit skips headings, comment-start lines, and fenced code; numeric\ntext outside these regions must be tagged. It cannot identify every untagged\nnon-numeric assertion or inspect the contents of linked files. Review those manually."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "claim/source/consistency checks",
+          "temporal": "final audit"
+        },
+        "skills": [
+          "scientific-writing"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Hash/metadata validation is distinct from genuine actor attestation."
+        ]
+      },
+      {
+        "id": "writing-cli-scaffold-boundary",
+        "source": {
+          "source_id": "skills__scientific-writing__references__cli_reference",
+          "start_line": 3,
+          "end_line": 26,
+          "quote": "All bundled commands use only the Python standard library. They:\n\n- accept explicit UTF-8 JSON, CSV, or Markdown files;\n- reject symbolic-link inputs;\n- cap file size, records, fields, JSON nodes, and nesting;\n- make no network calls;\n- read no environment variables or `.env` files;\n- perform no dynamic evaluation or pickle loading;\n- report issue codes, IDs, and line numbers without echoing manuscript or source text.\n\nRun from the skill directory with Python 3.11 or newer.\n\n## Scaffold\n\n```bash\npython3 scripts/scaffold_manuscript.py \\\n  --output-dir ./draft-workspace \\\n  --document-id local-draft \\\n  --study-design randomized_trial \\\n  --guideline consort-2025\n```\n\nThe output directory must not exist. The command never overwrites files. Generated\ndocuments are explicitly incomplete and not submission-ready."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "local Python CLI and destination",
+          "temporal": "scaffold execution"
+        },
+        "skills": [
+          "scientific-writing"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Filesystem limits and destination freshness not verified."
+        ]
+      },
+      {
+        "id": "citation-registration-boundary",
+        "source": {
+          "source_id": "skills__citation-management__references__citation_validation",
+          "start_line": 61,
+          "end_line": 70,
+          "quote": "**Process**:\n1. Extract all DOIs from BibTeX file\n2. Query Crossref `/works/{doi}`; on 404, query DataCite `/dois/{doi}`\n3. If both lack a record, GET `doi.org/{doi}` without following the redirect\n4. A registration record or resolver redirect confirms registration; resolver 404 is an error\n5. Report timeouts, 429/5xx, and malformed responses as `doi_unverified` warnings\n\nThe script does not compare bibliographic fields or test the publisher landing\npage. Review title/authors/year manually; a registered DOI can still identify\nthe wrong work. Retraction status also requires a separate publisher check."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "DOI registration vs identity support",
+          "temporal": "verification"
+        },
+        "skills": [
+          "citation-management"
+        ],
+        "semantic_warnings": [
+          "Evidence-only raw clause: no Boolean effect inferred. See raw extraction for complete modality, conditions, exceptions and unsupported semantics.",
+          "Service observations and bibliographic identity are separate facts."
+        ]
+      }
+    ],
+    "contexts": [
+      {
+        "id": "KD-WR-01",
+        "facts": {
+          "scenario_id": "KD-WR-01"
+        },
+        "active_skills": [
+          "citation-management",
+          "scientific-writing"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "id": "citation-management"
+      },
+      {
+        "id": "scientific-writing"
+      }
+    ],
+    "assumptions": [
+      "Native model extraction, not product provider execution or human gold. Independent labels and checker predictions were not consulted.",
+      "Equal source priority 0 is an explicit modeling convention; no hidden rule hierarchy.",
+      "Only declared scenario capabilities and outcomes are modeled. No repository scripts/services were run.",
+      "Planner facts are explicit state abstractions of distinct entities/stages. They do not establish scientific provenance, human identity, approval, or biological validity.",
+      "No executor tool API schema is declared in the neutral scenarios. tools is empty and tool_call is omitted rather than inventing a runnable tool. Documented CLI/API mappings are recorded externally.",
+      "No general prose contradiction or exhaustive completeness claim follows from planner results. All bundles remain candidates requiring independent review.",
+      "{\"assumptions\": [\"Local Python 3.11+ and all documented offline scientific-writing CLIs are available. The requested artifact contains public, non-sensitive material only.\", \"Venue policy, reporting coverage, authorship, declarations and results are complete and accurate unless otherwise stated. No actual submission or external transmission is requested.\", \"An accountable human has opened every source, checked each exact claim and locator, recorded identity/time, and will reverify changed wording and perform final submission_ready/banner decisions.\"], \"family\": \"evidence_writing\", \"id\": \"KD-WR-01\", \"origin\": \"synthetic_control\", \"scenario\": \"Prepare a submission-ready scientific manuscript from citation-management metadata and a verified evidence record, with final approval performed by the accountable human.\", \"selection_rationale\": \"Test full workflow with independently supplied human gates.\"}",
+      "POST-AUDIT REGRESSION DEMONSTRATION: original transition model plus separately declared trace property. The original flawed model is intentionally analyzed to reproduce a known review finding; this is outside the blind benchmark and never an upstream source defect."
+    ],
+    "workflows": [
+      {
+        "id": "kd-wr-01-workflow",
+        "initial": [
+          "local_cli_available",
+          "metadata_checks_pass",
+          "draft_inputs_available",
+          "fresh_output_directory_selectable",
+          "human_available",
+          "evidence_human_verified",
+          "venue_declarations_complete"
+        ],
+        "goal": [
+          "submission_ready_true",
+          "banner_removed"
+        ],
+        "actions": [
+          {
+            "id": "human_verify_source_claims",
+            "requires": [
+              "human_available",
+              "draft_inputs_available"
+            ],
+            "adds": [
+              "evidence_human_verified"
+            ],
+            "removes": [],
+            "provenance": {
+              "source_spans": [
+                {
+                  "source_id": "skills__scientific-writing__SKILL",
+                  "start_line": 56,
+                  "end_line": 61,
+                  "quote": "Every factual or numeric manuscript claim must map to verified evidence IDs. A human\nverifier must open the source, confirm the proposition and locator, verify bibliographic\nmetadata, and record who verified it and when.\n\nSearch snippets, generated summaries, memory, and another work's bibliography may aid\ndiscovery but do not verify a claim. See `references/evidence_workflow.md`."
+                }
+              ],
+              "assumptions": [
+                "Finite declared-state abstraction; does not execute code or verify underlying data/human act.",
+                "Action actor is accountable human; assistant cannot create attestation merely by editing metadata."
+              ]
+            }
+          },
+          {
+            "id": "create_evidence_outline",
+            "requires": [
+              "evidence_human_verified",
+              "draft_inputs_available"
+            ],
+            "adds": [
+              "verified_outline_ready"
+            ],
+            "removes": [],
+            "provenance": {
+              "source_spans": [
+                {
+                  "source_id": "skills__scientific-writing__SKILL",
+                  "start_line": 149,
+                  "end_line": 164,
+                  "quote": "Outline only from recorded evidence:\n\n- objective or question;\n- section purpose;\n- claim IDs and evidence IDs;\n- methods and result IDs;\n- analysis intent and uncertainty;\n- unresolved conflicts or missing information;\n- applicable reporting topics.\n\nKeep unsupported content in an unresolved-issues list, not manuscript prose.\n\n### 5. Draft without adding facts\n\nTransform the verified outline into venue-appropriate prose. Preserve all IDs during\ndrafting."
+                }
+              ],
+              "assumptions": [
+                "Finite declared-state abstraction; does not execute code or verify underlying data/human act."
+              ]
+            }
+          },
+          {
+            "id": "draft_manuscript",
+            "requires": [
+              "verified_outline_ready"
+            ],
+            "adds": [
+              "draft_prose_ready",
+              "reverification_due"
+            ],
+            "removes": [],
+            "provenance": {
+              "source_spans": [
+                {
+                  "source_id": "skills__scientific-writing__SKILL",
+                  "start_line": 149,
+                  "end_line": 164,
+                  "quote": "Outline only from recorded evidence:\n\n- objective or question;\n- section purpose;\n- claim IDs and evidence IDs;\n- methods and result IDs;\n- analysis intent and uncertainty;\n- unresolved conflicts or missing information;\n- applicable reporting topics.\n\nKeep unsupported content in an unresolved-issues list, not manuscript prose.\n\n### 5. Draft without adding facts\n\nTransform the verified outline into venue-appropriate prose. Preserve all IDs during\ndrafting."
+                },
+                {
+                  "source_id": "skills__scientific-writing__SKILL",
+                  "start_line": 135,
+                  "end_line": 145,
+                  "quote": "Store a hash of claim text in CSV rather than raw claim text. Use one claim per\nphysical Markdown line; the hash binds the entire line after removing claim/evidence\nmarkers and collapsing whitespace. During drafting, append:\n\n```text\n[claim:C001] [evidence:E001,E002]\n```\n\nDo not mark a source verified until an accountable human has opened it and confirmed\nthe exact support. After changing wording, re-verify the claim before updating its\nhash; see the exact normalization in `references/evidence_workflow.md`."
+                }
+              ],
+              "assumptions": [
+                "Finite declared-state abstraction; does not execute code or verify underlying data/human act."
+              ]
+            }
+          },
+          {
+            "id": "human_reverify_changed_prose",
+            "requires": [
+              "draft_prose_ready",
+              "human_available",
+              "reverification_due"
+            ],
+            "adds": [
+              "changed_prose_human_verified"
+            ],
+            "removes": [
+              "reverification_due"
+            ],
+            "provenance": {
+              "source_spans": [
+                {
+                  "source_id": "skills__scientific-writing__SKILL",
+                  "start_line": 135,
+                  "end_line": 145,
+                  "quote": "Store a hash of claim text in CSV rather than raw claim text. Use one claim per\nphysical Markdown line; the hash binds the entire line after removing claim/evidence\nmarkers and collapsing whitespace. During drafting, append:\n\n```text\n[claim:C001] [evidence:E001,E002]\n```\n\nDo not mark a source verified until an accountable human has opened it and confirmed\nthe exact support. After changing wording, re-verify the claim before updating its\nhash; see the exact normalization in `references/evidence_workflow.md`."
+                }
+              ],
+              "assumptions": [
+                "Finite declared-state abstraction; does not execute code or verify underlying data/human act."
+              ]
+            }
+          },
+          {
+            "id": "run_local_consistency_audits",
+            "requires": [
+              "local_cli_available",
+              "draft_prose_ready",
+              "metadata_checks_pass"
+            ],
+            "adds": [
+              "local_audits_pass"
+            ],
+            "removes": [],
+            "provenance": {
+              "source_spans": [
+                {
+                  "source_id": "skills__scientific-writing__references__evidence_workflow",
+                  "start_line": 88,
+                  "end_line": 110,
+                  "quote": "## Final audit\n\nRun:\n\n```bash\npython3 scripts/validate_manifest.py source_manifest.json --kind source --require-verified\npython3 scripts/audit_claims.py manuscript.md claims.csv source_manifest.json\npython3 scripts/check_consistency.py consistency_manifest.json\npython3 scripts/check_references.py source_manifest.json\n```\n\nTool output contains IDs and line numbers, not manuscript or source text. A passing\nmachine audit supports review; it does not replace human scientific judgment.\n\nThe claim audit compares that digest with the current manuscript line and rejects\nchanged text or multiple claim markers on a line. Re-verify the evidence fit before\nreplacing an old digest. A matching hash detects text changes; it proves neither\nscientific truth nor that a human performed the recorded verification. Hashes are\nnot encryption and do not anonymize predictable sensitive statements.\n\nThe lightweight audit skips headings, comment-start lines, and fenced code; numeric\ntext outside these regions must be tagged. It cannot identify every untagged\nnon-numeric assertion or inspect the contents of linked files. Review those manually."
+                },
+                {
+                  "source_id": "skills__scientific-writing__SKILL",
+                  "start_line": 197,
+                  "end_line": 200,
+                  "quote": "The reference checker validates syntax and duplicate identifiers without network\nresolution. A human must still compare every identifier and quotation with the opened\nsource. Follow NLM *Citing Medicine* or the current official style required by the\nvenue [SW-S20, SW-S21]."
+                }
+              ],
+              "assumptions": [
+                "Finite declared-state abstraction; does not execute code or verify underlying data/human act.",
+                "Local syntax/checks never add evidence_human_verified. Scenario explicitly supplies successful local checks."
+              ]
+            }
+          },
+          {
+            "id": "human_approve_ready_and_remove_banner",
+            "requires": [
+              "human_available",
+              "changed_prose_human_verified",
+              "local_audits_pass",
+              "venue_declarations_complete"
+            ],
+            "adds": [
+              "submission_ready_true",
+              "banner_removed"
+            ],
+            "removes": [],
+            "provenance": {
+              "source_spans": [
+                {
+                  "source_id": "skills__scientific-writing__SKILL",
+                  "start_line": 276,
+                  "end_line": 283,
+                  "quote": "Only accountable humans may:\n\n- resolve scientific ambiguities;\n- approve author order and declarations;\n- approve external disclosure or transfer;\n- set `submission_ready` to true;\n- remove the draft banner;\n- authorize submission."
+                }
+              ],
+              "assumptions": [
+                "Finite declared-state abstraction; does not execute code or verify underlying data/human act.",
+                "No actual submission is modeled or authorized; final flags require separate specific human approval."
+              ]
+            }
+          }
+        ],
+        "advertisement_rule": "writing-advertisement",
+        "trace_assertions": [
+          {
+            "id": "post-audit-current-human-verification",
+            "kind": "freshness",
+            "invalidate_actions": [
+              "draft_manuscript"
+            ],
+            "refresh_actions": [
+              "human_reverify_changed_prose"
+            ],
+            "guarded_actions": [
+              "human_approve_ready_and_remove_banner"
+            ],
+            "initially_fresh": false,
+            "source": {
+              "source_id": "skills__scientific-writing__SKILL",
+              "start_line": 143,
+              "end_line": 145,
+              "quote": "Do not mark a source verified until an accountable human has opened it and confirmed\nthe exact support. After changing wording, re-verify the claim before updating its\nhash; see the exact normalization in `references/evidence_workflow.md`."
+            },
+            "assumptions": [
+              "POST-AUDIT declaration manually authored from the cited source after independent review found the model defect. This is not a blind extraction result.",
+              "All modeled allowed prefixes are checked, including after goal completion; goals do not terminate the run. Deliberate new generator runs are outside this one-run case."
+            ]
+          }
+        ]
+      }
+    ],
+    "interpretation": {
+      "status": "accepted",
+      "method": "native-model extraction; evidence-only clauses plus declared-state workflow adaptation",
+      "accepted_candidate_ids": [],
+      "excluded_candidate_ids": [],
+      "total_candidate_count": 19,
+      "untranslated_line_count": 1807,
+      "unsupported_spans": [
+        {
+          "source_id": "skills__citation-management__SKILL",
+          "start_line": 1,
+          "end_line": 360,
+          "quote": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nIf a document built from these citations needs a diagram, use the\n**scientific-schematics** skill.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n### Phase 2.5: Metadata Enrichment via Web Search (MANDATORY)\n\nAPIs routinely return incomplete records. Run this **after** extraction and **before**\nformatting. Investigate missing bibliographic fields against the publisher record\nand log each source. Online-first articles may have no volume/pages yet; some use\nan article number or have no DOI. Preserve the actual publication state, use the\nstyle-appropriate article-number field, and never invent pages, volume, or DOI.\nRecord unavailable/not-applicable fields in the audit log; add a rendered `note`\nonly when useful to the reader or required by the citation style.\n\n\n\n\n\n\n\n\n> **Treat extracted metadata as untrusted.** Author, title, and journal strings come\n> verbatim from a record whose contents a publisher controls. A title containing `$(...)`,\n> a backtick, or a quote becomes shell syntax the moment it is pasted into a command.\n> Pass metadata as a `subprocess` argument list rather than building a shell string; if\n> you must use a shell, single-quote every substituted value and escape embedded quotes\n> as `'\\''`. Validate any citation key against `^[A-Za-z0-9]+$` before it reaches a path.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n### Phase 4: Citation Validation\n\nCheck completeness, venue conformance, and agreement with the manuscript.\n\n```bash\npython scripts/validate_citations.py references.bib --report report.json\npython scripts/validate_citations.py references.bib --venue nature\npython scripts/validate_citations.py references.bib --manuscript paper.tex\npython scripts/validate_citations.py references.bib --check-dois     # slow; hits CrossRef\n```\n\nThe script exits non-zero on high-severity errors \u2014 missing required fields,\nmalformed years, unresolved citations, or a count below an explicit\n`--min-count`. Venue reference-count figures are editorial rules of thumb, not\nsubmission requirements, so falling short of one is only a warning.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+        },
+        {
+          "source_id": "skills__citation-management__references__citation_validation",
+          "start_line": 1,
+          "end_line": 833,
+          "quote": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n**Process**:\n1. Extract all DOIs from BibTeX file\n2. Query Crossref `/works/{doi}`; on 404, query DataCite `/dois/{doi}`\n3. If both lack a record, GET `doi.org/{doi}` without following the redirect\n4. A registration record or resolver redirect confirms registration; resolver 404 is an error\n5. Report timeouts, 429/5xx, and malformed responses as `doi_unverified` warnings\n\nThe script does not compare bibliographic fields or test the publisher landing\npage. Review title/authors/year manually; a registered DOI can still identify\nthe wrong work. Retraction status also requires a separate publisher check.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+        },
+        {
+          "source_id": "skills__scientific-writing__SKILL",
+          "start_line": 1,
+          "end_line": 382,
+          "quote": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nProduce clear scientific prose without inventing evidence or concealing uncertainty.\nKeep drafting, evidence verification, and submission approval as separate stages.\n\nThe accountable human authors control scientific decisions and final approval. AI is\nnot an author, and generated fluency is never evidence [SW-S01, SW-S03].\n\n\n\n\n\nDo not send unpublished manuscripts, peer-review or editorial material, sensitive or\nrestricted data, PHI or other personal data, proprietary content, or source documents\nto an external service without:\n\n1. explicit authorization from a person or body empowered to grant it; and\n2. a documented review of journal, institutional, funder, consent, ethics, contractual,\n   legal, and data-use policy.\n\nWhen authorization or policy is unclear, keep processing local and use only the minimum\nmetadata needed. De-identification requires expert review; removing obvious names is\nnot sufficient. See `references/authorship_ai_confidentiality.md`.\n\n\n\nNever invent or complete:\n\n- citations, references, DOI, PMID, PMCID, ISBN, URLs, or quotations;\n- results, data values, denominators, sample sizes, units, effect estimates,\n  uncertainty, statistical tests, or significance claims;\n- methods, materials, protocol details, software versions, analysis choices, or\n  deviations;\n- registrations, approvals, consent, ethics statements, participant details, or dates;\n- authors, author order, CRediT roles, acknowledgments, or permissions;\n- funding, sponsor roles, conflicts, data or code availability, or AI disclosures.\n\nUse an explicit missing, unverified, or not-applicable state. Do not substitute plausible\nboilerplate.\n\n\n\nEvery factual or numeric manuscript claim must map to verified evidence IDs. A human\nverifier must open the source, confirm the proposition and locator, verify bibliographic\nmetadata, and record who verified it and when.\n\nSearch snippets, generated summaries, memory, and another work's bibliography may aid\ndiscovery but do not verify a claim. See `references/evidence_workflow.md`.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBefore drafting, obtain or mark unresolved:\n\n- document type, study design, stage, audience, and target venue;\n- current author instructions and policy access date;\n- protocol, registration, analysis plan, amendments, and reporting guideline;\n- manuscript or section scope;\n- verified source manifest and claim registry;\n- methods, results, tables, figures, and supplements;\n- authorship, CRediT, declarations, and approval records;\n- confidentiality classification and authorized processing boundary;\n- data, code, materials, and repository constraints.\n\nDo not ask for restricted source material if metadata or a local user-run audit is\nsufficient.\n\n\n\n\n\nFor a new draft, optionally generate fail-closed Markdown, JSON, and CSV scaffolds:\n\n```bash\npython3 scripts/scaffold_manuscript.py \\\n  --output-dir ./draft-workspace \\\n  --document-id local-draft \\\n  --study-design randomized_trial \\\n  --guideline consort-2025\n```\n\nThe generator never overwrites files. Its output is explicitly not submission-ready and\ncontains placeholders that the linter rejects.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nStore a hash of claim text in CSV rather than raw claim text. Use one claim per\nphysical Markdown line; the hash binds the entire line after removing claim/evidence\nmarkers and collapsing whitespace. During drafting, append:\n\n```text\n[claim:C001] [evidence:E001,E002]\n```\n\nDo not mark a source verified until an accountable human has opened it and confirmed\nthe exact support. After changing wording, re-verify the claim before updating its\nhash; see the exact normalization in `references/evidence_workflow.md`.\n\n\n\nOutline only from recorded evidence:\n\n- objective or question;\n- section purpose;\n- claim IDs and evidence IDs;\n- methods and result IDs;\n- analysis intent and uncertainty;\n- unresolved conflicts or missing information;\n- applicable reporting topics.\n\nKeep unsupported content in an unresolved-issues list, not manuscript prose.\n\n### 5. Draft without adding facts\n\nTransform the verified outline into venue-appropriate prose. Preserve all IDs during\ndrafting.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThe reference checker validates syntax and duplicate identifiers without network\nresolution. A human must still compare every identifier and quotation with the opened\nsource. Follow NLM *Citing Medicine* or the current official style required by the\nvenue [SW-S20, SW-S21].\n\n\n\nUse journal criteria for authorship. Record the standardized CRediT roles as\ncontribution metadata; CRediT does not itself define authorship [SW-S19].\n\nIf AI was used, humans must verify all affected content and disclose the tool and\npurpose according to current journal and publisher policy. ICMJE's January 2026\nRecommendations require transparency and retain human accountability [SW-S01, SW-S02].\n\n```bash\npython3 scripts/validate_authorship.py authorship.json\n```\n\nThe local validator implements ICMJE-style authorship gates and a local guarantor\nrecord; it does not implement every venue policy. Do not generate a disclosure from\nassumptions. See\n`references/authorship_ai_confidentiality.md`.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n### 10. Use figures and tables only when warranted\n\nFigures and tables are optional and provenance-bound. This skill does not generate\nimages or schematics.\n\nFor every retained display:\n\n- link source data, code, transformations, and evidence IDs;\n- reconcile values with prose and registries;\n- document image processing, permissions, and licenses;\n- include units, denominators, sample sizes, uncertainty, and analysis population;\n- provide alt text and redundant non-color cues;\n- perform a manual accessibility and scientific check at final size.\n\nSee `references/figures_tables.md`.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOnly accountable humans may:\n\n- resolve scientific ambiguities;\n- approve author order and declarations;\n- approve external disclosure or transfer;\n- set `submission_ready` to true;\n- remove the draft banner;\n- authorize submission.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+        },
+        {
+          "source_id": "skills__scientific-writing__references__cli_reference",
+          "start_line": 1,
+          "end_line": 121,
+          "quote": "\n\nAll bundled commands use only the Python standard library. They:\n\n- accept explicit UTF-8 JSON, CSV, or Markdown files;\n- reject symbolic-link inputs;\n- cap file size, records, fields, JSON nodes, and nesting;\n- make no network calls;\n- read no environment variables or `.env` files;\n- perform no dynamic evaluation or pickle loading;\n- report issue codes, IDs, and line numbers without echoing manuscript or source text.\n\nRun from the skill directory with Python 3.11 or newer.\n\n## Scaffold\n\n```bash\npython3 scripts/scaffold_manuscript.py \\\n  --output-dir ./draft-workspace \\\n  --document-id local-draft \\\n  --study-design randomized_trial \\\n  --guideline consort-2025\n```\n\nThe output directory must not exist. The command never overwrites files. Generated\ndocuments are explicitly incomplete and not submission-ready.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+        },
+        {
+          "source_id": "skills__scientific-writing__references__evidence_workflow",
+          "start_line": 1,
+          "end_line": 111,
+          "quote": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n## Final audit\n\nRun:\n\n```bash\npython3 scripts/validate_manifest.py source_manifest.json --kind source --require-verified\npython3 scripts/audit_claims.py manuscript.md claims.csv source_manifest.json\npython3 scripts/check_consistency.py consistency_manifest.json\npython3 scripts/check_references.py source_manifest.json\n```\n\nTool output contains IDs and line numbers, not manuscript or source text. A passing\nmachine audit supports review; it does not replace human scientific judgment.\n\nThe claim audit compares that digest with the current manuscript line and rejects\nchanged text or multiple claim markers on a line. Re-verify the evidence fit before\nreplacing an old digest. A matching hash detects text changes; it proves neither\nscientific truth nor that a human performed the recorded verification. Hashes are\nnot encryption and do not anonymize predictable sensitive statements.\n\nThe lightweight audit skips headings, comment-start lines, and fenced code; numeric\ntext outside these regions must be tagged. It cannot identify every untagged\nnon-numeric assertion or inspect the contents of linked files. Review those manually.\n"
+        }
+      ]
+    }
+  },
+  "sources": {
+    "skills__citation-management__SKILL": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nIf a document built from these citations needs a diagram, use the\n**scientific-schematics** skill.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n### Phase 2.5: Metadata Enrichment via Web Search (MANDATORY)\n\nAPIs routinely return incomplete records. Run this **after** extraction and **before**\nformatting. Investigate missing bibliographic fields against the publisher record\nand log each source. Online-first articles may have no volume/pages yet; some use\nan article number or have no DOI. Preserve the actual publication state, use the\nstyle-appropriate article-number field, and never invent pages, volume, or DOI.\nRecord unavailable/not-applicable fields in the audit log; add a rendered `note`\nonly when useful to the reader or required by the citation style.\n\n\n\n\n\n\n\n\n> **Treat extracted metadata as untrusted.** Author, title, and journal strings come\n> verbatim from a record whose contents a publisher controls. A title containing `$(...)`,\n> a backtick, or a quote becomes shell syntax the moment it is pasted into a command.\n> Pass metadata as a `subprocess` argument list rather than building a shell string; if\n> you must use a shell, single-quote every substituted value and escape embedded quotes\n> as `'\\''`. Validate any citation key against `^[A-Za-z0-9]+$` before it reaches a path.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n### Phase 4: Citation Validation\n\nCheck completeness, venue conformance, and agreement with the manuscript.\n\n```bash\npython scripts/validate_citations.py references.bib --report report.json\npython scripts/validate_citations.py references.bib --venue nature\npython scripts/validate_citations.py references.bib --manuscript paper.tex\npython scripts/validate_citations.py references.bib --check-dois     # slow; hits CrossRef\n```\n\nThe script exits non-zero on high-severity errors \u2014 missing required fields,\nmalformed years, unresolved citations, or a count below an explicit\n`--min-count`. Venue reference-count figures are editorial rules of thumb, not\nsubmission requirements, so falling short of one is only a warning.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+    "skills__citation-management__references__citation_validation": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n**Process**:\n1. Extract all DOIs from BibTeX file\n2. Query Crossref `/works/{doi}`; on 404, query DataCite `/dois/{doi}`\n3. If both lack a record, GET `doi.org/{doi}` without following the redirect\n4. A registration record or resolver redirect confirms registration; resolver 404 is an error\n5. Report timeouts, 429/5xx, and malformed responses as `doi_unverified` warnings\n\nThe script does not compare bibliographic fields or test the publisher landing\npage. Review title/authors/year manually; a registered DOI can still identify\nthe wrong work. Retraction status also requires a separate publisher check.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+    "skills__scientific-writing__SKILL": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nProduce clear scientific prose without inventing evidence or concealing uncertainty.\nKeep drafting, evidence verification, and submission approval as separate stages.\n\nThe accountable human authors control scientific decisions and final approval. AI is\nnot an author, and generated fluency is never evidence [SW-S01, SW-S03].\n\n\n\n\n\nDo not send unpublished manuscripts, peer-review or editorial material, sensitive or\nrestricted data, PHI or other personal data, proprietary content, or source documents\nto an external service without:\n\n1. explicit authorization from a person or body empowered to grant it; and\n2. a documented review of journal, institutional, funder, consent, ethics, contractual,\n   legal, and data-use policy.\n\nWhen authorization or policy is unclear, keep processing local and use only the minimum\nmetadata needed. De-identification requires expert review; removing obvious names is\nnot sufficient. See `references/authorship_ai_confidentiality.md`.\n\n\n\nNever invent or complete:\n\n- citations, references, DOI, PMID, PMCID, ISBN, URLs, or quotations;\n- results, data values, denominators, sample sizes, units, effect estimates,\n  uncertainty, statistical tests, or significance claims;\n- methods, materials, protocol details, software versions, analysis choices, or\n  deviations;\n- registrations, approvals, consent, ethics statements, participant details, or dates;\n- authors, author order, CRediT roles, acknowledgments, or permissions;\n- funding, sponsor roles, conflicts, data or code availability, or AI disclosures.\n\nUse an explicit missing, unverified, or not-applicable state. Do not substitute plausible\nboilerplate.\n\n\n\nEvery factual or numeric manuscript claim must map to verified evidence IDs. A human\nverifier must open the source, confirm the proposition and locator, verify bibliographic\nmetadata, and record who verified it and when.\n\nSearch snippets, generated summaries, memory, and another work's bibliography may aid\ndiscovery but do not verify a claim. See `references/evidence_workflow.md`.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBefore drafting, obtain or mark unresolved:\n\n- document type, study design, stage, audience, and target venue;\n- current author instructions and policy access date;\n- protocol, registration, analysis plan, amendments, and reporting guideline;\n- manuscript or section scope;\n- verified source manifest and claim registry;\n- methods, results, tables, figures, and supplements;\n- authorship, CRediT, declarations, and approval records;\n- confidentiality classification and authorized processing boundary;\n- data, code, materials, and repository constraints.\n\nDo not ask for restricted source material if metadata or a local user-run audit is\nsufficient.\n\n\n\n\n\nFor a new draft, optionally generate fail-closed Markdown, JSON, and CSV scaffolds:\n\n```bash\npython3 scripts/scaffold_manuscript.py \\\n  --output-dir ./draft-workspace \\\n  --document-id local-draft \\\n  --study-design randomized_trial \\\n  --guideline consort-2025\n```\n\nThe generator never overwrites files. Its output is explicitly not submission-ready and\ncontains placeholders that the linter rejects.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nStore a hash of claim text in CSV rather than raw claim text. Use one claim per\nphysical Markdown line; the hash binds the entire line after removing claim/evidence\nmarkers and collapsing whitespace. During drafting, append:\n\n```text\n[claim:C001] [evidence:E001,E002]\n```\n\nDo not mark a source verified until an accountable human has opened it and confirmed\nthe exact support. After changing wording, re-verify the claim before updating its\nhash; see the exact normalization in `references/evidence_workflow.md`.\n\n\n\nOutline only from recorded evidence:\n\n- objective or question;\n- section purpose;\n- claim IDs and evidence IDs;\n- methods and result IDs;\n- analysis intent and uncertainty;\n- unresolved conflicts or missing information;\n- applicable reporting topics.\n\nKeep unsupported content in an unresolved-issues list, not manuscript prose.\n\n### 5. Draft without adding facts\n\nTransform the verified outline into venue-appropriate prose. Preserve all IDs during\ndrafting.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThe reference checker validates syntax and duplicate identifiers without network\nresolution. A human must still compare every identifier and quotation with the opened\nsource. Follow NLM *Citing Medicine* or the current official style required by the\nvenue [SW-S20, SW-S21].\n\n\n\nUse journal criteria for authorship. Record the standardized CRediT roles as\ncontribution metadata; CRediT does not itself define authorship [SW-S19].\n\nIf AI was used, humans must verify all affected content and disclose the tool and\npurpose according to current journal and publisher policy. ICMJE's January 2026\nRecommendations require transparency and retain human accountability [SW-S01, SW-S02].\n\n```bash\npython3 scripts/validate_authorship.py authorship.json\n```\n\nThe local validator implements ICMJE-style authorship gates and a local guarantor\nrecord; it does not implement every venue policy. Do not generate a disclosure from\nassumptions. See\n`references/authorship_ai_confidentiality.md`.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n### 10. Use figures and tables only when warranted\n\nFigures and tables are optional and provenance-bound. This skill does not generate\nimages or schematics.\n\nFor every retained display:\n\n- link source data, code, transformations, and evidence IDs;\n- reconcile values with prose and registries;\n- document image processing, permissions, and licenses;\n- include units, denominators, sample sizes, uncertainty, and analysis population;\n- provide alt text and redundant non-color cues;\n- perform a manual accessibility and scientific check at final size.\n\nSee `references/figures_tables.md`.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOnly accountable humans may:\n\n- resolve scientific ambiguities;\n- approve author order and declarations;\n- approve external disclosure or transfer;\n- set `submission_ready` to true;\n- remove the draft banner;\n- authorize submission.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+    "skills__scientific-writing__references__cli_reference": "\n\nAll bundled commands use only the Python standard library. They:\n\n- accept explicit UTF-8 JSON, CSV, or Markdown files;\n- reject symbolic-link inputs;\n- cap file size, records, fields, JSON nodes, and nesting;\n- make no network calls;\n- read no environment variables or `.env` files;\n- perform no dynamic evaluation or pickle loading;\n- report issue codes, IDs, and line numbers without echoing manuscript or source text.\n\nRun from the skill directory with Python 3.11 or newer.\n\n## Scaffold\n\n```bash\npython3 scripts/scaffold_manuscript.py \\\n  --output-dir ./draft-workspace \\\n  --document-id local-draft \\\n  --study-design randomized_trial \\\n  --guideline consort-2025\n```\n\nThe output directory must not exist. The command never overwrites files. Generated\ndocuments are explicitly incomplete and not submission-ready.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+    "skills__scientific-writing__references__evidence_workflow": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n## Final audit\n\nRun:\n\n```bash\npython3 scripts/validate_manifest.py source_manifest.json --kind source --require-verified\npython3 scripts/audit_claims.py manuscript.md claims.csv source_manifest.json\npython3 scripts/check_consistency.py consistency_manifest.json\npython3 scripts/check_references.py source_manifest.json\n```\n\nTool output contains IDs and line numbers, not manuscript or source text. A passing\nmachine audit supports review; it does not replace human scientific judgment.\n\nThe claim audit compares that digest with the current manuscript line and rejects\nchanged text or multiple claim markers on a line. Re-verify the evidence fit before\nreplacing an old digest. A matching hash detects text changes; it proves neither\nscientific truth nor that a human performed the recorded verification. Hashes are\nnot encryption and do not anonymize predictable sensitive statements.\n\nThe lightweight audit skips headings, comment-start lines, and fenced code; numeric\ntext outside these regions must be tagged. It cannot identify every untagged\nnon-numeric assertion or inspect the contents of linked files. Review those manually.\n\n"
+  },
+  "tools": {
+    "tools": {}
+  },
+  "runtime": {
+    "max_plan_steps": 20
+  }
+}

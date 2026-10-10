@@ -90,3 +90,23 @@ python -m unittest evaluation.test_evaluation -v
 ```
 
 Saved native predictions can be rescored deterministically; re-running a native model requires a new external judge invocation and creates a new observation. `evaluation/README.md` documents the JSON adapter, access boundaries and metrics. Do not regenerate frozen inputs during an experiment. Future release claims require a larger family-held-out corpus, independent human adjudication, confirmed natural positives, repeated known-model arms, end-to-end extraction measurements and real utility/cost evaluation.
+
+## Source-pinned scientific workflow runner
+
+`python -m evaluation.scientific_workflows` provides a separate offline adapter
+for real documented multi-skill workflows. Its catalog records each case's
+family, origin (`natural`, `deployment_probe`, `synthetic_control`), advertised
+completion question, bundle and independent extraction-review rationale.
+`freeze.json` SHA-256 pins the catalog, bundles and referenced evidence files.
+Unreviewed candidates are rejected; partial or unsupported projections abstain.
+The runner never invokes a scientific tool, retrieves a credential or calls a
+paid model API.
+
+A conclusive checker result is about completion in the reviewed finite
+projection. It is not a claim about full prose correctness, source-program
+execution, or runtime success. Exhaustive unreachability can coexist with a
+compliant fallback. Bound exhaustion or unknown activation is an abstention;
+a discovered path plus an independent modeled error is also an abstention.
+Untranslated source coverage remains attached even when the projected path is
+reachable. Scores retain ambiguous references and separate origin and workflow
+family. A new native-model call is a new observation, not reproduced by Python.

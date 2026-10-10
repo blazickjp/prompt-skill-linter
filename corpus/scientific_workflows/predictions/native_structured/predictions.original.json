@@ -1,0 +1,938 @@
+{
+  "schema_version": 1,
+  "arm": "native_structured_evidence",
+  "model": null,
+  "model_identity_note": "Actual model identity was not exposed to this worker; no identity inferred.",
+  "tokens": null,
+  "cost": null,
+  "latency_seconds": null,
+  "measurement_note": "Token usage, monetary cost and total elapsed task latency were not instrumented.",
+  "created_at": "2026-10-10T17:04:29.333994+00:00",
+  "evaluation_question": "Under the scenario's stated environment, is the advertised requested completion reachable while following applicable instructions? Compliant refusal is distinct from requested completion. Unspecified prerequisites remain unknown rather than false.",
+  "input_packet_sha256": "5961623150fd553c830d4915c940dab70a3d8b9aa98e512204e9f79e5811526b",
+  "input_packet_manifest_sha256": "7faef734b649a46e5ae2c91313df05be978ce9844488a49321333209df41a729",
+  "input_packet": {
+    "neutral_cases": {
+      "path": "/workspace/shared/kdense-testbed/neutral-cases.json",
+      "sha256": "5961623150fd553c830d4915c940dab70a3d8b9aa98e512204e9f79e5811526b"
+    },
+    "coactivation_excerpts": {
+      "path": "/workspace/shared/kdense-testbed/coactivation-excerpts.json",
+      "sha256": "4c2c2c52c98003eeb62106f35059c849e0f3d0cb877f4a84ad53d0f642bdfbd5"
+    },
+    "selected_source_manifest": {
+      "path": "/workspace/shared/kdense-testbed/selected-source-manifest.json",
+      "sha256": "d50e30a7df31240892980824badfdb3531849e27674756808ec50a9db2587e07"
+    },
+    "source_commit": "92ace75ac21efe19a620434e0ca4e356081fe807",
+    "source_files": [
+      {
+        "path": "skills/anndata/SKILL.md",
+        "sha256": "bd953fff1771c5a32aad1892ca3ea2ca41e97804041bc5e36af55a155f5e199c"
+      },
+      {
+        "path": "skills/citation-management/SKILL.md",
+        "sha256": "44d04609133c295dbd65eb0b9813579d7a397200f58aac8307cfcf9389f28477"
+      },
+      {
+        "path": "skills/citation-management/references/citation_validation.md",
+        "sha256": "72bc1beaa053d4d255208d145a7768554600f97ba3d9e533b14da6064ae68c78"
+      },
+      {
+        "path": "skills/literature-review/SKILL.md",
+        "sha256": "ab8a895458cc9d4cf5eb0555e941081c09c75cb829b48b3b13964bd97cdf45b9"
+      },
+      {
+        "path": "skills/literature-review/references/core_workflow.md",
+        "sha256": "bdc54633630056f7d94400e36854adecccafbbc09b891e9930d5515b26c9ce13"
+      },
+      {
+        "path": "skills/scanpy/SKILL.md",
+        "sha256": "7f11e14c6b7d98034329dd518dda625746bd2ea1d743e406b3835f695c79439e"
+      },
+      {
+        "path": "skills/scientific-schematics/SKILL.md",
+        "sha256": "3a3bb9a5c60785c46401f8bad22af551c550d7be37e824aad14e49a430f3c220"
+      },
+      {
+        "path": "skills/scientific-writing/SKILL.md",
+        "sha256": "28656c6ea70c01ab15977891814a421807f83504d4f6297ff1cd0e9067ec90ea"
+      },
+      {
+        "path": "skills/scientific-writing/references/cli_reference.md",
+        "sha256": "bb4eb53a782b23ab6059201a817098227e55df839675cda38656b6f4709eaed4"
+      },
+      {
+        "path": "skills/scientific-writing/references/evidence_workflow.md",
+        "sha256": "0ced09190075f8c2a357daa4c20d253d573b0d6b0f4633609f87c0776ed4d4f2"
+      },
+      {
+        "path": "skills/scvi-tools/SKILL.md",
+        "sha256": "1b152d2613894767f8b451bab5ef351ab7d838f285139ae6af7bc0e524631958"
+      },
+      {
+        "path": "skills/scvi-tools/references/models-specialized.md",
+        "sha256": "509ca420cc735169a14ee22ada12f9f3d28e1df22a811373906b430204e7ab55"
+      }
+    ]
+  },
+  "extraction_freeze_sha256": "1e9a94d35b4862ab27c5679c777130a63d141f073a327a7dfdbbf4b1f7d73a45",
+  "extraction_evidence": {
+    "freeze_path": "/workspace/shared/kdense-extraction/FREEZE.json",
+    "all_frozen_file_hashes_verified": true,
+    "raw_extraction_sha256": "49b1ad00e959e3858a07247b5bb3cc5fc9cb6f2060070211cbad97072cf993b7",
+    "workflow_extraction_sha256": "7a1055530d83343d7008173ebee339fc04a2d55700811de0edef7ec5e3ee3642",
+    "manifest_sha256": "78dc04213835f37cffb145427d0100d425a1290e0a8b0da56f6083f22167616a",
+    "bundle_hashes": [
+      {
+        "path": "bundles/KD-LR-01.json",
+        "sha256": "2225355e6ef1ad681072cabd54f4a9904a8fe02a6571fb0ec76bbc30aec7642e"
+      },
+      {
+        "path": "bundles/KD-LR-02.json",
+        "sha256": "a3134e6cf9cc5b09514d6c5f3ebc53c71a504ee1585b0faa664baa843777e3bb"
+      },
+      {
+        "path": "bundles/KD-LR-03.json",
+        "sha256": "4c25a882a108f851e6e0e1540faa10538967fa1d78a8903caf2942848282e4cf"
+      },
+      {
+        "path": "bundles/KD-LR-04.json",
+        "sha256": "a2d39fb7bc2bdcbc60b9bce43d651873b7a1cecc552f46401e6eacbb2721a0d1"
+      },
+      {
+        "path": "bundles/KD-LR-05.json",
+        "sha256": "d48d2974d3dd29a7cda194eb330f78698ce0022a5cf2f86603563348d03cdf71"
+      },
+      {
+        "path": "bundles/KD-SC-01.json",
+        "sha256": "3f310c207bc3f04c9b5e7581576b2ff5a39cc56e4a0c38f383c3f52692092377"
+      },
+      {
+        "path": "bundles/KD-SC-02.json",
+        "sha256": "1a7901b664a0d846da9190cca94b077c49aa4afc34807193d7c694c986710377"
+      },
+      {
+        "path": "bundles/KD-SC-03.json",
+        "sha256": "22ac5953bfc23faa1d16422c37c544bc5af9faaecf4dcaceb8e19c9f9c580bc6"
+      },
+      {
+        "path": "bundles/KD-SC-04.json",
+        "sha256": "3ecbf1344c8a9466261bc39a100f1194e504e98aae94f786bcdc5d23569c62b7"
+      },
+      {
+        "path": "bundles/KD-WR-01.json",
+        "sha256": "95d122afaee56dd4cac1d85c7b21cd56d503528baa05327b9fa6c69aaaa476d3"
+      },
+      {
+        "path": "bundles/KD-WR-02.json",
+        "sha256": "91252a3beffa43e06fbcae310f648c1687730cc0703bb280c91759aae4a85a8c"
+      },
+      {
+        "path": "bundles/KD-WR-03.json",
+        "sha256": "a8516b8d6b8093a8df484e6eb5cbad58561e33f81a50240c2d9c9edade95903d"
+      },
+      {
+        "path": "bundles/KD-WR-04.json",
+        "sha256": "291bdf530c34481ec62164d83a691f9341408bf1149ac78dfb4d98433c3a6cfc"
+      }
+    ]
+  },
+  "review_method": {
+    "native_model_review": true,
+    "candidate_interpretation_is_ground_truth": false,
+    "source_scientific_scripts_executed": false,
+    "paid_api_called": false,
+    "checker_or_product_results_read": false,
+    "plain_predictor_or_independent_reference_read": false,
+    "all_47_candidate_clause_quotes_and_source_hashes_verified": true,
+    "all_13_bundle_source_texts_match_pinned_captures": true,
+    "scope": "Frozen scenario assumptions plus original pinned documentation. Independent semantic review of full requested completion; no source commands treated as instructions to execute."
+  },
+  "label_definitions": {
+    "issue": "At least one explicit required completion is unreachable under the stated environment while following source instructions. This need not be a contradiction in the source.",
+    "no_issue": "A compliant path to the expressly requested outcome is supported under the stated assumptions; not a guarantee or observed successful execution.",
+    "abstain": "The full outcome depends on materially unspecified capabilities, stage, or unresolved interpretation of the applicable completion gates."
+  },
+  "predictions": [
+    {
+      "id": "KD-SC-01",
+      "label": "no_issue",
+      "rationale": "The requested mechanical preprocessing, SCVI fit, and representation export have a compliant path under the explicitly supplied environment. Copy measured counts into an independent count layer, normalize X without changing that layer, finish valid QC/feature selection, register the exact selected object with SCVI using layer=\"counts\", train, inspect the fit, and export the representation plus reproducibility records. AnnData .raw is a snapshot of the current matrix, here log-normalized expression; it need not supply SCVI input. Thus Scanpy normalization and SCVI count requirements apply to different representations and do not contradict each other.",
+      "source_spans": [
+        {
+          "path": "skills/scanpy/SKILL.md",
+          "start_line": 43,
+          "end_line": 51,
+          "quote": "- Input to QC/preprocessing must be identified raw counts. The scripts reject negative,\n  fractional, nonfinite or zero-total cells. Use `--counts-layer counts` when X is already\n  normalized; never infer provenance from integer-looking values alone.\n- `layers[\"counts\"]` remains unnormalized; `.raw` is an independent full-gene\n  log-normalized snapshot. Gene subsetting also subsets every layer, but does not subset\n  `.raw` genes. Retain a full-gene object for pseudobulk; the full pipeline does so.\n- `seurat`/`cell_ranger` HVGs use log-normalized values; `seurat_v3` and\n  `seurat_v3_paper` use counts and require `scanpy[skmisc]`. Scaling/regression are optional,\n  may densify sparse data, and can remove biology along with covariates.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scanpy/SKILL.md#L43-L51"
+        },
+        {
+          "path": "skills/anndata/SKILL.md",
+          "start_line": 352,
+          "end_line": 366,
+          "quote": "# 3. Preserve counts explicitly, then normalize X\nadata = adata.copy()\nadata.layers['counts'] = adata.X.copy()\nadata.uns['matrix_semantics'] = {'counts': 'untransformed counts'}\n\n# 4. Normalize and filter\nsc.pp.normalize_total(adata, target_sum=1e4)\nsc.pp.log1p(adata)\nadata.raw = adata.copy()  # Snapshot log-normalized X with all genes\nadata.uns['matrix_semantics']['raw'] = 'log1p library-size normalized expression'\nsc.pp.highly_variable_genes(adata, n_top_genes=2000)\nadata = adata[:, adata.var['highly_variable']].copy()\n\n# 5. Save processed data\nadata.write_h5ad('processed.h5ad')",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/anndata/SKILL.md#L352-L366"
+        },
+        {
+          "path": "skills/scvi-tools/SKILL.md",
+          "start_line": 64,
+          "end_line": 74,
+          "quote": "1. Confirm modality, raw-data provenance, unique cell/feature IDs, feature order,\n   batch/sample metadata, and the intended biological comparison.\n2. Perform QC and feature selection before model registration. Use count-aware\n   HVG selection for count layers, and preserve a full-gene count object for later\n   analyses outside the selected feature set.\n3. Register the exact data object with that model's `setup_anndata` or\n   `setup_mudata`; create and train the model. Setup is registration, not normalization.\n4. Inspect validation history, held-out fit, seed stability, batch mixing **and**\n   retention of known biology. A well-mixed UMAP alone does not validate integration.\n5. Extract representations or model-specific normalized outputs; save the model,\n   data, selected feature order, software versions, seed and training parameters.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scvi-tools/SKILL.md#L64-L74"
+        },
+        {
+          "path": "skills/scvi-tools/SKILL.md",
+          "start_line": 96,
+          "end_line": 111,
+          "quote": "adata.layers[\"counts\"] = x.copy()\nsc.pp.filter_genes(adata, min_cells=3)\nsc.pp.highly_variable_genes(\n    adata, layer=\"counts\", flavor=\"seurat_v3\", batch_key=\"batch\",\n    n_top_genes=min(2000, adata.n_vars), subset=True,\n)\nadata = adata.copy()\nassert (np.asarray(adata.layers[\"counts\"].sum(axis=1)).ravel() > 0).all()\nscvi.model.SCVI.setup_anndata(adata, layer=\"counts\", batch_key=\"batch\")\nmodel = scvi.model.SCVI(adata, n_latent=20, gene_likelihood=\"nb\")\nmodel.train(max_epochs=400, early_stopping=True)\nadata.obsm[\"X_scVI\"] = model.get_latent_representation()\nsc.pp.neighbors(adata, use_rep=\"X_scVI\")\nsc.tl.umap(adata)\nsc.tl.leiden(adata, flavor=\"igraph\", n_iterations=2, directed=False)\nmodel.save(\"scvi_model\", save_anndata=True)",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scvi-tools/SKILL.md#L96-L111"
+        },
+        {
+          "path": "skills/scvi-tools/SKILL.md",
+          "start_line": 125,
+          "end_line": 128,
+          "quote": "Registration is tied to feature order, layers and category encodings. Finish\nfiltering before setup. If the training object changes, register it again and\ninitialize a new model; use the dedicated query-mapping methods for a trained\nreference rather than changing its registry in place.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scvi-tools/SKILL.md#L125-L128"
+        }
+      ],
+      "limitations": [
+        "Reachability is assessed against the stipulated compatible packages, suitable data and resources; no scientific script was executed.",
+        "The source requires fit inspection and preservation of feature order, model/data and training metadata. A saved embedding alone does not establish biological validity or convergence.",
+        "The candidate phrase \"Scenario declares mechanical fit success\" is stronger than the neutral scenario, which specifies the outcome scope and prerequisites rather than an observed successful fit."
+      ],
+      "completion_assessment": {
+        "full_requested_completion": "reachable_under_stated_assumptions",
+        "issue_type": null,
+        "source_contradiction_established": false,
+        "compliant_refusal_is_completion": false
+      },
+      "candidate_projection_review": [
+        "The distinct count/X states are source-supported. The finite actions omit explicit inspection of fit/stability and detailed reproducibility export; these steps can be added with the provided resources.",
+        "Do not interpret deterministic model_fitted as experimental evidence or a success guarantee."
+      ]
+    },
+    {
+      "id": "KD-SC-02",
+      "label": "issue",
+      "rationale": "SCVI explicitly requires measured unnormalized RNA counts. The only surviving input is normalized log1p expression, originals cannot be recovered, and the task forbids substituting another model. The source expressly forbids reconstructing counts by exponentiating normalized data. An array copied into a layer called counts would not restore provenance or satisfy the contract. Consequently the required SCVI fit/export is unreachable while following the instructions. Reporting the missing input or refusing this fit is compliant but does not complete the request.",
+      "source_spans": [
+        {
+          "path": "skills/scvi-tools/SKILL.md",
+          "start_line": 26,
+          "end_line": 41,
+          "quote": "| Task | Class | Required input |\n| --- | --- | --- |\n| RNA integration | `scvi.model.SCVI` | Unnormalized RNA counts |\n| RNA annotation | `scvi.model.SCANVI` | Counts and partial labels |\n| CITE-seq | `scvi.model.TOTALVI` | RNA and protein counts, aligned cells |\n| RNA + ATAC integration | `scvi.model.MULTIVI` | Registered MuData with aligned modality representation |\n| ATAC accessibility | `scvi.model.PEAKVI` | Cells by peaks, binary/count accessibility |\n| Quantitative ATAC | `scvi.external.POISSONVI` | Region-level fragment counts |\n| Methylation | `scvi.external.METHYLVI`, `METHYLANVI` | MuData with methylated and total coverage counts |\n| Cytometry | `scvi.external.CYTOVI` | Transformed protein intensities |\n| Large cross-system effects | `scvi.external.SysVI` | Normalized, log-transformed expression |\n| RNA velocity | `scvi.external.VELOVI` | Preprocessed spliced/unspliced abundances |\n\nThe count rule is model-specific: do not feed raw RNA counts to SysVI or replace\nmethylation coverage with ratios. Likewise, never reconstruct counts by exponentiating\nlog-normalized data. Preserve measured counts and preprocessing provenance.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scvi-tools/SKILL.md#L26-L41"
+        },
+        {
+          "path": "skills/scvi-tools/SKILL.md",
+          "start_line": 78,
+          "end_line": 79,
+          "quote": "Assumes `rna_counts.h5ad` contains measured, unnormalized counts in `.X`, with\nnonmissing `obs['batch']`. Choose QC thresholds for the experiment before this block.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scvi-tools/SKILL.md#L78-L79"
+        },
+        {
+          "path": "skills/scvi-tools/SKILL.md",
+          "start_line": 104,
+          "end_line": 107,
+          "quote": "scvi.model.SCVI.setup_anndata(adata, layer=\"counts\", batch_key=\"batch\")\nmodel = scvi.model.SCVI(adata, n_latent=20, gene_likelihood=\"nb\")\nmodel.train(max_epochs=400, early_stopping=True)\nadata.obsm[\"X_scVI\"] = model.get_latent_representation()",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scvi-tools/SKILL.md#L104-L107"
+        },
+        {
+          "path": "skills/scvi-tools/SKILL.md",
+          "start_line": 119,
+          "end_line": 128,
+          "quote": "Count validity does not prove count provenance. If filtering removes all expression\nfrom a cell, remove that cell or revise feature selection before setup. Do not add\ncondition, tissue, or donor as nuisance covariates automatically: they may encode\nthe biological signal being investigated, and confounding cannot be repaired by\nregistration alone.\n\nRegistration is tied to feature order, layers and category encodings. Finish\nfiltering before setup. If the training object changes, register it again and\ninitialize a new model; use the dedicated query-mapping methods for a trained\nreference rather than changing its registry in place.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scvi-tools/SKILL.md#L119-L128"
+        },
+        {
+          "path": "skills/anndata/SKILL.md",
+          "start_line": 280,
+          "end_line": 282,
+          "quote": "# Snapshot current X/var before feature filtering (not automatically raw counts)\nadata.raw = adata.copy()\nadata = adata[:, adata.var['highly_variable']]",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/anndata/SKILL.md#L280-L282"
+        }
+      ],
+      "limitations": [
+        "This is a missing-input deployment incompatibility, not an intrinsic contradiction among the source skills.",
+        "A numerical API may accept some transformed arrays; this evaluation concerns a compliant SCVI workflow, not merely a call that returns without error."
+      ],
+      "completion_assessment": {
+        "full_requested_completion": "unreachable",
+        "issue_type": "deployment_missing_required_data",
+        "source_contradiction_established": false,
+        "compliant_refusal_is_completion": false
+      },
+      "candidate_projection_review": [
+        "The absent measured-count fact is justified by an explicit negative assumption, not by closed-world treatment of an unspecified input.",
+        "No recovery or substitute-model action may be added under this scenario."
+      ]
+    },
+    {
+      "id": "KD-SC-03",
+      "label": "no_issue",
+      "rationale": "The model-specific SysVI branch takes normalized log-transformed expression and is intended for substantial cross-system effects. The supplied input provenance, system metadata, valid selected data, compatible dependencies and resources support registration, training and latent-representation export. SCVI's raw-count requirement does not apply to SysVI. The specialized example begins with counts to demonstrate how to construct a normalized layer; it does not require repeating that preparation when the correct normalized input already exists.",
+      "source_spans": [
+        {
+          "path": "skills/scvi-tools/SKILL.md",
+          "start_line": 35,
+          "end_line": 43,
+          "quote": "| Cytometry | `scvi.external.CYTOVI` | Transformed protein intensities |\n| Large cross-system effects | `scvi.external.SysVI` | Normalized, log-transformed expression |\n| RNA velocity | `scvi.external.VELOVI` | Preprocessed spliced/unspliced abundances |\n\nThe count rule is model-specific: do not feed raw RNA counts to SysVI or replace\nmethylation coverage with ratios. Likewise, never reconstruct counts by exponentiating\nlog-normalized data. Preserve measured counts and preprocessing provenance.\n\nRead the corresponding references before using a specialized model:",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scvi-tools/SKILL.md#L35-L43"
+        },
+        {
+          "path": "skills/scvi-tools/SKILL.md",
+          "start_line": 64,
+          "end_line": 74,
+          "quote": "1. Confirm modality, raw-data provenance, unique cell/feature IDs, feature order,\n   batch/sample metadata, and the intended biological comparison.\n2. Perform QC and feature selection before model registration. Use count-aware\n   HVG selection for count layers, and preserve a full-gene count object for later\n   analyses outside the selected feature set.\n3. Register the exact data object with that model's `setup_anndata` or\n   `setup_mudata`; create and train the model. Setup is registration, not normalization.\n4. Inspect validation history, held-out fit, seed stability, batch mixing **and**\n   retention of known biology. A well-mixed UMAP alone does not validate integration.\n5. Extract representations or model-specific normalized outputs; save the model,\n   data, selected feature order, software versions, seed and training parameters.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scvi-tools/SKILL.md#L64-L74"
+        },
+        {
+          "path": "skills/scvi-tools/references/models-specialized.md",
+          "start_line": 84,
+          "end_line": 108,
+          "quote": "SysVI is intended for substantial cross-system effects (for example protocol or\nmodel-system differences). It models approximately normal inputs, commonly\nlibrary-normalized and log1p-transformed RNA, rather than raw RNA counts.\n\n```python\nimport scanpy as sc\n\n# sys_adata starts with measured counts; preserve before transforming.\nsys_adata.layers[\"counts\"] = sys_adata.X.copy()\nsc.pp.normalize_total(sys_adata, target_sum=1e4)\nsc.pp.log1p(sys_adata)\nsys_adata.layers[\"log_normalized\"] = sys_adata.X.copy()\nscvi.external.SysVI.setup_anndata(\n    sys_adata, layer=\"log_normalized\", batch_key=\"system\",\n)\nsysvi = scvi.external.SysVI(sys_adata)\nsysvi.train()\nsys_adata.obsm[\"X_SysVI\"] = sysvi.get_latent_representation()\n```\n\nTune cycle-consistency strength with biological-preservation checks and seeds;\nmore correction is not always better. A system covariate is treated differently\nfrom auxiliary covariates. Gene orthology and shared feature definitions require\nexplicit decisions for cross-species data. SysVI is not a guarantee that confounded\nor nonoverlapping biological states can be aligned safely.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scvi-tools/references/models-specialized.md#L84-L108"
+        }
+      ],
+      "limitations": [
+        "The source says SysVI models approximately normal input; normalized log1p values are its documented common representation, not proof of a suitable biological model.",
+        "Cross-species orthology choices, preservation of biology and confounding remain scientific checks where applicable; the task expressly asks for mechanical fit/export rather than validated alignment.",
+        "No SysVI execution or convergence was measured."
+      ],
+      "completion_assessment": {
+        "full_requested_completion": "reachable_under_stated_assumptions",
+        "issue_type": null,
+        "source_contradiction_established": false,
+        "compliant_refusal_is_completion": false
+      },
+      "candidate_projection_review": [
+        "The projection correctly scopes the input contract to the selected model. It omits explicit provenance recording, exact feature-order persistence and post-fit checks, which should accompany the actual workflow.",
+        "The SysVI example is illustrative, so its count-to-log preparation is not an unconditional raw-input gate for this scenario."
+      ]
+    },
+    {
+      "id": "KD-SC-04",
+      "label": "abstain",
+      "rationale": "The documentation establishes a compatible count-preserving Scanpy-to-SCVI path and a distinct normalized-input SysVI path, but the user has not selected a model or supplied data/provenance, layers, dependencies or resources. Either a compliant completion or a blocked deployment is consistent with the known facts. Choosing SCVI and declaring counts absent would invent two facts. Clarify or inspect the intended model, representation and environment before assessing the requested integration.",
+      "source_spans": [
+        {
+          "path": "skills/scanpy/SKILL.md",
+          "start_line": 39,
+          "end_line": 51,
+          "quote": "For AnnData structure and I/O details, use the **anndata** skill. For probabilistic models and batch correction, use **scvi-tools**.\n\n## Representation and inference contracts\n\n- Input to QC/preprocessing must be identified raw counts. The scripts reject negative,\n  fractional, nonfinite or zero-total cells. Use `--counts-layer counts` when X is already\n  normalized; never infer provenance from integer-looking values alone.\n- `layers[\"counts\"]` remains unnormalized; `.raw` is an independent full-gene\n  log-normalized snapshot. Gene subsetting also subsets every layer, but does not subset\n  `.raw` genes. Retain a full-gene object for pseudobulk; the full pipeline does so.\n- `seurat`/`cell_ranger` HVGs use log-normalized values; `seurat_v3` and\n  `seurat_v3_paper` use counts and require `scanpy[skmisc]`. Scaling/regression are optional,\n  may densify sparse data, and can remove biology along with covariates.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scanpy/SKILL.md#L39-L51"
+        },
+        {
+          "path": "skills/scvi-tools/SKILL.md",
+          "start_line": 24,
+          "end_line": 41,
+          "quote": "## Choose the model and its input contract\n\n| Task | Class | Required input |\n| --- | --- | --- |\n| RNA integration | `scvi.model.SCVI` | Unnormalized RNA counts |\n| RNA annotation | `scvi.model.SCANVI` | Counts and partial labels |\n| CITE-seq | `scvi.model.TOTALVI` | RNA and protein counts, aligned cells |\n| RNA + ATAC integration | `scvi.model.MULTIVI` | Registered MuData with aligned modality representation |\n| ATAC accessibility | `scvi.model.PEAKVI` | Cells by peaks, binary/count accessibility |\n| Quantitative ATAC | `scvi.external.POISSONVI` | Region-level fragment counts |\n| Methylation | `scvi.external.METHYLVI`, `METHYLANVI` | MuData with methylated and total coverage counts |\n| Cytometry | `scvi.external.CYTOVI` | Transformed protein intensities |\n| Large cross-system effects | `scvi.external.SysVI` | Normalized, log-transformed expression |\n| RNA velocity | `scvi.external.VELOVI` | Preprocessed spliced/unspliced abundances |\n\nThe count rule is model-specific: do not feed raw RNA counts to SysVI or replace\nmethylation coverage with ratios. Likewise, never reconstruct counts by exponentiating\nlog-normalized data. Preserve measured counts and preprocessing provenance.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scvi-tools/SKILL.md#L24-L41"
+        },
+        {
+          "path": "skills/scvi-tools/SKILL.md",
+          "start_line": 64,
+          "end_line": 74,
+          "quote": "1. Confirm modality, raw-data provenance, unique cell/feature IDs, feature order,\n   batch/sample metadata, and the intended biological comparison.\n2. Perform QC and feature selection before model registration. Use count-aware\n   HVG selection for count layers, and preserve a full-gene count object for later\n   analyses outside the selected feature set.\n3. Register the exact data object with that model's `setup_anndata` or\n   `setup_mudata`; create and train the model. Setup is registration, not normalization.\n4. Inspect validation history, held-out fit, seed stability, batch mixing **and**\n   retention of known biology. A well-mixed UMAP alone does not validate integration.\n5. Extract representations or model-specific normalized outputs; save the model,\n   data, selected feature order, software versions, seed and training parameters.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scvi-tools/SKILL.md#L64-L74"
+        },
+        {
+          "path": "skills/scvi-tools/SKILL.md",
+          "start_line": 155,
+          "end_line": 173,
+          "quote": "## Installation and verification\n\nUse a dedicated environment, separate from packages with incompatible constraints:\n\n```bash\nuv venv --python 3.13 .venv-scvi\nuv pip install --python .venv-scvi/bin/python \"scvi-tools==1.5.1\" \"scanpy==1.12.4\" igraph\n```\n\nOn Windows, use `.venv-scvi/Scripts/python.exe`. Select the appropriate PyTorch\nbuild for the hardware before GPU work. The `cuda`/`cuda13` extras install additional\nCUDA dependencies; they are not needed for CPU or Apple MPS and do not guarantee\nworking drivers. Specialized extras include `regseq` (genome sequences), `diagvi`,\n`interpretability`, `dataloaders`, and `metal`. Do not install every extra by default.\n\nCheck a small CPU fit and finite outputs in the actual environment before a long\nrun; short synthetic fitting validates mechanics, not convergence or biology.\nOptional dataset loaders and genome/motif helpers may download data. No hosted\ninference endpoint, authentication, or pagination is part of this local workflow.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scvi-tools/SKILL.md#L155-L173"
+        }
+      ],
+      "limitations": [
+        "Natural documentation scenario rather than an observed execution.",
+        "No missing prerequisite has been treated as false; possible branch feasibility is not full-workflow evidence."
+      ],
+      "completion_assessment": {
+        "full_requested_completion": "unknown",
+        "issue_type": "insufficient_scenario_information",
+        "source_contradiction_established": false,
+        "compliant_refusal_is_completion": false
+      },
+      "candidate_projection_review": [
+        "The frozen bundle appropriately supplies no finite workflow for this case. Its existence does not establish either failure or success."
+      ]
+    },
+    {
+      "id": "KD-WR-01",
+      "label": "no_issue",
+      "rationale": "The requested outcome includes an accountable human who has verified exact source support and will reverify changed wording and make the final submission_ready and banner decisions. This supplies the actor-specific gates that citation metadata or local audits cannot supply. The assistant can build the evidence outline, preserve claim/evidence bindings, draft without new facts and run local audits; the named human then performs the required final decisions. With complete venue, reporting, authorship, declarations and results as stipulated, that joint workflow can reach the requested submission-ready artifact without submitting or transmitting it.",
+      "source_spans": [
+        {
+          "path": "skills/scientific-writing/SKILL.md",
+          "start_line": 16,
+          "end_line": 20,
+          "quote": "Produce clear scientific prose without inventing evidence or concealing uncertainty.\nKeep drafting, evidence verification, and submission approval as separate stages.\n\nThe accountable human authors control scientific decisions and final approval. AI is\nnot an author, and generated fluency is never evidence [SW-S01, SW-S03].",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-writing/SKILL.md#L16-L20"
+        },
+        {
+          "path": "skills/scientific-writing/SKILL.md",
+          "start_line": 56,
+          "end_line": 61,
+          "quote": "Every factual or numeric manuscript claim must map to verified evidence IDs. A human\nverifier must open the source, confirm the proposition and locator, verify bibliographic\nmetadata, and record who verified it and when.\n\nSearch snippets, generated summaries, memory, and another work's bibliography may aid\ndiscovery but do not verify a claim. See `references/evidence_workflow.md`.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-writing/SKILL.md#L56-L61"
+        },
+        {
+          "path": "skills/scientific-writing/SKILL.md",
+          "start_line": 143,
+          "end_line": 159,
+          "quote": "Do not mark a source verified until an accountable human has opened it and confirmed\nthe exact support. After changing wording, re-verify the claim before updating its\nhash; see the exact normalization in `references/evidence_workflow.md`.\n\n### 4. Create an evidence outline\n\nOutline only from recorded evidence:\n\n- objective or question;\n- section purpose;\n- claim IDs and evidence IDs;\n- methods and result IDs;\n- analysis intent and uncertainty;\n- unresolved conflicts or missing information;\n- applicable reporting topics.\n\nKeep unsupported content in an unresolved-issues list, not manuscript prose.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-writing/SKILL.md#L143-L159"
+        },
+        {
+          "path": "skills/scientific-writing/SKILL.md",
+          "start_line": 188,
+          "end_line": 209,
+          "quote": "### 7. Verify citations and claims\n\n```bash\npython3 scripts/validate_manifest.py source_manifest.json \\\n  --kind source --require-verified\npython3 scripts/audit_claims.py manuscript.md claims.csv source_manifest.json\npython3 scripts/check_references.py source_manifest.json\n```\n\nThe reference checker validates syntax and duplicate identifiers without network\nresolution. A human must still compare every identifier and quotation with the opened\nsource. Follow NLM *Citing Medicine* or the current official style required by the\nvenue [SW-S20, SW-S21].\n\n### 8. Validate authorship and disclosure\n\nUse journal criteria for authorship. Record the standardized CRediT roles as\ncontribution metadata; CRediT does not itself define authorship [SW-S19].\n\nIf AI was used, humans must verify all affected content and disclose the tool and\npurpose according to current journal and publisher policy. ICMJE's January 2026\nRecommendations require transparency and retain human accountability [SW-S01, SW-S02].",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-writing/SKILL.md#L188-L209"
+        },
+        {
+          "path": "skills/scientific-writing/SKILL.md",
+          "start_line": 276,
+          "end_line": 283,
+          "quote": "Only accountable humans may:\n\n- resolve scientific ambiguities;\n- approve author order and declarations;\n- approve external disclosure or transfer;\n- set `submission_ready` to true;\n- remove the draft banner;\n- authorize submission.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-writing/SKILL.md#L276-L283"
+        },
+        {
+          "path": "skills/scientific-writing/references/evidence_workflow.md",
+          "start_line": 99,
+          "end_line": 110,
+          "quote": "Tool output contains IDs and line numbers, not manuscript or source text. A passing\nmachine audit supports review; it does not replace human scientific judgment.\n\nThe claim audit compares that digest with the current manuscript line and rejects\nchanged text or multiple claim markers on a line. Re-verify the evidence fit before\nreplacing an old digest. A matching hash detects text changes; it proves neither\nscientific truth nor that a human performed the recorded verification. Hashes are\nnot encryption and do not anonymize predictable sensitive statements.\n\nThe lightweight audit skips headings, comment-start lines, and fenced code; numeric\ntext outside these regions must be tagged. It cannot identify every untagged\nnon-numeric assertion or inspect the contents of linked files. Review those manually.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-writing/references/evidence_workflow.md#L99-L110"
+        }
+      ],
+      "limitations": [
+        "This is joint human-assistant completion, not autonomous approval by the assistant.",
+        "The supplied verified evidence record is treated as a scenario fact; no human attestation or actual manuscript was independently checked.",
+        "Actual citation identities, venue compliance and audit passes would still need inspection in execution."
+      ],
+      "completion_assessment": {
+        "full_requested_completion": "reachable_under_stated_assumptions",
+        "issue_type": null,
+        "source_contradiction_established": false,
+        "compliant_refusal_is_completion": false
+      },
+      "candidate_projection_review": [
+        "The projection preserves the human actor boundary. It reduces submission readiness to two terminal flags, omitting the manuscript artifact and detailed claim, style, declaration and coverage checks; the scenario supports completing these rather than merely setting flags.",
+        "The neutral case does not explicitly promise every local audit already passes. Correctable drafting/checking remains part of the compliant path."
+      ]
+    },
+    {
+      "id": "KD-WR-02",
+      "label": "issue",
+      "rationale": "Successful metadata and machine checks cannot satisfy the source's requirement that a human open and verify each claim/source or its exclusive human authority to set submission_ready=true and remove the draft banner. No human has done the verification and none is available; the assistant is the sole actor. The autonomous submission-ready deliverable is therefore unreachable under the instructions. An incomplete scaffold, an unresolved-evidence report, or a refusal to claim readiness would be compliant partial outcomes but are not the requested final manuscript.",
+      "source_spans": [
+        {
+          "path": "skills/scientific-writing/SKILL.md",
+          "start_line": 56,
+          "end_line": 61,
+          "quote": "Every factual or numeric manuscript claim must map to verified evidence IDs. A human\nverifier must open the source, confirm the proposition and locator, verify bibliographic\nmetadata, and record who verified it and when.\n\nSearch snippets, generated summaries, memory, and another work's bibliography may aid\ndiscovery but do not verify a claim. See `references/evidence_workflow.md`.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-writing/SKILL.md#L56-L61"
+        },
+        {
+          "path": "skills/scientific-writing/SKILL.md",
+          "start_line": 143,
+          "end_line": 145,
+          "quote": "Do not mark a source verified until an accountable human has opened it and confirmed\nthe exact support. After changing wording, re-verify the claim before updating its\nhash; see the exact normalization in `references/evidence_workflow.md`.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-writing/SKILL.md#L143-L145"
+        },
+        {
+          "path": "skills/scientific-writing/SKILL.md",
+          "start_line": 197,
+          "end_line": 200,
+          "quote": "The reference checker validates syntax and duplicate identifiers without network\nresolution. A human must still compare every identifier and quotation with the opened\nsource. Follow NLM *Citing Medicine* or the current official style required by the\nvenue [SW-S20, SW-S21].",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-writing/SKILL.md#L197-L200"
+        },
+        {
+          "path": "skills/scientific-writing/SKILL.md",
+          "start_line": 276,
+          "end_line": 283,
+          "quote": "Only accountable humans may:\n\n- resolve scientific ambiguities;\n- approve author order and declarations;\n- approve external disclosure or transfer;\n- set `submission_ready` to true;\n- remove the draft banner;\n- authorize submission.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-writing/SKILL.md#L276-L283"
+        },
+        {
+          "path": "skills/scientific-writing/references/evidence_workflow.md",
+          "start_line": 99,
+          "end_line": 110,
+          "quote": "Tool output contains IDs and line numbers, not manuscript or source text. A passing\nmachine audit supports review; it does not replace human scientific judgment.\n\nThe claim audit compares that digest with the current manuscript line and rejects\nchanged text or multiple claim markers on a line. Re-verify the evidence fit before\nreplacing an old digest. A matching hash detects text changes; it proves neither\nscientific truth nor that a human performed the recorded verification. Hashes are\nnot encryption and do not anonymize predictable sensitive statements.\n\nThe lightweight audit skips headings, comment-start lines, and fenced code; numeric\ntext outside these regions must be tagged. It cannot identify every untagged\nnon-numeric assertion or inspect the contents of linked files. Review those manually.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-writing/references/evidence_workflow.md#L99-L110"
+        },
+        {
+          "path": "skills/citation-management/references/citation_validation.md",
+          "start_line": 61,
+          "end_line": 70,
+          "quote": "**Process**:\n1. Extract all DOIs from BibTeX file\n2. Query Crossref `/works/{doi}`; on 404, query DataCite `/dois/{doi}`\n3. If both lack a record, GET `doi.org/{doi}` without following the redirect\n4. A registration record or resolver redirect confirms registration; resolver 404 is an error\n5. Report timeouts, 429/5xx, and malformed responses as `doi_unverified` warnings\n\nThe script does not compare bibliographic fields or test the publisher landing\npage. Review title/authors/year manually; a registered DOI can still identify\nthe wrong work. Retraction status also requires a separate publisher check.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/citation-management/references/citation_validation.md#L61-L70"
+        }
+      ],
+      "limitations": [
+        "This is an explicitly unsupported actor/deployment configuration, not evidence of inconsistent source documentation.",
+        "No actual submission is required for the blocker to apply: human authority also governs readiness and banner removal."
+      ],
+      "completion_assessment": {
+        "full_requested_completion": "unreachable",
+        "issue_type": "deployment_missing_required_human_actor",
+        "source_contradiction_established": false,
+        "compliant_refusal_is_completion": false
+      },
+      "candidate_projection_review": [
+        "The projection correctly prevents machine-check transitions from creating genuine human verification or approval.",
+        "A model must not simulate approval by filling verification fields or editing the readiness flags."
+      ]
+    },
+    {
+      "id": "KD-WR-03",
+      "label": "no_issue",
+      "rationale": "The source explicitly permits incomplete, fail-closed draft scaffolds and unresolved intake states, and directs unsupported content to an unresolved-issues list rather than manuscript prose. That is exactly the requested deliverable. Retaining the draft banner and submission_ready=false while omitting unverified factual assertions avoids the human verification and final-approval gates rather than pretending to satisfy them. The available offline CLIs, or platform-neutral drafting guidance, support producing this scaffold and checklist.",
+      "source_spans": [
+        {
+          "path": "skills/scientific-writing/SKILL.md",
+          "start_line": 51,
+          "end_line": 58,
+          "quote": "Use an explicit missing, unverified, or not-applicable state. Do not substitute plausible\nboilerplate.\n\n### Evidence binding\n\nEvery factual or numeric manuscript claim must map to verified evidence IDs. A human\nverifier must open the source, confirm the proposition and locator, verify bibliographic\nmetadata, and record who verified it and when.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-writing/SKILL.md#L51-L58"
+        },
+        {
+          "path": "skills/scientific-writing/SKILL.md",
+          "start_line": 75,
+          "end_line": 87,
+          "quote": "## Intake\n\nBefore drafting, obtain or mark unresolved:\n\n- document type, study design, stage, audience, and target venue;\n- current author instructions and policy access date;\n- protocol, registration, analysis plan, amendments, and reporting guideline;\n- manuscript or section scope;\n- verified source manifest and claim registry;\n- methods, results, tables, figures, and supplements;\n- authorship, CRediT, declarations, and approval records;\n- confidentiality classification and authorized processing boundary;\n- data, code, materials, and repository constraints.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-writing/SKILL.md#L75-L87"
+        },
+        {
+          "path": "skills/scientific-writing/SKILL.md",
+          "start_line": 96,
+          "end_line": 107,
+          "quote": "For a new draft, optionally generate fail-closed Markdown, JSON, and CSV scaffolds:\n\n```bash\npython3 scripts/scaffold_manuscript.py \\\n  --output-dir ./draft-workspace \\\n  --document-id local-draft \\\n  --study-design randomized_trial \\\n  --guideline consort-2025\n```\n\nThe generator never overwrites files. Its output is explicitly not submission-ready and\ncontains placeholders that the linter rejects.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-writing/SKILL.md#L96-L107"
+        },
+        {
+          "path": "skills/scientific-writing/SKILL.md",
+          "start_line": 147,
+          "end_line": 159,
+          "quote": "### 4. Create an evidence outline\n\nOutline only from recorded evidence:\n\n- objective or question;\n- section purpose;\n- claim IDs and evidence IDs;\n- methods and result IDs;\n- analysis intent and uncertainty;\n- unresolved conflicts or missing information;\n- applicable reporting topics.\n\nKeep unsupported content in an unresolved-issues list, not manuscript prose.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-writing/SKILL.md#L147-L159"
+        },
+        {
+          "path": "skills/scientific-writing/references/cli_reference.md",
+          "start_line": 15,
+          "end_line": 26,
+          "quote": "## Scaffold\n\n```bash\npython3 scripts/scaffold_manuscript.py \\\n  --output-dir ./draft-workspace \\\n  --document-id local-draft \\\n  --study-design randomized_trial \\\n  --guideline consort-2025\n```\n\nThe output directory must not exist. The command never overwrites files. Generated\ndocuments are explicitly incomplete and not submission-ready.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-writing/references/cli_reference.md#L15-L26"
+        },
+        {
+          "path": "skills/scientific-writing/references/cli_reference.md",
+          "start_line": 105,
+          "end_line": 113,
+          "quote": "## Language, placeholder, and confidentiality lint\n\n```bash\npython3 scripts/lint_manuscript.py manuscript.md \\\n  --manifest manuscript_manifest.json\n```\n\nPossible sensitive-content findings are review prompts, not a de-identification\ncertificate. The linter intentionally fails on unresolved placeholders.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-writing/references/cli_reference.md#L105-L113"
+        }
+      ],
+      "limitations": [
+        "Completion here means the explicitly requested incomplete scaffold, not completion of a scientific manuscript.",
+        "If using the generator, select a new output directory and respect its bounded, nonsymlink input contracts. A linter rejection for intentional unresolved placeholders is expected and must be reported honestly.",
+        "The scenario does not independently establish a writable fresh directory; that minor implementation choice is not required by the platform-neutral scaffold outcome."
+      ],
+      "completion_assessment": {
+        "full_requested_completion": "reachable_for_requested_draft_stage",
+        "issue_type": null,
+        "source_contradiction_established": false,
+        "compliant_refusal_is_completion": false
+      },
+      "candidate_projection_review": [
+        "The candidate adds fresh_output_directory_selectable as an adaptation assumption, not a quoted scenario fact. Do not mistake that convenience for evidence of a real filesystem check.",
+        "Its assumption metadata_checks_pass is unnecessary for an unresolved scaffold and not expressly supplied by this case. No factual assertions or human attestations should be inferred from it."
+      ]
+    },
+    {
+      "id": "KD-WR-04",
+      "label": "abstain",
+      "rationale": "Discovered citations provide a route to bibliographic metadata, but they do not establish verified claim support or human approval. The requested manuscript stage, source access, verification status and accountable-human availability are all unspecified. A clearly incomplete scaffold may be feasible without those gates, while a submission-ready manuscript requires them. Without choosing the requested stage or inventing an available human, full completion cannot be determined.",
+      "source_spans": [
+        {
+          "path": "skills/citation-management/SKILL.md",
+          "start_line": 98,
+          "end_line": 106,
+          "quote": "### Phase 2.5: Metadata Enrichment via Web Search (MANDATORY)\n\nAPIs routinely return incomplete records. Run this **after** extraction and **before**\nformatting. Investigate missing bibliographic fields against the publisher record\nand log each source. Online-first articles may have no volume/pages yet; some use\nan article number or have no DOI. Preserve the actual publication state, use the\nstyle-appropriate article-number field, and never invent pages, volume, or DOI.\nRecord unavailable/not-applicable fields in the audit log; add a rendered `note`\nonly when useful to the reader or required by the citation style.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/citation-management/SKILL.md#L98-L106"
+        },
+        {
+          "path": "skills/citation-management/references/citation_validation.md",
+          "start_line": 61,
+          "end_line": 70,
+          "quote": "**Process**:\n1. Extract all DOIs from BibTeX file\n2. Query Crossref `/works/{doi}`; on 404, query DataCite `/dois/{doi}`\n3. If both lack a record, GET `doi.org/{doi}` without following the redirect\n4. A registration record or resolver redirect confirms registration; resolver 404 is an error\n5. Report timeouts, 429/5xx, and malformed responses as `doi_unverified` warnings\n\nThe script does not compare bibliographic fields or test the publisher landing\npage. Review title/authors/year manually; a registered DOI can still identify\nthe wrong work. Retraction status also requires a separate publisher check.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/citation-management/references/citation_validation.md#L61-L70"
+        },
+        {
+          "path": "skills/scientific-writing/SKILL.md",
+          "start_line": 16,
+          "end_line": 20,
+          "quote": "Produce clear scientific prose without inventing evidence or concealing uncertainty.\nKeep drafting, evidence verification, and submission approval as separate stages.\n\nThe accountable human authors control scientific decisions and final approval. AI is\nnot an author, and generated fluency is never evidence [SW-S01, SW-S03].",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-writing/SKILL.md#L16-L20"
+        },
+        {
+          "path": "skills/scientific-writing/SKILL.md",
+          "start_line": 56,
+          "end_line": 61,
+          "quote": "Every factual or numeric manuscript claim must map to verified evidence IDs. A human\nverifier must open the source, confirm the proposition and locator, verify bibliographic\nmetadata, and record who verified it and when.\n\nSearch snippets, generated summaries, memory, and another work's bibliography may aid\ndiscovery but do not verify a claim. See `references/evidence_workflow.md`.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-writing/SKILL.md#L56-L61"
+        },
+        {
+          "path": "skills/scientific-writing/SKILL.md",
+          "start_line": 75,
+          "end_line": 87,
+          "quote": "## Intake\n\nBefore drafting, obtain or mark unresolved:\n\n- document type, study design, stage, audience, and target venue;\n- current author instructions and policy access date;\n- protocol, registration, analysis plan, amendments, and reporting guideline;\n- manuscript or section scope;\n- verified source manifest and claim registry;\n- methods, results, tables, figures, and supplements;\n- authorship, CRediT, declarations, and approval records;\n- confidentiality classification and authorized processing boundary;\n- data, code, materials, and repository constraints.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-writing/SKILL.md#L75-L87"
+        },
+        {
+          "path": "skills/scientific-writing/SKILL.md",
+          "start_line": 276,
+          "end_line": 283,
+          "quote": "Only accountable humans may:\n\n- resolve scientific ambiguities;\n- approve author order and declarations;\n- approve external disclosure or transfer;\n- set `submission_ready` to true;\n- remove the draft banner;\n- authorize submission.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-writing/SKILL.md#L276-L283"
+        }
+      ],
+      "limitations": [
+        "The absence of a stated human verifier is unknown, not proof that no human exists.",
+        "This documentation coactivation is not evidence of an autonomous publication promise."
+      ],
+      "completion_assessment": {
+        "full_requested_completion": "unknown",
+        "issue_type": "insufficient_scenario_information",
+        "source_contradiction_established": false,
+        "compliant_refusal_is_completion": false
+      },
+      "candidate_projection_review": [
+        "The lack of a candidate workflow is appropriate. Metadata enrichment and human claim verification must remain separate in any later refinement."
+      ]
+    },
+    {
+      "id": "KD-LR-01",
+      "label": "abstain",
+      "rationale": "The diagram branch itself is clearly unnecessary: conceptual schematics are optional and neither a PRISMA figure nor an image deliverable is requested. Local reports and completed search/extraction records support thematic synthesis and direct claim/identity comparison. However, full compliant completion is less settled than the candidate review_text_ready state suggests. The main skill separately instructs running verify_citations.py for DOI registration/metadata, and its detailed workflow includes a DOI-registration check in the final-output checklist; that service check cannot succeed with no network. The case does not state that prior DOI checks are already recorded. The same reference preserves service errors, directs their resolution against actual sources, and states its strict accuracy gate before final submission, which this scenario does not request. Those passages leave the acceptability of an otherwise finished offline narrative review with unresolved live DOI status ambiguous. I therefore abstain on the full requested completion rather than infer either an unconditional offline waiver or a source contradiction.",
+      "source_spans": [
+        {
+          "path": "skills/literature-review/SKILL.md",
+          "start_line": 6,
+          "end_line": 6,
+          "quote": "compatibility: Python 3.10+ with requests; network for DOI checks and searches. Optional parallel-cli requires Parallel authentication. PDF export needs Pandoc and XeLaTeX; AI schematics need OPENROUTER_API_KEY.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/literature-review/SKILL.md#L6-L6"
+        },
+        {
+          "path": "skills/literature-review/SKILL.md",
+          "start_line": 40,
+          "end_line": 56,
+          "quote": "For systematic reviews, use the appropriate [PRISMA 2020 flow template](https://www.prisma-statement.org/prisma-2020-flow-diagram) and reconciled screening counts. Distinguish records, reports, and studies, including reports not retrieved and reasons for full-text exclusions. Use tables or deterministic plotting for exact numbers, effect estimates, and risk-of-bias results.\n\nConceptual schematics are optional. The bundled generator needs `OPENROUTER_API_KEY` and creates a PNG draft with up to two generation/review iterations:\n\n```bash\npython scripts/generate_schematic.py \"Conceptual evidence map; labels from the reviewed extraction table\" \\\n  -o figures/evidence_map.png --doc-type journal --iterations 2\n```\n\nGeneration uses OpenRouter's `POST /api/v1/images` with\n`google/gemini-3.1-flash-image`; review uses `POST /api/v1/chat/completions` with\n`google/gemini-3.7-flash`. The output path must end in `.png`. Inspect labels,\ncounts, arrows, and accessibility yourself: `success` means an image was saved,\nwhereas `quality_met`, `final_reviewed`, and `termination_reason` in the review\nlog describe the automated review. Neither proves scientific accuracy. A failed\nrefinement preserves the previous draft. Check current model availability before\nrunning paid generation; do not fabricate study counts in an image prompt.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/literature-review/SKILL.md#L40-L56"
+        },
+        {
+          "path": "skills/literature-review/SKILL.md",
+          "start_line": 63,
+          "end_line": 71,
+          "quote": "1. **Planning and scoping** — the question, inclusion and exclusion criteria, and scope.\n2. **Systematic literature search** — multi-database searching with recorded queries.\n3. **Screening and selection** — title/abstract then full-text screening with counts kept\n   for the PRISMA flow.\n4. **Data extraction and quality assessment** — structured extraction and risk-of-bias\n   or quality appraisal.\n5. **Synthesis and analysis** — thematic or quantitative synthesis across studies.\n6. **Citation verification** — every citation checked against the actual source.\n7. **Document generation** — assembling the review with a complete bibliography.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/literature-review/SKILL.md#L63-L71"
+        },
+        {
+          "path": "skills/literature-review/SKILL.md",
+          "start_line": 106,
+          "end_line": 110,
+          "quote": "### Quality and Reproducibility\n1. **Assess study quality**: Use appropriate quality assessment tools\n2. **Verify citations and claims**: Run verify_citations.py for DOI registration/metadata, then compare the reference and the cited claim with the actual source\n3. **Document methodology**: Provide enough detail for others to reproduce\n4. **Follow guidelines**: Use PRISMA for systematic reviews",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/literature-review/SKILL.md#L106-L110"
+        },
+        {
+          "path": "skills/literature-review/references/core_workflow.md",
+          "start_line": 203,
+          "end_line": 229,
+          "quote": "### Phase 6: Citation Verification\n\n**CRITICAL**: All citations must be verified for accuracy before final submission.\n\n1. **Verify All DOIs**:\n   ```bash\n   python scripts/verify_citations.py my_literature_review.md\n   ```\n\n   This script:\n   - Extracts all DOIs from the document\n   - Checks DOI registration via the Handle API\n   - Retrieves available Crossref metadata and preserves unresolved errors\n   - Generates verification report\n   - Does not verify claim support, publisher accessibility, or final citation style\n\n2. **Review Verification Report**:\n   - Check for any failed DOIs\n   - Verify author names, titles, and publication details match\n   - Correct any errors in the original document\n   - Resolve errors against the source; do not delete a reference solely because a service timed out or lacks its metadata\n\n3. **Format Citations Consistently**:\n   - Choose one citation style and use throughout (see `references/citation_styles.md`)\n   - Common styles: APA, Nature, Vancouver, Chicago, IEEE\n   - Use complete metadata with a CSL processor; the script only provides metadata previews\n   - Ensure in-text citations match reference list format",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/literature-review/references/core_workflow.md#L203-L229"
+        },
+        {
+          "path": "skills/literature-review/references/core_workflow.md",
+          "start_line": 258,
+          "end_line": 267,
+          "quote": "3. **Quality Checklist**:\n   - [ ] DOI registration checked; metadata identity and claim support reviewed manually\n   - [ ] Citations formatted consistently\n   - [ ] PRISMA flow diagram included (for systematic reviews)\n   - [ ] Search methodology fully documented\n   - [ ] Inclusion/exclusion criteria clearly stated\n   - [ ] Results organized thematically (not study-by-study)\n   - [ ] Quality assessment completed\n   - [ ] Limitations acknowledged\n   - [ ] References complete and accurate",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/literature-review/references/core_workflow.md#L258-L267"
+        }
+      ],
+      "limitations": [
+        "No issue is established for missing OpenRouter credentials: that dependency belongs only to the optional diagram branch.",
+        "A source-grounded text review is feasible; certification that all live DOI-registration checks completed is not established.",
+        "Clarify whether recorded prior registration checks suffice, or whether the requested finished review may transparently retain unresolved online verification. No negative fact is inferred about prior checks from their omission."
+      ],
+      "completion_assessment": {
+        "full_requested_completion": "unknown_due_to_completion_gate_ambiguity",
+        "issue_type": "source_scope_and_unstated_prior_verification",
+        "source_contradiction_established": false,
+        "compliant_refusal_is_completion": false,
+        "diagram_branch": "not_required",
+        "local_text_branch": "feasible"
+      },
+      "candidate_projection_review": [
+        "The finite workflow omits the instructed DOI-helper step and all live-registration state. Its own assumption acknowledges the ambiguity but does not encode it as a prerequisite or uncertainty.",
+        "A proof of review_text_ready is therefore narrower than a proof that every applicable review instruction has been satisfied."
+      ]
+    },
+    {
+      "id": "KD-LR-02",
+      "label": "issue",
+      "rationale": "The requested PNG must be produced by the bundled OpenRouter helper, and that branch requires network access and an OpenRouter credential. Both are explicitly unavailable, and the task rules out replacing the generator. The review text may still be drafted from local records, but it cannot satisfy the required review-plus-generated-PNG deliverable. A refusal or offer of a different drawing method would not complete the specified task.",
+      "source_spans": [
+        {
+          "path": "skills/literature-review/SKILL.md",
+          "start_line": 42,
+          "end_line": 56,
+          "quote": "Conceptual schematics are optional. The bundled generator needs `OPENROUTER_API_KEY` and creates a PNG draft with up to two generation/review iterations:\n\n```bash\npython scripts/generate_schematic.py \"Conceptual evidence map; labels from the reviewed extraction table\" \\\n  -o figures/evidence_map.png --doc-type journal --iterations 2\n```\n\nGeneration uses OpenRouter's `POST /api/v1/images` with\n`google/gemini-3.1-flash-image`; review uses `POST /api/v1/chat/completions` with\n`google/gemini-3.7-flash`. The output path must end in `.png`. Inspect labels,\ncounts, arrows, and accessibility yourself: `success` means an image was saved,\nwhereas `quality_met`, `final_reviewed`, and `termination_reason` in the review\nlog describe the automated review. Neither proves scientific accuracy. A failed\nrefinement preserves the previous draft. Check current model availability before\nrunning paid generation; do not fabricate study counts in an image prompt.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/literature-review/SKILL.md#L42-L56"
+        },
+        {
+          "path": "skills/scientific-schematics/SKILL.md",
+          "start_line": 6,
+          "end_line": 6,
+          "quote": "compatibility: Requires Python 3.10+ with requests, network access, and an OpenRouter API key.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-schematics/SKILL.md#L6-L6"
+        },
+        {
+          "path": "skills/scientific-schematics/SKILL.md",
+          "start_line": 48,
+          "end_line": 54,
+          "quote": "**What the output is:** a raster PNG at whatever resolution the image model returns. This skill has\nno vector path and no DPI control — if a journal demands PDF, EPS, or 300 dpi TIFF, convert the PNG\ndownstream and check the result at final print size.\n\n## Quick Start: Generate Any Diagram\n\nRun from this skill directory with `requests` installed and `OPENROUTER_API_KEY` set. The following paid-generation examples are illustrative; the request contracts are tested offline. Supply source-backed labels and relationships rather than asking the image model to invent them:",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-schematics/SKILL.md#L48-L54"
+        },
+        {
+          "path": "skills/scientific-schematics/SKILL.md",
+          "start_line": 101,
+          "end_line": 110,
+          "quote": "**Data leaves the machine.** Your prompt is sent to OpenRouter to generate the image, and the\ngenerated image is sent back to OpenRouter for the quality review. Both are subject to OpenRouter's\ndata policies and those of the underlying model providers. Do not describe unpublished data,\npatient information, or anything under embargo in the prompt.\n\n### Current API contract\n\nThe image call uses OpenRouter `POST /api/v1/images` with `model`, `prompt`, and `n: 1`; it reads `data[0].b64_json` and checks the returned MIME type (when supplied) and PNG signature. Quality review separately uses `POST /api/v1/chat/completions` with text and an `image_url` data URL. Both use Bearer authentication. The current chat schema still allows image output; this helper follows the dedicated image-generation guide without assuming the chat route was retired.\n\nModels are `google/gemini-3.1-flash-image` (Nano Banana 2) and `google/gemini-3.7-flash` (review). Their IDs and modalities were checked in public catalogs; this helper's Gemini generation/review calls were validated offline, not with a paid end-to-end run. See [the verified contract and sources](references/iterative_refinement.md#openrouter-contract-reviewed-2026-09-30) before changing models or request fields.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-schematics/SKILL.md#L101-L110"
+        }
+      ],
+      "limitations": [
+        "This is unavailable required service capability in the deployment, not a contradiction in the source.",
+        "The offline DOI-check ambiguity discussed for KD-LR-01 is an additional limitation of the whole-review projection; the missing required image branch is already decisive.",
+        "No paid generation, network call or credential handling was attempted."
+      ],
+      "completion_assessment": {
+        "full_requested_completion": "unreachable",
+        "issue_type": "deployment_missing_required_service",
+        "source_contradiction_established": false,
+        "compliant_refusal_is_completion": false,
+        "local_text_branch": "feasible_but_not_sufficient"
+      },
+      "candidate_projection_review": [
+        "The workflow correctly requires network and credential facts for PNG generation. Their absence is explicitly stated, not inferred.",
+        "generation_success_declared and prompt authorization are also prerequisites in the candidate, but their unspecified status need not be resolved because two explicit required capabilities are absent."
+      ]
+    },
+    {
+      "id": "KD-LR-03",
+      "label": "no_issue",
+      "rationale": "The source explicitly saves the latest successful image when automated review is unavailable and records honest review failure, including a null score and final_reviewed=false when no numeric score exists. First generation is stipulated to succeed, the service inputs and public-prompt authorization are supplied, and the requested deliverable expressly accepts an unchecked draft and log. Thus the review plus that draft and truthful status can be delivered without fabricating a passing score or spending on an unnecessary second generation. Direct source comparison, thematic synthesis, and the source's citation-verification procedure remain part of preparing the review.",
+      "source_spans": [
+        {
+          "path": "skills/literature-review/SKILL.md",
+          "start_line": 49,
+          "end_line": 56,
+          "quote": "Generation uses OpenRouter's `POST /api/v1/images` with\n`google/gemini-3.1-flash-image`; review uses `POST /api/v1/chat/completions` with\n`google/gemini-3.7-flash`. The output path must end in `.png`. Inspect labels,\ncounts, arrows, and accessibility yourself: `success` means an image was saved,\nwhereas `quality_met`, `final_reviewed`, and `termination_reason` in the review\nlog describe the automated review. Neither proves scientific accuracy. A failed\nrefinement preserves the previous draft. Check current model availability before\nrunning paid generation; do not fabricate study counts in an image prompt.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/literature-review/SKILL.md#L49-L56"
+        },
+        {
+          "path": "skills/literature-review/SKILL.md",
+          "start_line": 63,
+          "end_line": 71,
+          "quote": "1. **Planning and scoping** — the question, inclusion and exclusion criteria, and scope.\n2. **Systematic literature search** — multi-database searching with recorded queries.\n3. **Screening and selection** — title/abstract then full-text screening with counts kept\n   for the PRISMA flow.\n4. **Data extraction and quality assessment** — structured extraction and risk-of-bias\n   or quality appraisal.\n5. **Synthesis and analysis** — thematic or quantitative synthesis across studies.\n6. **Citation verification** — every citation checked against the actual source.\n7. **Document generation** — assembling the review with a complete bibliography.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/literature-review/SKILL.md#L63-L71"
+        },
+        {
+          "path": "skills/literature-review/SKILL.md",
+          "start_line": 106,
+          "end_line": 110,
+          "quote": "### Quality and Reproducibility\n1. **Assess study quality**: Use appropriate quality assessment tools\n2. **Verify citations and claims**: Run verify_citations.py for DOI registration/metadata, then compare the reference and the cited claim with the actual source\n3. **Document methodology**: Provide enough detail for others to reproduce\n4. **Follow guidelines**: Use PRISMA for systematic reviews",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/literature-review/SKILL.md#L106-L110"
+        },
+        {
+          "path": "skills/scientific-schematics/SKILL.md",
+          "start_line": 83,
+          "end_line": 90,
+          "quote": "**Output**: Versioned images (`name_v1.png`, `name_v2.png`), a copy of the latest successful version at the path you\nasked for, and `name_review_log.json` with the score, critique, and any early-stop reason.\n\n**When the review cannot run** — a rate limit, a content filter, a reviewer that answers in some\nunexpected shape — the image is still generated and saved, but no score is invented for it. The log\nrecords `\"score\": null` with the reason in `\"review_error\"`. `\"reviewed\": false` means the reviewer did not return a usable response; a prose answer with no parsable score can have `\"reviewed\": true`. `\"final_reviewed\"` remains false without a numeric score, and the run\nprints `Review unavailable - image kept, quality not verified`. Treat that image as unchecked and\nlook at it yourself and diagnose the review error before spending on another generation. A generation failure ends the loop without automatic replay; if an earlier draft exists, it is retained with its score and the failure in the log.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-schematics/SKILL.md#L83-L90"
+        },
+        {
+          "path": "skills/scientific-schematics/SKILL.md",
+          "start_line": 190,
+          "end_line": 195,
+          "quote": "The generate-review-refine loop, the Python API and command-line options, prompt\nengineering guidance, and four worked examples (CONSORT flowchart, neural network\narchitecture, biological pathway, system architecture) are in\n[references/iterative_refinement.md](references/iterative_refinement.md).\n\nThe loop stops when the review passes or is unavailable, or when generation fails. A below-threshold score or an explicit improvement verdict can trigger a second generation; no run makes more than two attempts.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-schematics/SKILL.md#L190-L195"
+        },
+        {
+          "path": "skills/scientific-schematics/SKILL.md",
+          "start_line": 212,
+          "end_line": 212,
+          "quote": "**Review is advisory:** the vision model can miss incorrect counts, topology, or labels. A high score does not establish scientific validity, CONSORT/PRISMA compliance, accessibility conformance, or a journal's acceptance of AI-generated figures.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-schematics/SKILL.md#L212-L212"
+        },
+        {
+          "path": "skills/literature-review/references/core_workflow.md",
+          "start_line": 203,
+          "end_line": 229,
+          "quote": "### Phase 6: Citation Verification\n\n**CRITICAL**: All citations must be verified for accuracy before final submission.\n\n1. **Verify All DOIs**:\n   ```bash\n   python scripts/verify_citations.py my_literature_review.md\n   ```\n\n   This script:\n   - Extracts all DOIs from the document\n   - Checks DOI registration via the Handle API\n   - Retrieves available Crossref metadata and preserves unresolved errors\n   - Generates verification report\n   - Does not verify claim support, publisher accessibility, or final citation style\n\n2. **Review Verification Report**:\n   - Check for any failed DOIs\n   - Verify author names, titles, and publication details match\n   - Correct any errors in the original document\n   - Resolve errors against the source; do not delete a reference solely because a service timed out or lacks its metadata\n\n3. **Format Citations Consistently**:\n   - Choose one citation style and use throughout (see `references/citation_styles.md`)\n   - Common styles: APA, Nature, Vancouver, Chicago, IEEE\n   - Use complete metadata with a CSL processor; the script only provides metadata previews\n   - Ensure in-text citations match reference list format",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/literature-review/references/core_workflow.md#L203-L229"
+        }
+      ],
+      "limitations": [
+        "This completes the expressly requested unchecked-draft stage; it does not certify scientific correctness, automated threshold success, journal acceptance or publication readiness.",
+        "The exact unusable reviewer response is not supplied, so reviewed may be false or true for unscored prose; do not invent its value. Without a numeric score, final_reviewed remains false.",
+        "Network availability permits the citation-check route but does not prove an observed DOI service result. Preserve any unresolved errors and check actual sources.",
+        "Manual label/relationship inspection is still required before substantive inclusion in a paper."
+      ],
+      "completion_assessment": {
+        "full_requested_completion": "reachable_for_explicitly_accepted_unchecked_draft",
+        "issue_type": null,
+        "source_contradiction_established": false,
+        "compliant_refusal_is_completion": false
+      },
+      "candidate_projection_review": [
+        "The image-state projection is source-supported, but it leaves manual inspection and the review's DOI-helper procedure implicit. Those must not be silently replaced by png_saved.",
+        "The source's pre-submission checklist requires more than this request; the scenario explicitly does not request that later certification."
+      ]
+    },
+    {
+      "id": "KD-LR-04",
+      "label": "issue",
+      "rationale": "Both permitted generations are explicitly below the requested automated-review threshold. The documented loop stops after at most two generation attempts, and the scenario also forbids a third attempt or alternative image. Saving the latest successful PNG is not equivalent to quality_met, and a reviewer pass cannot be fabricated. The certified-threshold schematic is therefore unreachable even though generation and authentication work. Returning the real draft and failure log would be honest partial output, not the requested certification.",
+      "source_spans": [
+        {
+          "path": "skills/scientific-schematics/SKILL.md",
+          "start_line": 70,
+          "end_line": 75,
+          "quote": "**What happens behind the scenes:**\n1. **Generation 1**: Nano Banana 2 creates initial image following scientific diagram best practices\n2. **Review 1**: **Gemini 3.7 Flash** evaluates quality against document-type threshold\n3. **Decision**: If quality >= threshold and no improvement verdict → **DONE** (no more iterations needed!)\n4. **If below threshold or improvement requested**: Improved prompt based on critique, regenerate\n5. **Repeat**: Until quality meets threshold OR max iterations reached",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-schematics/SKILL.md#L70-L75"
+        },
+        {
+          "path": "skills/scientific-schematics/SKILL.md",
+          "start_line": 83,
+          "end_line": 90,
+          "quote": "**Output**: Versioned images (`name_v1.png`, `name_v2.png`), a copy of the latest successful version at the path you\nasked for, and `name_review_log.json` with the score, critique, and any early-stop reason.\n\n**When the review cannot run** — a rate limit, a content filter, a reviewer that answers in some\nunexpected shape — the image is still generated and saved, but no score is invented for it. The log\nrecords `\"score\": null` with the reason in `\"review_error\"`. `\"reviewed\": false` means the reviewer did not return a usable response; a prose answer with no parsable score can have `\"reviewed\": true`. `\"final_reviewed\"` remains false without a numeric score, and the run\nprints `Review unavailable - image kept, quality not verified`. Treat that image as unchecked and\nlook at it yourself and diagnose the review error before spending on another generation. A generation failure ends the loop without automatic replay; if an earlier draft exists, it is retained with its score and the failure in the log.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-schematics/SKILL.md#L83-L90"
+        },
+        {
+          "path": "skills/scientific-schematics/SKILL.md",
+          "start_line": 190,
+          "end_line": 195,
+          "quote": "The generate-review-refine loop, the Python API and command-line options, prompt\nengineering guidance, and four worked examples (CONSORT flowchart, neural network\narchitecture, biological pathway, system architecture) are in\n[references/iterative_refinement.md](references/iterative_refinement.md).\n\nThe loop stops when the review passes or is unavailable, or when generation fails. A below-threshold score or an explicit improvement verdict can trigger a second generation; no run makes more than two attempts.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-schematics/SKILL.md#L190-L195"
+        },
+        {
+          "path": "skills/scientific-schematics/SKILL.md",
+          "start_line": 212,
+          "end_line": 212,
+          "quote": "**Review is advisory:** the vision model can miss incorrect counts, topology, or labels. A high score does not establish scientific validity, CONSORT/PRISMA compliance, accessibility conformance, or a journal's acceptance of AI-generated figures.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-schematics/SKILL.md#L212-L212"
+        },
+        {
+          "path": "skills/scientific-schematics/SKILL.md",
+          "start_line": 272,
+          "end_line": 276,
+          "quote": "**A run stops at a score below the threshold**\n- That can be the iteration cap or a failed second generation. `--iterations 2` is the maximum; the latest successfully generated image is kept with its real score. Check `termination_reason` and each attempt's `error`.\n\n**`\"score\": null` and `\"reviewed\": false` in the log**\n- The review call failed or answered in an unusable shape. The image was kept but its quality is unknown. Check `\"review_error\"` and inspect the image yourself.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-schematics/SKILL.md#L272-L276"
+        },
+        {
+          "path": "skills/literature-review/SKILL.md",
+          "start_line": 49,
+          "end_line": 56,
+          "quote": "Generation uses OpenRouter's `POST /api/v1/images` with\n`google/gemini-3.1-flash-image`; review uses `POST /api/v1/chat/completions` with\n`google/gemini-3.7-flash`. The output path must end in `.png`. Inspect labels,\ncounts, arrows, and accessibility yourself: `success` means an image was saved,\nwhereas `quality_met`, `final_reviewed`, and `termination_reason` in the review\nlog describe the automated review. Neither proves scientific accuracy. A failed\nrefinement preserves the previous draft. Check current model availability before\nrunning paid generation; do not fabricate study counts in an image prompt.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/literature-review/SKILL.md#L49-L56"
+        }
+      ],
+      "limitations": [
+        "The failure concerns the stipulated bounded outcomes, not a claim that all deployments or future generations fail.",
+        "Even a passing automated threshold would be advisory and would not certify scientific or publisher acceptance.",
+        "The neutral task specifically requires the schematic; the candidate additionally includes review_text_ready in its goal. That extra text goal is not needed to establish the decisive schematic blocker."
+      ],
+      "completion_assessment": {
+        "full_requested_completion": "unreachable",
+        "issue_type": "bounded_requested_quality_unattainable",
+        "source_contradiction_established": false,
+        "compliant_refusal_is_completion": false,
+        "generation_branch": "successful_but_not_sufficient"
+      },
+      "candidate_projection_review": [
+        "The projection correctly avoids adding quality_met after below-threshold reviews. Its success state must not be collapsed with image saved or final_reviewed.",
+        "The general documentation mentions re-running; the explicit scenario excludes any third generation, so that broader advice cannot rescue this case."
+      ]
+    },
+    {
+      "id": "KD-LR-05",
+      "label": "abstain",
+      "rationale": "The skill combination permits optional conceptual schematics, but the review type, source access, figure requirement, format, network and credentials are unknown. A locally supported narrative Markdown review, a systematic review with reconciled PRISMA counts, a PDF export, and an OpenRouter-generated diagram have different prerequisites. As appropriate does not select one of those branches. Neither a missing-credential failure nor full review completion follows from this documentation-only scenario.",
+      "source_spans": [
+        {
+          "path": "skills/literature-review/SKILL.md",
+          "start_line": 6,
+          "end_line": 6,
+          "quote": "compatibility: Python 3.10+ with requests; network for DOI checks and searches. Optional parallel-cli requires Parallel authentication. PDF export needs Pandoc and XeLaTeX; AI schematics need OPENROUTER_API_KEY.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/literature-review/SKILL.md#L6-L6"
+        },
+        {
+          "path": "skills/literature-review/SKILL.md",
+          "start_line": 38,
+          "end_line": 56,
+          "quote": "## Figures and PRISMA reporting\n\nFor systematic reviews, use the appropriate [PRISMA 2020 flow template](https://www.prisma-statement.org/prisma-2020-flow-diagram) and reconciled screening counts. Distinguish records, reports, and studies, including reports not retrieved and reasons for full-text exclusions. Use tables or deterministic plotting for exact numbers, effect estimates, and risk-of-bias results.\n\nConceptual schematics are optional. The bundled generator needs `OPENROUTER_API_KEY` and creates a PNG draft with up to two generation/review iterations:\n\n```bash\npython scripts/generate_schematic.py \"Conceptual evidence map; labels from the reviewed extraction table\" \\\n  -o figures/evidence_map.png --doc-type journal --iterations 2\n```\n\nGeneration uses OpenRouter's `POST /api/v1/images` with\n`google/gemini-3.1-flash-image`; review uses `POST /api/v1/chat/completions` with\n`google/gemini-3.7-flash`. The output path must end in `.png`. Inspect labels,\ncounts, arrows, and accessibility yourself: `success` means an image was saved,\nwhereas `quality_met`, `final_reviewed`, and `termination_reason` in the review\nlog describe the automated review. Neither proves scientific accuracy. A failed\nrefinement preserves the previous draft. Check current model availability before\nrunning paid generation; do not fabricate study counts in an image prompt.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/literature-review/SKILL.md#L38-L56"
+        },
+        {
+          "path": "skills/literature-review/SKILL.md",
+          "start_line": 63,
+          "end_line": 71,
+          "quote": "1. **Planning and scoping** — the question, inclusion and exclusion criteria, and scope.\n2. **Systematic literature search** — multi-database searching with recorded queries.\n3. **Screening and selection** — title/abstract then full-text screening with counts kept\n   for the PRISMA flow.\n4. **Data extraction and quality assessment** — structured extraction and risk-of-bias\n   or quality appraisal.\n5. **Synthesis and analysis** — thematic or quantitative synthesis across studies.\n6. **Citation verification** — every citation checked against the actual source.\n7. **Document generation** — assembling the review with a complete bibliography.",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/literature-review/SKILL.md#L63-L71"
+        },
+        {
+          "path": "skills/literature-review/SKILL.md",
+          "start_line": 94,
+          "end_line": 110,
+          "quote": "### Screening and Selection\n1. **Use clear criteria**: Document inclusion/exclusion criteria before screening\n2. **Screen systematically**: Title → Abstract → Full text\n3. **Document exclusions**: Record reasons for excluding studies\n4. **Use independent eligibility decisions**: For systematic reviews, use two reviewers for final full-text eligibility and document disagreement resolution; disclose any single-reviewer limitation\n\n### Synthesis\n1. **Organize thematically**: Group by themes, NOT by individual studies\n2. **Synthesize across studies**: Compare, contrast, identify patterns\n3. **Be critical**: Evaluate quality and consistency of evidence\n4. **Identify gaps**: Note what's missing or understudied\n\n### Quality and Reproducibility\n1. **Assess study quality**: Use appropriate quality assessment tools\n2. **Verify citations and claims**: Run verify_citations.py for DOI registration/metadata, then compare the reference and the cited claim with the actual source\n3. **Document methodology**: Provide enough detail for others to reproduce\n4. **Follow guidelines**: Use PRISMA for systematic reviews",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/literature-review/SKILL.md#L94-L110"
+        },
+        {
+          "path": "skills/literature-review/references/core_workflow.md",
+          "start_line": 203,
+          "end_line": 229,
+          "quote": "### Phase 6: Citation Verification\n\n**CRITICAL**: All citations must be verified for accuracy before final submission.\n\n1. **Verify All DOIs**:\n   ```bash\n   python scripts/verify_citations.py my_literature_review.md\n   ```\n\n   This script:\n   - Extracts all DOIs from the document\n   - Checks DOI registration via the Handle API\n   - Retrieves available Crossref metadata and preserves unresolved errors\n   - Generates verification report\n   - Does not verify claim support, publisher accessibility, or final citation style\n\n2. **Review Verification Report**:\n   - Check for any failed DOIs\n   - Verify author names, titles, and publication details match\n   - Correct any errors in the original document\n   - Resolve errors against the source; do not delete a reference solely because a service timed out or lacks its metadata\n\n3. **Format Citations Consistently**:\n   - Choose one citation style and use throughout (see `references/citation_styles.md`)\n   - Common styles: APA, Nature, Vancouver, Chicago, IEEE\n   - Use complete metadata with a CSL processor; the script only provides metadata previews\n   - Ensure in-text citations match reference list format",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/literature-review/references/core_workflow.md#L203-L229"
+        },
+        {
+          "path": "skills/scientific-schematics/SKILL.md",
+          "start_line": 48,
+          "end_line": 54,
+          "quote": "**What the output is:** a raster PNG at whatever resolution the image model returns. This skill has\nno vector path and no DPI control — if a journal demands PDF, EPS, or 300 dpi TIFF, convert the PNG\ndownstream and check the result at final print size.\n\n## Quick Start: Generate Any Diagram\n\nRun from this skill directory with `requests` installed and `OPENROUTER_API_KEY` set. The following paid-generation examples are illustrative; the request contracts are tested offline. Supply source-backed labels and relationships rather than asking the image model to invent them:",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-schematics/SKILL.md#L48-L54"
+        }
+      ],
+      "limitations": [
+        "Unknown credentials or network are not treated as absent.",
+        "Optional-diagram feasibility is distinct from the full review's evidence, verification and output requirements."
+      ],
+      "completion_assessment": {
+        "full_requested_completion": "unknown",
+        "issue_type": "insufficient_scenario_information",
+        "source_contradiction_established": false,
+        "compliant_refusal_is_completion": false
+      },
+      "candidate_projection_review": [
+        "The bundle has no fabricated finite workflow for this natural case. Determine applicable branches and prerequisites before translating them into Boolean initial states."
+      ]
+    }
+  ],
+  "global_limitations": [
+    "Native reasoning review is not human gold, a paid model-pipeline run, a live deployment test, or evidence of scientific validity.",
+    "The candidate workflow is a finite handoff artifact whose transitions compress or omit natural-language obligations; source-level feasibility is not established merely by reaching its state tokens.",
+    "No intrinsic source contradiction was established in these 13 cases. Decisive issue labels concern explicitly bounded deployments or requested outcome gates.",
+    "KD-LR-01 remains conservative abstention on full completion, despite a feasible text branch and a clearly optional diagram branch."
+  ]
+}

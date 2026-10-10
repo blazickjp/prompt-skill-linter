@@ -12,6 +12,8 @@ from .schema import ShapeError, check, validate_shape
 from .planner import explore
 from .sat import checked_core
 
+TRACE_STATE_BUDGET = 20_000
+
 
 class ContractError(ValueError):
     """Invalid input, rather than an instruction conflict."""
@@ -40,7 +42,7 @@ def validate(contract, manifest, runtime, root):
     for key in ('sources', 'rules', 'contexts'):
         if not isinstance(contract.get(key), list):
             raise ContractError(f'contract.{key} must be an array')
-    for group in ('sources', 'rules', 'contexts', 'skills'):
+    for group in ('sources', 'rules', 'contexts', 'skills', 'workflows'):
         items = contract.get(group, [])
         ids = [x.get('id') for x in items]
         if any(not isinstance(x, str) or not x for x in ids) or len(ids) != len(set(ids)):
@@ -139,9 +141,56 @@ def validate(contract, manifest, runtime, root):
                 raise ContractError('bulk rules cannot also participate in boolean/action/tool-call fragments')
             if rule['scope'] != rules[bulk['advertisement_rule']]['scope']:
                 raise ContractError('bulk constraints and advertisement must share exact scope')
+    action_source_lines = {}
+    assertion_ids = [a['id'] for w in contract.get('workflows', []) for a in w.get('trace_assertions', [])]
+    if len(assertion_ids) > 16 or len(assertion_ids) * len(contract['contexts']) > 128:
+        raise ContractError('Trace analysis supports 16 assertions and 128 assertion/context pairs per bundle.')
+    if len(assertion_ids) != len(set(assertion_ids)) or set(assertion_ids) & {r['id'] for r in contract['rules']}:
+        raise ContractError('Trace assertion IDs must be globally unique and distinct from rule IDs.')
+    if contract.get('field_contracts'):
+        from .fields import FieldContractError, validate_field_contracts
+        try:
+            validate_field_contracts(contract, root)
+        except FieldContractError as exc:
+            raise ContractError(str(exc)) from exc
     for workflow in contract.get('workflows', []):
         if len(workflow['actions']) > 64:
             raise ContractError('A workflow may declare at most 64 actions.')
+        assertions = workflow.get('trace_assertions', [])
+        if len(assertions) > 8:
+            raise ContractError('At most 8 trace assertions per workflow are supported.')
+        if assertions:
+            from .trace import validate_assertions
+            try:
+                validate_assertions(workflow)
+            except ValueError as exc:
+                raise ContractError(str(exc)) from exc
+        evidence_holders = workflow['actions'] + [
+            {'provenance': {'source_spans': [a['source']], 'assumptions': a['assumptions']}}
+            for a in assertions
+        ]
+        for action in evidence_holders:
+            provenance = action.get('provenance', {})
+            spans = provenance.get('source_spans', [])
+            if len(spans) > 32 or len(provenance.get('assumptions', [])) > 32:
+                raise ContractError('Action provenance supports at most 32 spans and 32 assumptions.')
+            for span in spans:
+                if span['source_id'] not in sources:
+                    raise ContractError('Action provenance references an unknown source.')
+                path = (root / sources[span['source_id']]['path']).resolve()
+                if not path.is_relative_to(root):
+                    raise ContractError('Action provenance source must stay within the contract directory.')
+                if path not in action_source_lines:
+                    try:
+                        if path.stat().st_size > 1_500_000:
+                            raise ContractError('Action provenance source exceeds the analysis limit.')
+                        action_source_lines[path] = path.read_text(encoding='utf-8').splitlines()
+                    except (OSError, UnicodeError) as exc:
+                        raise ContractError('Cannot read action provenance source.') from exc
+                lines = action_source_lines[path]
+                start, end = span['start_line'], span['end_line']
+                if not 1 <= start <= end <= len(lines) or span['quote'] != '\n'.join(lines[start - 1:end]):
+                    raise ContractError('Action provenance quote does not match its exact line span.')
         action_ids = [a['id'] for a in workflow['actions']]
         if len(action_ids) != len(set(action_ids)):
             raise ContractError('workflow action IDs must be unique')
@@ -400,6 +449,7 @@ def reachable(workflow, forbidden, max_steps):
 
 def workflow_analysis(contract, manifest, runtime):
     diagnostics, checks = [], []
+    trace_states_remaining = TRACE_STATE_BUDGET
     max_steps = runtime.get('max_plan_steps', 20)
     if type(max_steps) is not int or not 0 <= max_steps <= 100:
         raise ContractError('max_plan_steps must be an integer from 0 to 100')
@@ -436,6 +486,93 @@ def workflow_analysis(contract, manifest, runtime):
                            'resolved_restriction_ids': [r['id'] for r in restrictions],
                            'compliant_fallback_reachable': result['fallback_path'] is not None,
                            'contradictory_effective_instructions': False})
+            result['action_provenance'] = {a['id']: a.get('provenance', {'source_spans': [], 'assumptions': []}) for a in workflow['actions']}
+            ungrounded = [a['id'] for a in workflow['actions'] if not a.get('provenance', {}).get('source_spans')]
+            result['provenance_limitations'] = ([
+                'Action source evidence is absent for: ' + ', '.join(ungrounded)
+            ] if ungrounded else []) + [
+                'Action source quotations establish provenance only; precondition/effect equivalence to prose remains a reviewed abstraction.'
+            ]
+            result['trace_assertions'] = []
+            if workflow.get('trace_assertions'):
+                from .trace import check_trace_assertions
+                if unknown_policy:
+                    trace_results = [{'assertion_id': a['id'], 'kind': a['kind'], 'status': 'unknown',
+                        'violation_path': None, 'search_exhaustive': False, 'visited_states': 0,
+                        'bounds': {'max_steps': max_steps, 'max_states': 2000},
+                        'cutoff_reasons': ['unresolved_activation']} for a in workflow['trace_assertions']]
+                else:
+                    trace_results = []
+                    for assertion in workflow['trace_assertions']:
+                        allowance = min(2000, trace_states_remaining)
+                        if allowance:
+                            isolated = dict(workflow, trace_assertions=[assertion])
+                            trace_result = check_trace_assertions(isolated, forbidden, max_steps=max_steps, max_states=allowance)[0]
+                            trace_states_remaining -= trace_result['visited_states']
+                            if trace_result['status'] == 'unknown' and allowance < 2000 and 'max_states' in trace_result['cutoff_reasons']:
+                                trace_result['cutoff_reasons'].append('aggregate_trace_state_budget')
+                                trace_result['trigger_coverage']['cutoff_reasons'].append('aggregate_trace_state_budget')
+                        else:
+                            trace_result = {'assertion_id': assertion['id'], 'kind': assertion['kind'], 'status': 'unknown',
+                                'violation_path': None, 'search_exhaustive': False, 'visited_states': 0,
+                                'bounds': {'max_steps': max_steps, 'max_states': 0},
+                                'cutoff_reasons': ['aggregate_trace_state_budget']}
+                        trace_result['aggregate_budget'] = {'max_visited_states': TRACE_STATE_BUDGET,
+                                                            'remaining_states': trace_states_remaining}
+                        trace_results.append(trace_result)
+                for assertion, trace_result in zip(workflow['trace_assertions'], trace_results):
+                    trace_result.setdefault('trigger_coverage', {
+                        'status': 'unknown',
+                        'trigger_actions': list(assertion['actions'] if assertion['kind'] == 'action_count'
+                                                else assertion['guarded_actions']),
+                        'first_trigger_path': None, 'search_exhaustive': False,
+                        'cutoff_reasons': list(trace_result['cutoff_reasons']),
+                        'scope': 'enabled_action_events_in_reviewed_transition_model',
+                    })
+                    implicated = set(trace_result.get('violation_path') or [])
+                    trace_result.update({'workflow': workflow['id'], 'context_id': context['id'],
+                                         'source': assertion['source'], 'assumptions': assertion['assumptions'],
+                                         'property_scope': 'safety_of_allowed_paths_in_reviewed_transition_model',
+                                         'completion_feasibility_not_disproved': True,
+                                         'minimality_not_checked': True,
+                                         'implicated_actions': [a for a in workflow['actions'] if a['id'] in implicated],
+                                         'resolved_action_policy': [{'id': r['id'], 'priority': r['priority'], 'kind': r['kind'],
+                                             'action': r.get('allow_action', r.get('forbid_action')), 'source': r['source']}
+                                             for r in applicable if 'allow_action' in r or 'forbid_action' in r],
+                                         'policy_notice': 'Hierarchy determines action availability; the reviewer-declared trace property has no intrinsic priority.'})
+                    result['trace_assertions'].append(trace_result)
+                    if trace_result['status'] == 'safe':
+                        coverage = trace_result['trigger_coverage']['status']
+                        if coverage == 'reachable':
+                            continue
+                        code = 'TRACE_TRIGGER_UNREACHABLE' if coverage == 'unreachable' else 'TRACE_TRIGGER_COVERAGE_UNKNOWN'
+                        severity = 'info'
+                    else:
+                        code = 'TRACE_ASSERTION_VIOLATED' if trace_result['status'] == 'violated' else 'TRACE_ANALYSIS_UNKNOWN'
+                        severity = 'error' if trace_result['status'] == 'violated' else 'warning'
+                    item = diagnostic(code, 'model_based', severity,
+                                      [], context, trace_result, assertion['assumptions'] + [
+                                          'Author-declared finite action-event assertion; no prose inference or runtime execution.',
+                                          'All enabled prefixes are checked, including after the goal; assertion monitors are independent of workflow effects.',
+                                          'Trigger coverage is separate from safety. An unreachable trigger may be intentional; it is not an instruction conflict.'])
+                    item['source_spans'] = [assertion['source']]
+                    if code == 'TRACE_TRIGGER_UNREACHABLE':
+                        item['message'] = 'Safety is satisfied in this model, but no enabled assertion trigger is reachable. This may be intentional.'
+                    elif code == 'TRACE_TRIGGER_COVERAGE_UNKNOWN':
+                        item['message'] = 'Safety is satisfied in this model; trigger reachability remains unknown under the configured bounds.'
+                    for action in trace_result['implicated_actions']:
+                        for span in action.get('provenance', {}).get('source_spans', []):
+                            if span not in item['source_spans']:
+                                item['source_spans'].append(span)
+                    item['interpreted_rules'] = [{'id': assertion['id'], 'source': assertion['source'], 'trace_assertion': assertion}]
+                    item['responsible_rule_set'] = [assertion['id']]
+                    item['resolved_priorities'] = {r['id']: r['priority'] for r in trace_result['resolved_action_policy']}
+                    item['regression_case'].update({'assertion_id': assertion['id'], 'violation_path': trace_result.get('violation_path')})
+                    item['provenance_limitations'] = ['Exact source text does not prove the assertion or transition abstraction is semantically faithful.']
+                    missing_action_evidence = [a['id'] for a in trace_result['implicated_actions'] if not a.get('provenance', {}).get('source_spans')]
+                    if missing_action_evidence:
+                        item['provenance_limitations'].append('Witness action source evidence is absent for: ' + ', '.join(missing_action_evidence))
+                    diagnostics.append(item)
             checks.append(result)
             if unavailable:
                 diagnostics.append(diagnostic('UNAVAILABLE_WORKFLOW_ACTION', 'exact', 'error', [advertised], context,
@@ -448,12 +585,69 @@ def workflow_analysis(contract, manifest, runtime):
                 {k: v for k, v in result.items() if k != 'graph'},
                 ['Closed-world deterministic finite boolean-state actions; only listed actions exist.',
                  'A fallback must be explicitly declared compliant by the reviewer.']))
+            diagnostics[-1]['provenance_limitations'].extend(result['provenance_limitations'])
     return diagnostics, checks
 
 
 def check_workflows(contract, runtime):
     # Backward-compatible helper; public lint uses the supplied manifest.
     return workflow_analysis(contract, {'tools': {}}, runtime)[0]
+
+
+def field_analysis(contract):
+    """Field-presence checks on explicitly active, fixed-scope data edges."""
+    from .fields import check_field_presence
+    diagnostics, checks = [], []
+    for declaration in contract.get('field_contracts', []):
+        spans, assumptions = [], list(declaration['assumptions'])
+        for holder in [declaration['producer'], declaration['consumer']] + declaration['adapters']:
+            assumptions.extend(holder['provenance']['assumptions'])
+            for span in holder['provenance']['source_spans']:
+                if span not in spans:
+                    spans.append(span)
+        assumptions.extend([
+            'One reviewer-declared data edge in its fixed entity/temporal scope; activation does not prove workflow reachability.',
+            'Required producer keys are guaranteed; optional keys may be absent; a closed producer has no undeclared keys.',
+            'Only literal top-level field presence is checked; values, types, nested paths, execution, and implicit aliases are outside scope.',
+            'No instruction priority is inferred for this edge; policy resolution and any consumer occurrence are review assumptions.',
+        ])
+        for context in contract['contexts']:
+            activation = activation_status(declaration, context)
+            result = {'field_contract_id': declaration['id'], 'context_id': context['id'],
+                      'scope': declaration['scope'], 'activation': activation,
+                      'status': 'inactive' if activation == 'inactive' else 'unknown',
+                      'reason': 'inactive_context' if activation == 'inactive' else 'unresolved_activation',
+                      'source_spans': spans, 'assumptions': list(dict.fromkeys(assumptions)),
+                      'presence_only': True, 'runtime_observations_verified': False}
+            if activation == 'active':
+                result.update(check_field_presence(declaration))
+                result['reason'] = ('closed_record_missing_required_field' if result['status'] == 'incompatible'
+                                    else 'required_field_not_guaranteed' if result['status'] == 'unknown'
+                                    else 'all_required_fields_guaranteed')
+            checks.append(result)
+            if result['status'] in ('compatible', 'inactive'):
+                continue
+            incompatible = result['status'] == 'incompatible'
+            code = 'REQUIRED_FIELD_NOT_PRODUCED' if incompatible else 'FIELD_PRESENCE_UNKNOWN'
+            item = diagnostic(code, 'exact' if incompatible else 'model_based',
+                              'error' if incompatible else 'warning', [], context, result, result['assumptions'])
+            item['source_spans'] = spans
+            item['interpreted_rules'] = [{'id': declaration['id'], 'field_contract': declaration,
+                                         'source': declaration['consumer']['provenance']['source_spans'][0],
+                                         'scope': declaration['scope']}]
+            item['responsible_rule_set'] = [declaration['id']]
+            item['regression_case']['field_contract_id'] = declaration['id']
+            item['provenance_limitations'] = [
+                'Exact source quotations do not prove that the declared schema, literal property read, adapter, or active consuming branch matches runtime behavior.'
+            ]
+            if incompatible:
+                item['message'] = 'Required consumer keys absent from this reviewed closed producer: ' + ', '.join(result['missing_required_fields']) + '.'
+                item['interpretation_status'] = 'Exact missing-field relation under the reviewed closed-record projection; not proof of runtime failure or a whole-skill conflict.'
+                item['regression_case']['missing_required_fields'] = result['missing_required_fields']
+            else:
+                item['message'] = 'Required field presence remains unknown in this reviewed context.'
+            diagnostics.append(item)
+    return diagnostics, checks
 
 
 def check_clauses(contract):
@@ -502,6 +696,8 @@ def lint(contract, manifest, runtime, root):
     diagnostics += check_obligations(contract)
     workflow_diags, workflow_checks = workflow_analysis(contract, manifest, runtime)
     diagnostics += workflow_diags
+    field_diags, field_checks = field_analysis(contract)
+    diagnostics += field_diags
     clause_diags, constraint_checks = check_clauses(contract)
     diagnostics += clause_diags
     bulk_diags, checks = check_bulk(contract, runtime)
@@ -516,11 +712,15 @@ def lint(contract, manifest, runtime, root):
     incomplete_reasons = []
     if interpretation.get('untranslated_line_count', 0) or interpretation.get('excluded_candidate_ids'):
         incomplete_reasons.append('source_coverage')
-    if any(d['code'] in ('PLAN_BOUND_EXHAUSTED', 'SOLVER_BOUND_EXHAUSTED') for d in diagnostics):
+    if any(d['code'] in ('PLAN_BOUND_EXHAUSTED', 'SOLVER_BOUND_EXHAUSTED', 'TRACE_ANALYSIS_UNKNOWN', 'TRACE_TRIGGER_COVERAGE_UNKNOWN') for d in diagnostics):
         incomplete_reasons.append('search_bounds')
     if any(d['class'] == 'semantic_warning' and d['code'] != 'INCOMPLETE_SOURCE_COVERAGE' for d in diagnostics):
         incomplete_reasons.append('semantic_review')
-    return {'version': 1, 'contract': contract, 'diagnostics': diagnostics, 'resource_checks': checks, 'workflow_checks': workflow_checks, 'constraint_checks': constraint_checks,
+    if any(check['status'] == 'unknown' or check.get('uncertain_required_fields') for check in field_checks):
+        incomplete_reasons.append('field_presence')
+    return {'version': 1, 'contract': contract, 'diagnostics': diagnostics, 'resource_checks': checks, 'workflow_checks': workflow_checks,
+            'trace_checks': [t for w in workflow_checks for t in w.get('trace_assertions', [])], 'constraint_checks': constraint_checks,
+            'field_checks': field_checks,
             'coverage': {'translation': 'declared_only', 'runtime_grounding': 'declared_snapshot_only', 'runtime_observations_verified': False, 'interpretation_review_recorded': interpretation.get('status') == 'accepted', 'incomplete': bool(incomplete_reasons), 'incomplete_reasons': incomplete_reasons, 'interpretation': interpretation, 'context_count': len(contract['contexts']),
                          'plan_bound': runtime.get('max_plan_steps', 20),
                          'universal_prompt_correctness_certified': False},

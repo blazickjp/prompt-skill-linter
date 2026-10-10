@@ -1,0 +1,267 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-10-10T16:53:00Z",
+  "source": {
+    "repository": "K-Dense-AI/scientific-agent-skills",
+    "commit": "92ace75ac21efe19a620434e0ca4e356081fe807",
+    "root_license": "MIT; per-skill licenses differ; inspect individual frontmatter",
+    "source_root": "source",
+    "retrieval": "Read-only GitHub connector, pinned blob URLs. No source scripts executed."
+  },
+  "evaluation_question": "Under the scenario's stated environment, is the advertised requested completion reachable while following applicable instructions? Compliant refusal is distinct from requested completion. Unspecified prerequisites remain unknown rather than false.",
+  "limitations": [
+    "No execution claims or measured biological/service success. Explicit synthetic deployments are constructed probes, not naturally observed source faults.",
+    "The three natural cases are observational documentation scenarios, not captured user executions.",
+    "Source field signatures quoted by the skill are documented evidence, not proof of a live installed tool manifest."
+  ],
+  "families": {
+    "single_cell": {
+      "source_paths": [
+        "skills/scanpy/SKILL.md",
+        "skills/anndata/SKILL.md",
+        "skills/scvi-tools/SKILL.md",
+        "skills/scvi-tools/references/models-specialized.md"
+      ],
+      "context_spans": [
+        {
+          "path": "docs/examples.md",
+          "start_line": 686,
+          "end_line": 765
+        }
+      ],
+      "focus_spans": [
+        {
+          "path": "skills/scanpy/SKILL.md",
+          "start_line": 39,
+          "end_line": 75
+        },
+        {
+          "path": "skills/scvi-tools/SKILL.md",
+          "start_line": 25,
+          "end_line": 79
+        },
+        {
+          "path": "skills/scvi-tools/references/models-specialized.md",
+          "start_line": 84,
+          "end_line": 112
+        }
+      ]
+    },
+    "evidence_writing": {
+      "source_paths": [
+        "skills/citation-management/SKILL.md",
+        "skills/scientific-writing/SKILL.md",
+        "skills/scientific-writing/references/evidence_workflow.md",
+        "skills/scientific-writing/references/cli_reference.md",
+        "skills/citation-management/references/citation_validation.md"
+      ],
+      "context_spans": [
+        {
+          "path": "docs/examples.md",
+          "start_line": 6165,
+          "end_line": 6280
+        }
+      ],
+      "focus_spans": [
+        {
+          "path": "skills/scientific-writing/SKILL.md",
+          "start_line": 15,
+          "end_line": 61
+        },
+        {
+          "path": "skills/scientific-writing/SKILL.md",
+          "start_line": 95,
+          "end_line": 107
+        },
+        {
+          "path": "skills/scientific-writing/SKILL.md",
+          "start_line": 264,
+          "end_line": 283
+        }
+      ]
+    },
+    "review_diagrams": {
+      "source_paths": [
+        "skills/literature-review/SKILL.md",
+        "skills/scientific-schematics/SKILL.md",
+        "skills/literature-review/references/core_workflow.md"
+      ],
+      "context_spans": [
+        {
+          "path": "skills/literature-review/SKILL.md",
+          "start_line": 40,
+          "end_line": 61
+        },
+        {
+          "path": "skills/citation-management/SKILL.md",
+          "start_line": 49,
+          "end_line": 50
+        }
+      ],
+      "focus_spans": [
+        {
+          "path": "skills/scientific-schematics/SKILL.md",
+          "start_line": 83,
+          "end_line": 114
+        },
+        {
+          "path": "skills/scientific-schematics/SKILL.md",
+          "start_line": 190,
+          "end_line": 195
+        }
+      ]
+    }
+  },
+  "cases": [
+    {
+      "id": "KD-SC-01",
+      "family": "single_cell",
+      "origin": "synthetic_control",
+      "scenario": "Preprocess measured RNA counts with Scanpy, preserve counts in AnnData, fit SCVI using the count layer, and export its representation.",
+      "assumptions": [
+        "All named Python packages and selected model dependencies are already installed and compatible with pinned skill versions; CPU, memory, local file access and sufficient training time are available.",
+        "Cells/features are unique, batch metadata complete, dataset nondegenerate and QC/feature selection criteria valid. Outcome concerns a mechanically completed model fit/export, not biological validation or convergence guarantees.",
+        "Measured unnormalized counts and provenance are available; normalization modifies X only, while layers['counts'] remains available."
+      ],
+      "selection_rationale": "Exercise documented intended coactivation with separate matrix representations."
+    },
+    {
+      "id": "KD-SC-02",
+      "family": "single_cell",
+      "origin": "deployment_probe",
+      "scenario": "Fit SCVI and export its representation using the only available RNA dataset.",
+      "assumptions": [
+        "All named Python packages and selected model dependencies are already installed and compatible with pinned skill versions; CPU, memory, local file access and sufficient training time are available.",
+        "Cells/features are unique, batch metadata complete, dataset nondegenerate and QC/feature selection criteria valid. Outcome concerns a mechanically completed model fit/export, not biological validation or convergence guarantees.",
+        "Only normalized log1p expression remains. No measured counts or counts layer exist; there is no route to retrieve the originals. Completion must use SCVI, not a substitute model."
+      ],
+      "selection_rationale": "Assess a bounded missing-input deployment."
+    },
+    {
+      "id": "KD-SC-03",
+      "family": "single_cell",
+      "origin": "synthetic_control",
+      "scenario": "Fit SysVI for substantial cross-system effects using normalized log1p expression and export its representation.",
+      "assumptions": [
+        "All named Python packages and selected model dependencies are already installed and compatible with pinned skill versions; CPU, memory, local file access and sufficient training time are available.",
+        "Cells/features are unique, batch metadata complete, dataset nondegenerate and QC/feature selection criteria valid. Outcome concerns a mechanically completed model fit/export, not biological validation or convergence guarantees.",
+        "The SysVI-specific input is normalized log1p expression with known provenance and complete system metadata. No requirement to use SCVI."
+      ],
+      "selection_rationale": "Exercise the explicit model-specific representation exception."
+    },
+    {
+      "id": "KD-SC-04",
+      "family": "single_cell",
+      "origin": "natural",
+      "scenario": "A user requests Scanpy preprocessing followed by scvi-tools integration; no model or available data representation is specified.",
+      "assumptions": [
+        "Only the public skill documentation and the task description are known. Data provenance, available layers, chosen model, installed dependencies, and runtime resources are unspecified."
+      ],
+      "selection_rationale": "Observe intended workflow without inventing deployment capabilities."
+    },
+    {
+      "id": "KD-WR-01",
+      "family": "evidence_writing",
+      "origin": "synthetic_control",
+      "scenario": "Prepare a submission-ready scientific manuscript from citation-management metadata and a verified evidence record, with final approval performed by the accountable human.",
+      "assumptions": [
+        "Local Python 3.11+ and all documented offline scientific-writing CLIs are available. The requested artifact contains public, non-sensitive material only.",
+        "Venue policy, reporting coverage, authorship, declarations and results are complete and accurate unless otherwise stated. No actual submission or external transmission is requested.",
+        "An accountable human has opened every source, checked each exact claim and locator, recorded identity/time, and will reverify changed wording and perform final submission_ready/banner decisions."
+      ],
+      "selection_rationale": "Test full workflow with independently supplied human gates."
+    },
+    {
+      "id": "KD-WR-02",
+      "family": "evidence_writing",
+      "origin": "deployment_probe",
+      "scenario": "Autonomously deliver the same submission-ready manuscript now.",
+      "assumptions": [
+        "Local Python 3.11+ and all documented offline scientific-writing CLIs are available. The requested artifact contains public, non-sensitive material only.",
+        "Venue policy, reporting coverage, authorship, declarations and results are complete and accurate unless otherwise stated. No actual submission or external transmission is requested.",
+        "Citation metadata and machine checks succeed, but no accountable human has verified claims or sources and no human is available during completion. The assistant is the only actor."
+      ],
+      "selection_rationale": "Distinguish citation metadata validation from human evidence/approval prerequisites."
+    },
+    {
+      "id": "KD-WR-03",
+      "family": "evidence_writing",
+      "origin": "synthetic_control",
+      "scenario": "Deliver a clearly marked incomplete draft scaffold and unresolved-evidence checklist for later human review, without unsupported factual prose.",
+      "assumptions": [
+        "Local Python 3.11+ and all documented offline scientific-writing CLIs are available. The requested artifact contains public, non-sensitive material only.",
+        "Venue policy, reporting coverage, authorship, declarations and results are complete and accurate unless otherwise stated. No actual submission or external transmission is requested.",
+        "No human verifier is available. Unverified assertions are omitted from manuscript prose and retained only as unresolved issues. The artifact retains its draft banner and submission_ready=false."
+      ],
+      "selection_rationale": "Exercise documented draft-stage outcome rather than final approval."
+    },
+    {
+      "id": "KD-WR-04",
+      "family": "evidence_writing",
+      "origin": "natural",
+      "scenario": "Use citation-management and scientific-writing to prepare a manuscript from discovered sources.",
+      "assumptions": [
+        "Source access, human verification status, manuscript stage and accountable author availability are unspecified."
+      ],
+      "selection_rationale": "Observe an intended coactivation without supplying missing stage/capability facts."
+    },
+    {
+      "id": "KD-LR-01",
+      "family": "review_diagrams",
+      "origin": "synthetic_control",
+      "scenario": "Finish a text-only narrative literature review; a conceptual diagram is optional.",
+      "assumptions": [
+        "A narrative review's relevant full reports, completed search records and extraction notes are locally available; citation identity and claim support can be checked against actual sources.",
+        "Local Python and requests are installed. The artifact is Markdown; no PDF, systematic-review PRISMA figure or journal-specific image requirement applies. Public non-sensitive content only.",
+        "No network, OpenRouter credential or AI image-generation service is available; no diagram is requested."
+      ],
+      "selection_rationale": "Test optional dependency scope."
+    },
+    {
+      "id": "KD-LR-02",
+      "family": "review_diagrams",
+      "origin": "deployment_probe",
+      "scenario": "Finish the same review including a PNG conceptual schematic generated by the bundled OpenRouter helper.",
+      "assumptions": [
+        "A narrative review's relevant full reports, completed search records and extraction notes are locally available; citation identity and claim support can be checked against actual sources.",
+        "Local Python and requests are installed. The artifact is Markdown; no PDF, systematic-review PRISMA figure or journal-specific image requirement applies. Public non-sensitive content only.",
+        "No network or OpenRouter credential is available. Bundled OpenRouter generation is a required requested deliverable and cannot be replaced with another drawing method."
+      ],
+      "selection_rationale": "Test unavailable service only when branch is explicitly required."
+    },
+    {
+      "id": "KD-LR-03",
+      "family": "review_diagrams",
+      "origin": "synthetic_control",
+      "scenario": "Deliver the review plus the latest successful schematic draft and honest review-status log.",
+      "assumptions": [
+        "A narrative review's relevant full reports, completed search records and extraction notes are locally available; citation identity and claim support can be checked against actual sources.",
+        "Local Python and requests are installed. The artifact is Markdown; no PDF, systematic-review PRISMA figure or journal-specific image requirement applies. Public non-sensitive content only.",
+        "Network, OpenRouter credential and permission for the public prompt are provided. First generation succeeds. Automated review is unavailable. The user accepts an unchecked draft and log; scientific acceptance is not requested."
+      ],
+      "selection_rationale": "Exercise documented review-unavailable partial-output semantics."
+    },
+    {
+      "id": "KD-LR-04",
+      "family": "review_diagrams",
+      "origin": "deployment_probe",
+      "scenario": "Deliver a schematic certified by the automated reviewer as meeting the requested quality threshold.",
+      "assumptions": [
+        "A narrative review's relevant full reports, completed search records and extraction notes are locally available; citation identity and claim support can be checked against actual sources.",
+        "Local Python and requests are installed. The artifact is Markdown; no PDF, systematic-review PRISMA figure or journal-specific image requirement applies. Public non-sensitive content only.",
+        "Network and authenticated services work, but both permitted generations receive below-threshold reviews. No third generation or alternative image is available; uncertified draft does not satisfy the requested outcome."
+      ],
+      "selection_rationale": "Exercise the bounded retry branch without assuming retry can guarantee quality."
+    },
+    {
+      "id": "KD-LR-05",
+      "family": "review_diagrams",
+      "origin": "natural",
+      "scenario": "Use literature-review with scientific-schematics as appropriate to produce a review.",
+      "assumptions": [
+        "Figure requirement, credential availability, network access, review type, source access and output format are unspecified."
+      ],
+      "selection_rationale": "Observe the branch ambiguity in an intended integration."
+    }
+  ]
+}

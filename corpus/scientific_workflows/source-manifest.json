@@ -1,0 +1,133 @@
+{
+  "commit": "92ace75ac21efe19a620434e0ca4e356081fe807",
+  "packet_sha256": "5961623150fd553c830d4915c940dab70a3d8b9aa98e512204e9f79e5811526b",
+  "files": [
+    {
+      "path": "skills/anndata/SKILL.md",
+      "sha256": "bd953fff1771c5a32aad1892ca3ea2ca41e97804041bc5e36af55a155f5e199c",
+      "git_blob_sha": "c07814b8785967d62a172692fb5d3a948c3bb12e",
+      "license_frontmatter": "BSD-3-Clause license",
+      "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/anndata/SKILL.md",
+      "capture_transform": "One trailing newline added by apply_patch; line spans and content unchanged.",
+      "canonical_sha256": "a619c4088e1be6f6feaa5838c63ff8c4381fa21b4adee2a9276aa61464f3a034",
+      "git_blob_verified_after_removing_capture_newline": true
+    },
+    {
+      "path": "skills/citation-management/SKILL.md",
+      "sha256": "44d04609133c295dbd65eb0b9813579d7a397200f58aac8307cfcf9389f28477",
+      "git_blob_sha": "b63b589d4d423969a63e032e62c2b74969147c1c",
+      "license_frontmatter": "MIT License",
+      "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/citation-management/SKILL.md",
+      "capture_transform": "One trailing newline added by apply_patch; line spans and content unchanged.",
+      "canonical_sha256": "dc79fe1e8438dcf598040615d5323360c6a7ed0b868fc3ffc82512c871a1e3ff",
+      "git_blob_verified_after_removing_capture_newline": true
+    },
+    {
+      "path": "skills/citation-management/references/citation_validation.md",
+      "sha256": "72bc1beaa053d4d255208d145a7768554600f97ba3d9e533b14da6064ae68c78",
+      "git_blob_sha": "2474645bf7482c70483467507e77bcfe992c0a15",
+      "license_frontmatter": "MIT License",
+      "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/citation-management/references/citation_validation.md",
+      "capture_transform": "One trailing newline added by apply_patch; line spans and content unchanged.",
+      "canonical_sha256": "f235f82e02db282f0abdd23fd8d2973d870d427d355979e869f736259ba95774",
+      "git_blob_verified_after_removing_capture_newline": true
+    },
+    {
+      "path": "skills/literature-review/SKILL.md",
+      "sha256": "ab8a895458cc9d4cf5eb0555e941081c09c75cb829b48b3b13964bd97cdf45b9",
+      "git_blob_sha": "5178dce6419cee412155e7b9dd523d5b2ef703f5",
+      "license_frontmatter": "MIT license",
+      "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/literature-review/SKILL.md",
+      "capture_transform": "One trailing newline added by apply_patch; line spans and content unchanged.",
+      "canonical_sha256": "16a9e85bcdcb9bb859e1646bf836e51b22900445ba2e367d8d75be05b5a5cba8",
+      "git_blob_verified_after_removing_capture_newline": true
+    },
+    {
+      "path": "skills/literature-review/references/core_workflow.md",
+      "sha256": "bdc54633630056f7d94400e36854adecccafbbc09b891e9930d5515b26c9ce13",
+      "git_blob_sha": "6a0bab11cd67d05dd683576f512b2045d85c826b",
+      "license_frontmatter": "MIT license",
+      "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/literature-review/references/core_workflow.md",
+      "capture_transform": "One trailing newline added by apply_patch; line spans and content unchanged.",
+      "canonical_sha256": "4d63f1087c98efeec7c7bf622bed6e0456a9c7c3defe584995917f2de6f2c601",
+      "git_blob_verified_after_removing_capture_newline": true
+    },
+    {
+      "path": "skills/scanpy/SKILL.md",
+      "sha256": "7f11e14c6b7d98034329dd518dda625746bd2ea1d743e406b3835f695c79439e",
+      "git_blob_sha": "8c071306c10ebaf6b23da5d4fbacdaa597e5c8a8",
+      "license_frontmatter": "BSD-3-Clause",
+      "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scanpy/SKILL.md",
+      "capture_transform": "One trailing newline added by apply_patch; line spans and content unchanged.",
+      "canonical_sha256": "4a59f87933a1e9ed49eac603719af1b0c606dd99050fe59ffa1c1bf807900cb8",
+      "git_blob_verified_after_removing_capture_newline": true
+    },
+    {
+      "path": "skills/scientific-schematics/SKILL.md",
+      "sha256": "3a3bb9a5c60785c46401f8bad22af551c550d7be37e824aad14e49a430f3c220",
+      "git_blob_sha": "5f2ff1b3f73818b05c649438e71f50961d01f2eb",
+      "license_frontmatter": "MIT license",
+      "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-schematics/SKILL.md",
+      "capture_transform": "One trailing newline added by apply_patch; line spans and content unchanged.",
+      "canonical_sha256": "e15d761ef88013c98fd5b19cc144aba7336e20dbadf340db17bd1ba2227d1d69",
+      "git_blob_verified_after_removing_capture_newline": true
+    },
+    {
+      "path": "skills/scientific-writing/SKILL.md",
+      "sha256": "28656c6ea70c01ab15977891814a421807f83504d4f6297ff1cd0e9067ec90ea",
+      "git_blob_sha": "446993fcd4716ae54ab74bc2a91e3bc5af5235c7",
+      "license_frontmatter": "MIT",
+      "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-writing/SKILL.md",
+      "capture_transform": "One trailing newline added by apply_patch; line spans and content unchanged.",
+      "canonical_sha256": "511a2096bebecd8cf0f8212b9d262d37154ae1ba566eb385d93ac968682edbd1",
+      "git_blob_verified_after_removing_capture_newline": true
+    },
+    {
+      "path": "skills/scientific-writing/references/cli_reference.md",
+      "sha256": "bb4eb53a782b23ab6059201a817098227e55df839675cda38656b6f4709eaed4",
+      "git_blob_sha": "05c1d113720af67cad6458e8bddadcdbcc49ebdd",
+      "license_frontmatter": "MIT",
+      "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-writing/references/cli_reference.md",
+      "capture_transform": "One trailing newline added by apply_patch; line spans and content unchanged.",
+      "canonical_sha256": "05b15a587277e37dbc6161532dce58c8ccf647e22f21861ebcbac22954453e75",
+      "git_blob_verified_after_removing_capture_newline": true
+    },
+    {
+      "path": "skills/scientific-writing/references/evidence_workflow.md",
+      "sha256": "0ced09190075f8c2a357daa4c20d253d573b0d6b0f4633609f87c0776ed4d4f2",
+      "git_blob_sha": "6a54eb95d87be854d38046851c87f2a08a487390",
+      "license_frontmatter": "MIT",
+      "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scientific-writing/references/evidence_workflow.md",
+      "capture_transform": "One trailing newline added by apply_patch; line spans and content unchanged.",
+      "canonical_sha256": "346c867d71e8cf1db6e3684a64714925a3966fcaeb1db853d7ddb07c6a6f607b",
+      "git_blob_verified_after_removing_capture_newline": true
+    },
+    {
+      "path": "skills/scvi-tools/SKILL.md",
+      "sha256": "1b152d2613894767f8b451bab5ef351ab7d838f285139ae6af7bc0e524631958",
+      "git_blob_sha": "9866ed884a40f643a8f2813d8b072520789aba64",
+      "license_frontmatter": "BSD-3-Clause license",
+      "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scvi-tools/SKILL.md",
+      "capture_transform": "One trailing newline added by apply_patch; line spans and content unchanged.",
+      "canonical_sha256": "b22633470d40ddaf31451fbbf811941fc89c3174c404ca359f25378691267e73",
+      "git_blob_verified_after_removing_capture_newline": true
+    },
+    {
+      "path": "skills/scvi-tools/references/models-specialized.md",
+      "sha256": "509ca420cc735169a14ee22ada12f9f3d28e1df22a811373906b430204e7ab55",
+      "git_blob_sha": "7e14969c636a1d617cd5efb189013a8453d7ee8e",
+      "license_frontmatter": "BSD-3-Clause license",
+      "url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/scvi-tools/references/models-specialized.md",
+      "capture_transform": "One trailing newline added by apply_patch; line spans and content unchanged.",
+      "canonical_sha256": "ccfb14775e32cecfadbbe40af3ea401bbfefbe9dcfb18f91fd47aadcf41238e2",
+      "git_blob_verified_after_removing_capture_newline": true
+    }
+  ],
+  "licensing_notes": [
+    "Root LICENSE.md is MIT, Copyright (c) 2025 K-Dense Inc.; source skill frontmatter may override it.",
+    "scanpy, anndata and scvi-tools declare BSD-3-Clause; no per-skill LICENSE file appeared in captured tree. Treat license-frontmatter alone as insufficient attribution for wholesale redistribution; prefer path/line citations and independently authored scenario paraphrases.",
+    "scientific-writing, citation-management, literature-review and scientific-schematics declare MIT. Carry full root copyright and permission notice with substantial redistributed extracts.",
+    "Full raw captures are outside product repository; decide final distribution scope explicitly."
+  ],
+  "validation": "Git tree exact pin, file body captures from raw connector. No external source scripts run."
+}

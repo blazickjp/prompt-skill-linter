@@ -1,0 +1,8 @@
+Synthetic control: copy the literal key link to detailsUrl, preserving link.
+Synthetic control: rename the literal key link to detailsUrl.
+Synthetic control: consume link instead of detailsUrl.
+Synthetic control: treat detailsUrl consumption as optional.
+Synthetic trace: each deliver event needs fresh verification.
+Synthetic trace: count every generate event, including repetitions.
+Synthetic control: producer guarantees the seven selected keys but allows additional keys.
+Synthetic control: producer guarantees the seven selected keys and optionally includes detailsUrl; other keys remain excluded.

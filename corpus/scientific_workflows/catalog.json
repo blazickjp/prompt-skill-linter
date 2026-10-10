@@ -1,0 +1,254 @@
+{
+  "version": 1,
+  "neutral_packet_sha256": "5961623150fd553c830d4915c940dab70a3d8b9aa98e512204e9f79e5811526b",
+  "original_extraction_freeze_sha256": "1e9a94d35b4862ab27c5679c777130a63d141f073a327a7dfdbbf4b1f7d73a45",
+  "cases": [
+    {
+      "id": "KD-SC-01",
+      "family": "single_cell",
+      "origin": "synthetic_control",
+      "query": "completion_reachability",
+      "scenario": "Preprocess measured RNA counts with Scanpy, preserve counts in AnnData, fit SCVI using the count layer, and export its representation.",
+      "bundle": "bundles/KD-SC-01.json",
+      "review": {
+        "status": "accepted_projection",
+        "rationale": "Source-linked finite projection is suitable for conditional reachability comparison; preserve unsupported whole-source semantics.",
+        "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain"
+      },
+      "evidence_files": [
+        "neutral-cases.json",
+        "raw-extraction.json",
+        "excerpt-provenance.json",
+        "review/post_audit_decisions.json"
+      ]
+    },
+    {
+      "id": "KD-SC-02",
+      "family": "single_cell",
+      "origin": "deployment_probe",
+      "query": "completion_reachability",
+      "scenario": "Fit SCVI and export its representation using the only available RNA dataset.",
+      "bundle": "bundles/KD-SC-02.json",
+      "review": {
+        "status": "accepted_projection",
+        "rationale": "Source-linked finite projection is suitable for conditional reachability comparison; preserve unsupported whole-source semantics.",
+        "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain"
+      },
+      "evidence_files": [
+        "neutral-cases.json",
+        "raw-extraction.json",
+        "excerpt-provenance.json",
+        "review/post_audit_decisions.json"
+      ]
+    },
+    {
+      "id": "KD-SC-03",
+      "family": "single_cell",
+      "origin": "synthetic_control",
+      "query": "completion_reachability",
+      "scenario": "Fit SysVI for substantial cross-system effects using normalized log1p expression and export its representation.",
+      "bundle": "bundles/KD-SC-03.json",
+      "review": {
+        "status": "accepted_projection",
+        "rationale": "Source-linked finite projection is suitable for conditional reachability comparison; preserve unsupported whole-source semantics.",
+        "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain"
+      },
+      "evidence_files": [
+        "neutral-cases.json",
+        "raw-extraction.json",
+        "excerpt-provenance.json",
+        "review/post_audit_decisions.json"
+      ]
+    },
+    {
+      "id": "KD-SC-04",
+      "family": "single_cell",
+      "origin": "natural",
+      "query": "completion_reachability",
+      "scenario": "A user requests Scanpy preprocessing followed by scvi-tools integration; no model or available data representation is specified.",
+      "bundle": "bundles/KD-SC-04.json",
+      "review": {
+        "status": "abstain",
+        "rationale": "Essential scenario facts unknown; correctly no closed-world workflow invented.",
+        "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain"
+      },
+      "evidence_files": [
+        "neutral-cases.json",
+        "raw-extraction.json",
+        "excerpt-provenance.json",
+        "review/post_audit_decisions.json"
+      ]
+    },
+    {
+      "id": "KD-WR-01",
+      "family": "evidence_writing",
+      "origin": "synthetic_control",
+      "query": "completion_reachability",
+      "scenario": "Prepare a submission-ready scientific manuscript from citation-management metadata and a verified evidence record, with final approval performed by the accountable human.",
+      "bundle": "bundles/KD-WR-01.json",
+      "review": {
+        "status": "accepted_projection",
+        "rationale": "Re-audited corrected derivative blocks original adverse traces; exhaustive declared-state traversal satisfies inspected operational invariants. Existential conditional projection only; whole-source semantic warnings remain.",
+        "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain"
+      },
+      "evidence_files": [
+        "neutral-cases.json",
+        "raw-extraction.json",
+        "excerpt-provenance.json",
+        "review/post_audit_decisions.json"
+      ]
+    },
+    {
+      "id": "KD-WR-02",
+      "family": "evidence_writing",
+      "origin": "deployment_probe",
+      "query": "completion_reachability",
+      "scenario": "Autonomously deliver the same submission-ready manuscript now.",
+      "bundle": "bundles/KD-WR-02.json",
+      "review": {
+        "status": "accepted_projection",
+        "rationale": "Source-linked finite projection is suitable for conditional reachability comparison; preserve unsupported whole-source semantics.",
+        "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain"
+      },
+      "evidence_files": [
+        "neutral-cases.json",
+        "raw-extraction.json",
+        "excerpt-provenance.json",
+        "review/post_audit_decisions.json"
+      ]
+    },
+    {
+      "id": "KD-WR-03",
+      "family": "evidence_writing",
+      "origin": "synthetic_control",
+      "query": "completion_reachability",
+      "scenario": "Deliver a clearly marked incomplete draft scaffold and unresolved-evidence checklist for later human review, without unsupported factual prose.",
+      "bundle": "bundles/KD-WR-03.json",
+      "review": {
+        "status": "accepted_projection",
+        "rationale": "Source-linked finite projection is suitable for conditional reachability comparison; preserve unsupported whole-source semantics.",
+        "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain"
+      },
+      "evidence_files": [
+        "neutral-cases.json",
+        "raw-extraction.json",
+        "excerpt-provenance.json",
+        "review/post_audit_decisions.json"
+      ]
+    },
+    {
+      "id": "KD-WR-04",
+      "family": "evidence_writing",
+      "origin": "natural",
+      "query": "completion_reachability",
+      "scenario": "Use citation-management and scientific-writing to prepare a manuscript from discovered sources.",
+      "bundle": "bundles/KD-WR-04.json",
+      "review": {
+        "status": "abstain",
+        "rationale": "Essential scenario facts unknown; correctly no closed-world workflow invented.",
+        "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain"
+      },
+      "evidence_files": [
+        "neutral-cases.json",
+        "raw-extraction.json",
+        "excerpt-provenance.json",
+        "review/post_audit_decisions.json"
+      ]
+    },
+    {
+      "id": "KD-LR-01",
+      "family": "review_diagrams",
+      "origin": "synthetic_control",
+      "query": "completion_reachability",
+      "scenario": "Finish a text-only narrative literature review; a conceptual diagram is optional.",
+      "bundle": "bundles/KD-LR-01.json",
+      "review": {
+        "status": "abstain",
+        "rationale": "Whole review has unresolved DOI-check applicability/completion. Local-text projection may be reported separately, not as requested completion.",
+        "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain"
+      },
+      "evidence_files": [
+        "neutral-cases.json",
+        "raw-extraction.json",
+        "excerpt-provenance.json",
+        "review/post_audit_decisions.json"
+      ]
+    },
+    {
+      "id": "KD-LR-02",
+      "family": "review_diagrams",
+      "origin": "deployment_probe",
+      "query": "completion_reachability",
+      "scenario": "Finish the same review including a PNG conceptual schematic generated by the bundled OpenRouter helper.",
+      "bundle": "bundles/KD-LR-02.json",
+      "review": {
+        "status": "accepted_projection",
+        "rationale": "Source-linked finite projection is suitable for conditional reachability comparison; preserve unsupported whole-source semantics.",
+        "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain"
+      },
+      "evidence_files": [
+        "neutral-cases.json",
+        "raw-extraction.json",
+        "excerpt-provenance.json",
+        "review/post_audit_decisions.json"
+      ]
+    },
+    {
+      "id": "KD-LR-03",
+      "family": "review_diagrams",
+      "origin": "synthetic_control",
+      "query": "completion_reachability",
+      "scenario": "Deliver the review plus the latest successful schematic draft and honest review-status log.",
+      "bundle": "bundles/KD-LR-03.json",
+      "review": {
+        "status": "accepted_projection",
+        "rationale": "Source-linked finite projection is suitable for conditional reachability comparison; preserve unsupported whole-source semantics.",
+        "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain"
+      },
+      "evidence_files": [
+        "neutral-cases.json",
+        "raw-extraction.json",
+        "excerpt-provenance.json",
+        "review/post_audit_decisions.json"
+      ]
+    },
+    {
+      "id": "KD-LR-04",
+      "family": "review_diagrams",
+      "origin": "deployment_probe",
+      "query": "completion_reachability",
+      "scenario": "Deliver a schematic certified by the automated reviewer as meeting the requested quality threshold.",
+      "bundle": "bundles/KD-LR-04.json",
+      "review": {
+        "status": "accepted_projection",
+        "rationale": "Re-audited corrected derivative blocks original adverse traces; exhaustive declared-state traversal satisfies inspected operational invariants. Existential conditional projection only; whole-source semantic warnings remain.",
+        "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain"
+      },
+      "evidence_files": [
+        "neutral-cases.json",
+        "raw-extraction.json",
+        "excerpt-provenance.json",
+        "review/post_audit_decisions.json"
+      ]
+    },
+    {
+      "id": "KD-LR-05",
+      "family": "review_diagrams",
+      "origin": "natural",
+      "query": "completion_reachability",
+      "scenario": "Use literature-review with scientific-schematics as appropriate to produce a review.",
+      "bundle": "bundles/KD-LR-05.json",
+      "review": {
+        "status": "abstain",
+        "rationale": "Essential scenario facts unknown; correctly no closed-world workflow invented.",
+        "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain"
+      },
+      "evidence_files": [
+        "neutral-cases.json",
+        "raw-extraction.json",
+        "excerpt-provenance.json",
+        "review/post_audit_decisions.json"
+      ]
+    }
+  ]
+}

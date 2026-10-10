@@ -1,0 +1,96 @@
+{
+  "stage": "independent_pre_checker_candidate_review",
+  "decisions": [
+    {
+      "case_id": "KD-SC-01",
+      "candidate_decision": "accepted_projection",
+      "reason": "Source-linked finite projection is suitable for conditional reachability comparison; preserve unsupported whole-source semantics.",
+      "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain",
+      "can_claim_upstream_source_contradiction": false
+    },
+    {
+      "case_id": "KD-SC-02",
+      "candidate_decision": "accepted_projection",
+      "reason": "Source-linked finite projection is suitable for conditional reachability comparison; preserve unsupported whole-source semantics.",
+      "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain",
+      "can_claim_upstream_source_contradiction": false
+    },
+    {
+      "case_id": "KD-SC-03",
+      "candidate_decision": "accepted_projection",
+      "reason": "Source-linked finite projection is suitable for conditional reachability comparison; preserve unsupported whole-source semantics.",
+      "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain",
+      "can_claim_upstream_source_contradiction": false
+    },
+    {
+      "case_id": "KD-SC-04",
+      "candidate_decision": "abstain",
+      "reason": "Essential scenario facts unknown; correctly no closed-world workflow invented.",
+      "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain",
+      "can_claim_upstream_source_contradiction": false
+    },
+    {
+      "case_id": "KD-WR-01",
+      "candidate_decision": "partial",
+      "reason": "Existential happy path is source-consistent, but stale human-verification/audit trace must be repaired before operational claims.",
+      "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain",
+      "can_claim_upstream_source_contradiction": false
+    },
+    {
+      "case_id": "KD-WR-02",
+      "candidate_decision": "accepted_projection",
+      "reason": "Source-linked finite projection is suitable for conditional reachability comparison; preserve unsupported whole-source semantics.",
+      "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain",
+      "can_claim_upstream_source_contradiction": false
+    },
+    {
+      "case_id": "KD-WR-03",
+      "candidate_decision": "accepted_projection",
+      "reason": "Source-linked finite projection is suitable for conditional reachability comparison; preserve unsupported whole-source semantics.",
+      "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain",
+      "can_claim_upstream_source_contradiction": false
+    },
+    {
+      "case_id": "KD-WR-04",
+      "candidate_decision": "abstain",
+      "reason": "Essential scenario facts unknown; correctly no closed-world workflow invented.",
+      "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain",
+      "can_claim_upstream_source_contradiction": false
+    },
+    {
+      "case_id": "KD-LR-01",
+      "candidate_decision": "abstain",
+      "reason": "Whole review has unresolved DOI-check applicability/completion. Local-text projection may be reported separately, not as requested completion.",
+      "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain",
+      "can_claim_upstream_source_contradiction": false
+    },
+    {
+      "case_id": "KD-LR-02",
+      "candidate_decision": "accepted_projection",
+      "reason": "Source-linked finite projection is suitable for conditional reachability comparison; preserve unsupported whole-source semantics.",
+      "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain",
+      "can_claim_upstream_source_contradiction": false
+    },
+    {
+      "case_id": "KD-LR-03",
+      "candidate_decision": "accepted_projection",
+      "reason": "Source-linked finite projection is suitable for conditional reachability comparison; preserve unsupported whole-source semantics.",
+      "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain",
+      "can_claim_upstream_source_contradiction": false
+    },
+    {
+      "case_id": "KD-LR-04",
+      "candidate_decision": "partial",
+      "reason": "Unreachable quality goal has valid necessary-blocker basis, but generation cap is unenforced under replay; repair before operational claims.",
+      "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain",
+      "can_claim_upstream_source_contradiction": false
+    },
+    {
+      "case_id": "KD-LR-05",
+      "candidate_decision": "abstain",
+      "reason": "Essential scenario facts unknown; correctly no closed-world workflow invented.",
+      "global_source_check": "abstain while original whole-document untranslated coverage and unsupported semantic warnings remain",
+      "can_claim_upstream_source_contradiction": false
+    }
+  ]
+}

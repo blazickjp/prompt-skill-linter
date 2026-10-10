@@ -21,6 +21,12 @@ jobs:
       - run: python -m unittest discover -s tests -v
       - run: python -m unittest evaluation.test_evaluation -v
       - run: python -m evaluation.run verify
+      - run: python -m evaluation.scientific_workflows verify
+      - run: python -m evaluation.research_extensions verify
+      - run: python -m evaluation.research_extensions reproduce --output /tmp/research-extensions.json
+      - run: python -m evaluation.scientific_workflows mechanical --output /tmp/scientific-workflows.json
+      - run: python scripts/review_trace_oracle.py
+      - run: python corpus/scientific_workflows/structural/test_scan_explicit_links.py
       - run: python -m compileall -q prompt_skill_linter tests scripts
       - run: python scripts/reproduce.py
       - run: node web/tests/test_state.js
@@ -52,3 +58,13 @@ jobs:
             web/qa-artifacts/
             artifacts/browser-review/
           if-no-files-found: warn
+  mcp-sdk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install 'mcp==1.26.0'
+      - run: python -c 'import mcp'
+      - run: python -m unittest discover -s tests -p test_mcp_server.py -v

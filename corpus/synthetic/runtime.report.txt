@@ -41,4 +41,4 @@ Resource check n=151: infeasible; lower bound 32, budget 30
 
 Resource check n=184: infeasible; lower bound 38, budget 30
 
-A lower-bound pass is not a completion guarantee. Prose extraction is not implemented.
+A lower-bound pass is not a completion guarantee. Checks apply to the reviewed contract; semantic fidelity to source prose is not certified.

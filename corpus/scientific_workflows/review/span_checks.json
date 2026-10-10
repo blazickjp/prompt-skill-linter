@@ -1,0 +1,1628 @@
+[
+  {
+    "case": "KD-LR-01",
+    "kind": "rule",
+    "id": "literature-search",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-01",
+    "kind": "rule",
+    "id": "literature-prisma",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-01",
+    "kind": "rule",
+    "id": "literature-screening",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-01",
+    "kind": "rule",
+    "id": "literature-citation-support",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-01",
+    "kind": "rule",
+    "id": "schematics-restricted-prompt",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-01",
+    "kind": "rule",
+    "id": "schematics-generation",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-01",
+    "kind": "rule",
+    "id": "schematics-review-not-proof",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-01",
+    "kind": "rule",
+    "id": "schematics-flow-accounting",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-01",
+    "kind": "rule",
+    "id": "literature-local-support",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-01",
+    "kind": "rule",
+    "id": "schematics-bounded-loop",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-02",
+    "kind": "rule",
+    "id": "literature-search",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-02",
+    "kind": "rule",
+    "id": "literature-prisma",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-02",
+    "kind": "rule",
+    "id": "literature-screening",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-02",
+    "kind": "rule",
+    "id": "literature-citation-support",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-02",
+    "kind": "rule",
+    "id": "schematics-restricted-prompt",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-02",
+    "kind": "rule",
+    "id": "schematics-generation",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-02",
+    "kind": "rule",
+    "id": "schematics-review-not-proof",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-02",
+    "kind": "rule",
+    "id": "schematics-flow-accounting",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-02",
+    "kind": "rule",
+    "id": "literature-local-support",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-02",
+    "kind": "rule",
+    "id": "schematics-bounded-loop",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-03",
+    "kind": "rule",
+    "id": "literature-search",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-03",
+    "kind": "rule",
+    "id": "literature-prisma",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-03",
+    "kind": "rule",
+    "id": "literature-screening",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-03",
+    "kind": "rule",
+    "id": "literature-citation-support",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-03",
+    "kind": "rule",
+    "id": "schematics-restricted-prompt",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-03",
+    "kind": "rule",
+    "id": "schematics-generation",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-03",
+    "kind": "rule",
+    "id": "schematics-review-not-proof",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-03",
+    "kind": "rule",
+    "id": "schematics-flow-accounting",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-03",
+    "kind": "rule",
+    "id": "literature-local-support",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-03",
+    "kind": "rule",
+    "id": "schematics-bounded-loop",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-04",
+    "kind": "rule",
+    "id": "literature-search",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-04",
+    "kind": "rule",
+    "id": "literature-prisma",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-04",
+    "kind": "rule",
+    "id": "literature-screening",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-04",
+    "kind": "rule",
+    "id": "literature-citation-support",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-04",
+    "kind": "rule",
+    "id": "schematics-restricted-prompt",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-04",
+    "kind": "rule",
+    "id": "schematics-generation",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-04",
+    "kind": "rule",
+    "id": "schematics-review-not-proof",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-04",
+    "kind": "rule",
+    "id": "schematics-flow-accounting",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-04",
+    "kind": "rule",
+    "id": "literature-local-support",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-04",
+    "kind": "rule",
+    "id": "schematics-bounded-loop",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-05",
+    "kind": "rule",
+    "id": "literature-search",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-05",
+    "kind": "rule",
+    "id": "literature-prisma",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-05",
+    "kind": "rule",
+    "id": "literature-screening",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-05",
+    "kind": "rule",
+    "id": "literature-citation-support",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-05",
+    "kind": "rule",
+    "id": "schematics-restricted-prompt",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-05",
+    "kind": "rule",
+    "id": "schematics-generation",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-05",
+    "kind": "rule",
+    "id": "schematics-review-not-proof",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-05",
+    "kind": "rule",
+    "id": "schematics-flow-accounting",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-05",
+    "kind": "rule",
+    "id": "literature-local-support",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-05",
+    "kind": "rule",
+    "id": "schematics-bounded-loop",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-01",
+    "kind": "rule",
+    "id": "scanpy-count-input",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-01",
+    "kind": "rule",
+    "id": "scanpy-independent-representations",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-01",
+    "kind": "rule",
+    "id": "scanpy-hvg-input",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-01",
+    "kind": "rule",
+    "id": "scanpy-marker-input",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-01",
+    "kind": "rule",
+    "id": "scanpy-de-design",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-01",
+    "kind": "rule",
+    "id": "scanpy-integration-effects",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-01",
+    "kind": "rule",
+    "id": "scanpy-backed",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-01",
+    "kind": "rule",
+    "id": "scanpy-r-conversion",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-01",
+    "kind": "rule",
+    "id": "scanpy-tool-preference",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-01",
+    "kind": "rule",
+    "id": "anndata-copy-counts",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-01",
+    "kind": "rule",
+    "id": "anndata-raw-snapshot",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-01",
+    "kind": "rule",
+    "id": "scvi-scvi-input",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-01",
+    "kind": "rule",
+    "id": "scvi-sysvi-input",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-01",
+    "kind": "rule",
+    "id": "scvi-preflight",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-01",
+    "kind": "rule",
+    "id": "scvi-register-train",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-01",
+    "kind": "rule",
+    "id": "scvi-count-failure",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-01",
+    "kind": "rule",
+    "id": "scvi-registration-invalidation",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-01",
+    "kind": "rule",
+    "id": "scvi-sysvi-specialized",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-02",
+    "kind": "rule",
+    "id": "scanpy-count-input",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-02",
+    "kind": "rule",
+    "id": "scanpy-independent-representations",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-02",
+    "kind": "rule",
+    "id": "scanpy-hvg-input",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-02",
+    "kind": "rule",
+    "id": "scanpy-marker-input",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-02",
+    "kind": "rule",
+    "id": "scanpy-de-design",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-02",
+    "kind": "rule",
+    "id": "scanpy-integration-effects",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-02",
+    "kind": "rule",
+    "id": "scanpy-backed",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-02",
+    "kind": "rule",
+    "id": "scanpy-r-conversion",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-02",
+    "kind": "rule",
+    "id": "scanpy-tool-preference",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-02",
+    "kind": "rule",
+    "id": "anndata-copy-counts",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-02",
+    "kind": "rule",
+    "id": "anndata-raw-snapshot",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-02",
+    "kind": "rule",
+    "id": "scvi-scvi-input",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-02",
+    "kind": "rule",
+    "id": "scvi-sysvi-input",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-02",
+    "kind": "rule",
+    "id": "scvi-preflight",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-02",
+    "kind": "rule",
+    "id": "scvi-register-train",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-02",
+    "kind": "rule",
+    "id": "scvi-count-failure",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-02",
+    "kind": "rule",
+    "id": "scvi-registration-invalidation",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-02",
+    "kind": "rule",
+    "id": "scvi-sysvi-specialized",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-03",
+    "kind": "rule",
+    "id": "scanpy-count-input",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-03",
+    "kind": "rule",
+    "id": "scanpy-independent-representations",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-03",
+    "kind": "rule",
+    "id": "scanpy-hvg-input",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-03",
+    "kind": "rule",
+    "id": "scanpy-marker-input",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-03",
+    "kind": "rule",
+    "id": "scanpy-de-design",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-03",
+    "kind": "rule",
+    "id": "scanpy-integration-effects",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-03",
+    "kind": "rule",
+    "id": "scanpy-backed",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-03",
+    "kind": "rule",
+    "id": "scanpy-r-conversion",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-03",
+    "kind": "rule",
+    "id": "scanpy-tool-preference",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-03",
+    "kind": "rule",
+    "id": "anndata-copy-counts",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-03",
+    "kind": "rule",
+    "id": "anndata-raw-snapshot",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-03",
+    "kind": "rule",
+    "id": "scvi-scvi-input",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-03",
+    "kind": "rule",
+    "id": "scvi-sysvi-input",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-03",
+    "kind": "rule",
+    "id": "scvi-preflight",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-03",
+    "kind": "rule",
+    "id": "scvi-register-train",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-03",
+    "kind": "rule",
+    "id": "scvi-count-failure",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-03",
+    "kind": "rule",
+    "id": "scvi-registration-invalidation",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-03",
+    "kind": "rule",
+    "id": "scvi-sysvi-specialized",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-04",
+    "kind": "rule",
+    "id": "scanpy-count-input",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-04",
+    "kind": "rule",
+    "id": "scanpy-independent-representations",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-04",
+    "kind": "rule",
+    "id": "scanpy-hvg-input",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-04",
+    "kind": "rule",
+    "id": "scanpy-marker-input",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-04",
+    "kind": "rule",
+    "id": "scanpy-de-design",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-04",
+    "kind": "rule",
+    "id": "scanpy-integration-effects",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-04",
+    "kind": "rule",
+    "id": "scanpy-backed",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-04",
+    "kind": "rule",
+    "id": "scanpy-r-conversion",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-04",
+    "kind": "rule",
+    "id": "scanpy-tool-preference",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-04",
+    "kind": "rule",
+    "id": "anndata-copy-counts",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-04",
+    "kind": "rule",
+    "id": "anndata-raw-snapshot",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-04",
+    "kind": "rule",
+    "id": "scvi-scvi-input",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-04",
+    "kind": "rule",
+    "id": "scvi-sysvi-input",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-04",
+    "kind": "rule",
+    "id": "scvi-preflight",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-04",
+    "kind": "rule",
+    "id": "scvi-register-train",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-04",
+    "kind": "rule",
+    "id": "scvi-count-failure",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-04",
+    "kind": "rule",
+    "id": "scvi-registration-invalidation",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-04",
+    "kind": "rule",
+    "id": "scvi-sysvi-specialized",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-01",
+    "kind": "rule",
+    "id": "writing-advertisement",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-01",
+    "kind": "rule",
+    "id": "writing-confidentiality",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-01",
+    "kind": "rule",
+    "id": "writing-no-fabrication",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-01",
+    "kind": "rule",
+    "id": "writing-human-evidence",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-01",
+    "kind": "rule",
+    "id": "writing-intake",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-01",
+    "kind": "rule",
+    "id": "writing-human-reverification",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-01",
+    "kind": "rule",
+    "id": "writing-outline",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-01",
+    "kind": "rule",
+    "id": "writing-reference-boundary",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-01",
+    "kind": "rule",
+    "id": "writing-ai-disclosure",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-01",
+    "kind": "rule",
+    "id": "writing-optional-displays",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-01",
+    "kind": "rule",
+    "id": "writing-human-approval",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-01",
+    "kind": "rule",
+    "id": "citation-enrichment",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-01",
+    "kind": "rule",
+    "id": "citation-untrusted-metadata",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-01",
+    "kind": "rule",
+    "id": "citation-validation",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-01",
+    "kind": "rule",
+    "id": "citation-diagram-conditional",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-01",
+    "kind": "rule",
+    "id": "writing-scaffold",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-01",
+    "kind": "rule",
+    "id": "writing-local-audits",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-01",
+    "kind": "rule",
+    "id": "writing-cli-scaffold-boundary",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-01",
+    "kind": "rule",
+    "id": "citation-registration-boundary",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-02",
+    "kind": "rule",
+    "id": "writing-advertisement",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-02",
+    "kind": "rule",
+    "id": "writing-confidentiality",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-02",
+    "kind": "rule",
+    "id": "writing-no-fabrication",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-02",
+    "kind": "rule",
+    "id": "writing-human-evidence",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-02",
+    "kind": "rule",
+    "id": "writing-intake",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-02",
+    "kind": "rule",
+    "id": "writing-human-reverification",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-02",
+    "kind": "rule",
+    "id": "writing-outline",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-02",
+    "kind": "rule",
+    "id": "writing-reference-boundary",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-02",
+    "kind": "rule",
+    "id": "writing-ai-disclosure",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-02",
+    "kind": "rule",
+    "id": "writing-optional-displays",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-02",
+    "kind": "rule",
+    "id": "writing-human-approval",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-02",
+    "kind": "rule",
+    "id": "citation-enrichment",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-02",
+    "kind": "rule",
+    "id": "citation-untrusted-metadata",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-02",
+    "kind": "rule",
+    "id": "citation-validation",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-02",
+    "kind": "rule",
+    "id": "citation-diagram-conditional",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-02",
+    "kind": "rule",
+    "id": "writing-scaffold",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-02",
+    "kind": "rule",
+    "id": "writing-local-audits",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-02",
+    "kind": "rule",
+    "id": "writing-cli-scaffold-boundary",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-02",
+    "kind": "rule",
+    "id": "citation-registration-boundary",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-03",
+    "kind": "rule",
+    "id": "writing-advertisement",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-03",
+    "kind": "rule",
+    "id": "writing-confidentiality",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-03",
+    "kind": "rule",
+    "id": "writing-no-fabrication",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-03",
+    "kind": "rule",
+    "id": "writing-human-evidence",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-03",
+    "kind": "rule",
+    "id": "writing-intake",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-03",
+    "kind": "rule",
+    "id": "writing-human-reverification",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-03",
+    "kind": "rule",
+    "id": "writing-outline",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-03",
+    "kind": "rule",
+    "id": "writing-reference-boundary",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-03",
+    "kind": "rule",
+    "id": "writing-ai-disclosure",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-03",
+    "kind": "rule",
+    "id": "writing-optional-displays",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-03",
+    "kind": "rule",
+    "id": "writing-human-approval",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-03",
+    "kind": "rule",
+    "id": "citation-enrichment",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-03",
+    "kind": "rule",
+    "id": "citation-untrusted-metadata",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-03",
+    "kind": "rule",
+    "id": "citation-validation",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-03",
+    "kind": "rule",
+    "id": "citation-diagram-conditional",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-03",
+    "kind": "rule",
+    "id": "writing-scaffold",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-03",
+    "kind": "rule",
+    "id": "writing-local-audits",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-03",
+    "kind": "rule",
+    "id": "writing-cli-scaffold-boundary",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-03",
+    "kind": "rule",
+    "id": "citation-registration-boundary",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-04",
+    "kind": "rule",
+    "id": "writing-advertisement",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-04",
+    "kind": "rule",
+    "id": "writing-confidentiality",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-04",
+    "kind": "rule",
+    "id": "writing-no-fabrication",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-04",
+    "kind": "rule",
+    "id": "writing-human-evidence",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-04",
+    "kind": "rule",
+    "id": "writing-intake",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-04",
+    "kind": "rule",
+    "id": "writing-human-reverification",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-04",
+    "kind": "rule",
+    "id": "writing-outline",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-04",
+    "kind": "rule",
+    "id": "writing-reference-boundary",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-04",
+    "kind": "rule",
+    "id": "writing-ai-disclosure",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-04",
+    "kind": "rule",
+    "id": "writing-optional-displays",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-04",
+    "kind": "rule",
+    "id": "writing-human-approval",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-04",
+    "kind": "rule",
+    "id": "citation-enrichment",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-04",
+    "kind": "rule",
+    "id": "citation-untrusted-metadata",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-04",
+    "kind": "rule",
+    "id": "citation-validation",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-04",
+    "kind": "rule",
+    "id": "citation-diagram-conditional",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-04",
+    "kind": "rule",
+    "id": "writing-scaffold",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-04",
+    "kind": "rule",
+    "id": "writing-local-audits",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-04",
+    "kind": "rule",
+    "id": "writing-cli-scaffold-boundary",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-04",
+    "kind": "rule",
+    "id": "citation-registration-boundary",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-01",
+    "kind": "action",
+    "id": "preserve_measured_counts",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-01",
+    "kind": "action",
+    "id": "preserve_measured_counts",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-01",
+    "kind": "action",
+    "id": "normalize_X_keep_counts",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-01",
+    "kind": "action",
+    "id": "select_count_features",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-01",
+    "kind": "action",
+    "id": "select_count_features",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-01",
+    "kind": "action",
+    "id": "register_scvi_counts",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-01",
+    "kind": "action",
+    "id": "register_scvi_counts",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-01",
+    "kind": "action",
+    "id": "fit_scvi",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-01",
+    "kind": "action",
+    "id": "export_model_and_representation",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-02",
+    "kind": "action",
+    "id": "preserve_measured_counts",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-02",
+    "kind": "action",
+    "id": "preserve_measured_counts",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-02",
+    "kind": "action",
+    "id": "normalize_X_keep_counts",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-02",
+    "kind": "action",
+    "id": "select_count_features",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-02",
+    "kind": "action",
+    "id": "select_count_features",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-02",
+    "kind": "action",
+    "id": "register_scvi_counts",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-02",
+    "kind": "action",
+    "id": "register_scvi_counts",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-02",
+    "kind": "action",
+    "id": "fit_scvi",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-02",
+    "kind": "action",
+    "id": "export_model_and_representation",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-03",
+    "kind": "action",
+    "id": "register_sysvi_normalized",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-03",
+    "kind": "action",
+    "id": "register_sysvi_normalized",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-03",
+    "kind": "action",
+    "id": "register_sysvi_normalized",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-03",
+    "kind": "action",
+    "id": "fit_sysvi",
+    "exact": true
+  },
+  {
+    "case": "KD-SC-03",
+    "kind": "action",
+    "id": "export_model_and_representation",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-01",
+    "kind": "action",
+    "id": "human_verify_source_claims",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-01",
+    "kind": "action",
+    "id": "create_evidence_outline",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-01",
+    "kind": "action",
+    "id": "draft_manuscript",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-01",
+    "kind": "action",
+    "id": "draft_manuscript",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-01",
+    "kind": "action",
+    "id": "human_reverify_changed_prose",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-01",
+    "kind": "action",
+    "id": "run_local_consistency_audits",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-01",
+    "kind": "action",
+    "id": "run_local_consistency_audits",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-01",
+    "kind": "action",
+    "id": "human_approve_ready_and_remove_banner",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-02",
+    "kind": "action",
+    "id": "human_verify_source_claims",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-02",
+    "kind": "action",
+    "id": "create_evidence_outline",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-02",
+    "kind": "action",
+    "id": "draft_manuscript",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-02",
+    "kind": "action",
+    "id": "draft_manuscript",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-02",
+    "kind": "action",
+    "id": "human_reverify_changed_prose",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-02",
+    "kind": "action",
+    "id": "run_local_consistency_audits",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-02",
+    "kind": "action",
+    "id": "run_local_consistency_audits",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-02",
+    "kind": "action",
+    "id": "human_approve_ready_and_remove_banner",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-03",
+    "kind": "action",
+    "id": "create_incomplete_scaffold",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-03",
+    "kind": "action",
+    "id": "create_incomplete_scaffold",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-03",
+    "kind": "action",
+    "id": "create_incomplete_scaffold",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-03",
+    "kind": "action",
+    "id": "create_incomplete_scaffold",
+    "exact": true
+  },
+  {
+    "case": "KD-WR-03",
+    "kind": "action",
+    "id": "create_incomplete_scaffold",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-01",
+    "kind": "action",
+    "id": "compare_citations_claims_to_local_sources",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-01",
+    "kind": "action",
+    "id": "compare_citations_claims_to_local_sources",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-01",
+    "kind": "action",
+    "id": "synthesize_narrative_review",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-01",
+    "kind": "action",
+    "id": "synthesize_narrative_review",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-02",
+    "kind": "action",
+    "id": "compare_citations_claims_to_local_sources",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-02",
+    "kind": "action",
+    "id": "compare_citations_claims_to_local_sources",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-02",
+    "kind": "action",
+    "id": "synthesize_narrative_review",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-02",
+    "kind": "action",
+    "id": "synthesize_narrative_review",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-02",
+    "kind": "action",
+    "id": "generate_first_png",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-02",
+    "kind": "action",
+    "id": "generate_first_png",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-03",
+    "kind": "action",
+    "id": "compare_citations_claims_to_local_sources",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-03",
+    "kind": "action",
+    "id": "compare_citations_claims_to_local_sources",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-03",
+    "kind": "action",
+    "id": "synthesize_narrative_review",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-03",
+    "kind": "action",
+    "id": "synthesize_narrative_review",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-03",
+    "kind": "action",
+    "id": "generate_first_png",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-03",
+    "kind": "action",
+    "id": "generate_first_png",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-03",
+    "kind": "action",
+    "id": "record_unavailable_review",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-04",
+    "kind": "action",
+    "id": "compare_citations_claims_to_local_sources",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-04",
+    "kind": "action",
+    "id": "compare_citations_claims_to_local_sources",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-04",
+    "kind": "action",
+    "id": "synthesize_narrative_review",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-04",
+    "kind": "action",
+    "id": "synthesize_narrative_review",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-04",
+    "kind": "action",
+    "id": "generate_first_png",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-04",
+    "kind": "action",
+    "id": "generate_first_png",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-04",
+    "kind": "action",
+    "id": "record_first_low_review",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-04",
+    "kind": "action",
+    "id": "record_first_low_review",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-04",
+    "kind": "action",
+    "id": "generate_second_png",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-04",
+    "kind": "action",
+    "id": "generate_second_png",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-04",
+    "kind": "action",
+    "id": "record_second_low_review",
+    "exact": true
+  },
+  {
+    "case": "KD-LR-04",
+    "kind": "action",
+    "id": "record_second_low_review",
+    "exact": true
+  }
+]

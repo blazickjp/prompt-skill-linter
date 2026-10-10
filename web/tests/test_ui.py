@@ -160,6 +160,35 @@ def run(browser_path=None):
                 expect(page.locator('#contract-rules .rule-card')).to_have_count(3)
             check('composed-rule-inspection', composition)
 
+            def field_presence(page):
+                page.locator('#import-file').set_input_files(str(ROOT / 'corpus/research_extensions/bundles/GH-MANUAL.json'))
+                expect(page.locator('#run-status')).to_contain_text('1 error-level')
+                expect(page.locator('#finding-detail')).to_contain_text('detailsUrl')
+                expect(page.locator('#finding-detail')).to_contain_text('reviewed closed-record projection')
+                with page.expect_download() as download:
+                    page.locator('#export-report-btn').click()
+                report = json.loads(Path(download.value.path()).read_text())
+                assert report['field_checks'][0]['missing_required_fields'] == ['detailsUrl']
+                assert report['diagnostics'][0]['code'] == 'REQUIRED_FIELD_NOT_PRODUCED'
+                page.locator('#import-file').set_input_files(str(ROOT / 'corpus/research_extensions/bundles/GH-HELPER.json'))
+                expect(page.locator('#findings-total')).to_have_text('0 FINDINGS')
+                with page.expect_download() as download:
+                    page.locator('#export-report-btn').click()
+                assert json.loads(Path(download.value.path()).read_text())['field_checks'][0]['status'] == 'compatible'
+            check('field-presence-candidate-and-helper-control', field_presence)
+
+            def trigger_coverage(page):
+                page.locator('#import-file').set_input_files(str(ROOT / 'corpus/research_extensions/bundles/TRACE-DISABLED-ZERO.json'))
+                expect(page.locator('#finding-detail')).to_contain_text('unreachable')
+                expect(page.locator('#run-status')).to_contain_text('No error-level')
+                with page.expect_download() as download:
+                    page.locator('#export-report-btn').click()
+                report = json.loads(Path(download.value.path()).read_text())
+                assert report['trace_checks'][0]['status'] == 'safe'
+                assert report['trace_checks'][0]['trigger_coverage']['status'] == 'unreachable'
+                assert report['diagnostics'][0]['severity'] == 'info'
+            check('safe-unreachable-trigger-is-information', trigger_coverage)
+
             def responsive(page):
                 expect(page.locator('#toast')).to_be_hidden(timeout=5000)
                 page.screenshot(path=str(artifacts / 'desktop.png'), full_page=True)

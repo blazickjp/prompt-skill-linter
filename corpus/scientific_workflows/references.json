@@ -1,0 +1,73 @@
+{
+  "labels": [
+    {
+      "id": "KD-SC-01",
+      "label": "no_issue",
+      "rationale": "Measured unnormalized counts remain in the selected counts layer; normalized X and log-normalized .raw do not change that layer contract. Scope is mechanical fit/export, not proof of biological validity."
+    },
+    {
+      "id": "KD-SC-02",
+      "label": "issue",
+      "rationale": "SCVI specifically requires unnormalized measured counts. The only supplied matrix is log-normalized and no retrieval is available; exponentiation is expressly disallowed as reconstruction. This is an unsupported deployment, not an inherent contradiction between skills."
+    },
+    {
+      "id": "KD-SC-03",
+      "label": "no_issue",
+      "rationale": "The selected SysVI model requires normalized log-transformed expression. A blanket count requirement would contradict this explicit model branch; supplied system metadata and other prerequisites are assumed valid as stated."
+    },
+    {
+      "id": "KD-SC-04",
+      "label": "abstain",
+      "rationale": "scvi-tools contains distinct input contracts by model. An integration request without selected model, input provenance or deployment facts does not establish either compatibility or an absent prerequisite."
+    },
+    {
+      "id": "KD-WR-01",
+      "label": "no_issue",
+      "rationale": "The stipulated accountable human verifies source propositions and metadata, rechecks changed text, and performs final approval/banner/flag actions. Feasibility is conditional on those promised human steps occurring; the assistant alone may not finish them."
+    },
+    {
+      "id": "KD-WR-02",
+      "label": "issue",
+      "rationale": "Machine metadata and consistency checks cannot substitute for the explicitly required accountable human source verification or permission to set submission_ready/remove the banner. No human is available in this scenario."
+    },
+    {
+      "id": "KD-WR-03",
+      "label": "no_issue",
+      "rationale": "The requested output is an incomplete scaffold with unresolved states, retained draft banner and submission_ready=false, not factual prose falsely presented as verified or approved. The source explicitly supports missing/unverified states and fail-closed scaffolds."
+    },
+    {
+      "id": "KD-WR-04",
+      "label": "abstain",
+      "rationale": "Preparing a manuscript can mean a scaffold, evidence-grounded draft, or submission-ready output. Unspecified verification and human availability do not establish a contradiction or unsupported finalization."
+    },
+    {
+      "id": "KD-LR-01",
+      "label": "abstain",
+      "rationale": "Optional schematic branch is feasible without key/network. Whole-review completion is underdetermined: the later-arriving core workflow directs DOI registration checks through Handle/Crossref and its quality checklist requires completed registration checks. Scenario supplies local reports/search/extraction and manual identity/claim support, but not DOI presence, existing DOI verification report, or registration completion. Absence of network is explicit; absence of cached verification is not. Do not infer overall completion or a definite missing prerequisite from these unknowns."
+    },
+    {
+      "id": "KD-LR-02",
+      "label": "issue",
+      "rationale": "The user specifically requires the bundled OpenRouter PNG generator and excludes alternatives, while its key and network prerequisites are explicitly absent. Optionality in the general review does not waive prerequisites after selection."
+    },
+    {
+      "id": "KD-LR-03",
+      "label": "no_issue",
+      "rationale": "The requested unchecked draft can be retained when a generation succeeded but automated review is unavailable. Honest null/unverified review state is required; saved output is not evidence of a passing threshold or scientific accuracy."
+    },
+    {
+      "id": "KD-LR-04",
+      "label": "issue",
+      "rationale": "Given both permitted generations remain below the requested threshold, the supplied run cannot produce the demanded passing outcome. The source permits stopping at the bound and retaining a draft, but that fallback does not satisfy this stricter synthetic goal. This is not a natural contradiction in the source."
+    },
+    {
+      "id": "KD-LR-05",
+      "label": "abstain",
+      "rationale": "A natural review request with schematics only as appropriate leaves the active branch and required evidence/tooling unspecified. The optional generator\u2019s absent/available credentials cannot be presumed either way."
+    }
+  ],
+  "human_gold": false,
+  "initial_reference_sha256": "3246632e9a5ea5bfd29f40ba3c425da69c862687336f585670f8b36e792f7c45",
+  "amendment_sha256": "79f33185ac9ab382500ec85b80a4bf162e361bbc74d0d2eb1f30359ee84dc7dd",
+  "notice": "Label mapping only; initial labels and explicit source-based pre-checker amendment both retained."
+}

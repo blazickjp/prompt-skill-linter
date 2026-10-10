@@ -2,6 +2,13 @@
 
 A local verification Studio and Python CLI for **reviewed instruction contracts**. It finds reproducible specification problems before agent execution. It does not score prompt quality, certify arbitrary-English interpretations, execute declared tool calls, or guarantee runtime compliance.
 
+This **1.2.0.dev0 local research build** adds separate trace-trigger coverage and
+reviewed flat-record field-presence checks. It is an unpublished successor to
+the frozen v1.1 work; historical evaluation artifacts are unchanged. Read the
+[research extension scope and evidence](docs/RESEARCH_EXTENSIONS.md) and
+[research decisions](docs/RESEARCH_AGENDA.md). No perplexity score or behavioral
+robustness heuristic is enabled.
+
 ## Launch the local Studio
 
 Python 3.10+, with no runtime dependencies or API key required:
@@ -16,6 +23,20 @@ Open http://127.0.0.1:8765. Or launch directly from this checkout with `python -
 The Studio provides source intake and reviewed extraction, source-linked diagnostics, finite-state workflow paths, scoped CNF truth tables, deletion-checked cores, explicit repair what-if, contract differences and replay ZIPs. Three built-in examples demonstrate bulk capacity, three-way rule composition and compliant refusal. The core Studio and analysis run locally. Model-assisted extraction is optional, off by default and not live-validated.
 
 Offline extraction handles explicit annotation lines such as `REQUIRE approved=true` and `CLAUSE approved | !upload`. Other English remains visibly untranslated. An optional OpenAI structured-candidate adapter requires local environment configuration, explicit source/cost opt-in and mandatory review; only mocked integration tests have run. See [API and extraction modes](docs/API.md).
+
+### Use an existing coding assistant
+
+Version 1.1 adds an optional local MCP bridge: `python -m prompt_skill_linter.mcp_server`.
+Your existing host model can propose source-grounded contracts, show the mapping
+and omissions for review, then invoke the deterministic checker. No separate API
+key or provider call is required by this bridge; normal host usage terms still
+apply. Setup is explicit, with no automatic client configuration. See the
+[host setup and review workflow](docs/agent-host.md).
+
+Explicit action-trace assertions also check per-run invocation caps and current
+verification after edits, independently of the workflow's own state flags. They
+return a shortest unsafe trace, exhaustive finite safety, or UNKNOWN. An unsafe
+allowed path does not make a safe completion impossible. See [trace semantics](docs/contracts.md).
 
 ## Reproduce the CLI finding
 
@@ -69,6 +90,14 @@ The initial external seed contains five observations from three pinned repositor
 
 A provisional matched native-model pilot and separate extraction measurements are documented in [the evaluation report](docs/EVALUATION.md), with unresolved ambiguity and explicit coverage limits. Held-out human ground truth, live-provider accuracy, production usefulness and any superiority claim remain unavailable. No paid model calls, production updates or historical tool replays are performed.
 
+The [13-case scientific-workflow evaluation](corpus/scientific_workflows/README.md)
+adds three real documented workflow families, two independent native review arms,
+source-pinned extraction audit, and explicit deployment controls. It found two
+defects in model-authored transition abstractions, corrected them, and added
+post-audit trace regressions. Both native arms answered 9/13 cases; the conservative
+checker answered 4/13 and kept unsupported-source warnings. No upstream source
+contradiction or advantage over model review was established.
+
 ## Intentional limits
 
 No validated arbitrary-English extraction, general SMT solver, unconstrained temporal logic, arbitrary conditional expressions, retry/failure model, dynamic skill discovery, argument type checker, automatic policy repair, automatic specificity inference, or inferred fallback compliance. Explicit CNF and finite-state models are bounded and isolated by documented fragment guards. Dependency diagnostics currently point to JSON declarations rather than a source-prose span and explicitly disclose that provenance gap. Read `docs/contracts.md` before interpreting a result.
@@ -76,5 +105,9 @@ No validated arbitrary-English extraction, general SMT solver, unconstrained tem
 ## Product and scientific documentation
 
 [Acceptance gates](docs/PRODUCT.md) · [Architecture](docs/ARCHITECTURE.md) · [Model card and soundness envelope](docs/MODEL_CARD.md) · [Local API](docs/API.md) · [Release notes](CHANGELOG.md)
+
+The host-assisted 1.1 release candidate has a separate [real-workflow acceptance
+checklist](docs/REAL_WORKFLOW_ACCEPTANCE.md). Its local evidence does not inherit
+the earlier release's remote CI pass; final publication must verify the new snapshot.
 
 This repository is private. No open-source license has been selected. Version 1.0 passed [all four release CI jobs](https://github.com/blazickjp/prompt-skill-linter/actions/runs/38062286853), including three Python versions, installed-wheel assets and 17 headless-browser user journeys. See [the acceptance scope](docs/PRODUCT.md).

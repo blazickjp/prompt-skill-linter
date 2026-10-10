@@ -1,0 +1,29 @@
+{
+  "commit": "92ace75ac21efe19a620434e0ca4e356081fe807",
+  "tree_truncated": false,
+  "method": "Pinned tracked skills only. Heuristic explicit inline relative Markdown links outside fenced code; excludes images, schemes, anchors, absolute paths and obvious templates. Compare normalized targets with complete tracked Git tree; raw candidates require contextual review.",
+  "counts": {
+    "skills": 177,
+    "explicit_relative_links": 675,
+    "existing": 673,
+    "excluded": 0
+  },
+  "raw_candidates": [
+    {
+      "source": "skills/exa-search/SKILL.md",
+      "line": 53,
+      "text": "When citing academic sources, include author names and publication year where available (e.g., [Smith et al., 2025](url)) in addition to the standard citation format. If a DOI is present, prefer the DOI link.",
+      "target": "url",
+      "resolved": "skills/exa-search/url",
+      "source_url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/exa-search/SKILL.md#L53"
+    },
+    {
+      "source": "skills/parallel-web/SKILL.md",
+      "line": 57,
+      "text": "When citing academic sources, include author names and publication year where available (e.g., [Smith et al., 2025](url)) in addition to the standard citation format. If a DOI is present, prefer the DOI link.",
+      "target": "url",
+      "resolved": "skills/parallel-web/url",
+      "source_url": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/92ace75ac21efe19a620434e0ca4e356081fe807/skills/parallel-web/SKILL.md#L57"
+    }
+  ]
+}
