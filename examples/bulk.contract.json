@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "id": "bulk",
+      "path": "bulk.skill.txt"
+    }
+  ],
+  "skills": [],
+  "rules": [
+    {
+      "id": "advertised_support",
+      "source": {
+        "source_id": "bulk",
+        "start_line": 1,
+        "end_line": 1,
+        "quote": "Advertised support: update every requested node for lists of 1-200 nodes within one run."
+      },
+      "priority": 100,
+      "kind": "requirement",
+      "when": {},
+      "skills": [],
+      "scope": {
+        "entity": "requested_nodes",
+        "temporal": "one_run"
+      },
+      "exceptions": []
+    },
+    {
+      "id": "submission_capacity",
+      "source": {
+        "source_id": "bulk",
+        "start_line": 2,
+        "end_line": 2,
+        "quote": "Each submission handles at most 10 nodes and returns exactly one task."
+      },
+      "priority": 100,
+      "kind": "requirement",
+      "when": {},
+      "skills": [],
+      "scope": {
+        "entity": "requested_nodes",
+        "temporal": "one_run"
+      },
+      "exceptions": []
+    },
+    {
+      "id": "mandatory_polling",
+      "source": {
+        "source_id": "bulk",
+        "start_line": 3,
+        "end_line": 3,
+        "quote": "Every task needs at least one separate polling call; each poll handles exactly one task."
+      },
+      "priority": 100,
+      "kind": "requirement",
+      "when": {},
+      "skills": [],
+      "scope": {
+        "entity": "requested_nodes",
+        "temporal": "one_run"
+      },
+      "exceptions": []
+    },
+    {
+      "id": "call_budget",
+      "source": {
+        "source_id": "bulk",
+        "start_line": 4,
+        "end_line": 4,
+        "quote": "The run permits at most 30 counted service calls."
+      },
+      "priority": 100,
+      "kind": "requirement",
+      "when": {},
+      "skills": [],
+      "scope": {
+        "entity": "requested_nodes",
+        "temporal": "one_run"
+      },
+      "exceptions": []
+    }
+  ],
+  "contexts": [
+    {
+      "id": "synthetic_bulk",
+      "facts": {},
+      "active_skills": []
+    }
+  ],
+  "declared_facts": [
+    "Advertised support: update every requested node for lists of 1-200 nodes within one run.",
+    "Each submission handles at most 10 nodes and returns exactly one task.",
+    "Every task needs at least one separate polling call; each poll handles exactly one task.",
+    "The run permits at most 30 counted service calls.",
+    "No prior tasks, batching shortcuts, alternative update operations, or bulk polling exist in this synthetic model."
+  ],
+  "assumptions": [
+    "Explicitly synthetic, author-reviewed contract; no natural-language extraction.",
+    "s and p are nonnegative integers.",
+    "Each submission returns exactly one new task and each task requires a distinct polling call.",
+    "No prior tasks, batching shortcuts, alternate updates or bulk polling are available.",
+    "This is a lower bound: schema retrieval, retries, failed requests and additional polls may consume more calls.",
+    "Runtime budget variants explicitly replace the budget requirement for controls."
+  ],
+  "bulk_model": {
+    "nodes_per_submission": 10,
+    "advertised_min": 1,
+    "advertised_max": 200,
+    "advertisement_rule": "advertised_support",
+    "constraint_rules": {
+      "coverage": "submission_capacity",
+      "polling": "mandatory_polling",
+      "budget": "call_budget"
+    }
+  }
+}

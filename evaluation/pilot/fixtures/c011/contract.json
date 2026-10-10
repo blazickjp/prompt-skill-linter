@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "id": "policy",
+      "path": "policy.txt"
+    }
+  ],
+  "skills": [],
+  "rules": [
+    {
+      "id": "r1",
+      "source": {
+        "source_id": "policy",
+        "start_line": 1,
+        "end_line": 1,
+        "quote": "Place this import at top level unless that causes a circular dependency."
+      },
+      "priority": 0,
+      "kind": "requirement",
+      "scope": {
+        "entity": "task",
+        "temporal": "turn"
+      },
+      "when": {},
+      "exceptions": [
+        {
+          "circular": true
+        }
+      ],
+      "effect": {
+        "literal": "top",
+        "value": true
+      }
+    },
+    {
+      "id": "r2",
+      "source": {
+        "source_id": "policy",
+        "start_line": 2,
+        "end_line": 2,
+        "quote": "For a circular dependency, do not place this import at top level."
+      },
+      "priority": 0,
+      "kind": "prohibition",
+      "scope": {
+        "entity": "task",
+        "temporal": "turn"
+      },
+      "when": {
+        "circular": true
+      },
+      "exceptions": [],
+      "effect": {
+        "literal": "top",
+        "value": true
+      }
+    }
+  ],
+  "contexts": [
+    {
+      "id": "task",
+      "facts": {
+        "circular": true
+      },
+      "active_skills": []
+    }
+  ],
+  "assumptions": [
+    "Explicitly synthetic finite model; no inferred natural-language completeness."
+  ]
+}

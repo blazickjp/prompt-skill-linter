@@ -1,0 +1,338 @@
+{
+  "version": 1,
+  "retrieved_at": "2026-10-10",
+  "label_status": "five_cases_single_blind_model_review_one_unresolved_disagreement_no_gold",
+  "sources": [
+    {
+      "id": "oh",
+      "repository": "OpenHands/software-agent-sdk",
+      "commit": "e2bac66be26e94f571f27b71f507e7192720f825",
+      "path": "openhands-sdk/openhands/sdk/context/prompts/sections/static.py",
+      "git_blob_sha": "db7f8c23ea10dc082a2ddecd8c0f05bf44ea852f",
+      "url": "https://github.com/OpenHands/software-agent-sdk/blob/e2bac66be26e94f571f27b71f507e7192720f825/openhands-sdk/openhands/sdk/context/prompts/sections/static.py",
+      "retrieval": "GitHub read-only API; pinned revision re-fetched",
+      "redistribution": "Minimal exact fragments only; no full upstream artifact. Source license not inherited by this project's code."
+    },
+    {
+      "id": "mini",
+      "repository": "SWE-agent/mini-swe-agent",
+      "commit": "04d809ceab9df28f9adaed044884180159172930",
+      "path": "src/minisweagent/config/mini.yaml",
+      "git_blob_sha": "8b72f71f8092ae805ec43221dbeaeefc2340cd3e",
+      "url": "https://github.com/SWE-agent/mini-swe-agent/blob/04d809ceab9df28f9adaed044884180159172930/src/minisweagent/config/mini.yaml",
+      "retrieval": "GitHub read-only API; pinned revision re-fetched",
+      "redistribution": "Minimal exact fragments only; no full upstream artifact. Source license not inherited by this project's code."
+    },
+    {
+      "id": "pdf",
+      "repository": "anthropics/skills",
+      "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "path": "skills/pdf/SKILL.md",
+      "git_blob_sha": "d3e046a5ae107a6cb23cfb16c219837094ab35d3",
+      "url": "https://github.com/anthropics/skills/blob/dbd4588f9e1033efb41dad4bef2f7947c8993d44/skills/pdf/SKILL.md",
+      "retrieval": "GitHub read-only API; pinned revision re-fetched",
+      "redistribution": "Minimal exact fragments only; no full upstream artifact. Source license not inherited by this project's code."
+    },
+    {
+      "id": "codex",
+      "repository": "openai/codex",
+      "commit": "806d9732c974bc8a51b8317c1bd8985544fe627c",
+      "path": "codex-rs/core/gpt-5.2-codex_prompt.md",
+      "git_blob_sha": "8e3f08fb514a6fe82376817aa0a0c960cfbc4656",
+      "url": "https://github.com/openai/codex/blob/806d9732c974bc8a51b8317c1bd8985544fe627c/codex-rs/core/gpt-5.2-codex_prompt.md",
+      "retrieval": "GitHub read-only API at pinned commit, 2026-10-10",
+      "redistribution": "Case paraphrases and source links only; full upstream artifact not redistributed."
+    },
+    {
+      "id": "gemini",
+      "repository": "google-gemini/gemini-cli",
+      "commit": "9b6e0265d16bbd29ca51e33c9e0c01dc4cec5e83",
+      "path": "packages/core/src/prompts/snippets.ts",
+      "git_blob_sha": "dab03248aac815a9104c7e94f57a255670510e25",
+      "url": "https://github.com/google-gemini/gemini-cli/blob/9b6e0265d16bbd29ca51e33c9e0c01dc4cec5e83/packages/core/src/prompts/snippets.ts",
+      "retrieval": "GitHub read-only API at pinned commit, 2026-10-10",
+      "redistribution": "Case paraphrases and source links only; full upstream artifact not redistributed."
+    }
+  ],
+  "cases": [
+    {
+      "id": "openhands_config_bug",
+      "source_id": "oh",
+      "origin": "natural_candidate",
+      "classification": "ambiguous_warning",
+      "source_spans": [
+        {
+          "upstream_start_line": 253,
+          "upstream_end_line": 253,
+          "url": "https://github.com/OpenHands/software-agent-sdk/blob/e2bac66be26e94f571f27b71f507e7192720f825/openhands-sdk/openhands/sdk/context/prompts/sections/static.py#L253",
+          "quote": "For bug fixes: Create tests to verify issues before implementing fixes",
+          "excerpt_local_line": 1,
+          "fragment": true
+        },
+        {
+          "upstream_start_line": 255,
+          "upstream_end_line": 255,
+          "url": "https://github.com/OpenHands/software-agent-sdk/blob/e2bac66be26e94f571f27b71f507e7192720f825/openhands-sdk/openhands/sdk/context/prompts/sections/static.py#L255",
+          "quote": "Do NOT write tests for documentation changes, README updates, configuration files",
+          "excerpt_local_line": 2,
+          "fragment": true
+        }
+      ],
+      "witness": {
+        "bug_fix": true,
+        "configuration_change": true
+      },
+      "author_label": "ambiguous_warning",
+      "author_rationale": "A configuration bug can activate both sentences. The second may be an intended specific exception to the first, so source-level hard contradiction is not established.",
+      "independent_labels": [
+        {
+          "reviewer_type": "independent_model_reviewer",
+          "model": "unknown",
+          "label": "ambiguous",
+          "confidence": 0.85,
+          "blind_to_author_labels": true,
+          "review_file": "independent_review.json"
+        }
+      ],
+      "reference_status": "single_model_review_not_gold",
+      "contract": "openhands_config_bug.json",
+      "provisional_expected_encoded_findings": [
+        "INCOMPATIBLE_OBLIGATIONS"
+      ],
+      "limitations": [
+        "Explicit exception/precedence is absent from this abstraction. An adjudicator may reasonably interpret specificity as resolving the tension.",
+        "The second excerpt omits the final non-functionality category; consult the pinned complete source."
+      ]
+    },
+    {
+      "id": "mini_call_count",
+      "source_id": "mini",
+      "origin": "natural_control",
+      "classification": "negative_control",
+      "source_spans": [
+        {
+          "upstream_start_line": 38,
+          "upstream_end_line": 38,
+          "url": "https://github.com/SWE-agent/mini-swe-agent/blob/04d809ceab9df28f9adaed044884180159172930/src/minisweagent/config/mini.yaml#L38",
+          "quote": "Your response MUST include AT LEAST ONE bash tool call",
+          "excerpt_local_line": 1,
+          "fragment": true
+        },
+        {
+          "upstream_start_line": 131,
+          "upstream_end_line": 131,
+          "url": "https://github.com/SWE-agent/mini-swe-agent/blob/04d809ceab9df28f9adaed044884180159172930/src/minisweagent/config/mini.yaml#L131",
+          "quote": "finish with exactly one bash tool call",
+          "excerpt_local_line": 2,
+          "fragment": true
+        }
+      ],
+      "witness": {
+        "token_limit_recovery": true
+      },
+      "author_label": "negative_control",
+      "author_rationale": "Exactly one satisfies at least one. The tighter instruction is conditional on recovery from truncation, and neither requires an incompatible action.",
+      "independent_labels": [
+        {
+          "reviewer_type": "independent_model_reviewer",
+          "model": "unknown",
+          "label": "compatible",
+          "confidence": 0.99,
+          "blind_to_author_labels": true,
+          "review_file": "independent_review.json"
+        }
+      ],
+      "reference_status": "single_model_review_not_gold",
+      "contract": "mini_call_count.json",
+      "provisional_expected_encoded_findings": [],
+      "limitations": [
+        "The Boolean abstraction retains the nonzero lower bound but cannot represent or prove the exactly-one upper bound. It is only a no-false-positive smoke case.",
+        "Runtime Jinja branch context must be retained by any full extractor."
+      ]
+    },
+    {
+      "id": "pdf_subscript",
+      "source_id": "pdf",
+      "origin": "natural_control",
+      "classification": "negative_control",
+      "source_spans": [
+        {
+          "upstream_start_line": 171,
+          "upstream_end_line": 171,
+          "url": "https://github.com/anthropics/skills/blob/dbd4588f9e1033efb41dad4bef2f7947c8993d44/skills/pdf/SKILL.md#L171",
+          "quote": "Never use Unicode subscript/superscript characters",
+          "excerpt_local_line": 1,
+          "fragment": true
+        },
+        {
+          "upstream_start_line": 173,
+          "upstream_end_line": 173,
+          "url": "https://github.com/anthropics/skills/blob/dbd4588f9e1033efb41dad4bef2f7947c8993d44/skills/pdf/SKILL.md#L173",
+          "quote": "Instead, use ReportLab's XML markup tags in Paragraph objects:",
+          "excerpt_local_line": 2,
+          "fragment": true
+        }
+      ],
+      "witness": {
+        "reportlab_pdf": true,
+        "needs_subscript": true
+      },
+      "author_label": "negative_control",
+      "author_rationale": "The prohibition is about Unicode glyphs; XML formatting is a different representation and can satisfy both instructions.",
+      "independent_labels": [
+        {
+          "reviewer_type": "independent_model_reviewer",
+          "model": "unknown",
+          "label": "compatible",
+          "confidence": 0.99,
+          "blind_to_author_labels": true,
+          "review_file": "independent_review.json"
+        }
+      ],
+      "reference_status": "single_model_review_not_gold",
+      "contract": "pdf_subscript.json",
+      "provisional_expected_encoded_findings": [],
+      "limitations": [
+        "The selected font/rendering assumption is source-specific, not a universal ReportLab theorem.",
+        "No PDF was rendered in this corpus exercise."
+      ]
+    },
+    {
+      "id": "openhands_import_exception",
+      "source_id": "oh",
+      "origin": "natural_control",
+      "classification": "valid_exception",
+      "source_spans": [
+        {
+          "upstream_start_line": 217,
+          "upstream_end_line": 217,
+          "url": "https://github.com/OpenHands/software-agent-sdk/blob/e2bac66be26e94f571f27b71f507e7192720f825/openhands-sdk/openhands/sdk/context/prompts/sections/static.py#L217",
+          "quote": null,
+          "paraphrase": "Top-of-file import placement explicitly allows a user-requested alternative or a placement that would create issues, including circular imports."
+        }
+      ],
+      "witness": {
+        "circular_import_if_top_level": true
+      },
+      "author_label": "valid_exception",
+      "author_rationale": "The exception is part of the rule itself. A deferred import under the listed condition is not a policy violation.",
+      "independent_labels": [
+        {
+          "reviewer_type": "independent_model_reviewer",
+          "model": "unknown",
+          "label": "valid_exception",
+          "confidence": 0.99,
+          "blind_to_author_labels": true,
+          "review_file": "independent_review.json"
+        }
+      ],
+      "reference_status": "single_model_review_not_gold",
+      "contract": null,
+      "limitations": [
+        "Not executable in this corpus slice; tests extraction and exception preservation in the planned evaluation."
+      ]
+    },
+    {
+      "id": "openhands_pr_consent",
+      "source_id": "oh",
+      "origin": "natural_candidate",
+      "classification": "ambiguous_warning",
+      "source_spans": [
+        {
+          "upstream_start_line": 238,
+          "upstream_end_line": 238,
+          "url": "https://github.com/OpenHands/software-agent-sdk/blob/e2bac66be26e94f571f27b71f507e7192720f825/openhands-sdk/openhands/sdk/context/prompts/sections/static.py#L238",
+          "quote": null,
+          "paraphrase": "The pull-request section conditions pushing or opening a PR on an explicit request."
+        },
+        {
+          "upstream_start_line": 300,
+          "upstream_end_line": 304,
+          "url": "https://github.com/OpenHands/software-agent-sdk/blob/e2bac66be26e94f571f27b71f507e7192720f825/openhands-sdk/openhands/sdk/context/prompts/sections/static.py#L300-L304",
+          "quote": null,
+          "paraphrase": "The default security section lists opening a PR at the original repository among actions permitted without explicit consent."
+        }
+      ],
+      "witness": {
+        "explicit_pr_request": false,
+        "default_security_section_enabled": true,
+        "original_repository": true
+      },
+      "author_label": "ambiguous_warning",
+      "author_rationale": "This is permission-versus-prohibition tension, not opposing mandatory actions. The security section may define a safety envelope that the workflow narrows; an extractor must not upgrade permission to requirement.",
+      "independent_labels": [
+        {
+          "reviewer_type": "independent_model_reviewer",
+          "model": "unknown",
+          "label": "hard_conflict",
+          "confidence": 0.91,
+          "blind_to_author_labels": true,
+          "review_file": "independent_review.json"
+        }
+      ],
+      "reference_status": "unresolved_model_author_disagreement",
+      "contract": null,
+      "limitations": [
+        "Runtime section guards and custom security-policy replacement affect whether both spans are present.",
+        "Do not report this as an inevitable hard contradiction."
+      ]
+    },
+    {
+      "id": "codex_ascii_exception",
+      "source_id": "codex",
+      "origin": "natural_control",
+      "classification": "provisional_control",
+      "source_urls": [
+        "https://github.com/openai/codex/blob/806d9732c974bc8a51b8317c1bd8985544fe627c/codex-rs/core/gpt-5.2-codex_prompt.md#L9"
+      ],
+      "paraphrase": "ASCII is the default. Non-ASCII is allowed with clear justification in a file that already uses it.",
+      "witness": "The existing source file already contains Unicode; keeping the localized label has a clear justification.",
+      "author_label": null,
+      "independent_labels": [],
+      "reference_status": "See evaluation/pilot/reference_review.json when present",
+      "contract": null,
+      "pilot_case_id": "c006",
+      "limitations": [
+        "Source-linked natural case; no executable reviewed finite encoding supplied."
+      ]
+    },
+    {
+      "id": "codex_dirty_known",
+      "source_id": "codex",
+      "origin": "natural_control",
+      "classification": "provisional_control",
+      "source_urls": [
+        "https://github.com/openai/codex/blob/806d9732c974bc8a51b8317c1bd8985544fe627c/codex-rs/core/gpt-5.2-codex_prompt.md#L12-L18"
+      ],
+      "paraphrase": "A worktree may already contain user edits; preserve them. Unexpected changes noticed during work require stopping and asking the user.",
+      "witness": "At task start, the user explicitly identifies pre-existing changes. No new unexpected change is observed.",
+      "author_label": null,
+      "independent_labels": [],
+      "reference_status": "See evaluation/pilot/reference_review.json when present",
+      "contract": null,
+      "pilot_case_id": "c007",
+      "limitations": [
+        "Source-linked natural case; no executable reviewed finite encoding supplied."
+      ]
+    },
+    {
+      "id": "gemini_interactive_exception",
+      "source_id": "gemini",
+      "origin": "natural_control",
+      "classification": "provisional_control",
+      "source_urls": [
+        "https://github.com/google-gemini/gemini-cli/blob/9b6e0265d16bbd29ca51e33c9e0c01dc4cec5e83/packages/core/src/prompts/snippets.ts#L849-L853"
+      ],
+      "paraphrase": "Prefer noninteractive commands unless a persistent process is specifically required; some commands require interaction.",
+      "witness": "The user explicitly requires a persistent development watcher.",
+      "author_label": null,
+      "independent_labels": [],
+      "reference_status": "See evaluation/pilot/reference_review.json when present",
+      "contract": null,
+      "pilot_case_id": "c008",
+      "limitations": [
+        "Source-linked natural case; no executable reviewed finite encoding supplied."
+      ]
+    }
+  ]
+}

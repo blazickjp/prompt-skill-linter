@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "scope": "Six held-out source fragments not used in the 24-case feasibility pilot; held-out here means disjoint selected spans, not independent policy families. Exact snippet extraction only, not full-policy recall.",
+  "allowed_action_vocabulary": ["amend_commit", "single_step_plan", "stage_changes", "commit_changes", "log_secret", "print_secret", "commit_secret", "line_length_lt_80", "active_voice"],
+  "condition_vocabulary": ["explicitly_requested", "using_plan", "serif_font"],
+  "schema": {
+    "rules": [{"source_id":"case ID","start_line":1,"end_line":1,"quote":"exact supplied fragment","kind":"requirement|prohibition|permission|preference","action":"from allowed vocabulary","when":{},"exceptions":[{}],"binding_supported":true,"rationale":"brief interpretation and unsupported details"}],
+    "unsupported": [{"source_id":"case ID","reason":"unmapped scope or semantics"}]
+  },
+  "cases": [
+    {"id":"e01","text":"Do not amend a commit unless explicitly requested to do so.","source_url":"https://github.com/openai/codex/blob/806d9732c974bc8a51b8317c1bd8985544fe627c/codex-rs/core/gpt-5.2-codex_prompt.md#L17","source_line":17,"context":"The source describes editing constraints. Preserve the user-request exception. This fragment is an exact substring of the source line."},
+    {"id":"e02","text":"Do not make single-step plans.","source_url":"https://github.com/openai/codex/blob/806d9732c974bc8a51b8317c1bd8985544fe627c/codex-rs/core/gpt-5.2-codex_prompt.md#L22-L26","source_line":25,"context":"Under the source heading When using the planning tool; the scope condition matters. The full source is normative; this fragment is not the complete section."},
+    {"id":"e03","text":"Do not stage or commit changes unless specifically requested by the user.","source_url":"https://github.com/google-gemini/gemini-cli/blob/9b6e0265d16bbd29ca51e33c9e0c01dc4cec5e83/packages/core/src/prompts/snippets.ts#L218","source_line":218,"context":"The core mandates are enabled. Split distinct actions if necessary; preserve the request exception."},
+    {"id":"e04","text":"Never log, print, or commit secrets","source_url":"https://github.com/google-gemini/gemini-cli/blob/9b6e0265d16bbd29ca51e33c9e0c01dc4cec5e83/packages/core/src/prompts/snippets.ts#L217","source_line":217,"context":"Minimal exact fragment from a longer credential-protection rule. Scope for this task is secrets; API keys and credentials beyond this fragment are not part of the recall denominator. Split distinct actions if needed."},
+    {"id":"e05","text":"Default to line lengths of less than 80 characters.","source_url":"https://github.com/anthropics/skills/blob/dbd4588f9e1033efb41dad4bef2f7947c8993d44/skills/frontend-design/SKILL.md#L23","source_line":23,"context":"The same source line permits somewhat longer serif line lengths. The source gives a default, not an unconditional hard cap; preserve softness and the font exception. A Boolean atom alone cannot enforce a numeric rendering measurement."},
+    {"id":"e06","text":"Use active voice as default.","source_url":"https://github.com/anthropics/skills/blob/dbd4588f9e1033efb41dad4bef2f7947c8993d44/skills/frontend-design/SKILL.md#L67","source_line":67,"context":"Writing-style default. This fragment is an exact substring of the source line; do not promote a default to an unconditional hard duty."}
+  ]
+}

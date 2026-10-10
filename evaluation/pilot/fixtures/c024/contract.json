@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "id": "policy",
+      "path": "policy.txt"
+    }
+  ],
+  "skills": [],
+  "rules": [
+    {
+      "id": "r1",
+      "source": {
+        "source_id": "policy",
+        "start_line": 1,
+        "end_line": 1,
+        "quote": "The workflow advertises reaching done."
+      },
+      "priority": 0,
+      "kind": "requirement",
+      "scope": {
+        "entity": "task",
+        "temporal": "turn"
+      },
+      "when": {},
+      "exceptions": []
+    }
+  ],
+  "contexts": [
+    {
+      "id": "task",
+      "facts": {},
+      "active_skills": []
+    }
+  ],
+  "assumptions": [
+    "Explicitly synthetic finite model; no inferred natural-language completeness."
+  ],
+  "workflows": [
+    {
+      "id": "flow",
+      "initial": [],
+      "goal": [
+        "done"
+      ],
+      "actions": [
+        {
+          "id": "prepare",
+          "requires": [],
+          "adds": [
+            "ready"
+          ]
+        },
+        {
+          "id": "finish",
+          "requires": [
+            "ready"
+          ],
+          "adds": [
+            "done"
+          ]
+        }
+      ],
+      "advertisement_rule": "r1"
+    }
+  ]
+}

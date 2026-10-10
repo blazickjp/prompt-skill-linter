@@ -1,0 +1,230 @@
+{
+  "generated_at": "2026-10-10T14:49:25.900927+00:00",
+  "scope": "Reproducibility, source alignment, finite minimal-core certificates, exact synthetic range, and repair provenance. These are machine-checkable output properties, not an empirical measure of human usefulness or English correctness.",
+  "diagnostics": [
+    {
+      "case_id": "c001",
+      "code": "INCOMPATIBLE_OBLIGATIONS",
+      "source_spans_exact": true,
+      "regression_case_present": true,
+      "repair_targets_known": true,
+      "repair_count": 0,
+      "certificate": {
+        "full_core_unsatisfiable": true,
+        "removal_witnesses_valid": true,
+        "minimal_core_valid": true
+      }
+    },
+    {
+      "case_id": "c009",
+      "code": "INCOMPATIBLE_OBLIGATIONS",
+      "source_spans_exact": true,
+      "regression_case_present": true,
+      "repair_targets_known": true,
+      "repair_count": 0,
+      "certificate": {
+        "full_core_unsatisfiable": true,
+        "removal_witnesses_valid": true,
+        "minimal_core_valid": true
+      }
+    },
+    {
+      "case_id": "c010",
+      "code": "INCOMPATIBLE_OBLIGATIONS",
+      "source_spans_exact": true,
+      "regression_case_present": true,
+      "repair_targets_known": true,
+      "repair_count": 0,
+      "certificate": {
+        "full_core_unsatisfiable": true,
+        "removal_witnesses_valid": true,
+        "minimal_core_valid": true
+      }
+    },
+    {
+      "case_id": "c012",
+      "code": "INCOMPATIBLE_OBLIGATIONS",
+      "source_spans_exact": true,
+      "regression_case_present": true,
+      "repair_targets_known": true,
+      "repair_count": 0,
+      "certificate": {
+        "full_core_unsatisfiable": true,
+        "removal_witnesses_valid": true,
+        "minimal_core_valid": true
+      }
+    },
+    {
+      "case_id": "c014",
+      "code": "INCOMPATIBLE_OBLIGATIONS",
+      "source_spans_exact": true,
+      "regression_case_present": true,
+      "repair_targets_known": true,
+      "repair_count": 0,
+      "certificate": {
+        "full_core_unsatisfiable": true,
+        "removal_witnesses_valid": true,
+        "minimal_core_valid": true
+      }
+    },
+    {
+      "case_id": "c018",
+      "code": "UNREACHABLE_COMPLETION",
+      "source_spans_exact": true,
+      "regression_case_present": true,
+      "repair_targets_known": true,
+      "repair_count": 3,
+      "certificate": {
+        "full_system_unsatisfiable": true,
+        "removal_witnesses_valid": true,
+        "pairwise_witnesses_valid": true,
+        "lower_bound_valid": true,
+        "affected_range_valid_for_1_to_200": true,
+        "minimal_core_valid": true
+      }
+    },
+    {
+      "case_id": "c019",
+      "code": "UNREACHABLE_COMPLETION",
+      "source_spans_exact": true,
+      "regression_case_present": true,
+      "repair_targets_known": true,
+      "repair_count": 3,
+      "certificate": {
+        "full_system_unsatisfiable": true,
+        "removal_witnesses_valid": true,
+        "pairwise_witnesses_valid": true,
+        "lower_bound_valid": true,
+        "affected_range_valid_for_1_to_200": true,
+        "minimal_core_valid": true
+      }
+    },
+    {
+      "case_id": "c021",
+      "code": "BROKEN_TOOL_REFERENCE",
+      "source_spans_exact": true,
+      "regression_case_present": true,
+      "repair_targets_known": true,
+      "repair_count": 0
+    },
+    {
+      "case_id": "c022",
+      "code": "INVALID_TOOL_ARGUMENTS",
+      "source_spans_exact": true,
+      "regression_case_present": true,
+      "repair_targets_known": true,
+      "repair_count": 0
+    },
+    {
+      "case_id": "c023",
+      "code": "MISSING_FALLBACK_PATH",
+      "source_spans_exact": true,
+      "regression_case_present": true,
+      "repair_targets_known": true,
+      "repair_count": 0
+    },
+    {
+      "case_id": "c024",
+      "code": "PLAN_BOUND_EXHAUSTED",
+      "source_spans_exact": true,
+      "regression_case_present": true,
+      "repair_targets_known": true,
+      "repair_count": 0,
+      "cutoff_honestly_unknown": true
+    }
+  ],
+  "repeated_runs": [
+    {
+      "case_id": "c001",
+      "identical_reports": true
+    },
+    {
+      "case_id": "c002",
+      "identical_reports": true
+    },
+    {
+      "case_id": "c003",
+      "identical_reports": true
+    },
+    {
+      "case_id": "c009",
+      "identical_reports": true
+    },
+    {
+      "case_id": "c010",
+      "identical_reports": true
+    },
+    {
+      "case_id": "c011",
+      "identical_reports": true
+    },
+    {
+      "case_id": "c012",
+      "identical_reports": true
+    },
+    {
+      "case_id": "c013",
+      "identical_reports": true
+    },
+    {
+      "case_id": "c014",
+      "identical_reports": true
+    },
+    {
+      "case_id": "c015",
+      "identical_reports": true
+    },
+    {
+      "case_id": "c016",
+      "identical_reports": true
+    },
+    {
+      "case_id": "c017",
+      "identical_reports": true
+    },
+    {
+      "case_id": "c018",
+      "identical_reports": true
+    },
+    {
+      "case_id": "c019",
+      "identical_reports": true
+    },
+    {
+      "case_id": "c020",
+      "identical_reports": true
+    },
+    {
+      "case_id": "c021",
+      "identical_reports": true
+    },
+    {
+      "case_id": "c022",
+      "identical_reports": true
+    },
+    {
+      "case_id": "c023",
+      "identical_reports": true
+    },
+    {
+      "case_id": "c024",
+      "identical_reports": true
+    }
+  ],
+  "summary": {
+    "diagnostics": 11,
+    "exact_source_spans": 11,
+    "regression_cases": 11,
+    "cores_checked": 7,
+    "minimal_cores_valid": 7,
+    "identical_repeat_reports": 19,
+    "repeat_cases": 19,
+    "repairs_with_named_valid_requirement": 6
+  },
+  "limitations": [
+    "Checks apply to the declared finite models only.",
+    "The authors selected these development cases; no user study of diagnostic helpfulness has been run.",
+    "Subset-minimal is not minimum-cardinality or a unique causal explanation.",
+    "Repair proposal text is checked for named source requirement, not for business desirability or complete repair correctness."
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "amendments": [{
+    "at_utc": "2026-10-10T14:44:00Z",
+    "run_id": "pilot_v1_adapter1",
+    "change": "Corrected mechanical task-label adapter: an exhaustive unreachable workflow is an issue even when diagnostic severity is warning.",
+    "reason": "Severity is not the benchmark's feasibility target; the diagnostic explicitly carries unreachable plus search_exhaustive=true.",
+    "inputs_changed": false,
+    "reference_labels_changed": false,
+    "previous_run": "history/mechanical_adapter_v0.json",
+    "scope": "Adapter correction recorded before native prediction artifacts arrived. Not a checker change or a revised case."
+  }]
+}

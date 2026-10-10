@@ -1,0 +1,11 @@
+{
+ "sources":[
+  {"title":"WIRE: Profiling Witnessed Within-Policy Instruction Collisions in LLM Agents","url":"https://arxiv.org/pdf/2605.27784v2","version":"v2, July 26 2026","use":"Source-grounded rule encoding, candidate nomination, concrete witnesses, behavioral resolution profiles.","non_claim":"Not an English contradiction proof or validation of this tool."},
+  {"title":"Bounded Model Checking","authors":["Armin Biere","Alessandro Cimatti","Edmund M. Clarke","Ofer Strichman","Yunshan Zhu"],"year":2003,"url":"https://www.cs.cmu.edu/~emc/papers/Books%20and%20Edited%20Volumes/Bounded%20Model%20Checking.pdf","use":"Finite-state modeling, witnesses, bounds versus completeness.","non_claim":"Our explicit search is not the surveyed SAT-based algorithm."},
+  {"title":"Fast, flexible MUS enumeration","authors":["Mark H. Liffiton","Alessandro Previti","Ammar Malik","Joao Marques-Silva"],"year":2016,"url":"https://doi.org/10.1007/s10601-015-9183-0","use":"Minimal unsatisfiable subsets and correction sets.","non_claim":"No MARCO implementation or all-core enumeration claim."},
+  {"title":"Instruction-Following Evaluation for Large Language Models","year":2023,"url":"https://arxiv.org/abs/2311.07911","use":"Deterministic checking of verifiable instructions.","non_claim":"Not a static prompt-policy satisfiability benchmark."},
+  {"title":"Evaluating Large Language Models at Evaluating Instruction Following","year":2024,"url":"https://arxiv.org/abs/2310.07641v2","use":"Model judges themselves require meta-evaluation.","non_claim":"Native-model agreement is not human gold."}
+ ],
+ "retrieved_at":"2026-10-10",
+ "claim":"An engineering application of established concepts with a provisional pilot, not a novel verification theory."
+}

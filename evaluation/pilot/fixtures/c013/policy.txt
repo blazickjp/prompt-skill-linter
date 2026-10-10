@@ -1,0 +1,2 @@
+For functional bug fixes, write new tests.
+For documentation-only updates, do not write new tests.

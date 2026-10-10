@@ -1,0 +1,334 @@
+{
+  "arm": "mechanical_reviewed_contract",
+  "run_at": "2026-10-10T14:43:49.125741+00:00",
+  "model": null,
+  "backend_sha256": {
+    "__init__.py": "a1421850c289e3169b10958079b2446f3e1cf2b6e81599e71c5ce4715e040cf1",
+    "__main__.py": "79ee6f134c5c5193377cf9b189cbdcc3e2095e49ba9cec310114441c15a917c4",
+    "cli.py": "8852b8558d78d55d4e38d2e912fa430616f5bbf98c7c63d053e8b1625547fe4f",
+    "engine.py": "d044411e65cc30f29681ded816a16cc5bc30572a283fe48d1d963ec5e619f35a",
+    "extraction.py": "8d7634b41dc134551964930177a21b1ec4da7681f8bb082e917ec783185e5647",
+    "planner.py": "32f0c027455c5261d6dbb9387fa0b1860f2144af6404c030f8317894244aca5e",
+    "provider.py": "c7d28bd1f65547b7ba61e921a53bc1686ef01b872c7de2911bf387caf532c063",
+    "sat.py": "b2a6750a08136821fdb9558206a1c0f819d63ae904fdc8fa90fe00a93ba9e88a",
+    "schema.py": "a5083caf30c31f1b247708a762c82f5a5d68663f8fcc83be8297ed7ffcf96f08",
+    "server.py": "dd4166a95f4740e8b9b04b8e2c493ce00c2ef2063e0d7bed4151fb993921916c",
+    "service.py": "11d4b488f4644ba1d97d305722cd10ff9da9cca60f599cc022d858ffc84d0a1d"
+  },
+  "input_freeze_sha256": "8a1ed34b2935d9a0df7379445edc99dc6add13260cf6fbd70ae22292f36f9f3a",
+  "latency_seconds": 0.011000167000020156,
+  "cost": null,
+  "tokens": null,
+  "predictions": [
+    {
+      "id": "c001",
+      "tokens": null,
+      "cost": null,
+      "currency": null,
+      "label": "issue",
+      "rationale": "The reviewed finite contract produced INCOMPATIBLE_OBLIGATIONS. This is conditional on its translation and stated search scope.",
+      "codes": [
+        "INCOMPATIBLE_OBLIGATIONS"
+      ],
+      "supported": true,
+      "report": "reports/c001.json",
+      "latency_seconds": 0.0008441640002274653
+    },
+    {
+      "id": "c002",
+      "tokens": null,
+      "cost": null,
+      "currency": null,
+      "label": "no_issue",
+      "rationale": "The reviewed finite contract produced no diagnostic. This is conditional on its translation and stated search scope.",
+      "codes": [],
+      "supported": true,
+      "report": "reports/c002.json",
+      "latency_seconds": 0.0005208759994275169
+    },
+    {
+      "id": "c003",
+      "tokens": null,
+      "cost": null,
+      "currency": null,
+      "label": "no_issue",
+      "rationale": "The reviewed finite contract produced no diagnostic. This is conditional on its translation and stated search scope.",
+      "codes": [],
+      "supported": true,
+      "report": "reports/c003.json",
+      "latency_seconds": 0.00045092999971529935
+    },
+    {
+      "id": "c004",
+      "tokens": null,
+      "cost": null,
+      "currency": null,
+      "label": "abstain",
+      "rationale": "No reviewed finite contract supplied; the checker cannot translate this source case.",
+      "codes": [],
+      "supported": false,
+      "latency_seconds": 1.0819994713529013e-06
+    },
+    {
+      "id": "c005",
+      "tokens": null,
+      "cost": null,
+      "currency": null,
+      "label": "abstain",
+      "rationale": "No reviewed finite contract supplied; the checker cannot translate this source case.",
+      "codes": [],
+      "supported": false,
+      "latency_seconds": 6.010004653944634e-07
+    },
+    {
+      "id": "c006",
+      "tokens": null,
+      "cost": null,
+      "currency": null,
+      "label": "abstain",
+      "rationale": "No reviewed finite contract supplied; the checker cannot translate this source case.",
+      "codes": [],
+      "supported": false,
+      "latency_seconds": 5.410001904238015e-07
+    },
+    {
+      "id": "c007",
+      "tokens": null,
+      "cost": null,
+      "currency": null,
+      "label": "abstain",
+      "rationale": "No reviewed finite contract supplied; the checker cannot translate this source case.",
+      "codes": [],
+      "supported": false,
+      "latency_seconds": 2.8999966161791235e-07
+    },
+    {
+      "id": "c008",
+      "tokens": null,
+      "cost": null,
+      "currency": null,
+      "label": "abstain",
+      "rationale": "No reviewed finite contract supplied; the checker cannot translate this source case.",
+      "codes": [],
+      "supported": false,
+      "latency_seconds": 3.8100006349850446e-07
+    },
+    {
+      "id": "c009",
+      "tokens": null,
+      "cost": null,
+      "currency": null,
+      "label": "issue",
+      "rationale": "The reviewed finite contract produced INCOMPATIBLE_OBLIGATIONS. This is conditional on its translation and stated search scope.",
+      "codes": [
+        "INCOMPATIBLE_OBLIGATIONS"
+      ],
+      "supported": true,
+      "report": "reports/c009.json",
+      "latency_seconds": 0.0005163489995538839
+    },
+    {
+      "id": "c010",
+      "tokens": null,
+      "cost": null,
+      "currency": null,
+      "label": "issue",
+      "rationale": "The reviewed finite contract produced INCOMPATIBLE_OBLIGATIONS. This is conditional on its translation and stated search scope.",
+      "codes": [
+        "INCOMPATIBLE_OBLIGATIONS"
+      ],
+      "supported": true,
+      "report": "reports/c010.json",
+      "latency_seconds": 0.0004837400001633796
+    },
+    {
+      "id": "c011",
+      "tokens": null,
+      "cost": null,
+      "currency": null,
+      "label": "no_issue",
+      "rationale": "The reviewed finite contract produced no diagnostic. This is conditional on its translation and stated search scope.",
+      "codes": [],
+      "supported": true,
+      "report": "reports/c011.json",
+      "latency_seconds": 0.0005226379998930497
+    },
+    {
+      "id": "c012",
+      "tokens": null,
+      "cost": null,
+      "currency": null,
+      "label": "issue",
+      "rationale": "The reviewed finite contract produced INCOMPATIBLE_OBLIGATIONS. This is conditional on its translation and stated search scope.",
+      "codes": [
+        "INCOMPATIBLE_OBLIGATIONS"
+      ],
+      "supported": true,
+      "report": "reports/c012.json",
+      "latency_seconds": 0.0005592839997916599
+    },
+    {
+      "id": "c013",
+      "tokens": null,
+      "cost": null,
+      "currency": null,
+      "label": "no_issue",
+      "rationale": "The reviewed finite contract produced no diagnostic. This is conditional on its translation and stated search scope.",
+      "codes": [],
+      "supported": true,
+      "report": "reports/c013.json",
+      "latency_seconds": 0.000502978999975312
+    },
+    {
+      "id": "c014",
+      "tokens": null,
+      "cost": null,
+      "currency": null,
+      "label": "issue",
+      "rationale": "The reviewed finite contract produced INCOMPATIBLE_OBLIGATIONS. This is conditional on its translation and stated search scope.",
+      "codes": [
+        "INCOMPATIBLE_OBLIGATIONS"
+      ],
+      "supported": true,
+      "report": "reports/c014.json",
+      "latency_seconds": 0.00047114100016187876
+    },
+    {
+      "id": "c015",
+      "tokens": null,
+      "cost": null,
+      "currency": null,
+      "label": "no_issue",
+      "rationale": "The reviewed finite contract produced no diagnostic. This is conditional on its translation and stated search scope.",
+      "codes": [],
+      "supported": true,
+      "report": "reports/c015.json",
+      "latency_seconds": 0.0004380410000521806
+    },
+    {
+      "id": "c016",
+      "tokens": null,
+      "cost": null,
+      "currency": null,
+      "label": "no_issue",
+      "rationale": "The reviewed finite contract produced no diagnostic. This is conditional on its translation and stated search scope.",
+      "codes": [],
+      "supported": true,
+      "report": "reports/c016.json",
+      "latency_seconds": 0.00042334799945820123
+    },
+    {
+      "id": "c017",
+      "tokens": null,
+      "cost": null,
+      "currency": null,
+      "label": "no_issue",
+      "rationale": "The reviewed finite contract produced no diagnostic. This is conditional on its translation and stated search scope.",
+      "codes": [],
+      "supported": true,
+      "report": "reports/c017.json",
+      "latency_seconds": 0.0006518129994219635
+    },
+    {
+      "id": "c018",
+      "tokens": null,
+      "cost": null,
+      "currency": null,
+      "label": "issue",
+      "rationale": "The reviewed finite contract produced UNREACHABLE_COMPLETION. This is conditional on its translation and stated search scope.",
+      "codes": [
+        "UNREACHABLE_COMPLETION"
+      ],
+      "supported": true,
+      "report": "reports/c018.json",
+      "latency_seconds": 0.000813297000604507
+    },
+    {
+      "id": "c019",
+      "tokens": null,
+      "cost": null,
+      "currency": null,
+      "label": "issue",
+      "rationale": "The reviewed finite contract produced UNREACHABLE_COMPLETION. This is conditional on its translation and stated search scope.",
+      "codes": [
+        "UNREACHABLE_COMPLETION"
+      ],
+      "supported": true,
+      "report": "reports/c019.json",
+      "latency_seconds": 0.0008359919993381482
+    },
+    {
+      "id": "c020",
+      "tokens": null,
+      "cost": null,
+      "currency": null,
+      "label": "no_issue",
+      "rationale": "The reviewed finite contract produced no diagnostic. This is conditional on its translation and stated search scope.",
+      "codes": [],
+      "supported": true,
+      "report": "reports/c020.json",
+      "latency_seconds": 0.0007009379996816278
+    },
+    {
+      "id": "c021",
+      "tokens": null,
+      "cost": null,
+      "currency": null,
+      "label": "issue",
+      "rationale": "The reviewed finite contract produced BROKEN_TOOL_REFERENCE. This is conditional on its translation and stated search scope.",
+      "codes": [
+        "BROKEN_TOOL_REFERENCE"
+      ],
+      "supported": true,
+      "report": "reports/c021.json",
+      "latency_seconds": 0.00037350399998103967
+    },
+    {
+      "id": "c022",
+      "tokens": null,
+      "cost": null,
+      "currency": null,
+      "label": "issue",
+      "rationale": "The reviewed finite contract produced INVALID_TOOL_ARGUMENTS. This is conditional on its translation and stated search scope.",
+      "codes": [
+        "INVALID_TOOL_ARGUMENTS"
+      ],
+      "supported": true,
+      "report": "reports/c022.json",
+      "latency_seconds": 0.0004084470001544105
+    },
+    {
+      "id": "c023",
+      "tokens": null,
+      "cost": null,
+      "currency": null,
+      "label": "no_issue",
+      "rationale": "The reviewed finite contract produced MISSING_FALLBACK_PATH. This is conditional on its translation and stated search scope.",
+      "codes": [
+        "MISSING_FALLBACK_PATH"
+      ],
+      "supported": true,
+      "report": "reports/c023.json",
+      "latency_seconds": 0.00044304800030658953
+    },
+    {
+      "id": "c024",
+      "tokens": null,
+      "cost": null,
+      "currency": null,
+      "label": "abstain",
+      "rationale": "The reviewed finite contract produced PLAN_BOUND_EXHAUSTED. This is conditional on its translation and stated search scope.",
+      "codes": [
+        "PLAN_BOUND_EXHAUSTED"
+      ],
+      "supported": true,
+      "report": "reports/c024.json",
+      "latency_seconds": 0.0005848720002177288
+    }
+  ],
+  "limitations": [
+    "Local latency excludes corpus preparation and manual extraction.",
+    "No cloud/API model was invoked by this runner. Unknown resource cost is null, not zero.",
+    "Reviewed contracts are partial abstractions; no finding certifies full policy compliance."
+  ]
+}

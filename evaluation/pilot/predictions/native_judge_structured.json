@@ -1,0 +1,211 @@
+{
+  "arm": "native_judge_structured",
+  "model": null,
+  "model_identity_status": "not exposed by orchestration",
+  "provider": "native collaboration agent",
+  "started_at_utc": "2026-10-10T14:46:16Z",
+  "completed_at_utc": "2026-10-10T14:48:33Z",
+  "latency_seconds": 137 ,
+  "cost": null,
+  "tokens": null,
+  "predictions": [
+    {
+      "id": "c001",
+      "label": "abstain",
+      "rationale": "The pinned complete testing section includes both bug-fix test creation and a prohibition covering configuration files, followed by other non-functionality changes. For a configuration bug, a literal intersection creates opposite duties, but the more specific configuration instruction can plausibly be read as an exception, and the non-functionality wording complicates the scope. The supplied equal-priority projection does not establish that English interpretation. Abstain on unresolved semantic precedence/scope rather than certify an upstream contradiction.",
+      "issue_type": "semantic_ambiguity",
+      "source_refs": [
+        "https://github.com/OpenHands/software-agent-sdk/blob/e2bac66be26e94f571f27b71f507e7192720f825/openhands-sdk/openhands/sdk/context/prompts/sections/static.py#L253",
+        "https://github.com/OpenHands/software-agent-sdk/blob/e2bac66be26e94f571f27b71f507e7192720f825/openhands-sdk/openhands/sdk/context/prompts/sections/static.py#L255"
+      ]
+    },
+    {
+      "id": "c002",
+      "label": "no_issue",
+      "rationale": "One bash call satisfies both the general positive lower bound and the recovery branch's exact count. The complete YAML confirms that the latter is a conditional format-error response after token truncation; it does not require zero calls or a second call. The source describes bash execution, so the empty supplemental manifest is not treated as a declaration that bash is unavailable.",
+      "issue_type": "none",
+      "source_refs": [
+        "https://github.com/SWE-agent/mini-swe-agent/blob/04d809ceab9df28f9adaed044884180159172930/src/minisweagent/config/mini.yaml#L38",
+        "https://github.com/SWE-agent/mini-swe-agent/blob/04d809ceab9df28f9adaed044884180159172930/src/minisweagent/config/mini.yaml#L131"
+      ]
+    },
+    {
+      "id": "c003",
+      "label": "no_issue",
+      "rationale": "The complete ReportLab subsection explicitly provides XML subscript markup in a Paragraph as the alternative to Unicode subscript glyphs. A paragraph using ordinary digits inside a sub tag satisfies the typography goal and avoids the prohibited characters.",
+      "issue_type": "none",
+      "source_refs": [
+        "https://github.com/anthropics/skills/blob/dbd4588f9e1033efb41dad4bef2f7947c8993d44/skills/pdf/SKILL.md#L171",
+        "https://github.com/anthropics/skills/blob/dbd4588f9e1033efb41dad4bef2f7947c8993d44/skills/pdf/SKILL.md#L173"
+      ]
+    },
+    {
+      "id": "c004",
+      "label": "no_issue",
+      "rationale": "The pinned import-placement rule expressly exempts placements that cause circular imports or require delayed imports. The stated circular-dependency context activates that exception; a delayed import is a compliant completion.",
+      "issue_type": "none",
+      "source_refs": [
+        "https://github.com/OpenHands/software-agent-sdk/blob/e2bac66be26e94f571f27b71f507e7192720f825/openhands-sdk/openhands/sdk/context/prompts/sections/static.py#L217"
+      ]
+    },
+    {
+      "id": "c005",
+      "label": "no_issue",
+      "rationale": "With the built-in security section active, its permission to open an original-repository PR conflicts with the stricter PR authorization wording, but it does not impose an obligation to open a PR. Fixing the code without pushing or opening a PR remains a compliant task completion. The target is existence of a path, not consistency of every permission.",
+      "issue_type": "none",
+      "source_refs": [
+        "https://github.com/OpenHands/software-agent-sdk/blob/e2bac66be26e94f571f27b71f507e7192720f825/openhands-sdk/openhands/sdk/context/prompts/sections/static.py#L238",
+        "https://github.com/OpenHands/software-agent-sdk/blob/e2bac66be26e94f571f27b71f507e7192720f825/openhands-sdk/openhands/sdk/context/prompts/sections/static.py#L300-L304"
+      ]
+    },
+    {
+      "id": "c006",
+      "label": "no_issue",
+      "rationale": "The complete editing rule makes ASCII a default and permits Unicode when justification and pre-existing Unicode are both present. The supplied context meets both conditions; retaining the localized label is compliant.",
+      "issue_type": "none",
+      "source_refs": [
+        "https://github.com/openai/codex/blob/806d9732c974bc8a51b8317c1bd8985544fe627c/codex-rs/core/gpt-5.2-codex_prompt.md#L9"
+      ]
+    },
+    {
+      "id": "c007",
+      "label": "no_issue",
+      "rationale": "The source distinguishes existing user changes, which must be preserved, from unexpected changes noticed while working, which trigger a stop. Explicitly identified pre-existing changes are expected here. Proceeding while preserving them satisfies both conditional instructions.",
+      "issue_type": "none",
+      "source_refs": [
+        "https://github.com/openai/codex/blob/806d9732c974bc8a51b8317c1bd8985544fe627c/codex-rs/core/gpt-5.2-codex_prompt.md#L12-L18"
+      ]
+    },
+    {
+      "id": "c008",
+      "label": "no_issue",
+      "rationale": "Both interactive and noninteractive branches of the pinned helper retain the explicit exception for a specifically required persistent process. A requested development watcher falls within it. The surrounding operational guidance also supplies background-process handling; no hard ban prevents this task.",
+      "issue_type": "none",
+      "source_refs": [
+        "https://github.com/google-gemini/gemini-cli/blob/9b6e0265d16bbd29ca51e33c9e0c01dc4cec5e83/packages/core/src/prompts/snippets.ts#L849-L853"
+      ]
+    },
+    {
+      "id": "c009",
+      "label": "issue",
+      "rationale": "For the same response the bash-call count must be at least one and exactly zero, with no exceptions or priority differences. No count satisfies both requirements.",
+      "issue_type": "contradictory_requirements",
+      "source_refs": []
+    },
+    {
+      "id": "c010",
+      "label": "issue",
+      "rationale": "A subscript is required, and the applicable same-scope rules require and prohibit Unicode subscript characters. The synthetic model supplies no alternative satisfying the positive rule.",
+      "issue_type": "contradictory_requirements",
+      "source_refs": []
+    },
+    {
+      "id": "c011",
+      "label": "no_issue",
+      "rationale": "The circular-dependency condition disables the top-level requirement through its explicit exception and activates the prohibition. Placing the import later satisfies the remaining duty.",
+      "issue_type": "none",
+      "source_refs": []
+    },
+    {
+      "id": "c012",
+      "label": "issue",
+      "rationale": "The same import must be top-level under a universal exceptionless requirement and must not be top-level under an equal-priority exceptionless prohibition. No placement satisfies both.",
+      "issue_type": "contradictory_requirements",
+      "source_refs": []
+    },
+    {
+      "id": "c013",
+      "label": "no_issue",
+      "rationale": "The functional-bug condition is false and the documentation-only condition is true. Making the documentation update without new tests satisfies the sole applicable testing rule.",
+      "issue_type": "none",
+      "source_refs": []
+    },
+    {
+      "id": "c014",
+      "label": "issue",
+      "rationale": "The same file must contain only ASCII and must include a non-ASCII character. The first rule explicitly has no exceptions, so the required file cannot exist.",
+      "issue_type": "contradictory_requirements",
+      "source_refs": []
+    },
+    {
+      "id": "c015",
+      "label": "no_issue",
+      "rationale": "The positive bash rule is expressly a preference, whereas the negative rule is a hard prohibition for this response. A response with no bash call is compliant.",
+      "issue_type": "none",
+      "source_refs": []
+    },
+    {
+      "id": "c016",
+      "label": "no_issue",
+      "rationale": "Permission to open a PR imposes no duty to exercise it. Not opening a PR obeys the prohibition and is expressly an allowed completion in this task scope.",
+      "issue_type": "none",
+      "source_refs": []
+    },
+    {
+      "id": "c017",
+      "label": "no_issue",
+      "rationale": "For the requested 150 nodes, fifteen submissions of ten nodes plus one distinct poll for each task use exactly thirty service calls. This is a compliant witness within the stated finite model and task-size scope. It does not establish feasibility for every advertised size or guarantee success when extra polls or retries are needed.",
+      "issue_type": "none",
+      "source_refs": []
+    },
+    {
+      "id": "c018",
+      "label": "issue",
+      "rationale": "For 151 nodes, at least sixteen submissions are necessary. Their sixteen distinct mandatory polls give a lower bound of thirty-two counted service calls, exceeding the thirty-call run budget. The model excludes batching or alternative-operation escapes.",
+      "issue_type": "capacity_budget_infeasibility",
+      "source_refs": []
+    },
+    {
+      "id": "c019",
+      "label": "issue",
+      "rationale": "For 184 nodes, at least nineteen submissions and nineteen distinct mandatory polls are necessary. The resulting thirty-eight-call lower bound exceeds the thirty-call budget, so the requested run cannot complete within scope.",
+      "issue_type": "capacity_budget_infeasibility",
+      "source_refs": []
+    },
+    {
+      "id": "c020",
+      "label": "no_issue",
+      "rationale": "Eighteen ten-node submissions and one four-node submission cover 184 nodes. Nineteen distinct polls bring the total to thirty-eight calls, meeting the replacement thirty-eight-call budget. This proves existence in the supplied model, not a guarantee under additional retries or polls.",
+      "issue_type": "none",
+      "source_refs": []
+    },
+    {
+      "id": "c021",
+      "label": "issue",
+      "rationale": "The mandatory operation is submit, but the declared complete manifest contains only poll. With no aliases or alternatives, the advertised tool invocation cannot be performed.",
+      "issue_type": "missing_tool",
+      "source_refs": []
+    },
+    {
+      "id": "c022",
+      "label": "issue",
+      "rationale": "The required invocation uses node_ids, while submit accepts and requires nodes. Under the complete manifest and no-alias condition, the prescribed call both uses an unsupported argument and omits the required one.",
+      "issue_type": "tool_argument_mismatch",
+      "source_refs": []
+    },
+    {
+      "id": "c023",
+      "label": "issue",
+      "rationale": "The only action requires ready, the initial state is empty, and no action can produce ready. Thus no action is enabled and the reachable-state closure is just the empty state. Done is unreachable at any depth, so this is a proof of infeasibility rather than a bounded-search miss.",
+      "issue_type": "unreachable_workflow",
+      "source_refs": []
+    },
+    {
+      "id": "c024",
+      "label": "no_issue",
+      "rationale": "A concrete compliant plan exists: prepare adds ready, then finish adds done. The context explicitly says the depth-one search limit is not a semantic prohibition on longer plans. The two-step witness establishes feasibility despite a bounded checker being unable to find it at depth one.",
+      "issue_type": "none",
+      "source_refs": []
+    }
+  ],
+  "limitations": [
+    "Pilot approximation of a strong judge, not certified model strength; native model identity/version, token usage, and dollar cost are not exposed.",
+    "The 24 selected development cases are not representative or held-out production data; no superiority claim follows from this arm.",
+    "Only the protocol and structured packet were read locally. The five commit-pinned source files for all eight natural cases were fetched read-only through the GitHub connector and relevant complete policy sections and branch context were inspected. No reference labels, other predictions, checker, source manifests, or repository documentation were consulted.",
+    "Manual finite interpretations were treated as fallible evidence. c001 remains semantically ambiguous after full-source context inspection.",
+    "Empty supplemental tool dictionaries in natural/policy-only cases were not treated as complete runtime manifests; explicit completeness is asserted only where the case specifies it.",
+    "Bulk feasibility is evaluated for the supplied request size and the stated finite call model. A feasible lower-bound witness does not guarantee operational success with extra polls, retries, or setup overhead.",
+    "Search-depth settings are not assumed to prohibit longer semantic plans; c024 has an explicit two-action witness.",
+    "Latency is batch wall time through judgment completion, including orchestration and source reads; it is not isolated checker latency."
+  ]
+}

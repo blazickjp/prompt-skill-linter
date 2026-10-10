@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "id": "policy",
+      "path": "policy.txt"
+    }
+  ],
+  "skills": [],
+  "rules": [
+    {
+      "id": "r1",
+      "source": {
+        "source_id": "policy",
+        "start_line": 1,
+        "end_line": 1,
+        "quote": "Prefer including a bash call in each response."
+      },
+      "priority": 0,
+      "kind": "preference",
+      "scope": {
+        "entity": "task",
+        "temporal": "turn"
+      },
+      "when": {},
+      "exceptions": [],
+      "effect": {
+        "literal": "has_bash",
+        "value": true
+      }
+    },
+    {
+      "id": "r2",
+      "source": {
+        "source_id": "policy",
+        "start_line": 2,
+        "end_line": 2,
+        "quote": "Do not include a bash call in this response."
+      },
+      "priority": 0,
+      "kind": "prohibition",
+      "scope": {
+        "entity": "task",
+        "temporal": "turn"
+      },
+      "when": {},
+      "exceptions": [],
+      "effect": {
+        "literal": "has_bash",
+        "value": true
+      }
+    }
+  ],
+  "contexts": [
+    {
+      "id": "task",
+      "facts": {},
+      "active_skills": []
+    }
+  ],
+  "assumptions": [
+    "Explicitly synthetic finite model; no inferred natural-language completeness."
+  ]
+}

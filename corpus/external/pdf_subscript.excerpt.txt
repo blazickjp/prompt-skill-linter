@@ -1,0 +1,2 @@
+Never use Unicode subscript/superscript characters
+Instead, use ReportLab's XML markup tags in Paragraph objects:

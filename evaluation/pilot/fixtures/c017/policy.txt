@@ -1,0 +1,5 @@
+Advertised support: update every requested node for lists of 1-200 nodes within one run.
+Each submission handles at most 10 nodes and returns exactly one task.
+Every task needs at least one separate polling call; each poll handles exactly one task.
+The run permits at most 30 counted service calls.
+No prior tasks, batching shortcuts, alternative update operations, or bulk polling exist in this synthetic model.

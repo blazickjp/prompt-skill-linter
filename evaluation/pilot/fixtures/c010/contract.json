@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "id": "policy",
+      "path": "policy.txt"
+    }
+  ],
+  "skills": [],
+  "rules": [
+    {
+      "id": "r1",
+      "source": {
+        "source_id": "policy",
+        "start_line": 1,
+        "end_line": 1,
+        "quote": "For subscripts, use Unicode subscript characters."
+      },
+      "priority": 0,
+      "kind": "requirement",
+      "scope": {
+        "entity": "task",
+        "temporal": "turn"
+      },
+      "when": {},
+      "exceptions": [],
+      "effect": {
+        "literal": "unicode",
+        "value": true
+      }
+    },
+    {
+      "id": "r2",
+      "source": {
+        "source_id": "policy",
+        "start_line": 2,
+        "end_line": 2,
+        "quote": "Never use Unicode subscript characters."
+      },
+      "priority": 0,
+      "kind": "prohibition",
+      "scope": {
+        "entity": "task",
+        "temporal": "turn"
+      },
+      "when": {},
+      "exceptions": [],
+      "effect": {
+        "literal": "unicode",
+        "value": true
+      }
+    }
+  ],
+  "contexts": [
+    {
+      "id": "task",
+      "facts": {},
+      "active_skills": []
+    }
+  ],
+  "assumptions": [
+    "Explicitly synthetic finite model; no inferred natural-language completeness."
+  ]
+}

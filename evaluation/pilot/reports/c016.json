@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "contract": {
+    "version": 1,
+    "sources": [
+      {
+        "id": "policy",
+        "path": "policy.txt"
+      }
+    ],
+    "skills": [],
+    "rules": [
+      {
+        "id": "r1",
+        "source": {
+          "source_id": "policy",
+          "start_line": 1,
+          "end_line": 1,
+          "quote": "You may open a pull request."
+        },
+        "priority": 0,
+        "kind": "permission",
+        "scope": {
+          "entity": "task",
+          "temporal": "turn"
+        },
+        "when": {},
+        "exceptions": [],
+        "effect": {
+          "literal": "open_pr",
+          "value": true
+        }
+      },
+      {
+        "id": "r2",
+        "source": {
+          "source_id": "policy",
+          "start_line": 2,
+          "end_line": 2,
+          "quote": "Do not open a pull request."
+        },
+        "priority": 0,
+        "kind": "prohibition",
+        "scope": {
+          "entity": "task",
+          "temporal": "turn"
+        },
+        "when": {},
+        "exceptions": [],
+        "effect": {
+          "literal": "open_pr",
+          "value": true
+        }
+      }
+    ],
+    "contexts": [
+      {
+        "id": "task",
+        "facts": {},
+        "active_skills": []
+      }
+    ],
+    "assumptions": [
+      "Explicitly synthetic finite model; no inferred natural-language completeness."
+    ]
+  },
+  "diagnostics": [],
+  "resource_checks": [],
+  "workflow_checks": [],
+  "constraint_checks": [],
+  "coverage": {
+    "translation": "declared_only",
+    "context_count": 1,
+    "plan_bound": 20,
+    "universal_prompt_correctness_certified": false
+  },
+  "summary": {
+    "error": 0,
+    "warning": 0,
+    "info": 0
+  }
+}

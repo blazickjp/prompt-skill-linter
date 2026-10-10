@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "runs": [
+    {
+      "runtime": "runtime",
+      "expected_errors": 2,
+      "observed_errors": 2,
+      "classification": "synthetic",
+      "status": "passed"
+    },
+    {
+      "runtime": "runtime-budget32",
+      "expected_errors": 0,
+      "observed_errors": 0,
+      "classification": "synthetic",
+      "status": "passed"
+    },
+    {
+      "runtime": "runtime-budget38",
+      "expected_errors": 0,
+      "observed_errors": 0,
+      "classification": "synthetic",
+      "status": "passed"
+    },
+    {
+      "runtime": "runtime-budget40",
+      "expected_errors": 0,
+      "observed_errors": 0,
+      "classification": "synthetic",
+      "status": "passed"
+    }
+  ],
+  "scope": "Declared lower-bound controls, not whole-pipeline evaluation"
+}

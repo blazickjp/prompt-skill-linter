@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "frozen_before_predictions": true,
+  "frozen_at_utc": "2026-10-10T14:40:33Z",
+  "target": "Task-level existence of a compliant completion in the supplied scope, or exact advertised tool-interface inconsistency. Authorization tension with a safe no-op is not automatically no-completion.",
+  "labels": [
+    "issue",
+    "no_issue",
+    "abstain"
+  ],
+  "abstain_conditions": [
+    "unresolved semantic ambiguity",
+    "missing context",
+    "unsupported translation",
+    "bounded search without exhaustive closure"
+  ],
+  "primary_strata": [
+    "natural",
+    "synthetic_mutation",
+    "synthetic_handoff",
+    "synthetic_interface",
+    "synthetic_workflow"
+  ],
+  "arms": [
+    "native_judge",
+    "native_judge_structured",
+    "mechanical_reviewed_contract"
+  ],
+  "reference": "Independent blind native model review plus explicit mathematical checks; not human gold. Cases with unresolved reference disagreement excluded from binary scoring and retained for abstention reporting.",
+  "metrics": {
+    "precision": "TP/(TP+FP), null if denominator zero",
+    "recall": "TP/(TP+FN+abstained_reference_positive), null if no reference positives",
+    "coverage": "non-abstained predictions / all cases",
+    "selective_accuracy": "correct non-abstained / scored non-abstained",
+    "false_positive_rate": "FP / reference-negative cases",
+    "abstention_rate": "abstained / all cases",
+    "missed_issues": "false-negative plus abstained reference-positive cases"
+  },
+  "cost": "Record actual known tokens/dollars; unknown stays null, not zero. No explicit paid API calls.",
+  "latency": "Batch wall clock includes orchestration/tool reads; not comparable to isolated local checker latency.",
+  "disclosure": [
+    "24 selected development cases; not representative or held-out production benchmark.",
+    "Native judge model identity/version may be unknown; cannot certify frontier strength or cross-model independence.",
+    "Natural inputs are source-linked excerpts/paraphrases with full-source verification required by native arms. Mechanical arm runs reviewed finite projections for supported cases and abstains otherwise.",
+    "Extraction is separately evaluated; this is not an end-to-end superiority test.",
+    "No judge tuning after predictions; amendments require a new run ID and report changes."
+  ]
+}

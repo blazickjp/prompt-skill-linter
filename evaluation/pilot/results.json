@@ -1,0 +1,1268 @@
+{
+  "version": 1,
+  "generated_at": "2026-10-10T14:50:17.549478+00:00",
+  "protocol_sha256": "f1c1c740644591707a5fc3882c0a46e5ad769b1443bef628c86c9972b5f90bd3",
+  "reference_sha256": "58930561d42d4131464f2c1b81c7926e3a3d83fe59eef258eda03fb56a57dc30",
+  "arms": {
+    "mechanical_reviewed_contract": {
+      "all": {
+        "counts": {
+          "total": 24,
+          "abstained": 6,
+          "excluded_reference_ambiguous": 1,
+          "binary_reference": 23,
+          "reference_positive": 9,
+          "reference_negative": 14,
+          "tn": 8,
+          "abstained_negative": 6,
+          "tp": 9
+        },
+        "precision": 1.0,
+        "recall": 1.0,
+        "false_positive_rate": 0.0,
+        "missed_issues": 0,
+        "coverage": 0.75,
+        "abstention_rate": 0.25,
+        "selective_accuracy": 1.0,
+        "cases": [
+          {
+            "id": "c001",
+            "predicted": "issue",
+            "reference": "abstain",
+            "outcome": "unscored_ambiguous"
+          },
+          {
+            "id": "c002",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c003",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c004",
+            "predicted": "abstain",
+            "reference": "no_issue",
+            "outcome": "abstained_negative"
+          },
+          {
+            "id": "c005",
+            "predicted": "abstain",
+            "reference": "no_issue",
+            "outcome": "abstained_negative"
+          },
+          {
+            "id": "c006",
+            "predicted": "abstain",
+            "reference": "no_issue",
+            "outcome": "abstained_negative"
+          },
+          {
+            "id": "c007",
+            "predicted": "abstain",
+            "reference": "no_issue",
+            "outcome": "abstained_negative"
+          },
+          {
+            "id": "c008",
+            "predicted": "abstain",
+            "reference": "no_issue",
+            "outcome": "abstained_negative"
+          },
+          {
+            "id": "c009",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "c010",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "c011",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c012",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "c013",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c014",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "c015",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c016",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c017",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c018",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "c019",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "c020",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c021",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "c022",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "c023",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "c024",
+            "predicted": "abstain",
+            "reference": "no_issue",
+            "outcome": "abstained_negative"
+          }
+        ]
+      },
+      "by_origin": {
+        "natural": {
+          "counts": {
+            "total": 8,
+            "abstained": 5,
+            "excluded_reference_ambiguous": 1,
+            "binary_reference": 7,
+            "reference_positive": 0,
+            "reference_negative": 7,
+            "tn": 2,
+            "abstained_negative": 5
+          },
+          "precision": null,
+          "recall": null,
+          "false_positive_rate": 0.0,
+          "missed_issues": 0,
+          "coverage": 0.375,
+          "abstention_rate": 0.625,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "c001",
+              "predicted": "issue",
+              "reference": "abstain",
+              "outcome": "unscored_ambiguous"
+            },
+            {
+              "id": "c002",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "c003",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "c004",
+              "predicted": "abstain",
+              "reference": "no_issue",
+              "outcome": "abstained_negative"
+            },
+            {
+              "id": "c005",
+              "predicted": "abstain",
+              "reference": "no_issue",
+              "outcome": "abstained_negative"
+            },
+            {
+              "id": "c006",
+              "predicted": "abstain",
+              "reference": "no_issue",
+              "outcome": "abstained_negative"
+            },
+            {
+              "id": "c007",
+              "predicted": "abstain",
+              "reference": "no_issue",
+              "outcome": "abstained_negative"
+            },
+            {
+              "id": "c008",
+              "predicted": "abstain",
+              "reference": "no_issue",
+              "outcome": "abstained_negative"
+            }
+          ]
+        },
+        "synthetic_handoff": {
+          "counts": {
+            "total": 4,
+            "abstained": 0,
+            "binary_reference": 4,
+            "reference_positive": 2,
+            "reference_negative": 2,
+            "tn": 2,
+            "tp": 2
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "false_positive_rate": 0.0,
+          "missed_issues": 0,
+          "coverage": 1.0,
+          "abstention_rate": 0.0,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "c017",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "c018",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "c019",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "c020",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            }
+          ]
+        },
+        "synthetic_interface": {
+          "counts": {
+            "total": 2,
+            "abstained": 0,
+            "binary_reference": 2,
+            "reference_positive": 2,
+            "reference_negative": 0,
+            "tp": 2
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "false_positive_rate": null,
+          "missed_issues": 0,
+          "coverage": 1.0,
+          "abstention_rate": 0.0,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "c021",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "c022",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            }
+          ]
+        },
+        "synthetic_mutation": {
+          "counts": {
+            "total": 8,
+            "abstained": 0,
+            "binary_reference": 8,
+            "reference_positive": 4,
+            "reference_negative": 4,
+            "tp": 4,
+            "tn": 4
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "false_positive_rate": 0.0,
+          "missed_issues": 0,
+          "coverage": 1.0,
+          "abstention_rate": 0.0,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "c009",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "c010",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "c011",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "c012",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "c013",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "c014",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "c015",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "c016",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            }
+          ]
+        },
+        "synthetic_workflow": {
+          "counts": {
+            "total": 2,
+            "abstained": 1,
+            "binary_reference": 2,
+            "reference_positive": 1,
+            "reference_negative": 1,
+            "tp": 1,
+            "abstained_negative": 1
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "false_positive_rate": 0.0,
+          "missed_issues": 0,
+          "coverage": 0.5,
+          "abstention_rate": 0.5,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "c023",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "c024",
+              "predicted": "abstain",
+              "reference": "no_issue",
+              "outcome": "abstained_negative"
+            }
+          ]
+        }
+      },
+      "latency_seconds": 0.015297306000320532,
+      "cost": null,
+      "tokens": null,
+      "model": null,
+      "input_file": "predictions/mechanical_reviewed_contract.json"
+    },
+    "native_judge": {
+      "all": {
+        "counts": {
+          "total": 24,
+          "abstained": 1,
+          "excluded_reference_ambiguous": 1,
+          "binary_reference": 23,
+          "reference_positive": 9,
+          "reference_negative": 14,
+          "tn": 14,
+          "tp": 9
+        },
+        "precision": 1.0,
+        "recall": 1.0,
+        "false_positive_rate": 0.0,
+        "missed_issues": 0,
+        "coverage": 0.9583333333333334,
+        "abstention_rate": 0.041666666666666664,
+        "selective_accuracy": 1.0,
+        "cases": [
+          {
+            "id": "c001",
+            "predicted": "abstain",
+            "reference": "abstain",
+            "outcome": "unscored_ambiguous"
+          },
+          {
+            "id": "c002",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c003",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c004",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c005",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c006",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c007",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c008",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c009",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "c010",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "c011",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c012",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "c013",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c014",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "c015",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c016",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c017",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c018",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "c019",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "c020",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c021",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "c022",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "c023",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "c024",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          }
+        ]
+      },
+      "by_origin": {
+        "natural": {
+          "counts": {
+            "total": 8,
+            "abstained": 1,
+            "excluded_reference_ambiguous": 1,
+            "binary_reference": 7,
+            "reference_positive": 0,
+            "reference_negative": 7,
+            "tn": 7
+          },
+          "precision": null,
+          "recall": null,
+          "false_positive_rate": 0.0,
+          "missed_issues": 0,
+          "coverage": 0.875,
+          "abstention_rate": 0.125,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "c001",
+              "predicted": "abstain",
+              "reference": "abstain",
+              "outcome": "unscored_ambiguous"
+            },
+            {
+              "id": "c002",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "c003",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "c004",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "c005",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "c006",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "c007",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "c008",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            }
+          ]
+        },
+        "synthetic_handoff": {
+          "counts": {
+            "total": 4,
+            "abstained": 0,
+            "binary_reference": 4,
+            "reference_positive": 2,
+            "reference_negative": 2,
+            "tn": 2,
+            "tp": 2
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "false_positive_rate": 0.0,
+          "missed_issues": 0,
+          "coverage": 1.0,
+          "abstention_rate": 0.0,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "c017",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "c018",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "c019",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "c020",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            }
+          ]
+        },
+        "synthetic_interface": {
+          "counts": {
+            "total": 2,
+            "abstained": 0,
+            "binary_reference": 2,
+            "reference_positive": 2,
+            "reference_negative": 0,
+            "tp": 2
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "false_positive_rate": null,
+          "missed_issues": 0,
+          "coverage": 1.0,
+          "abstention_rate": 0.0,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "c021",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "c022",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            }
+          ]
+        },
+        "synthetic_mutation": {
+          "counts": {
+            "total": 8,
+            "abstained": 0,
+            "binary_reference": 8,
+            "reference_positive": 4,
+            "reference_negative": 4,
+            "tp": 4,
+            "tn": 4
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "false_positive_rate": 0.0,
+          "missed_issues": 0,
+          "coverage": 1.0,
+          "abstention_rate": 0.0,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "c009",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "c010",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "c011",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "c012",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "c013",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "c014",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "c015",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "c016",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            }
+          ]
+        },
+        "synthetic_workflow": {
+          "counts": {
+            "total": 2,
+            "abstained": 0,
+            "binary_reference": 2,
+            "reference_positive": 1,
+            "reference_negative": 1,
+            "tp": 1,
+            "tn": 1
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "false_positive_rate": 0.0,
+          "missed_issues": 0,
+          "coverage": 1.0,
+          "abstention_rate": 0.0,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "c023",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "c024",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            }
+          ]
+        }
+      },
+      "latency_seconds": 133.923,
+      "cost": null,
+      "tokens": null,
+      "model": null,
+      "input_file": "predictions/native_judge.json"
+    },
+    "native_judge_structured": {
+      "all": {
+        "counts": {
+          "total": 24,
+          "abstained": 1,
+          "excluded_reference_ambiguous": 1,
+          "binary_reference": 23,
+          "reference_positive": 9,
+          "reference_negative": 14,
+          "tn": 14,
+          "tp": 9
+        },
+        "precision": 1.0,
+        "recall": 1.0,
+        "false_positive_rate": 0.0,
+        "missed_issues": 0,
+        "coverage": 0.9583333333333334,
+        "abstention_rate": 0.041666666666666664,
+        "selective_accuracy": 1.0,
+        "cases": [
+          {
+            "id": "c001",
+            "predicted": "abstain",
+            "reference": "abstain",
+            "outcome": "unscored_ambiguous"
+          },
+          {
+            "id": "c002",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c003",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c004",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c005",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c006",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c007",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c008",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c009",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "c010",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "c011",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c012",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "c013",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c014",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "c015",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c016",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c017",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c018",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "c019",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "c020",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          },
+          {
+            "id": "c021",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "c022",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "c023",
+            "predicted": "issue",
+            "reference": "issue",
+            "outcome": "tp"
+          },
+          {
+            "id": "c024",
+            "predicted": "no_issue",
+            "reference": "no_issue",
+            "outcome": "tn"
+          }
+        ]
+      },
+      "by_origin": {
+        "natural": {
+          "counts": {
+            "total": 8,
+            "abstained": 1,
+            "excluded_reference_ambiguous": 1,
+            "binary_reference": 7,
+            "reference_positive": 0,
+            "reference_negative": 7,
+            "tn": 7
+          },
+          "precision": null,
+          "recall": null,
+          "false_positive_rate": 0.0,
+          "missed_issues": 0,
+          "coverage": 0.875,
+          "abstention_rate": 0.125,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "c001",
+              "predicted": "abstain",
+              "reference": "abstain",
+              "outcome": "unscored_ambiguous"
+            },
+            {
+              "id": "c002",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "c003",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "c004",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "c005",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "c006",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "c007",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "c008",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            }
+          ]
+        },
+        "synthetic_handoff": {
+          "counts": {
+            "total": 4,
+            "abstained": 0,
+            "binary_reference": 4,
+            "reference_positive": 2,
+            "reference_negative": 2,
+            "tn": 2,
+            "tp": 2
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "false_positive_rate": 0.0,
+          "missed_issues": 0,
+          "coverage": 1.0,
+          "abstention_rate": 0.0,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "c017",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "c018",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "c019",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "c020",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            }
+          ]
+        },
+        "synthetic_interface": {
+          "counts": {
+            "total": 2,
+            "abstained": 0,
+            "binary_reference": 2,
+            "reference_positive": 2,
+            "reference_negative": 0,
+            "tp": 2
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "false_positive_rate": null,
+          "missed_issues": 0,
+          "coverage": 1.0,
+          "abstention_rate": 0.0,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "c021",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "c022",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            }
+          ]
+        },
+        "synthetic_mutation": {
+          "counts": {
+            "total": 8,
+            "abstained": 0,
+            "binary_reference": 8,
+            "reference_positive": 4,
+            "reference_negative": 4,
+            "tp": 4,
+            "tn": 4
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "false_positive_rate": 0.0,
+          "missed_issues": 0,
+          "coverage": 1.0,
+          "abstention_rate": 0.0,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "c009",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "c010",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "c011",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "c012",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "c013",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "c014",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "c015",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            },
+            {
+              "id": "c016",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            }
+          ]
+        },
+        "synthetic_workflow": {
+          "counts": {
+            "total": 2,
+            "abstained": 0,
+            "binary_reference": 2,
+            "reference_positive": 1,
+            "reference_negative": 1,
+            "tp": 1,
+            "tn": 1
+          },
+          "precision": 1.0,
+          "recall": 1.0,
+          "false_positive_rate": 0.0,
+          "missed_issues": 0,
+          "coverage": 1.0,
+          "abstention_rate": 0.0,
+          "selective_accuracy": 1.0,
+          "cases": [
+            {
+              "id": "c023",
+              "predicted": "issue",
+              "reference": "issue",
+              "outcome": "tp"
+            },
+            {
+              "id": "c024",
+              "predicted": "no_issue",
+              "reference": "no_issue",
+              "outcome": "tn"
+            }
+          ]
+        }
+      },
+      "latency_seconds": 137,
+      "cost": null,
+      "tokens": null,
+      "model": null,
+      "input_file": "predictions/native_judge_structured.json"
+    }
+  },
+  "limitations": [
+    "Selected development pilot; not held-out, representative, human-gold, or a conclusive comparison.",
+    "Reference labels derive from one independent native model reviewer. Shared model family and correlated errors may exist.",
+    "Unknown native model identity/version means the strong-judge requirement is only approximated, not verified.",
+    "Scores on manual finite contracts measure downstream checking; raw-prose extraction measured separately.",
+    "No general advantage claim is warranted; natural positive recall may be undefined."
+  ]
+}

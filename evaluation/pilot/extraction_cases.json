@@ -1,0 +1,172 @@
+{
+  "protocol": {
+    "stage": "offline_annotation_grammar_conformance_and_raw_prose_coverage",
+    "expected_labels": "Grammar expectations authored from documented syntax, not human semantic gold. Natural binding coverage counts supported candidates, not understanding accuracy.",
+    "natural_inputs": "The same 24 frozen case policy fields; no full-policy inference is claimed.",
+    "acceptance": "End-to-end run automatically accepts only mechanically supported annotations for this test; no unsupported English is silently accepted."
+  },
+  "cases": [
+    {
+      "id": "require_True",
+      "text": "REQUIRE require_flag=true",
+      "expected": {
+        "kind": "requirement",
+        "effect": {
+          "literal": "require_flag",
+          "value": true
+        }
+      }
+    },
+    {
+      "id": "require_False",
+      "text": "REQUIRE require_flag=false",
+      "expected": {
+        "kind": "requirement",
+        "effect": {
+          "literal": "require_flag",
+          "value": false
+        }
+      }
+    },
+    {
+      "id": "forbid_True",
+      "text": "FORBID forbid_flag=true",
+      "expected": {
+        "kind": "prohibition",
+        "effect": {
+          "literal": "forbid_flag",
+          "value": true
+        }
+      }
+    },
+    {
+      "id": "forbid_False",
+      "text": "FORBID forbid_flag=false",
+      "expected": {
+        "kind": "prohibition",
+        "effect": {
+          "literal": "forbid_flag",
+          "value": false
+        }
+      }
+    },
+    {
+      "id": "permit_True",
+      "text": "PERMIT permit_flag=true",
+      "expected": {
+        "kind": "permission",
+        "effect": {
+          "literal": "permit_flag",
+          "value": true
+        }
+      }
+    },
+    {
+      "id": "permit_False",
+      "text": "PERMIT permit_flag=false",
+      "expected": {
+        "kind": "permission",
+        "effect": {
+          "literal": "permit_flag",
+          "value": false
+        }
+      }
+    },
+    {
+      "id": "prefer_True",
+      "text": "PREFER prefer_flag=true",
+      "expected": {
+        "kind": "preference",
+        "effect": {
+          "literal": "prefer_flag",
+          "value": true
+        }
+      }
+    },
+    {
+      "id": "prefer_False",
+      "text": "PREFER prefer_flag=false",
+      "expected": {
+        "kind": "preference",
+        "effect": {
+          "literal": "prefer_flag",
+          "value": false
+        }
+      }
+    },
+    {
+      "id": "lowercase",
+      "text": "require flag=true",
+      "expected": {
+        "kind": "requirement",
+        "effect": {
+          "literal": "flag",
+          "value": true
+        }
+      }
+    },
+    {
+      "id": "whitespace",
+      "text": "  FORBID   file.write = false  ",
+      "expected": {
+        "kind": "prohibition",
+        "effect": {
+          "literal": "file.write",
+          "value": false
+        }
+      }
+    },
+    {
+      "id": "disjunction",
+      "text": "CLAUSE ready | !blocked",
+      "expected": {
+        "kind": "requirement",
+        "clause": [
+          {
+            "literal": "ready",
+            "value": true
+          },
+          {
+            "literal": "blocked",
+            "value": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "unknown_boolean",
+      "text": "REQUIRE ready=maybe",
+      "expected": null
+    },
+    {
+      "id": "trailing_condition",
+      "text": "REQUIRE ready=true unless user_cancelled",
+      "expected": null
+    },
+    {
+      "id": "empty_atom",
+      "text": "CLAUSE ready |",
+      "expected": null
+    },
+    {
+      "id": "natural_negation",
+      "text": "Never disclose secrets.",
+      "expected": null
+    },
+    {
+      "id": "natural_exception",
+      "text": "Always use the API unless the user requests a browser.",
+      "expected": null
+    },
+    {
+      "id": "conditional_english",
+      "text": "If a request needs approval, ask the user before sending it.",
+      "expected": null
+    },
+    {
+      "id": "plain_description",
+      "text": "This document describes the assistant.",
+      "expected": null
+    }
+  ]
+}

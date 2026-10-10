@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "id": "policy",
+      "path": "policy.txt"
+    }
+  ],
+  "skills": [],
+  "rules": [
+    {
+      "id": "r1",
+      "source": {
+        "source_id": "policy",
+        "start_line": 1,
+        "end_line": 1,
+        "quote": "Invoke submit with arguments {\"node_ids\": [1]}."
+      },
+      "priority": 0,
+      "kind": "requirement",
+      "scope": {
+        "entity": "task",
+        "temporal": "turn"
+      },
+      "when": {},
+      "exceptions": [],
+      "tool_call": {
+        "tool": "submit",
+        "arguments": {
+          "node_ids": [
+            1
+          ]
+        }
+      }
+    }
+  ],
+  "contexts": [
+    {
+      "id": "task",
+      "facts": {},
+      "active_skills": []
+    }
+  ],
+  "assumptions": [
+    "Explicitly synthetic finite model; no inferred natural-language completeness."
+  ]
+}

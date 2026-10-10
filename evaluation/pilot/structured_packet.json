@@ -1,0 +1,1814 @@
+{
+  "version": 1,
+  "evidence_kind": "Manual finite projections, not reference labels or established English semantics.",
+  "cases": [
+    {
+      "id": "c001",
+      "origin": "natural",
+      "policy": "For bug fixes: Create tests to verify issues before implementing fixes\nDo NOT write tests for documentation changes, README updates, configuration files",
+      "context": "Configuration-file bug fix. Both bug-fix and configuration-change conditions hold.",
+      "tools": {
+        "tools": {}
+      },
+      "runtime": {
+        "max_plan_steps": 20
+      },
+      "source_urls": [
+        "https://github.com/OpenHands/software-agent-sdk/blob/e2bac66be26e94f571f27b71f507e7192720f825/openhands-sdk/openhands/sdk/context/prompts/sections/static.py#L253",
+        "https://github.com/OpenHands/software-agent-sdk/blob/e2bac66be26e94f571f27b71f507e7192720f825/openhands-sdk/openhands/sdk/context/prompts/sections/static.py#L255"
+      ],
+      "source_context_required": true,
+      "source_case_id": "openhands_config_bug",
+      "contract": "evaluation/pilot/fixtures/c001/contract.json",
+      "structured_evidence": {
+        "rules": [
+          {
+            "id": "openhands_config_bug_1",
+            "source": {
+              "source_id": "oh",
+              "start_line": 1,
+              "end_line": 1,
+              "quote": "For bug fixes: Create tests to verify issues before implementing fixes"
+            },
+            "priority": 0,
+            "kind": "requirement",
+            "when": {
+              "bug_fix": true
+            },
+            "skills": [],
+            "scope": {
+              "entity": "current_task",
+              "temporal": "current_turn"
+            },
+            "exceptions": [],
+            "effect": {
+              "literal": "write_tests",
+              "value": true
+            }
+          },
+          {
+            "id": "openhands_config_bug_2",
+            "source": {
+              "source_id": "oh",
+              "start_line": 2,
+              "end_line": 2,
+              "quote": "Do NOT write tests for documentation changes, README updates, configuration files"
+            },
+            "priority": 0,
+            "kind": "prohibition",
+            "when": {
+              "configuration_change": true
+            },
+            "skills": [],
+            "scope": {
+              "entity": "current_task",
+              "temporal": "current_turn"
+            },
+            "exceptions": [],
+            "effect": {
+              "literal": "write_tests",
+              "value": true
+            }
+          }
+        ],
+        "contexts": [
+          {
+            "id": "openhands_config_bug",
+            "facts": {
+              "bug_fix": true,
+              "configuration_change": true
+            },
+            "active_skills": []
+          }
+        ],
+        "assumptions": [
+          "Manual research encoding, not automatic extraction or an independently established semantic ground truth.",
+          "Explicit exception/precedence is absent from this abstraction. An adjudicator may reasonably interpret specificity as resolving the tension.",
+          "The second excerpt omits the final non-functionality category; consult the pinned complete source."
+        ],
+        "bulk_model": null,
+        "workflows": []
+      }
+    },
+    {
+      "id": "c002",
+      "origin": "natural",
+      "policy": "Your response MUST include AT LEAST ONE bash tool call\nfinish with exactly one bash tool call",
+      "context": "Response recovering from token-limit truncation; the recovery branch is active.",
+      "tools": {
+        "tools": {}
+      },
+      "runtime": {
+        "max_plan_steps": 20
+      },
+      "source_urls": [
+        "https://github.com/SWE-agent/mini-swe-agent/blob/04d809ceab9df28f9adaed044884180159172930/src/minisweagent/config/mini.yaml#L38",
+        "https://github.com/SWE-agent/mini-swe-agent/blob/04d809ceab9df28f9adaed044884180159172930/src/minisweagent/config/mini.yaml#L131"
+      ],
+      "source_context_required": true,
+      "source_case_id": "mini_call_count",
+      "contract": "evaluation/pilot/fixtures/c002/contract.json",
+      "structured_evidence": {
+        "rules": [
+          {
+            "id": "mini_call_count_1",
+            "source": {
+              "source_id": "mini",
+              "start_line": 1,
+              "end_line": 1,
+              "quote": "Your response MUST include AT LEAST ONE bash tool call"
+            },
+            "priority": 0,
+            "kind": "requirement",
+            "when": {},
+            "skills": [],
+            "scope": {
+              "entity": "current_task",
+              "temporal": "current_turn"
+            },
+            "exceptions": [],
+            "effect": {
+              "literal": "has_bash_call",
+              "value": true
+            }
+          },
+          {
+            "id": "mini_call_count_2",
+            "source": {
+              "source_id": "mini",
+              "start_line": 2,
+              "end_line": 2,
+              "quote": "finish with exactly one bash tool call"
+            },
+            "priority": 0,
+            "kind": "requirement",
+            "when": {
+              "token_limit_recovery": true
+            },
+            "skills": [],
+            "scope": {
+              "entity": "current_task",
+              "temporal": "current_turn"
+            },
+            "exceptions": [],
+            "effect": {
+              "literal": "has_bash_call",
+              "value": true
+            }
+          }
+        ],
+        "contexts": [
+          {
+            "id": "mini_call_count",
+            "facts": {
+              "token_limit_recovery": true
+            },
+            "active_skills": []
+          }
+        ],
+        "assumptions": [
+          "Manual research encoding, not automatic extraction or an independently established semantic ground truth.",
+          "The Boolean abstraction retains the nonzero lower bound but cannot represent or prove the exactly-one upper bound. It is only a no-false-positive smoke case.",
+          "Runtime Jinja branch context must be retained by any full extractor."
+        ],
+        "bulk_model": null,
+        "workflows": []
+      }
+    },
+    {
+      "id": "c003",
+      "origin": "natural",
+      "policy": "Never use Unicode subscript/superscript characters\nInstead, use ReportLab's XML markup tags in Paragraph objects:",
+      "context": "Create a ReportLab PDF paragraph containing subscript typography.",
+      "tools": {
+        "tools": {}
+      },
+      "runtime": {
+        "max_plan_steps": 20
+      },
+      "source_urls": [
+        "https://github.com/anthropics/skills/blob/dbd4588f9e1033efb41dad4bef2f7947c8993d44/skills/pdf/SKILL.md#L171",
+        "https://github.com/anthropics/skills/blob/dbd4588f9e1033efb41dad4bef2f7947c8993d44/skills/pdf/SKILL.md#L173"
+      ],
+      "source_context_required": true,
+      "source_case_id": "pdf_subscript",
+      "contract": "evaluation/pilot/fixtures/c003/contract.json",
+      "structured_evidence": {
+        "rules": [
+          {
+            "id": "pdf_subscript_1",
+            "source": {
+              "source_id": "pdf",
+              "start_line": 1,
+              "end_line": 1,
+              "quote": "Never use Unicode subscript/superscript characters"
+            },
+            "priority": 0,
+            "kind": "prohibition",
+            "when": {
+              "reportlab_pdf": true
+            },
+            "skills": [],
+            "scope": {
+              "entity": "current_task",
+              "temporal": "current_turn"
+            },
+            "exceptions": [],
+            "effect": {
+              "literal": "unicode_subscript",
+              "value": true
+            }
+          },
+          {
+            "id": "pdf_subscript_2",
+            "source": {
+              "source_id": "pdf",
+              "start_line": 2,
+              "end_line": 2,
+              "quote": "Instead, use ReportLab's XML markup tags in Paragraph objects:"
+            },
+            "priority": 0,
+            "kind": "requirement",
+            "when": {
+              "reportlab_pdf": true,
+              "needs_subscript": true
+            },
+            "skills": [],
+            "scope": {
+              "entity": "current_task",
+              "temporal": "current_turn"
+            },
+            "exceptions": [],
+            "effect": {
+              "literal": "xml_subscript",
+              "value": true
+            }
+          }
+        ],
+        "contexts": [
+          {
+            "id": "pdf_subscript",
+            "facts": {
+              "reportlab_pdf": true,
+              "needs_subscript": true
+            },
+            "active_skills": []
+          }
+        ],
+        "assumptions": [
+          "Manual research encoding, not automatic extraction or an independently established semantic ground truth.",
+          "The selected font/rendering assumption is source-specific, not a universal ReportLab theorem.",
+          "No PDF was rendered in this corpus exercise."
+        ],
+        "bulk_model": null,
+        "workflows": []
+      }
+    },
+    {
+      "id": "c004",
+      "origin": "natural",
+      "policy": "Top-of-file import placement explicitly allows a user-requested alternative or a placement that would create issues, including circular imports.",
+      "context": "A top-level import would create a circular dependency; a delayed import avoids it.",
+      "tools": {
+        "tools": {}
+      },
+      "runtime": {
+        "max_plan_steps": 20
+      },
+      "source_urls": [
+        "https://github.com/OpenHands/software-agent-sdk/blob/e2bac66be26e94f571f27b71f507e7192720f825/openhands-sdk/openhands/sdk/context/prompts/sections/static.py#L217"
+      ],
+      "source_context_required": true,
+      "source_case_id": "openhands_import_exception",
+      "contract": null,
+      "structured_evidence": {
+        "status": "No finite extraction supplied. Resolve from the same linked source context or abstain."
+      }
+    },
+    {
+      "id": "c005",
+      "origin": "natural",
+      "policy": "The pull-request section conditions pushing or opening a PR on an explicit request.\nThe default security section lists opening a PR at the original repository among actions permitted without explicit consent.",
+      "context": "Fix code in the original repository, no explicit PR request. Built-in security policy enabled and not replaced. Is there no compliant action path, rather than merely an authorization tension?",
+      "tools": {
+        "tools": {}
+      },
+      "runtime": {
+        "max_plan_steps": 20
+      },
+      "source_urls": [
+        "https://github.com/OpenHands/software-agent-sdk/blob/e2bac66be26e94f571f27b71f507e7192720f825/openhands-sdk/openhands/sdk/context/prompts/sections/static.py#L238",
+        "https://github.com/OpenHands/software-agent-sdk/blob/e2bac66be26e94f571f27b71f507e7192720f825/openhands-sdk/openhands/sdk/context/prompts/sections/static.py#L300-L304"
+      ],
+      "source_context_required": true,
+      "source_case_id": "openhands_pr_consent",
+      "contract": null,
+      "structured_evidence": {
+        "status": "No finite extraction supplied. Resolve from the same linked source context or abstain."
+      }
+    },
+    {
+      "id": "c006",
+      "origin": "natural",
+      "policy": "ASCII is the default. Non-ASCII is allowed with clear justification in a file that already uses it.",
+      "context": "The existing source file already contains Unicode; keeping the localized label has a clear justification.",
+      "tools": {
+        "tools": {}
+      },
+      "runtime": {
+        "max_plan_steps": 20
+      },
+      "source_urls": [
+        "https://github.com/openai/codex/blob/806d9732c974bc8a51b8317c1bd8985544fe627c/codex-rs/core/gpt-5.2-codex_prompt.md#L9"
+      ],
+      "source_context_required": true,
+      "source_case_id": "codex_ascii_exception",
+      "contract": null,
+      "structured_evidence": {
+        "status": "No finite extraction supplied. Resolve from the same linked source context or abstain."
+      }
+    },
+    {
+      "id": "c007",
+      "origin": "natural",
+      "policy": "A worktree may already contain user edits; preserve them. Unexpected changes noticed during work require stopping and asking the user.",
+      "context": "At task start, the user explicitly identifies pre-existing changes. No new unexpected change is observed.",
+      "tools": {
+        "tools": {}
+      },
+      "runtime": {
+        "max_plan_steps": 20
+      },
+      "source_urls": [
+        "https://github.com/openai/codex/blob/806d9732c974bc8a51b8317c1bd8985544fe627c/codex-rs/core/gpt-5.2-codex_prompt.md#L12-L18"
+      ],
+      "source_context_required": true,
+      "source_case_id": "codex_dirty_known",
+      "contract": null,
+      "structured_evidence": {
+        "status": "No finite extraction supplied. Resolve from the same linked source context or abstain."
+      }
+    },
+    {
+      "id": "c008",
+      "origin": "natural",
+      "policy": "Prefer noninteractive commands unless a persistent process is specifically required; some commands require interaction.",
+      "context": "The user explicitly requires a persistent development watcher.",
+      "tools": {
+        "tools": {}
+      },
+      "runtime": {
+        "max_plan_steps": 20
+      },
+      "source_urls": [
+        "https://github.com/google-gemini/gemini-cli/blob/9b6e0265d16bbd29ca51e33c9e0c01dc4cec5e83/packages/core/src/prompts/snippets.ts#L849-L853"
+      ],
+      "source_context_required": true,
+      "source_case_id": "gemini_interactive_exception",
+      "contract": null,
+      "structured_evidence": {
+        "status": "No finite extraction supplied. Resolve from the same linked source context or abstain."
+      }
+    },
+    {
+      "id": "c009",
+      "origin": "synthetic_mutation",
+      "policy": "Every response must include at least one bash call.\nEvery response must include zero bash calls.",
+      "context": "Same response; no exceptions or priority differences.",
+      "tools": {
+        "tools": {}
+      },
+      "runtime": {
+        "max_plan_steps": 20
+      },
+      "parent_case_id": "mini_call_count",
+      "mutation_disclosure": "Authored mutation, not an observed upstream defect.",
+      "contract": "evaluation/pilot/fixtures/c009/contract.json",
+      "structured_evidence": {
+        "rules": [
+          {
+            "id": "r1",
+            "source": {
+              "source_id": "policy",
+              "start_line": 1,
+              "end_line": 1,
+              "quote": "Every response must include at least one bash call."
+            },
+            "priority": 0,
+            "kind": "requirement",
+            "scope": {
+              "entity": "task",
+              "temporal": "turn"
+            },
+            "when": {},
+            "exceptions": [],
+            "effect": {
+              "literal": "has_bash",
+              "value": true
+            }
+          },
+          {
+            "id": "r2",
+            "source": {
+              "source_id": "policy",
+              "start_line": 2,
+              "end_line": 2,
+              "quote": "Every response must include zero bash calls."
+            },
+            "priority": 0,
+            "kind": "prohibition",
+            "scope": {
+              "entity": "task",
+              "temporal": "turn"
+            },
+            "when": {},
+            "exceptions": [],
+            "effect": {
+              "literal": "has_bash",
+              "value": true
+            }
+          }
+        ],
+        "contexts": [
+          {
+            "id": "task",
+            "facts": {},
+            "active_skills": []
+          }
+        ],
+        "assumptions": [
+          "Explicitly synthetic finite model; no inferred natural-language completeness."
+        ],
+        "bulk_model": null,
+        "workflows": []
+      }
+    },
+    {
+      "id": "c010",
+      "origin": "synthetic_mutation",
+      "policy": "For subscripts, use Unicode subscript characters.\nNever use Unicode subscript characters.",
+      "context": "A subscript is required in this PDF; both rules have the same scope.",
+      "tools": {
+        "tools": {}
+      },
+      "runtime": {
+        "max_plan_steps": 20
+      },
+      "parent_case_id": "pdf_subscript",
+      "mutation_disclosure": "Authored mutation, not an observed upstream defect.",
+      "contract": "evaluation/pilot/fixtures/c010/contract.json",
+      "structured_evidence": {
+        "rules": [
+          {
+            "id": "r1",
+            "source": {
+              "source_id": "policy",
+              "start_line": 1,
+              "end_line": 1,
+              "quote": "For subscripts, use Unicode subscript characters."
+            },
+            "priority": 0,
+            "kind": "requirement",
+            "scope": {
+              "entity": "task",
+              "temporal": "turn"
+            },
+            "when": {},
+            "exceptions": [],
+            "effect": {
+              "literal": "unicode",
+              "value": true
+            }
+          },
+          {
+            "id": "r2",
+            "source": {
+              "source_id": "policy",
+              "start_line": 2,
+              "end_line": 2,
+              "quote": "Never use Unicode subscript characters."
+            },
+            "priority": 0,
+            "kind": "prohibition",
+            "scope": {
+              "entity": "task",
+              "temporal": "turn"
+            },
+            "when": {},
+            "exceptions": [],
+            "effect": {
+              "literal": "unicode",
+              "value": true
+            }
+          }
+        ],
+        "contexts": [
+          {
+            "id": "task",
+            "facts": {},
+            "active_skills": []
+          }
+        ],
+        "assumptions": [
+          "Explicitly synthetic finite model; no inferred natural-language completeness."
+        ],
+        "bulk_model": null,
+        "workflows": []
+      }
+    },
+    {
+      "id": "c011",
+      "origin": "synthetic_mutation",
+      "policy": "Place this import at top level unless that causes a circular dependency.\nFor a circular dependency, do not place this import at top level.",
+      "context": "A circular dependency occurs if the import is at top level.",
+      "tools": {
+        "tools": {}
+      },
+      "runtime": {
+        "max_plan_steps": 20
+      },
+      "parent_case_id": "openhands_import_exception",
+      "mutation_disclosure": "Authored mutation, not an observed upstream defect.",
+      "contract": "evaluation/pilot/fixtures/c011/contract.json",
+      "structured_evidence": {
+        "rules": [
+          {
+            "id": "r1",
+            "source": {
+              "source_id": "policy",
+              "start_line": 1,
+              "end_line": 1,
+              "quote": "Place this import at top level unless that causes a circular dependency."
+            },
+            "priority": 0,
+            "kind": "requirement",
+            "scope": {
+              "entity": "task",
+              "temporal": "turn"
+            },
+            "when": {},
+            "exceptions": [
+              {
+                "circular": true
+              }
+            ],
+            "effect": {
+              "literal": "top",
+              "value": true
+            }
+          },
+          {
+            "id": "r2",
+            "source": {
+              "source_id": "policy",
+              "start_line": 2,
+              "end_line": 2,
+              "quote": "For a circular dependency, do not place this import at top level."
+            },
+            "priority": 0,
+            "kind": "prohibition",
+            "scope": {
+              "entity": "task",
+              "temporal": "turn"
+            },
+            "when": {
+              "circular": true
+            },
+            "exceptions": [],
+            "effect": {
+              "literal": "top",
+              "value": true
+            }
+          }
+        ],
+        "contexts": [
+          {
+            "id": "task",
+            "facts": {
+              "circular": true
+            },
+            "active_skills": []
+          }
+        ],
+        "assumptions": [
+          "Explicitly synthetic finite model; no inferred natural-language completeness."
+        ],
+        "bulk_model": null,
+        "workflows": []
+      }
+    },
+    {
+      "id": "c012",
+      "origin": "synthetic_mutation",
+      "policy": "Place every import at top level, without exceptions.\nDo not place this import at top level, without exceptions.",
+      "context": "Both rules have equal priority and refer to this import.",
+      "tools": {
+        "tools": {}
+      },
+      "runtime": {
+        "max_plan_steps": 20
+      },
+      "parent_case_id": "openhands_import_exception",
+      "mutation_disclosure": "Authored mutation, not an observed upstream defect.",
+      "contract": "evaluation/pilot/fixtures/c012/contract.json",
+      "structured_evidence": {
+        "rules": [
+          {
+            "id": "r1",
+            "source": {
+              "source_id": "policy",
+              "start_line": 1,
+              "end_line": 1,
+              "quote": "Place every import at top level, without exceptions."
+            },
+            "priority": 0,
+            "kind": "requirement",
+            "scope": {
+              "entity": "task",
+              "temporal": "turn"
+            },
+            "when": {},
+            "exceptions": [],
+            "effect": {
+              "literal": "top",
+              "value": true
+            }
+          },
+          {
+            "id": "r2",
+            "source": {
+              "source_id": "policy",
+              "start_line": 2,
+              "end_line": 2,
+              "quote": "Do not place this import at top level, without exceptions."
+            },
+            "priority": 0,
+            "kind": "prohibition",
+            "scope": {
+              "entity": "task",
+              "temporal": "turn"
+            },
+            "when": {},
+            "exceptions": [],
+            "effect": {
+              "literal": "top",
+              "value": true
+            }
+          }
+        ],
+        "contexts": [
+          {
+            "id": "task",
+            "facts": {},
+            "active_skills": []
+          }
+        ],
+        "assumptions": [
+          "Explicitly synthetic finite model; no inferred natural-language completeness."
+        ],
+        "bulk_model": null,
+        "workflows": []
+      }
+    },
+    {
+      "id": "c013",
+      "origin": "synthetic_mutation",
+      "policy": "For functional bug fixes, write new tests.\nFor documentation-only updates, do not write new tests.",
+      "context": "This update is documentation-only; it is not a functional bug fix.",
+      "tools": {
+        "tools": {}
+      },
+      "runtime": {
+        "max_plan_steps": 20
+      },
+      "parent_case_id": "openhands_config_bug",
+      "mutation_disclosure": "Authored mutation, not an observed upstream defect.",
+      "contract": "evaluation/pilot/fixtures/c013/contract.json",
+      "structured_evidence": {
+        "rules": [
+          {
+            "id": "r1",
+            "source": {
+              "source_id": "policy",
+              "start_line": 1,
+              "end_line": 1,
+              "quote": "For functional bug fixes, write new tests."
+            },
+            "priority": 0,
+            "kind": "requirement",
+            "scope": {
+              "entity": "task",
+              "temporal": "turn"
+            },
+            "when": {
+              "functional_bug": true
+            },
+            "exceptions": [],
+            "effect": {
+              "literal": "tests",
+              "value": true
+            }
+          },
+          {
+            "id": "r2",
+            "source": {
+              "source_id": "policy",
+              "start_line": 2,
+              "end_line": 2,
+              "quote": "For documentation-only updates, do not write new tests."
+            },
+            "priority": 0,
+            "kind": "prohibition",
+            "scope": {
+              "entity": "task",
+              "temporal": "turn"
+            },
+            "when": {
+              "docs_only": true
+            },
+            "exceptions": [],
+            "effect": {
+              "literal": "tests",
+              "value": true
+            }
+          }
+        ],
+        "contexts": [
+          {
+            "id": "task",
+            "facts": {
+              "functional_bug": false,
+              "docs_only": true
+            },
+            "active_skills": []
+          }
+        ],
+        "assumptions": [
+          "Explicitly synthetic finite model; no inferred natural-language completeness."
+        ],
+        "bulk_model": null,
+        "workflows": []
+      }
+    },
+    {
+      "id": "c014",
+      "origin": "synthetic_mutation",
+      "policy": "Use only ASCII in this file, without exceptions.\nInclude a non-ASCII character in this file.",
+      "context": "Both apply to the same file in the same edit.",
+      "tools": {
+        "tools": {}
+      },
+      "runtime": {
+        "max_plan_steps": 20
+      },
+      "parent_case_id": "codex_ascii_exception",
+      "mutation_disclosure": "Authored mutation, not an observed upstream defect.",
+      "contract": "evaluation/pilot/fixtures/c014/contract.json",
+      "structured_evidence": {
+        "rules": [
+          {
+            "id": "r1",
+            "source": {
+              "source_id": "policy",
+              "start_line": 1,
+              "end_line": 1,
+              "quote": "Use only ASCII in this file, without exceptions."
+            },
+            "priority": 0,
+            "kind": "prohibition",
+            "scope": {
+              "entity": "task",
+              "temporal": "turn"
+            },
+            "when": {},
+            "exceptions": [],
+            "effect": {
+              "literal": "non_ascii",
+              "value": true
+            }
+          },
+          {
+            "id": "r2",
+            "source": {
+              "source_id": "policy",
+              "start_line": 2,
+              "end_line": 2,
+              "quote": "Include a non-ASCII character in this file."
+            },
+            "priority": 0,
+            "kind": "requirement",
+            "scope": {
+              "entity": "task",
+              "temporal": "turn"
+            },
+            "when": {},
+            "exceptions": [],
+            "effect": {
+              "literal": "non_ascii",
+              "value": true
+            }
+          }
+        ],
+        "contexts": [
+          {
+            "id": "task",
+            "facts": {},
+            "active_skills": []
+          }
+        ],
+        "assumptions": [
+          "Explicitly synthetic finite model; no inferred natural-language completeness."
+        ],
+        "bulk_model": null,
+        "workflows": []
+      }
+    },
+    {
+      "id": "c015",
+      "origin": "synthetic_mutation",
+      "policy": "Prefer including a bash call in each response.\nDo not include a bash call in this response.",
+      "context": "The first rule is explicitly a preference, not a hard duty.",
+      "tools": {
+        "tools": {}
+      },
+      "runtime": {
+        "max_plan_steps": 20
+      },
+      "parent_case_id": "mini_call_count",
+      "mutation_disclosure": "Authored mutation, not an observed upstream defect.",
+      "contract": "evaluation/pilot/fixtures/c015/contract.json",
+      "structured_evidence": {
+        "rules": [
+          {
+            "id": "r1",
+            "source": {
+              "source_id": "policy",
+              "start_line": 1,
+              "end_line": 1,
+              "quote": "Prefer including a bash call in each response."
+            },
+            "priority": 0,
+            "kind": "preference",
+            "scope": {
+              "entity": "task",
+              "temporal": "turn"
+            },
+            "when": {},
+            "exceptions": [],
+            "effect": {
+              "literal": "has_bash",
+              "value": true
+            }
+          },
+          {
+            "id": "r2",
+            "source": {
+              "source_id": "policy",
+              "start_line": 2,
+              "end_line": 2,
+              "quote": "Do not include a bash call in this response."
+            },
+            "priority": 0,
+            "kind": "prohibition",
+            "scope": {
+              "entity": "task",
+              "temporal": "turn"
+            },
+            "when": {},
+            "exceptions": [],
+            "effect": {
+              "literal": "has_bash",
+              "value": true
+            }
+          }
+        ],
+        "contexts": [
+          {
+            "id": "task",
+            "facts": {},
+            "active_skills": []
+          }
+        ],
+        "assumptions": [
+          "Explicitly synthetic finite model; no inferred natural-language completeness."
+        ],
+        "bulk_model": null,
+        "workflows": []
+      }
+    },
+    {
+      "id": "c016",
+      "origin": "synthetic_mutation",
+      "policy": "You may open a pull request.\nDo not open a pull request.",
+      "context": "No other rule requires a pull request. Target is existence of a compliant action path; declining is allowed.",
+      "tools": {
+        "tools": {}
+      },
+      "runtime": {
+        "max_plan_steps": 20
+      },
+      "parent_case_id": "openhands_pr_consent",
+      "mutation_disclosure": "Authored mutation, not an observed upstream defect.",
+      "contract": "evaluation/pilot/fixtures/c016/contract.json",
+      "structured_evidence": {
+        "rules": [
+          {
+            "id": "r1",
+            "source": {
+              "source_id": "policy",
+              "start_line": 1,
+              "end_line": 1,
+              "quote": "You may open a pull request."
+            },
+            "priority": 0,
+            "kind": "permission",
+            "scope": {
+              "entity": "task",
+              "temporal": "turn"
+            },
+            "when": {},
+            "exceptions": [],
+            "effect": {
+              "literal": "open_pr",
+              "value": true
+            }
+          },
+          {
+            "id": "r2",
+            "source": {
+              "source_id": "policy",
+              "start_line": 2,
+              "end_line": 2,
+              "quote": "Do not open a pull request."
+            },
+            "priority": 0,
+            "kind": "prohibition",
+            "scope": {
+              "entity": "task",
+              "temporal": "turn"
+            },
+            "when": {},
+            "exceptions": [],
+            "effect": {
+              "literal": "open_pr",
+              "value": true
+            }
+          }
+        ],
+        "contexts": [
+          {
+            "id": "task",
+            "facts": {},
+            "active_skills": []
+          }
+        ],
+        "assumptions": [
+          "Explicitly synthetic finite model; no inferred natural-language completeness."
+        ],
+        "bulk_model": null,
+        "workflows": []
+      }
+    },
+    {
+      "id": "c017",
+      "origin": "synthetic_handoff",
+      "policy": "Advertised support: update every requested node for lists of 1-200 nodes within one run.\nEach submission handles at most 10 nodes and returns exactly one task.\nEvery task needs at least one separate polling call; each poll handles exactly one task.\nThe run permits at most 30 counted service calls.\nNo prior tasks, batching shortcuts, alternative update operations, or bulk polling exist in this synthetic model.",
+      "context": "Update all 150 nodes within this run; no prior tasks or alternative operations.",
+      "tools": {
+        "tools": {
+          "submit": {
+            "arguments": [
+              "nodes"
+            ],
+            "required": [
+              "nodes"
+            ],
+            "capabilities": [
+              "submit up to 10 nodes; returns exactly one task"
+            ]
+          },
+          "poll": {
+            "arguments": [
+              "task_id"
+            ],
+            "required": [
+              "task_id"
+            ],
+            "capabilities": [
+              "poll exactly one task"
+            ]
+          }
+        }
+      },
+      "runtime": {
+        "service_call_budget": 30,
+        "request_sizes": [
+          150
+        ],
+        "max_plan_steps": 20
+      },
+      "family": "bulk_capacity",
+      "contract": "evaluation/pilot/fixtures/c017/contract.json",
+      "structured_evidence": {
+        "rules": [
+          {
+            "id": "advertised_support",
+            "source": {
+              "source_id": "bulk",
+              "start_line": 1,
+              "end_line": 1,
+              "quote": "Advertised support: update every requested node for lists of 1-200 nodes within one run."
+            },
+            "priority": 100,
+            "kind": "requirement",
+            "when": {},
+            "skills": [],
+            "scope": {
+              "entity": "requested_nodes",
+              "temporal": "one_run"
+            },
+            "exceptions": []
+          },
+          {
+            "id": "submission_capacity",
+            "source": {
+              "source_id": "bulk",
+              "start_line": 2,
+              "end_line": 2,
+              "quote": "Each submission handles at most 10 nodes and returns exactly one task."
+            },
+            "priority": 100,
+            "kind": "requirement",
+            "when": {},
+            "skills": [],
+            "scope": {
+              "entity": "requested_nodes",
+              "temporal": "one_run"
+            },
+            "exceptions": []
+          },
+          {
+            "id": "mandatory_polling",
+            "source": {
+              "source_id": "bulk",
+              "start_line": 3,
+              "end_line": 3,
+              "quote": "Every task needs at least one separate polling call; each poll handles exactly one task."
+            },
+            "priority": 100,
+            "kind": "requirement",
+            "when": {},
+            "skills": [],
+            "scope": {
+              "entity": "requested_nodes",
+              "temporal": "one_run"
+            },
+            "exceptions": []
+          },
+          {
+            "id": "call_budget",
+            "source": {
+              "source_id": "bulk",
+              "start_line": 4,
+              "end_line": 4,
+              "quote": "The run permits at most 30 counted service calls."
+            },
+            "priority": 100,
+            "kind": "requirement",
+            "when": {},
+            "skills": [],
+            "scope": {
+              "entity": "requested_nodes",
+              "temporal": "one_run"
+            },
+            "exceptions": []
+          }
+        ],
+        "contexts": [
+          {
+            "id": "synthetic_bulk",
+            "facts": {},
+            "active_skills": []
+          }
+        ],
+        "assumptions": [
+          "Explicitly synthetic, author-reviewed contract; no natural-language extraction.",
+          "s and p are nonnegative integers.",
+          "Each submission returns exactly one new task and each task requires a distinct polling call.",
+          "No prior tasks, batching shortcuts, alternate updates or bulk polling are available.",
+          "This is a lower bound: schema retrieval, retries, failed requests and additional polls may consume more calls.",
+          "Runtime budget variants explicitly replace the budget requirement for controls."
+        ],
+        "bulk_model": {
+          "nodes_per_submission": 10,
+          "advertised_min": 1,
+          "advertised_max": 200,
+          "advertisement_rule": "advertised_support",
+          "constraint_rules": {
+            "coverage": "submission_capacity",
+            "polling": "mandatory_polling",
+            "budget": "call_budget"
+          }
+        },
+        "workflows": []
+      }
+    },
+    {
+      "id": "c018",
+      "origin": "synthetic_handoff",
+      "policy": "Advertised support: update every requested node for lists of 1-200 nodes within one run.\nEach submission handles at most 10 nodes and returns exactly one task.\nEvery task needs at least one separate polling call; each poll handles exactly one task.\nThe run permits at most 30 counted service calls.\nNo prior tasks, batching shortcuts, alternative update operations, or bulk polling exist in this synthetic model.",
+      "context": "Update all 151 nodes within this run; no prior tasks or alternative operations.",
+      "tools": {
+        "tools": {
+          "submit": {
+            "arguments": [
+              "nodes"
+            ],
+            "required": [
+              "nodes"
+            ],
+            "capabilities": [
+              "submit up to 10 nodes; returns exactly one task"
+            ]
+          },
+          "poll": {
+            "arguments": [
+              "task_id"
+            ],
+            "required": [
+              "task_id"
+            ],
+            "capabilities": [
+              "poll exactly one task"
+            ]
+          }
+        }
+      },
+      "runtime": {
+        "service_call_budget": 30,
+        "request_sizes": [
+          151
+        ],
+        "max_plan_steps": 20
+      },
+      "family": "bulk_capacity",
+      "contract": "evaluation/pilot/fixtures/c018/contract.json",
+      "structured_evidence": {
+        "rules": [
+          {
+            "id": "advertised_support",
+            "source": {
+              "source_id": "bulk",
+              "start_line": 1,
+              "end_line": 1,
+              "quote": "Advertised support: update every requested node for lists of 1-200 nodes within one run."
+            },
+            "priority": 100,
+            "kind": "requirement",
+            "when": {},
+            "skills": [],
+            "scope": {
+              "entity": "requested_nodes",
+              "temporal": "one_run"
+            },
+            "exceptions": []
+          },
+          {
+            "id": "submission_capacity",
+            "source": {
+              "source_id": "bulk",
+              "start_line": 2,
+              "end_line": 2,
+              "quote": "Each submission handles at most 10 nodes and returns exactly one task."
+            },
+            "priority": 100,
+            "kind": "requirement",
+            "when": {},
+            "skills": [],
+            "scope": {
+              "entity": "requested_nodes",
+              "temporal": "one_run"
+            },
+            "exceptions": []
+          },
+          {
+            "id": "mandatory_polling",
+            "source": {
+              "source_id": "bulk",
+              "start_line": 3,
+              "end_line": 3,
+              "quote": "Every task needs at least one separate polling call; each poll handles exactly one task."
+            },
+            "priority": 100,
+            "kind": "requirement",
+            "when": {},
+            "skills": [],
+            "scope": {
+              "entity": "requested_nodes",
+              "temporal": "one_run"
+            },
+            "exceptions": []
+          },
+          {
+            "id": "call_budget",
+            "source": {
+              "source_id": "bulk",
+              "start_line": 4,
+              "end_line": 4,
+              "quote": "The run permits at most 30 counted service calls."
+            },
+            "priority": 100,
+            "kind": "requirement",
+            "when": {},
+            "skills": [],
+            "scope": {
+              "entity": "requested_nodes",
+              "temporal": "one_run"
+            },
+            "exceptions": []
+          }
+        ],
+        "contexts": [
+          {
+            "id": "synthetic_bulk",
+            "facts": {},
+            "active_skills": []
+          }
+        ],
+        "assumptions": [
+          "Explicitly synthetic, author-reviewed contract; no natural-language extraction.",
+          "s and p are nonnegative integers.",
+          "Each submission returns exactly one new task and each task requires a distinct polling call.",
+          "No prior tasks, batching shortcuts, alternate updates or bulk polling are available.",
+          "This is a lower bound: schema retrieval, retries, failed requests and additional polls may consume more calls.",
+          "Runtime budget variants explicitly replace the budget requirement for controls."
+        ],
+        "bulk_model": {
+          "nodes_per_submission": 10,
+          "advertised_min": 1,
+          "advertised_max": 200,
+          "advertisement_rule": "advertised_support",
+          "constraint_rules": {
+            "coverage": "submission_capacity",
+            "polling": "mandatory_polling",
+            "budget": "call_budget"
+          }
+        },
+        "workflows": []
+      }
+    },
+    {
+      "id": "c019",
+      "origin": "synthetic_handoff",
+      "policy": "Advertised support: update every requested node for lists of 1-200 nodes within one run.\nEach submission handles at most 10 nodes and returns exactly one task.\nEvery task needs at least one separate polling call; each poll handles exactly one task.\nThe run permits at most 30 counted service calls.\nNo prior tasks, batching shortcuts, alternative update operations, or bulk polling exist in this synthetic model.",
+      "context": "Update all 184 nodes within this run; no prior tasks or alternative operations.",
+      "tools": {
+        "tools": {
+          "submit": {
+            "arguments": [
+              "nodes"
+            ],
+            "required": [
+              "nodes"
+            ],
+            "capabilities": [
+              "submit up to 10 nodes; returns exactly one task"
+            ]
+          },
+          "poll": {
+            "arguments": [
+              "task_id"
+            ],
+            "required": [
+              "task_id"
+            ],
+            "capabilities": [
+              "poll exactly one task"
+            ]
+          }
+        }
+      },
+      "runtime": {
+        "service_call_budget": 30,
+        "request_sizes": [
+          184
+        ],
+        "max_plan_steps": 20
+      },
+      "family": "bulk_capacity",
+      "contract": "evaluation/pilot/fixtures/c019/contract.json",
+      "structured_evidence": {
+        "rules": [
+          {
+            "id": "advertised_support",
+            "source": {
+              "source_id": "bulk",
+              "start_line": 1,
+              "end_line": 1,
+              "quote": "Advertised support: update every requested node for lists of 1-200 nodes within one run."
+            },
+            "priority": 100,
+            "kind": "requirement",
+            "when": {},
+            "skills": [],
+            "scope": {
+              "entity": "requested_nodes",
+              "temporal": "one_run"
+            },
+            "exceptions": []
+          },
+          {
+            "id": "submission_capacity",
+            "source": {
+              "source_id": "bulk",
+              "start_line": 2,
+              "end_line": 2,
+              "quote": "Each submission handles at most 10 nodes and returns exactly one task."
+            },
+            "priority": 100,
+            "kind": "requirement",
+            "when": {},
+            "skills": [],
+            "scope": {
+              "entity": "requested_nodes",
+              "temporal": "one_run"
+            },
+            "exceptions": []
+          },
+          {
+            "id": "mandatory_polling",
+            "source": {
+              "source_id": "bulk",
+              "start_line": 3,
+              "end_line": 3,
+              "quote": "Every task needs at least one separate polling call; each poll handles exactly one task."
+            },
+            "priority": 100,
+            "kind": "requirement",
+            "when": {},
+            "skills": [],
+            "scope": {
+              "entity": "requested_nodes",
+              "temporal": "one_run"
+            },
+            "exceptions": []
+          },
+          {
+            "id": "call_budget",
+            "source": {
+              "source_id": "bulk",
+              "start_line": 4,
+              "end_line": 4,
+              "quote": "The run permits at most 30 counted service calls."
+            },
+            "priority": 100,
+            "kind": "requirement",
+            "when": {},
+            "skills": [],
+            "scope": {
+              "entity": "requested_nodes",
+              "temporal": "one_run"
+            },
+            "exceptions": []
+          }
+        ],
+        "contexts": [
+          {
+            "id": "synthetic_bulk",
+            "facts": {},
+            "active_skills": []
+          }
+        ],
+        "assumptions": [
+          "Explicitly synthetic, author-reviewed contract; no natural-language extraction.",
+          "s and p are nonnegative integers.",
+          "Each submission returns exactly one new task and each task requires a distinct polling call.",
+          "No prior tasks, batching shortcuts, alternate updates or bulk polling are available.",
+          "This is a lower bound: schema retrieval, retries, failed requests and additional polls may consume more calls.",
+          "Runtime budget variants explicitly replace the budget requirement for controls."
+        ],
+        "bulk_model": {
+          "nodes_per_submission": 10,
+          "advertised_min": 1,
+          "advertised_max": 200,
+          "advertisement_rule": "advertised_support",
+          "constraint_rules": {
+            "coverage": "submission_capacity",
+            "polling": "mandatory_polling",
+            "budget": "call_budget"
+          }
+        },
+        "workflows": []
+      }
+    },
+    {
+      "id": "c020",
+      "origin": "synthetic_handoff",
+      "policy": "Advertised support: update every requested node for lists of 1-200 nodes within one run.\nEach submission handles at most 10 nodes and returns exactly one task.\nEvery task needs at least one separate polling call; each poll handles exactly one task.\nThe run permits at most 38 counted service calls.\nNo prior tasks, batching shortcuts, alternative update operations, or bulk polling exist in this synthetic model.",
+      "context": "Update all 184 nodes within this run; no prior tasks or alternative operations.",
+      "tools": {
+        "tools": {
+          "submit": {
+            "arguments": [
+              "nodes"
+            ],
+            "required": [
+              "nodes"
+            ],
+            "capabilities": [
+              "submit up to 10 nodes; returns exactly one task"
+            ]
+          },
+          "poll": {
+            "arguments": [
+              "task_id"
+            ],
+            "required": [
+              "task_id"
+            ],
+            "capabilities": [
+              "poll exactly one task"
+            ]
+          }
+        }
+      },
+      "runtime": {
+        "service_call_budget": 38,
+        "request_sizes": [
+          184
+        ],
+        "max_plan_steps": 20
+      },
+      "family": "bulk_capacity",
+      "contract": "evaluation/pilot/fixtures/c020/contract.json",
+      "structured_evidence": {
+        "rules": [
+          {
+            "id": "advertised_support",
+            "source": {
+              "source_id": "bulk",
+              "start_line": 1,
+              "end_line": 1,
+              "quote": "Advertised support: update every requested node for lists of 1-200 nodes within one run."
+            },
+            "priority": 100,
+            "kind": "requirement",
+            "when": {},
+            "skills": [],
+            "scope": {
+              "entity": "requested_nodes",
+              "temporal": "one_run"
+            },
+            "exceptions": []
+          },
+          {
+            "id": "submission_capacity",
+            "source": {
+              "source_id": "bulk",
+              "start_line": 2,
+              "end_line": 2,
+              "quote": "Each submission handles at most 10 nodes and returns exactly one task."
+            },
+            "priority": 100,
+            "kind": "requirement",
+            "when": {},
+            "skills": [],
+            "scope": {
+              "entity": "requested_nodes",
+              "temporal": "one_run"
+            },
+            "exceptions": []
+          },
+          {
+            "id": "mandatory_polling",
+            "source": {
+              "source_id": "bulk",
+              "start_line": 3,
+              "end_line": 3,
+              "quote": "Every task needs at least one separate polling call; each poll handles exactly one task."
+            },
+            "priority": 100,
+            "kind": "requirement",
+            "when": {},
+            "skills": [],
+            "scope": {
+              "entity": "requested_nodes",
+              "temporal": "one_run"
+            },
+            "exceptions": []
+          },
+          {
+            "id": "call_budget",
+            "source": {
+              "source_id": "bulk",
+              "start_line": 4,
+              "end_line": 4,
+              "quote": "The run permits at most 38 counted service calls."
+            },
+            "priority": 100,
+            "kind": "requirement",
+            "when": {},
+            "skills": [],
+            "scope": {
+              "entity": "requested_nodes",
+              "temporal": "one_run"
+            },
+            "exceptions": []
+          }
+        ],
+        "contexts": [
+          {
+            "id": "synthetic_bulk",
+            "facts": {},
+            "active_skills": []
+          }
+        ],
+        "assumptions": [
+          "Explicitly synthetic, author-reviewed contract; no natural-language extraction.",
+          "s and p are nonnegative integers.",
+          "Each submission returns exactly one new task and each task requires a distinct polling call.",
+          "No prior tasks, batching shortcuts, alternate updates or bulk polling are available.",
+          "This is a lower bound: schema retrieval, retries, failed requests and additional polls may consume more calls.",
+          "Runtime budget variants explicitly replace the budget requirement for controls."
+        ],
+        "bulk_model": {
+          "nodes_per_submission": 10,
+          "advertised_min": 1,
+          "advertised_max": 200,
+          "advertisement_rule": "advertised_support",
+          "constraint_rules": {
+            "coverage": "submission_capacity",
+            "polling": "mandatory_polling",
+            "budget": "call_budget"
+          }
+        },
+        "workflows": []
+      }
+    },
+    {
+      "id": "c021",
+      "origin": "synthetic_interface",
+      "policy": "Invoke submit with arguments {\"nodes\": [1]}.",
+      "context": "The declared manifest is complete; no aliasing or alternative operation exists.",
+      "tools": {
+        "tools": {
+          "poll": {
+            "arguments": [
+              "task_id"
+            ],
+            "required": [
+              "task_id"
+            ]
+          }
+        }
+      },
+      "runtime": {
+        "max_plan_steps": 20
+      },
+      "contract": "evaluation/pilot/fixtures/c021/contract.json",
+      "structured_evidence": {
+        "rules": [
+          {
+            "id": "r1",
+            "source": {
+              "source_id": "policy",
+              "start_line": 1,
+              "end_line": 1,
+              "quote": "Invoke submit with arguments {\"nodes\": [1]}."
+            },
+            "priority": 0,
+            "kind": "requirement",
+            "scope": {
+              "entity": "task",
+              "temporal": "turn"
+            },
+            "when": {},
+            "exceptions": [],
+            "tool_call": {
+              "tool": "submit",
+              "arguments": {
+                "nodes": [
+                  1
+                ]
+              }
+            }
+          }
+        ],
+        "contexts": [
+          {
+            "id": "task",
+            "facts": {},
+            "active_skills": []
+          }
+        ],
+        "assumptions": [
+          "Explicitly synthetic finite model; no inferred natural-language completeness."
+        ],
+        "bulk_model": null,
+        "workflows": []
+      }
+    },
+    {
+      "id": "c022",
+      "origin": "synthetic_interface",
+      "policy": "Invoke submit with arguments {\"node_ids\": [1]}.",
+      "context": "The declared manifest is complete; no aliasing or alternative operation exists.",
+      "tools": {
+        "tools": {
+          "submit": {
+            "arguments": [
+              "nodes"
+            ],
+            "required": [
+              "nodes"
+            ]
+          }
+        }
+      },
+      "runtime": {
+        "max_plan_steps": 20
+      },
+      "contract": "evaluation/pilot/fixtures/c022/contract.json",
+      "structured_evidence": {
+        "rules": [
+          {
+            "id": "r1",
+            "source": {
+              "source_id": "policy",
+              "start_line": 1,
+              "end_line": 1,
+              "quote": "Invoke submit with arguments {\"node_ids\": [1]}."
+            },
+            "priority": 0,
+            "kind": "requirement",
+            "scope": {
+              "entity": "task",
+              "temporal": "turn"
+            },
+            "when": {},
+            "exceptions": [],
+            "tool_call": {
+              "tool": "submit",
+              "arguments": {
+                "node_ids": [
+                  1
+                ]
+              }
+            }
+          }
+        ],
+        "contexts": [
+          {
+            "id": "task",
+            "facts": {},
+            "active_skills": []
+          }
+        ],
+        "assumptions": [
+          "Explicitly synthetic finite model; no inferred natural-language completeness."
+        ],
+        "bulk_model": null,
+        "workflows": []
+      }
+    },
+    {
+      "id": "c023",
+      "origin": "synthetic_workflow",
+      "policy": "The workflow advertises reaching done.",
+      "context": "Initial state is empty. Actions: [{\"id\": \"finish\", \"requires\": [\"ready\"], \"adds\": [\"done\"]}]. Search depth limit is 5; a limit is not a semantic prohibition on longer plans.",
+      "tools": {
+        "tools": {}
+      },
+      "runtime": {
+        "max_plan_steps": 5
+      },
+      "contract": "evaluation/pilot/fixtures/c023/contract.json",
+      "structured_evidence": {
+        "rules": [
+          {
+            "id": "r1",
+            "source": {
+              "source_id": "policy",
+              "start_line": 1,
+              "end_line": 1,
+              "quote": "The workflow advertises reaching done."
+            },
+            "priority": 0,
+            "kind": "requirement",
+            "scope": {
+              "entity": "task",
+              "temporal": "turn"
+            },
+            "when": {},
+            "exceptions": []
+          }
+        ],
+        "contexts": [
+          {
+            "id": "task",
+            "facts": {},
+            "active_skills": []
+          }
+        ],
+        "assumptions": [
+          "Explicitly synthetic finite model; no inferred natural-language completeness."
+        ],
+        "bulk_model": null,
+        "workflows": [
+          {
+            "id": "flow",
+            "initial": [],
+            "goal": [
+              "done"
+            ],
+            "actions": [
+              {
+                "id": "finish",
+                "requires": [
+                  "ready"
+                ],
+                "adds": [
+                  "done"
+                ]
+              }
+            ],
+            "advertisement_rule": "r1"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c024",
+      "origin": "synthetic_workflow",
+      "policy": "The workflow advertises reaching done.",
+      "context": "Initial state is empty. Actions: [{\"id\": \"prepare\", \"requires\": [], \"adds\": [\"ready\"]}, {\"id\": \"finish\", \"requires\": [\"ready\"], \"adds\": [\"done\"]}]. Search depth limit is 1; a limit is not a semantic prohibition on longer plans.",
+      "tools": {
+        "tools": {}
+      },
+      "runtime": {
+        "max_plan_steps": 1
+      },
+      "contract": "evaluation/pilot/fixtures/c024/contract.json",
+      "structured_evidence": {
+        "rules": [
+          {
+            "id": "r1",
+            "source": {
+              "source_id": "policy",
+              "start_line": 1,
+              "end_line": 1,
+              "quote": "The workflow advertises reaching done."
+            },
+            "priority": 0,
+            "kind": "requirement",
+            "scope": {
+              "entity": "task",
+              "temporal": "turn"
+            },
+            "when": {},
+            "exceptions": []
+          }
+        ],
+        "contexts": [
+          {
+            "id": "task",
+            "facts": {},
+            "active_skills": []
+          }
+        ],
+        "assumptions": [
+          "Explicitly synthetic finite model; no inferred natural-language completeness."
+        ],
+        "bulk_model": null,
+        "workflows": [
+          {
+            "id": "flow",
+            "initial": [],
+            "goal": [
+              "done"
+            ],
+            "actions": [
+              {
+                "id": "prepare",
+                "requires": [],
+                "adds": [
+                  "ready"
+                ]
+              },
+              {
+                "id": "finish",
+                "requires": [
+                  "ready"
+                ],
+                "adds": [
+                  "done"
+                ]
+              }
+            ],
+            "advertisement_rule": "r1"
+          }
+        ]
+      }
+    }
+  ]
+}

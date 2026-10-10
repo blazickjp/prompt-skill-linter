@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "contract": {
+    "version": 1,
+    "sources": [
+      {
+        "id": "policy",
+        "path": "policy.txt"
+      }
+    ],
+    "skills": [],
+    "rules": [
+      {
+        "id": "r1",
+        "source": {
+          "source_id": "policy",
+          "start_line": 1,
+          "end_line": 1,
+          "quote": "Invoke submit with arguments {\"node_ids\": [1]}."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "task",
+          "temporal": "turn"
+        },
+        "when": {},
+        "exceptions": [],
+        "tool_call": {
+          "tool": "submit",
+          "arguments": {
+            "node_ids": [
+              1
+            ]
+          }
+        }
+      }
+    ],
+    "contexts": [
+      {
+        "id": "task",
+        "facts": {},
+        "active_skills": []
+      }
+    ],
+    "assumptions": [
+      "Explicitly synthetic finite model; no inferred natural-language completeness."
+    ]
+  },
+  "diagnostics": [
+    {
+      "code": "INVALID_TOOL_ARGUMENTS",
+      "class": "exact",
+      "severity": "error",
+      "source_spans": [
+        {
+          "source_id": "policy",
+          "start_line": 1,
+          "end_line": 1,
+          "quote": "Invoke submit with arguments {\"node_ids\": [1]}."
+        }
+      ],
+      "interpreted_rules": [
+        {
+          "id": "r1",
+          "source": {
+            "source_id": "policy",
+            "start_line": 1,
+            "end_line": 1,
+            "quote": "Invoke submit with arguments {\"node_ids\": [1]}."
+          },
+          "priority": 0,
+          "kind": "requirement",
+          "scope": {
+            "entity": "task",
+            "temporal": "turn"
+          },
+          "when": {},
+          "exceptions": [],
+          "tool_call": {
+            "tool": "submit",
+            "arguments": {
+              "node_ids": [
+                1
+              ]
+            }
+          }
+        }
+      ],
+      "resolved_priorities": {
+        "r1": 0
+      },
+      "triggering_context": {},
+      "witness": {
+        "invalid": [
+          "node_ids"
+        ],
+        "missing_required": [
+          "nodes"
+        ]
+      },
+      "responsible_rule_set": [
+        "r1"
+      ],
+      "assumptions": [
+        "Explicitly synthetic finite model; no inferred natural-language completeness."
+      ],
+      "repairs": [],
+      "regression_case": {
+        "context": {},
+        "expected_code": "INVALID_TOOL_ARGUMENTS"
+      },
+      "provenance_limitations": []
+    }
+  ],
+  "resource_checks": [],
+  "workflow_checks": [],
+  "constraint_checks": [],
+  "coverage": {
+    "translation": "declared_only",
+    "context_count": 1,
+    "plan_bound": 20,
+    "universal_prompt_correctness_certified": false
+  },
+  "summary": {
+    "error": 1,
+    "warning": 0,
+    "info": 0
+  }
+}

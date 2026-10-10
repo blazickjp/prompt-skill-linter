@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "records": [
+    {
+      "case_id": "openhands_config_bug",
+      "exit_code": 1,
+      "diagnostic_codes": [
+        "INCOMPATIBLE_OBLIGATIONS"
+      ],
+      "summary": {
+        "error": 1,
+        "warning": 0,
+        "info": 0
+      },
+      "semantic_source_label": "ambiguous",
+      "scope": "Smoke test of manual declaration only, not semantic ground truth or full-policy extraction."
+    },
+    {
+      "case_id": "mini_call_count",
+      "exit_code": 0,
+      "diagnostic_codes": [],
+      "summary": {
+        "error": 0,
+        "warning": 0,
+        "info": 0
+      },
+      "semantic_source_label": "compatible",
+      "scope": "Smoke test of manual declaration only, not semantic ground truth or full-policy extraction."
+    },
+    {
+      "case_id": "pdf_subscript",
+      "exit_code": 0,
+      "diagnostic_codes": [],
+      "summary": {
+        "error": 0,
+        "warning": 0,
+        "info": 0
+      },
+      "semantic_source_label": "compatible",
+      "scope": "Smoke test of manual declaration only, not semantic ground truth or full-policy extraction."
+    }
+  ],
+  "evaluation_limitations": [
+    "No strong-judge comparison.",
+    "OpenHands model collision is not a proven source conflict.",
+    "Blind model review is not human gold."
+  ]
+}

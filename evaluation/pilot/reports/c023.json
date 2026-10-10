@@ -1,0 +1,193 @@
+{
+  "version": 1,
+  "contract": {
+    "version": 1,
+    "sources": [
+      {
+        "id": "policy",
+        "path": "policy.txt"
+      }
+    ],
+    "skills": [],
+    "rules": [
+      {
+        "id": "r1",
+        "source": {
+          "source_id": "policy",
+          "start_line": 1,
+          "end_line": 1,
+          "quote": "The workflow advertises reaching done."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "task",
+          "temporal": "turn"
+        },
+        "when": {},
+        "exceptions": []
+      }
+    ],
+    "contexts": [
+      {
+        "id": "task",
+        "facts": {},
+        "active_skills": []
+      }
+    ],
+    "assumptions": [
+      "Explicitly synthetic finite model; no inferred natural-language completeness."
+    ],
+    "workflows": [
+      {
+        "id": "flow",
+        "initial": [],
+        "goal": [
+          "done"
+        ],
+        "actions": [
+          {
+            "id": "finish",
+            "requires": [
+              "ready"
+            ],
+            "adds": [
+              "done"
+            ]
+          }
+        ],
+        "advertisement_rule": "r1"
+      }
+    ]
+  },
+  "diagnostics": [
+    {
+      "code": "MISSING_FALLBACK_PATH",
+      "class": "model_based",
+      "severity": "warning",
+      "source_spans": [
+        {
+          "source_id": "policy",
+          "start_line": 1,
+          "end_line": 1,
+          "quote": "The workflow advertises reaching done."
+        }
+      ],
+      "interpreted_rules": [
+        {
+          "id": "r1",
+          "source": {
+            "source_id": "policy",
+            "start_line": 1,
+            "end_line": 1,
+            "quote": "The workflow advertises reaching done."
+          },
+          "priority": 0,
+          "kind": "requirement",
+          "scope": {
+            "entity": "task",
+            "temporal": "turn"
+          },
+          "when": {},
+          "exceptions": []
+        }
+      ],
+      "resolved_priorities": {
+        "r1": 0
+      },
+      "triggering_context": {
+        "id": "task",
+        "facts": {},
+        "active_skills": []
+      },
+      "witness": {
+        "status": "unreachable",
+        "goal_path": null,
+        "fallback_path": null,
+        "search_exhaustive": true,
+        "visited_states": 1,
+        "bounds": {
+          "max_steps": 5,
+          "max_states": 2000,
+          "graph_display_limit": 200
+        },
+        "workflow": "flow",
+        "context_id": "task",
+        "unavailable_actions": [],
+        "resolved_restriction_ids": []
+      },
+      "responsible_rule_set": [
+        "r1"
+      ],
+      "assumptions": [
+        "Explicitly synthetic finite model; no inferred natural-language completeness.",
+        "Closed-world deterministic finite boolean-state actions; only listed actions exist.",
+        "A fallback must be explicitly declared compliant by the reviewer."
+      ],
+      "repairs": [],
+      "regression_case": {
+        "context": {
+          "id": "task",
+          "facts": {},
+          "active_skills": []
+        },
+        "expected_code": "MISSING_FALLBACK_PATH"
+      },
+      "provenance_limitations": [],
+      "interpretation_status": "Conditional on this declared abstraction; not proof that the source prose conflicts."
+    }
+  ],
+  "resource_checks": [],
+  "workflow_checks": [
+    {
+      "status": "unreachable",
+      "goal_path": null,
+      "fallback_path": null,
+      "search_exhaustive": true,
+      "visited_states": 1,
+      "bounds": {
+        "max_steps": 5,
+        "max_states": 2000,
+        "graph_display_limit": 200
+      },
+      "graph": {
+        "states": [
+          {
+            "id": 0,
+            "facts": [],
+            "depth": 0,
+            "goal": false
+          }
+        ],
+        "edges": [],
+        "blocked_actions": [
+          {
+            "state": 0,
+            "action": "finish",
+            "reason": "missing_prerequisites",
+            "missing": [
+              "ready"
+            ]
+          }
+        ],
+        "display_truncated": false
+      },
+      "workflow": "flow",
+      "context_id": "task",
+      "unavailable_actions": [],
+      "resolved_restriction_ids": []
+    }
+  ],
+  "constraint_checks": [],
+  "coverage": {
+    "translation": "declared_only",
+    "context_count": 1,
+    "plan_bound": 5,
+    "universal_prompt_correctness_certified": false
+  },
+  "summary": {
+    "error": 0,
+    "warning": 1,
+    "info": 0
+  }
+}

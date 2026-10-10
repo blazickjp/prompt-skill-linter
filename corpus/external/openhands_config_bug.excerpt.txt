@@ -1,0 +1,2 @@
+For bug fixes: Create tests to verify issues before implementing fixes
+Do NOT write tests for documentation changes, README updates, configuration files

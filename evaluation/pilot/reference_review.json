@@ -1,0 +1,187 @@
+{
+  "reviewer": {
+    "model": "unknown",
+    "kind": "native_model_reference",
+    "blind_to_author_labels": true
+  },
+  "labels": [
+    {
+      "id": "c001",
+      "label": "abstain",
+      "rationale": "The full testing section admits materially different readings. Its configuration-file prohibition can be a specific exception to the general bug-fix test duty, permitting a fix without new tests. Alternatively both clauses can apply without an override, requiring and forbidding test creation. The omitted phrase grouping configuration files with nonfunctional changes increases uncertainty for a functional configuration bug. Existing-test verification does not settle the new-test question. Source context checked: lines 252-263. Source references: https://github.com/OpenHands/software-agent-sdk/blob/e2bac66be26e94f571f27b71f507e7192720f825/openhands-sdk/openhands/sdk/context/prompts/sections/static.py#L253; https://github.com/OpenHands/software-agent-sdk/blob/e2bac66be26e94f571f27b71f507e7192720f825/openhands-sdk/openhands/sdk/context/prompts/sections/static.py#L255.",
+      "issue_type": "semantic_ambiguity",
+      "confidence": 0.91
+    },
+    {
+      "id": "c002",
+      "label": "no_issue",
+      "rationale": "A recovery response containing exactly one bash call is a complete witness: one satisfies the general lower bound and the recovery equality. The token-limit branch is selected at line 130; its alternative branch is mutually exclusive. Source context checked: lines 29-42 and 129-151. Source references: https://github.com/SWE-agent/mini-swe-agent/blob/04d809ceab9df28f9adaed044884180159172930/src/minisweagent/config/mini.yaml#L38; https://github.com/SWE-agent/mini-swe-agent/blob/04d809ceab9df28f9adaed044884180159172930/src/minisweagent/config/mini.yaml#L131.",
+      "issue_type": "none",
+      "confidence": 0.999
+    },
+    {
+      "id": "c003",
+      "label": "no_issue",
+      "rationale": "Construct the required paragraph using ordinary digits inside ReportLab subscript markup. This produces the requested typography without using Unicode subscript characters, satisfying both instructions. The source explicitly demonstrates this method and separately covers canvas positioning. Source context checked: lines 169-187. Source references: https://github.com/anthropics/skills/blob/dbd4588f9e1033efb41dad4bef2f7947c8993d44/skills/pdf/SKILL.md#L171; https://github.com/anthropics/skills/blob/dbd4588f9e1033efb41dad4bef2f7947c8993d44/skills/pdf/SKILL.md#L173.",
+      "issue_type": "none",
+      "confidence": 0.999
+    },
+    {
+      "id": "c004",
+      "label": "no_issue",
+      "rationale": "A delayed import is a compliant witness. The same instruction expressly exempts placements that cause problems and names circular imports, so the default top-level placement duty is inactive in this scenario. Source context checked: lines 208-218. Source references: https://github.com/OpenHands/software-agent-sdk/blob/e2bac66be26e94f571f27b71f507e7192720f825/openhands-sdk/openhands/sdk/context/prompts/sections/static.py#L217.",
+      "issue_type": "none",
+      "confidence": 0.999
+    },
+    {
+      "id": "c005",
+      "label": "no_issue",
+      "rationale": "Fix the code locally and do not push or open a PR. This completes the requested task while respecting the PR restriction. The security section permits PRs but does not require them; permission tension therefore does not eliminate all compliant completions. The stipulated default security body is active only with a truthy security-policy filename and no custom body. Source context checked: lines 234-243 and 289-336. Source references: https://github.com/OpenHands/software-agent-sdk/blob/e2bac66be26e94f571f27b71f507e7192720f825/openhands-sdk/openhands/sdk/context/prompts/sections/static.py#L238; https://github.com/OpenHands/software-agent-sdk/blob/e2bac66be26e94f571f27b71f507e7192720f825/openhands-sdk/openhands/sdk/context/prompts/sections/static.py#L300-L304.",
+      "issue_type": "none",
+      "confidence": 0.99
+    },
+    {
+      "id": "c006",
+      "label": "no_issue",
+      "rationale": "Preserve the justified localized label in the already-Unicode file. The ASCII instruction is a default with a stated exception whose two conditions are met; it also does not require removing existing Unicode. Source context checked: lines 7-19. Source references: https://github.com/openai/codex/blob/806d9732c974bc8a51b8317c1bd8985544fe627c/codex-rs/core/gpt-5.2-codex_prompt.md#L9.",
+      "issue_type": "none",
+      "confidence": 0.999
+    },
+    {
+      "id": "c007",
+      "label": "no_issue",
+      "rationale": "Preserve the identified pre-existing edits and continue the authorized work. The stop-and-ask condition concerns unexpected changes noticed during work and is not triggered by explicitly disclosed, expected initial edits. Source context checked: lines 12-19. Source references: https://github.com/openai/codex/blob/806d9732c974bc8a51b8317c1bd8985544fe627c/codex-rs/core/gpt-5.2-codex_prompt.md#L12-L18.",
+      "issue_type": "none",
+      "confidence": 0.99
+    },
+    {
+      "id": "c008",
+      "label": "no_issue",
+      "rationale": "Run the specifically required persistent watcher. The noninteractive preference explicitly exempts required persistent processes, and both branches of the source helper preserve that exception. If background execution is chosen, use its prescribed background parameter. Source context checked: lines 839-854. Source references: https://github.com/google-gemini/gemini-cli/blob/9b6e0265d16bbd29ca51e33c9e0c01dc4cec5e83/packages/core/src/prompts/snippets.ts#L849-L853.",
+      "issue_type": "none",
+      "confidence": 0.999
+    },
+    {
+      "id": "c009",
+      "label": "issue",
+      "rationale": "For the same response let n be its nonnegative integer bash-call count. The simultaneous constraints n >= 1 and n = 0 have empty intersection. No exception or precedence can resolve them in the supplied model. Source references: evaluation/pilot/cases.json#c009.",
+      "issue_type": "hard_conflict",
+      "confidence": 0.999
+    },
+    {
+      "id": "c010",
+      "label": "issue",
+      "rationale": "The required subscript must use Unicode subscript characters under the first rule, while the second forbids those same characters in the same scope. Omitting the subscript fails the task and alternative typography violates the first rule. Source references: evaluation/pilot/cases.json#c010.",
+      "issue_type": "hard_conflict",
+      "confidence": 0.999
+    },
+    {
+      "id": "c011",
+      "label": "no_issue",
+      "rationale": "Keep the import out of top level. The circular dependency activates the explicit exception to the first rule and the prohibition in the second, so this placement satisfies both. Source references: evaluation/pilot/cases.json#c011.",
+      "issue_type": "none",
+      "confidence": 0.999
+    },
+    {
+      "id": "c012",
+      "label": "issue",
+      "rationale": "For this required import, top-level placement and its negation are simultaneously mandatory at equal priority, without exceptions. Neither placement can satisfy both. Source references: evaluation/pilot/cases.json#c012.",
+      "issue_type": "hard_conflict",
+      "confidence": 0.999
+    },
+    {
+      "id": "c013",
+      "label": "no_issue",
+      "rationale": "Complete the documentation-only update without new tests. The functional-bug condition is false, while the documentation prohibition is active; their operative scopes do not overlap. Source references: evaluation/pilot/cases.json#c013.",
+      "issue_type": "none",
+      "confidence": 0.999
+    },
+    {
+      "id": "c014",
+      "label": "issue",
+      "rationale": "ASCII-only content excludes every non-ASCII character, while the second rule requires at least one such character in the same file. These content sets have empty intersection. Source references: evaluation/pilot/cases.json#c014.",
+      "issue_type": "hard_conflict",
+      "confidence": 0.999
+    },
+    {
+      "id": "c015",
+      "label": "no_issue",
+      "rationale": "Respond without a bash call. This satisfies the hard prohibition; the competing instruction is explicitly a defeasible preference rather than a hard compliance requirement. Source references: evaluation/pilot/cases.json#c015.",
+      "issue_type": "none",
+      "confidence": 0.999
+    },
+    {
+      "id": "c016",
+      "label": "no_issue",
+      "rationale": "Do not open a PR. Permission does not impose an obligation, and the context explicitly allows declining. This is a compliant path despite the permission/prohibition disagreement. Source references: evaluation/pilot/cases.json#c016.",
+      "issue_type": "none",
+      "confidence": 0.999
+    },
+    {
+      "id": "c017",
+      "label": "no_issue",
+      "rationale": "For the scoped 150-node request, use 15 submissions of 10 nodes and one separate poll per returned task: 15 + 15 = 30 service calls. A single successful poll per task is allowed by the supplied existential model. This is a constructive completion within the 30-call budget, not an inference from bounded search. The generic 1-200 advertised range is not being universally validated by this scoped case. Source references: evaluation/pilot/cases.json#c017.",
+      "issue_type": "none",
+      "confidence": 0.99
+    },
+    {
+      "id": "c018",
+      "label": "issue",
+      "rationale": "Every completion requires at least ceil(151/10) = 16 submissions. Each creates a distinct task needing its own separate poll, so at least 32 service calls are necessary. Since 32 > 30 and all shortcuts are excluded, no compliant completion exists at any search depth. Source references: evaluation/pilot/cases.json#c018.",
+      "issue_type": "capacity_mismatch",
+      "confidence": 0.999
+    },
+    {
+      "id": "c019",
+      "label": "issue",
+      "rationale": "Every completion requires at least ceil(184/10) = 19 submissions and 19 separate task polls, giving a lower bound of 38 calls. The 30-call budget is smaller and the model excludes alternate paths, proving impossibility independently of search limits. Source references: evaluation/pilot/cases.json#c019.",
+      "issue_type": "capacity_mismatch",
+      "confidence": 0.999
+    },
+    {
+      "id": "c020",
+      "label": "no_issue",
+      "rationale": "For the scoped 184-node request, submit 18 batches of 10 nodes and one batch of 4, then poll each of the 19 tasks once. The constructive witness uses 19 + 19 = 38 service calls, exactly the budget. The existential model permits each task to complete on its first required poll. This validates the concrete request, not every size in the advertised range. Source references: evaluation/pilot/cases.json#c020.",
+      "issue_type": "none",
+      "confidence": 0.99
+    },
+    {
+      "id": "c021",
+      "label": "issue",
+      "rationale": "The required submit operation is absent from the complete declared interface, which contains only poll. With aliases and alternatives expressly excluded, the advertised invocation cannot be made. Source references: evaluation/pilot/cases.json#c021.",
+      "issue_type": "missing_tool",
+      "confidence": 0.999
+    },
+    {
+      "id": "c022",
+      "label": "issue",
+      "rationale": "The required invocation supplies node_ids, but the complete submit interface declares and requires nodes. The exact invocation therefore uses an undeclared argument and omits the required one; aliasing and alternatives are excluded. Source references: evaluation/pilot/cases.json#c022.",
+      "issue_type": "argument_mismatch",
+      "confidence": 0.999
+    },
+    {
+      "id": "c023",
+      "label": "issue",
+      "rationale": "Initially ready is absent. The only action requires ready and does not establish it. Thus no action is enabled initially, the empty state is a fixed point, and done is unreachable for every plan length. This is exhaustive closure by invariant, not a negative result from the depth-five bound. Source references: evaluation/pilot/cases.json#c023.",
+      "issue_type": "unreachable_goal",
+      "confidence": 0.999
+    },
+    {
+      "id": "c024",
+      "label": "no_issue",
+      "rationale": "The explicit two-action witness is prepare followed by finish: prepare is enabled in the empty state and adds ready; finish then adds done. The depth-one search limit is explicitly not a semantic cap. Independent reasoning establishes existence despite a bounded search being unable to find the witness. Source references: evaluation/pilot/cases.json#c024.",
+      "issue_type": "none",
+      "confidence": 0.999
+    }
+  ],
+  "limitations": [
+    "Independent native-model reference, not human gold; exact model identity and cross-model independence are unverified. Confidence values are subjective judgments, not calibrated probabilities.",
+    "Only protocol.json and cases.json were read locally. No fixture contracts, arm predictions, engine, separate manifests, or author labels were consulted. Natural cases were checked against the pinned public source files and surrounding scope/guard logic using read-only GitHub tools.",
+    "c001 remains an abstention because the original source does not unambiguously settle whether its configuration exclusion overrides or overlaps the bug-fix test duty. It should not enter binary reference scoring without adjudication.",
+    "The target is existence of a compliant completion in each supplied scope. Permission tension alone is not a positive result: c005 and c016 admit completion without opening a PR.",
+    "Empty tool objects in non-interface cases are treated as omitted interface detail, not a complete assertion that no tools exist. Only c021-c022 explicitly declare a complete interface for exact consistency checking.",
+    "Capacity cases are evaluated for their concrete request sizes, with max_plan_steps treated as an analysis/search horizon rather than an additional service-call restriction. Their stated service_call_budget is the semantic resource cap. The no-issue witnesses establish possible completion under the model, not a timing or service-success guarantee.",
+    "Workflow c023 has an independent unreachable-state proof; c024 has an explicit two-step witness. Neither label relies on interpreting bounded search failure as impossibility.",
+    "This selected development pilot does not establish production representativeness, end-to-end extraction quality, or superiority over other models. No explicit paid API calls or external writes were made."
+  ]
+}

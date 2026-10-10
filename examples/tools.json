@@ -1,0 +1,26 @@
+{
+  "tools": {
+    "submit": {
+      "arguments": [
+        "nodes"
+      ],
+      "required": [
+        "nodes"
+      ],
+      "capabilities": [
+        "submit up to 10 nodes; returns exactly one task"
+      ]
+    },
+    "poll": {
+      "arguments": [
+        "task_id"
+      ],
+      "required": [
+        "task_id"
+      ],
+      "capabilities": [
+        "poll exactly one task"
+      ]
+    }
+  }
+}

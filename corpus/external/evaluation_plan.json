@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "status": "not_run",
+  "comparison": {
+    "arms": [
+      "strong_judge",
+      "same_judge_plus_structured_evidence",
+      "mechanical_checker"
+    ],
+    "matched_inputs": [
+      "full_policy_revision",
+      "tool_manifest_revision",
+      "runtime_context",
+      "hierarchy",
+      "allowed_abstention_labels"
+    ],
+    "stages": [
+      "extraction",
+      "checking_on_reference_contract",
+      "end_to_end",
+      "optional_behavioral_validation"
+    ]
+  },
+  "required_run_metadata": [
+    "run_id",
+    "timestamp",
+    "corpus_commit",
+    "case_id",
+    "arm",
+    "model_provider",
+    "model_id",
+    "model_version",
+    "prompt_hash",
+    "sampling_config",
+    "input_tokens",
+    "output_tokens",
+    "actual_cost_currency",
+    "actual_cost",
+    "latency_seconds",
+    "abstained",
+    "output_label",
+    "source_spans",
+    "witness",
+    "diagnostic",
+    "failures"
+  ],
+  "reference_label_values": [
+    "hard_conflict",
+    "ambiguous",
+    "valid_exception",
+    "compatible",
+    "unsupported",
+    "insufficient_context"
+  ],
+  "runs": [],
+  "metrics": {
+    "false_positives": null,
+    "missed_issues": null,
+    "precision": null,
+    "recall": null,
+    "coverage": null,
+    "abstention_rate": null,
+    "diagnostic_usefulness": null,
+    "extraction_precision": null,
+    "extraction_recall": null,
+    "total_cost": null,
+    "latency": null
+  },
+  "cautions": [
+    "Null metrics mean not measured, not zero.",
+    "Do not combine natural cases and synthetic mutations in a single headline accuracy figure.",
+    "Do not count semantic ambiguity as a confirmed true-positive simply because the finite encoding is inconsistent.",
+    "Single-model independent reviews are not human gold.",
+    "API/model experiments require prior approval of budget and model."
+  ]
+}

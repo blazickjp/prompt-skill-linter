@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "id": "mini",
+      "path": "mini_call_count.excerpt.txt"
+    }
+  ],
+  "skills": [],
+  "rules": [
+    {
+      "id": "mini_call_count_1",
+      "source": {
+        "source_id": "mini",
+        "start_line": 1,
+        "end_line": 1,
+        "quote": "Your response MUST include AT LEAST ONE bash tool call"
+      },
+      "priority": 0,
+      "kind": "requirement",
+      "when": {},
+      "skills": [],
+      "scope": {
+        "entity": "current_task",
+        "temporal": "current_turn"
+      },
+      "exceptions": [],
+      "effect": {
+        "literal": "has_bash_call",
+        "value": true
+      }
+    },
+    {
+      "id": "mini_call_count_2",
+      "source": {
+        "source_id": "mini",
+        "start_line": 2,
+        "end_line": 2,
+        "quote": "finish with exactly one bash tool call"
+      },
+      "priority": 0,
+      "kind": "requirement",
+      "when": {
+        "token_limit_recovery": true
+      },
+      "skills": [],
+      "scope": {
+        "entity": "current_task",
+        "temporal": "current_turn"
+      },
+      "exceptions": [],
+      "effect": {
+        "literal": "has_bash_call",
+        "value": true
+      }
+    }
+  ],
+  "contexts": [
+    {
+      "id": "mini_call_count",
+      "facts": {
+        "token_limit_recovery": true
+      },
+      "active_skills": []
+    }
+  ],
+  "assumptions": [
+    "Manual research encoding, not automatic extraction or an independently established semantic ground truth.",
+    "The Boolean abstraction retains the nonzero lower bound but cannot represent or prove the exactly-one upper bound. It is only a no-false-positive smoke case.",
+    "Runtime Jinja branch context must be retained by any full extractor."
+  ]
+}

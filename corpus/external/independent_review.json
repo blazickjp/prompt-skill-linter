@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "reviewed_at": "2026-10-10",
+  "reviewer": {
+    "type": "independent_model_reviewer",
+    "model": "unknown",
+    "blind_to_author_labels": true,
+    "verified_pinned_sources": true
+  },
+  "not_human_gold": true,
+  "scope": "Five source cases; no private artifacts, historical replay, or matched judge benchmark.",
+  "labels": [
+    {
+      "id": "openhands_config_bug",
+      "label": "ambiguous",
+      "confidence": 0.85,
+      "rationale": "The narrower configuration rule can be read as a valid exception to the general bug-fix rule. Grouping with nonfunctional changes leaves behavior-changing configuration fixes unclear. Later verification may use existing tests and need not require new ones.",
+      "source_lines": [
+        253,
+        255
+      ],
+      "context_lines": [
+        252,
+        263
+      ]
+    },
+    {
+      "id": "mini_call_count",
+      "label": "compatible",
+      "confidence": 0.99,
+      "rationale": "Exactly one satisfies the general minimum of one. The recovery branch narrows the permitted count; the alternative branch is mutually exclusive.",
+      "source_lines": [
+        38,
+        130,
+        131,
+        132,
+        141,
+        149
+      ]
+    },
+    {
+      "id": "pdf_subscript",
+      "label": "compatible",
+      "confidence": 0.99,
+      "rationale": "Unicode glyphs and XML formatting are distinct representations. XML tags over ordinary digits meet both instructions; canvas has a separately specified rendering method.",
+      "source_lines": [
+        171,
+        173,
+        180,
+        184,
+        187
+      ]
+    },
+    {
+      "id": "openhands_import_exception",
+      "label": "valid_exception",
+      "confidence": 0.99,
+      "rationale": "The top-level import default explicitly exempts problematic placement and names circular imports. A delayed import follows that exception.",
+      "source_lines": [
+        217
+      ],
+      "guard_lines": [
+        74,
+        75
+      ]
+    },
+    {
+      "id": "openhands_pr_consent",
+      "label": "hard_conflict",
+      "confidence": 0.91,
+      "rationale": "The reviewer reads an authorization conflict between express original-repository PR permission and the explicit-request restriction. This is permission versus prohibition, not competing obligations; declining to open a PR remains safe. Security clearance versus task authorization is a plausible narrower reading but is not explicitly established.",
+      "source_lines": [
+        238,
+        301,
+        304
+      ],
+      "guard_lines": [
+        328,
+        336
+      ],
+      "scope": "Original repository, no explicit PR request, built-in security policy enabled and not replaced."
+    }
+  ],
+  "disagreements": [
+    {
+      "case_id": "openhands_pr_consent",
+      "author_label": "ambiguous_warning",
+      "reviewer_label": "hard_conflict",
+      "status": "unresolved",
+      "reason": "Different treatment of permission-versus-prohibition and security-envelope versus task-authorization scope. A compliant no-PR action exists, so this is not an established no-completion case. Do not score as confirmed source inconsistency."
+    }
+  ],
+  "interpretation": "Four cases agree after mapping negative_control to compatible. One authorization-scope disagreement remains unresolved. This is not an accuracy measurement. Reviewer confidence is subjective and uncalibrated; no human adjudication occurred."
+}

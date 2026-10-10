@@ -1,0 +1,1 @@
+Invoke submit with arguments {"node_ids": [1]}.

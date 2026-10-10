@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "contract": {
+    "version": 1,
+    "sources": [
+      {
+        "id": "pdf",
+        "path": "pdf_subscript.excerpt.txt"
+      }
+    ],
+    "skills": [],
+    "rules": [
+      {
+        "id": "pdf_subscript_1",
+        "source": {
+          "source_id": "pdf",
+          "start_line": 1,
+          "end_line": 1,
+          "quote": "Never use Unicode subscript/superscript characters"
+        },
+        "priority": 0,
+        "kind": "prohibition",
+        "when": {
+          "reportlab_pdf": true
+        },
+        "skills": [],
+        "scope": {
+          "entity": "current_task",
+          "temporal": "current_turn"
+        },
+        "exceptions": [],
+        "effect": {
+          "literal": "unicode_subscript",
+          "value": true
+        }
+      },
+      {
+        "id": "pdf_subscript_2",
+        "source": {
+          "source_id": "pdf",
+          "start_line": 2,
+          "end_line": 2,
+          "quote": "Instead, use ReportLab's XML markup tags in Paragraph objects:"
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "when": {
+          "reportlab_pdf": true,
+          "needs_subscript": true
+        },
+        "skills": [],
+        "scope": {
+          "entity": "current_task",
+          "temporal": "current_turn"
+        },
+        "exceptions": [],
+        "effect": {
+          "literal": "xml_subscript",
+          "value": true
+        }
+      }
+    ],
+    "contexts": [
+      {
+        "id": "pdf_subscript",
+        "facts": {
+          "reportlab_pdf": true,
+          "needs_subscript": true
+        },
+        "active_skills": []
+      }
+    ],
+    "assumptions": [
+      "Manual research encoding, not automatic extraction or an independently established semantic ground truth.",
+      "The selected font/rendering assumption is source-specific, not a universal ReportLab theorem.",
+      "No PDF was rendered in this corpus exercise."
+    ]
+  },
+  "diagnostics": [],
+  "resource_checks": [],
+  "workflow_checks": [],
+  "constraint_checks": [],
+  "coverage": {
+    "translation": "declared_only",
+    "context_count": 1,
+    "plan_bound": 20,
+    "universal_prompt_correctness_certified": false
+  },
+  "summary": {
+    "error": 0,
+    "warning": 0,
+    "info": 0
+  }
+}

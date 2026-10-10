@@ -1,0 +1,2 @@
+Place this import at top level unless that causes a circular dependency.
+For a circular dependency, do not place this import at top level.

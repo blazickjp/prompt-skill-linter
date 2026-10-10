@@ -1,0 +1,2 @@
+For subscripts, use Unicode subscript characters.
+Never use Unicode subscript characters.

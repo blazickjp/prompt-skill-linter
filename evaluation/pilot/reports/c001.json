@@ -1,0 +1,216 @@
+{
+  "version": 1,
+  "contract": {
+    "version": 1,
+    "sources": [
+      {
+        "id": "oh",
+        "path": "openhands_config_bug.excerpt.txt"
+      }
+    ],
+    "skills": [],
+    "rules": [
+      {
+        "id": "openhands_config_bug_1",
+        "source": {
+          "source_id": "oh",
+          "start_line": 1,
+          "end_line": 1,
+          "quote": "For bug fixes: Create tests to verify issues before implementing fixes"
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "when": {
+          "bug_fix": true
+        },
+        "skills": [],
+        "scope": {
+          "entity": "current_task",
+          "temporal": "current_turn"
+        },
+        "exceptions": [],
+        "effect": {
+          "literal": "write_tests",
+          "value": true
+        }
+      },
+      {
+        "id": "openhands_config_bug_2",
+        "source": {
+          "source_id": "oh",
+          "start_line": 2,
+          "end_line": 2,
+          "quote": "Do NOT write tests for documentation changes, README updates, configuration files"
+        },
+        "priority": 0,
+        "kind": "prohibition",
+        "when": {
+          "configuration_change": true
+        },
+        "skills": [],
+        "scope": {
+          "entity": "current_task",
+          "temporal": "current_turn"
+        },
+        "exceptions": [],
+        "effect": {
+          "literal": "write_tests",
+          "value": true
+        }
+      }
+    ],
+    "contexts": [
+      {
+        "id": "openhands_config_bug",
+        "facts": {
+          "bug_fix": true,
+          "configuration_change": true
+        },
+        "active_skills": []
+      }
+    ],
+    "assumptions": [
+      "Manual research encoding, not automatic extraction or an independently established semantic ground truth.",
+      "Explicit exception/precedence is absent from this abstraction. An adjudicator may reasonably interpret specificity as resolving the tension.",
+      "The second excerpt omits the final non-functionality category; consult the pinned complete source."
+    ]
+  },
+  "diagnostics": [
+    {
+      "code": "INCOMPATIBLE_OBLIGATIONS",
+      "class": "model_based",
+      "severity": "error",
+      "source_spans": [
+        {
+          "source_id": "oh",
+          "start_line": 1,
+          "end_line": 1,
+          "quote": "For bug fixes: Create tests to verify issues before implementing fixes"
+        },
+        {
+          "source_id": "oh",
+          "start_line": 2,
+          "end_line": 2,
+          "quote": "Do NOT write tests for documentation changes, README updates, configuration files"
+        }
+      ],
+      "interpreted_rules": [
+        {
+          "id": "openhands_config_bug_1",
+          "source": {
+            "source_id": "oh",
+            "start_line": 1,
+            "end_line": 1,
+            "quote": "For bug fixes: Create tests to verify issues before implementing fixes"
+          },
+          "priority": 0,
+          "kind": "requirement",
+          "when": {
+            "bug_fix": true
+          },
+          "skills": [],
+          "scope": {
+            "entity": "current_task",
+            "temporal": "current_turn"
+          },
+          "exceptions": [],
+          "effect": {
+            "literal": "write_tests",
+            "value": true
+          }
+        },
+        {
+          "id": "openhands_config_bug_2",
+          "source": {
+            "source_id": "oh",
+            "start_line": 2,
+            "end_line": 2,
+            "quote": "Do NOT write tests for documentation changes, README updates, configuration files"
+          },
+          "priority": 0,
+          "kind": "prohibition",
+          "when": {
+            "configuration_change": true
+          },
+          "skills": [],
+          "scope": {
+            "entity": "current_task",
+            "temporal": "current_turn"
+          },
+          "exceptions": [],
+          "effect": {
+            "literal": "write_tests",
+            "value": true
+          }
+        }
+      ],
+      "resolved_priorities": {
+        "openhands_config_bug_1": 0,
+        "openhands_config_bug_2": 0
+      },
+      "triggering_context": {
+        "id": "openhands_config_bug",
+        "facts": {
+          "bug_fix": true,
+          "configuration_change": true
+        },
+        "active_skills": []
+      },
+      "witness": {
+        "literal": "write_tests",
+        "required_values": [
+          true,
+          false
+        ],
+        "minimality_checked": true,
+        "removal_witnesses": {
+          "openhands_config_bug_1": {
+            "write_tests": false
+          },
+          "openhands_config_bug_2": {
+            "write_tests": true
+          }
+        }
+      },
+      "responsible_rule_set": [
+        "openhands_config_bug_1",
+        "openhands_config_bug_2"
+      ],
+      "assumptions": [
+        "Manual research encoding, not automatic extraction or an independently established semantic ground truth.",
+        "Explicit exception/precedence is absent from this abstraction. An adjudicator may reasonably interpret specificity as resolving the tension.",
+        "The second excerpt omits the final non-functionality category; consult the pinned complete source.",
+        "Reviewed boolean interpretation and explicitly enumerated context.",
+        "Identical entity and temporal scope; no implicit cross-scope equivalence."
+      ],
+      "repairs": [],
+      "regression_case": {
+        "context": {
+          "id": "openhands_config_bug",
+          "facts": {
+            "bug_fix": true,
+            "configuration_change": true
+          },
+          "active_skills": []
+        },
+        "expected_code": "INCOMPATIBLE_OBLIGATIONS"
+      },
+      "provenance_limitations": [],
+      "interpretation_status": "Conditional on this declared abstraction; not proof that the source prose conflicts."
+    }
+  ],
+  "resource_checks": [],
+  "workflow_checks": [],
+  "constraint_checks": [],
+  "coverage": {
+    "translation": "declared_only",
+    "context_count": 1,
+    "plan_bound": 20,
+    "universal_prompt_correctness_certified": false
+  },
+  "summary": {
+    "error": 1,
+    "warning": 0,
+    "info": 0
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "id": "oh",
+      "path": "openhands_config_bug.excerpt.txt"
+    }
+  ],
+  "skills": [],
+  "rules": [
+    {
+      "id": "openhands_config_bug_1",
+      "source": {
+        "source_id": "oh",
+        "start_line": 1,
+        "end_line": 1,
+        "quote": "For bug fixes: Create tests to verify issues before implementing fixes"
+      },
+      "priority": 0,
+      "kind": "requirement",
+      "when": {
+        "bug_fix": true
+      },
+      "skills": [],
+      "scope": {
+        "entity": "current_task",
+        "temporal": "current_turn"
+      },
+      "exceptions": [],
+      "effect": {
+        "literal": "write_tests",
+        "value": true
+      }
+    },
+    {
+      "id": "openhands_config_bug_2",
+      "source": {
+        "source_id": "oh",
+        "start_line": 2,
+        "end_line": 2,
+        "quote": "Do NOT write tests for documentation changes, README updates, configuration files"
+      },
+      "priority": 0,
+      "kind": "prohibition",
+      "when": {
+        "configuration_change": true
+      },
+      "skills": [],
+      "scope": {
+        "entity": "current_task",
+        "temporal": "current_turn"
+      },
+      "exceptions": [],
+      "effect": {
+        "literal": "write_tests",
+        "value": true
+      }
+    }
+  ],
+  "contexts": [
+    {
+      "id": "openhands_config_bug",
+      "facts": {
+        "bug_fix": true,
+        "configuration_change": true
+      },
+      "active_skills": []
+    }
+  ],
+  "assumptions": [
+    "Manual research encoding, not automatic extraction or an independently established semantic ground truth.",
+    "Explicit exception/precedence is absent from this abstraction. An adjudicator may reasonably interpret specificity as resolving the tension.",
+    "The second excerpt omits the final non-functionality category; consult the pinned complete source."
+  ]
+}

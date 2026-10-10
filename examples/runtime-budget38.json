@@ -1,0 +1,7 @@
+{
+  "service_call_budget": 38,
+  "request_sizes": [
+    184
+  ],
+  "max_plan_steps": 20
+}

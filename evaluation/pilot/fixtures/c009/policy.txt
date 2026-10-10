@@ -1,0 +1,2 @@
+Every response must include at least one bash call.
+Every response must include zero bash calls.

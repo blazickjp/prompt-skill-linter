@@ -1,0 +1,8 @@
+{
+ "frozen_at_utc":"2026-10-10T14:47:00Z",
+ "reference":"Separate native reviewer extracts reference atoms and source/context fields before predictions; model references are not human gold.",
+ "prediction":"Fresh native worker receives only cases and this protocol, not reference annotations or earlier predictions.",
+ "metrics":["exact quote and local line alignment","atomic action precision/recall against provisional references","kind agreement","condition and exception agreement","unsupported numeric semantics disclosed","wrong hardening of defaults","downstream checker after explicit manual acceptance"],
+ "matching":"Match atoms by source_id and canonical action. Compound source actions are split. All proposals must use exact supplied snippet quotes and local line 1. Context-derived scope is permitted but must be explained. Numerical semantics may be extracted as a soft candidate while noting that Boolean encoding does not prove typography.",
+ "limits":["Six selected fragments with a supplied action vocabulary and context hints; easier than unrestricted full-policy extraction.","Source spans are held out from feasibility case texts, but source families overlap.","No human gold, no live provider API, no claim this native-worker path is integrated into the product.","A missing/review-only interpretation is not a clean verdict."]
+}

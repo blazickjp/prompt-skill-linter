@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "prompt-skill-linter"
+version = "1.0.0"
+description = "Provenance-first static checks for explicitly declared agent instruction contracts"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+prompt-skill-linter = "prompt_skill_linter.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["prompt_skill_linter*"]
+
+[tool.setuptools.package-data]
+prompt_skill_linter = ["*.schema.json", "data/*.json", "web/*", "web/**/*"]

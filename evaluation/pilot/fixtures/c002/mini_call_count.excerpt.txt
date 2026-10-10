@@ -1,0 +1,2 @@
+Your response MUST include AT LEAST ONE bash tool call
+finish with exactly one bash tool call

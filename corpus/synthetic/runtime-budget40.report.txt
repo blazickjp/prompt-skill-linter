@@ -1,0 +1,6 @@
+Prompt/skill linter: declared-contract analysis
+Errors: 0; warnings: 0; information: 0
+
+Resource check n=200: lower_bound_pass; lower bound 40, budget 40
+
+A lower-bound pass is not a completion guarantee. Prose extraction is not implemented.

@@ -1,0 +1,191 @@
+{
+  "version": 1,
+  "contract": {
+    "version": 1,
+    "sources": [
+      {
+        "id": "policy",
+        "path": "policy.txt"
+      }
+    ],
+    "skills": [],
+    "rules": [
+      {
+        "id": "r1",
+        "source": {
+          "source_id": "policy",
+          "start_line": 1,
+          "end_line": 1,
+          "quote": "Use only ASCII in this file, without exceptions."
+        },
+        "priority": 0,
+        "kind": "prohibition",
+        "scope": {
+          "entity": "task",
+          "temporal": "turn"
+        },
+        "when": {},
+        "exceptions": [],
+        "effect": {
+          "literal": "non_ascii",
+          "value": true
+        }
+      },
+      {
+        "id": "r2",
+        "source": {
+          "source_id": "policy",
+          "start_line": 2,
+          "end_line": 2,
+          "quote": "Include a non-ASCII character in this file."
+        },
+        "priority": 0,
+        "kind": "requirement",
+        "scope": {
+          "entity": "task",
+          "temporal": "turn"
+        },
+        "when": {},
+        "exceptions": [],
+        "effect": {
+          "literal": "non_ascii",
+          "value": true
+        }
+      }
+    ],
+    "contexts": [
+      {
+        "id": "task",
+        "facts": {},
+        "active_skills": []
+      }
+    ],
+    "assumptions": [
+      "Explicitly synthetic finite model; no inferred natural-language completeness."
+    ]
+  },
+  "diagnostics": [
+    {
+      "code": "INCOMPATIBLE_OBLIGATIONS",
+      "class": "model_based",
+      "severity": "error",
+      "source_spans": [
+        {
+          "source_id": "policy",
+          "start_line": 1,
+          "end_line": 1,
+          "quote": "Use only ASCII in this file, without exceptions."
+        },
+        {
+          "source_id": "policy",
+          "start_line": 2,
+          "end_line": 2,
+          "quote": "Include a non-ASCII character in this file."
+        }
+      ],
+      "interpreted_rules": [
+        {
+          "id": "r1",
+          "source": {
+            "source_id": "policy",
+            "start_line": 1,
+            "end_line": 1,
+            "quote": "Use only ASCII in this file, without exceptions."
+          },
+          "priority": 0,
+          "kind": "prohibition",
+          "scope": {
+            "entity": "task",
+            "temporal": "turn"
+          },
+          "when": {},
+          "exceptions": [],
+          "effect": {
+            "literal": "non_ascii",
+            "value": true
+          }
+        },
+        {
+          "id": "r2",
+          "source": {
+            "source_id": "policy",
+            "start_line": 2,
+            "end_line": 2,
+            "quote": "Include a non-ASCII character in this file."
+          },
+          "priority": 0,
+          "kind": "requirement",
+          "scope": {
+            "entity": "task",
+            "temporal": "turn"
+          },
+          "when": {},
+          "exceptions": [],
+          "effect": {
+            "literal": "non_ascii",
+            "value": true
+          }
+        }
+      ],
+      "resolved_priorities": {
+        "r1": 0,
+        "r2": 0
+      },
+      "triggering_context": {
+        "id": "task",
+        "facts": {},
+        "active_skills": []
+      },
+      "witness": {
+        "literal": "non_ascii",
+        "required_values": [
+          false,
+          true
+        ],
+        "minimality_checked": true,
+        "removal_witnesses": {
+          "r1": {
+            "non_ascii": true
+          },
+          "r2": {
+            "non_ascii": false
+          }
+        }
+      },
+      "responsible_rule_set": [
+        "r1",
+        "r2"
+      ],
+      "assumptions": [
+        "Explicitly synthetic finite model; no inferred natural-language completeness.",
+        "Reviewed boolean interpretation and explicitly enumerated context.",
+        "Identical entity and temporal scope; no implicit cross-scope equivalence."
+      ],
+      "repairs": [],
+      "regression_case": {
+        "context": {
+          "id": "task",
+          "facts": {},
+          "active_skills": []
+        },
+        "expected_code": "INCOMPATIBLE_OBLIGATIONS"
+      },
+      "provenance_limitations": [],
+      "interpretation_status": "Conditional on this declared abstraction; not proof that the source prose conflicts."
+    }
+  ],
+  "resource_checks": [],
+  "workflow_checks": [],
+  "constraint_checks": [],
+  "coverage": {
+    "translation": "declared_only",
+    "context_count": 1,
+    "plan_bound": 20,
+    "universal_prompt_correctness_certified": false
+  },
+  "summary": {
+    "error": 1,
+    "warning": 0,
+    "info": 0
+  }
+}

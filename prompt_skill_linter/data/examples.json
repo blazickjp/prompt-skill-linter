@@ -1,0 +1,457 @@
+{
+  "examples": [
+    {
+      "id": "bulk",
+      "title": "The 151-node boundary",
+      "description": "An exact lower bound exposes a three-constraint interaction beyond pairwise checks.",
+      "bundle": {
+        "contract": {
+          "version": 1,
+          "sources": [
+            {
+              "id": "bulk",
+              "path": "bulk.skill.txt"
+            }
+          ],
+          "skills": [],
+          "rules": [
+            {
+              "id": "advertised_support",
+              "source": {
+                "source_id": "bulk",
+                "start_line": 1,
+                "end_line": 1,
+                "quote": "Advertised support: update every requested node for lists of 1-200 nodes within one run."
+              },
+              "priority": 100,
+              "kind": "requirement",
+              "when": {},
+              "skills": [],
+              "scope": {
+                "entity": "requested_nodes",
+                "temporal": "one_run"
+              },
+              "exceptions": []
+            },
+            {
+              "id": "submission_capacity",
+              "source": {
+                "source_id": "bulk",
+                "start_line": 2,
+                "end_line": 2,
+                "quote": "Each submission handles at most 10 nodes and returns exactly one task."
+              },
+              "priority": 100,
+              "kind": "requirement",
+              "when": {},
+              "skills": [],
+              "scope": {
+                "entity": "requested_nodes",
+                "temporal": "one_run"
+              },
+              "exceptions": []
+            },
+            {
+              "id": "mandatory_polling",
+              "source": {
+                "source_id": "bulk",
+                "start_line": 3,
+                "end_line": 3,
+                "quote": "Every task needs at least one separate polling call; each poll handles exactly one task."
+              },
+              "priority": 100,
+              "kind": "requirement",
+              "when": {},
+              "skills": [],
+              "scope": {
+                "entity": "requested_nodes",
+                "temporal": "one_run"
+              },
+              "exceptions": []
+            },
+            {
+              "id": "call_budget",
+              "source": {
+                "source_id": "bulk",
+                "start_line": 4,
+                "end_line": 4,
+                "quote": "The run permits at most 30 counted service calls."
+              },
+              "priority": 100,
+              "kind": "requirement",
+              "when": {},
+              "skills": [],
+              "scope": {
+                "entity": "requested_nodes",
+                "temporal": "one_run"
+              },
+              "exceptions": []
+            }
+          ],
+          "contexts": [
+            {
+              "id": "synthetic_bulk",
+              "facts": {},
+              "active_skills": []
+            }
+          ],
+          "declared_facts": [
+            "Advertised support: update every requested node for lists of 1-200 nodes within one run.",
+            "Each submission handles at most 10 nodes and returns exactly one task.",
+            "Every task needs at least one separate polling call; each poll handles exactly one task.",
+            "The run permits at most 30 counted service calls.",
+            "No prior tasks, batching shortcuts, alternative update operations, or bulk polling exist in this synthetic model."
+          ],
+          "assumptions": [
+            "Explicitly synthetic, author-reviewed contract; no natural-language extraction.",
+            "s and p are nonnegative integers.",
+            "Each submission returns exactly one new task and each task requires a distinct polling call.",
+            "No prior tasks, batching shortcuts, alternate updates or bulk polling are available.",
+            "This is a lower bound: schema retrieval, retries, failed requests and additional polls may consume more calls.",
+            "Runtime budget variants explicitly replace the budget requirement for controls."
+          ],
+          "bulk_model": {
+            "nodes_per_submission": 10,
+            "advertised_min": 1,
+            "advertised_max": 200,
+            "advertisement_rule": "advertised_support",
+            "constraint_rules": {
+              "coverage": "submission_capacity",
+              "polling": "mandatory_polling",
+              "budget": "call_budget"
+            }
+          }
+        },
+        "sources": {
+          "bulk": "Advertised support: update every requested node for lists of 1-200 nodes within one run.\nEach submission handles at most 10 nodes and returns exactly one task.\nEvery task needs at least one separate polling call; each poll handles exactly one task.\nThe run permits at most 30 counted service calls.\nNo prior tasks, batching shortcuts, alternative update operations, or bulk polling exist in this synthetic model.\n"
+        },
+        "tools": {
+          "tools": {
+            "submit": {
+              "arguments": [
+                "nodes"
+              ],
+              "required": [
+                "nodes"
+              ],
+              "capabilities": [
+                "submit up to 10 nodes; returns exactly one task"
+              ]
+            },
+            "poll": {
+              "arguments": [
+                "task_id"
+              ],
+              "required": [
+                "task_id"
+              ],
+              "capabilities": [
+                "poll exactly one task"
+              ]
+            }
+          }
+        },
+        "runtime": {
+          "service_call_budget": 30,
+          "request_sizes": [
+            150,
+            151,
+            184
+          ],
+          "max_plan_steps": 20
+        }
+      }
+    },
+    {
+      "id": "composition",
+      "title": "Three rules, no joint solution",
+      "description": "A reviewed CNF model with source-linked deletion-checked minimal core.",
+      "bundle": {
+        "contract": {
+          "version": 1,
+          "sources": [
+            {
+              "id": "composition",
+              "path": "sources/composition.txt"
+            }
+          ],
+          "skills": [],
+          "rules": [
+            {
+              "id": "composition_line_1",
+              "source": {
+                "source_id": "composition",
+                "start_line": 1,
+                "end_line": 1,
+                "quote": "CLAUSE a"
+              },
+              "priority": 0,
+              "kind": "requirement",
+              "when": {},
+              "skills": [],
+              "scope": {
+                "entity": "task",
+                "temporal": "run"
+              },
+              "exceptions": [],
+              "clause": [
+                {
+                  "literal": "a",
+                  "value": true
+                }
+              ]
+            },
+            {
+              "id": "composition_line_2",
+              "source": {
+                "source_id": "composition",
+                "start_line": 2,
+                "end_line": 2,
+                "quote": "CLAUSE b"
+              },
+              "priority": 0,
+              "kind": "requirement",
+              "when": {},
+              "skills": [],
+              "scope": {
+                "entity": "task",
+                "temporal": "run"
+              },
+              "exceptions": [],
+              "clause": [
+                {
+                  "literal": "b",
+                  "value": true
+                }
+              ]
+            },
+            {
+              "id": "composition_line_3",
+              "source": {
+                "source_id": "composition",
+                "start_line": 3,
+                "end_line": 3,
+                "quote": "CLAUSE !a | !b"
+              },
+              "priority": 0,
+              "kind": "requirement",
+              "when": {},
+              "skills": [],
+              "scope": {
+                "entity": "task",
+                "temporal": "run"
+              },
+              "exceptions": [],
+              "clause": [
+                {
+                  "literal": "a",
+                  "value": false
+                },
+                {
+                  "literal": "b",
+                  "value": false
+                }
+              ]
+            }
+          ],
+          "contexts": [
+            {
+              "id": "default",
+              "facts": {},
+              "active_skills": []
+            }
+          ],
+          "assumptions": [
+            "Offline annotations use task/run scope and priority 0 until explicitly reviewed.",
+            "Unsupported prose is not certified; accepted warning-only candidates carry no binding interpretation.",
+            "0 candidate(s) excluded by reviewer; 0 source line(s) remain outside the annotation grammar.",
+            "Synthetic three-way composition: each pair is satisfiable, the conjunction is not."
+          ],
+          "interpretation": {
+            "status": "accepted",
+            "method": "offline-annotations-v1",
+            "accepted_candidate_ids": [
+              "composition_line_1",
+              "composition_line_2",
+              "composition_line_3"
+            ]
+          }
+        },
+        "sources": {
+          "composition": "CLAUSE a\nCLAUSE b\nCLAUSE !a | !b\n"
+        },
+        "tools": {
+          "tools": {}
+        },
+        "runtime": {}
+      }
+    },
+    {
+      "id": "workflow",
+      "title": "A refusal is still compliant",
+      "description": "Prerequisite/effect planning distinguishes an unsupported advertised update from a compliant fallback.",
+      "bundle": {
+        "contract": {
+          "version": 1,
+          "sources": [
+            {
+              "id": "workflow",
+              "path": "workflow.txt"
+            }
+          ],
+          "skills": [],
+          "rules": [
+            {
+              "id": "advertise",
+              "source": {
+                "source_id": "workflow",
+                "start_line": 1,
+                "end_line": 1,
+                "quote": "Advertise updating the record within this run."
+              },
+              "priority": 100,
+              "kind": "requirement",
+              "scope": {
+                "entity": "record",
+                "temporal": "run"
+              },
+              "when": {},
+              "skills": [],
+              "exceptions": []
+            },
+            {
+              "id": "needs_approval",
+              "source": {
+                "source_id": "workflow",
+                "start_line": 2,
+                "end_line": 2,
+                "quote": "Do not update the record without approval."
+              },
+              "priority": 100,
+              "kind": "prohibition",
+              "scope": {
+                "entity": "record",
+                "temporal": "run"
+              },
+              "when": {
+                "approved": false
+              },
+              "skills": [],
+              "exceptions": [],
+              "forbid_action": "update"
+            },
+            {
+              "id": "refusal_allowed",
+              "source": {
+                "source_id": "workflow",
+                "start_line": 3,
+                "end_line": 3,
+                "quote": "Refusing to update is a compliant fallback."
+              },
+              "priority": 100,
+              "kind": "permission",
+              "scope": {
+                "entity": "record",
+                "temporal": "run"
+              },
+              "when": {},
+              "skills": [],
+              "exceptions": []
+            }
+          ],
+          "contexts": [
+            {
+              "id": "no_approval",
+              "facts": {
+                "approved": false
+              },
+              "active_skills": []
+            },
+            {
+              "id": "approved",
+              "facts": {
+                "approved": true
+              },
+              "active_skills": []
+            }
+          ],
+          "assumptions": [
+            "Synthetic finite workflow; refusal compliance is explicitly declared by its author."
+          ],
+          "workflows": [
+            {
+              "id": "record_update",
+              "advertisement_rule": "advertise",
+              "initial": [],
+              "goal": [
+                "updated"
+              ],
+              "compliant_fallback": "refuse",
+              "actions": [
+                {
+                  "id": "read",
+                  "adds": [
+                    "loaded"
+                  ],
+                  "tool_call": {
+                    "tool": "read_record",
+                    "arguments": {
+                      "id": "record"
+                    }
+                  }
+                },
+                {
+                  "id": "update",
+                  "requires": [
+                    "loaded"
+                  ],
+                  "adds": [
+                    "updated"
+                  ],
+                  "tool_call": {
+                    "tool": "update_record",
+                    "arguments": {
+                      "id": "record"
+                    }
+                  }
+                },
+                {
+                  "id": "refuse",
+                  "adds": [
+                    "refused"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "sources": {
+          "workflow": "Advertise updating the record within this run.\nDo not update the record without approval.\nRefusing to update is a compliant fallback.\n"
+        },
+        "tools": {
+          "tools": {
+            "read_record": {
+              "arguments": [
+                "id"
+              ],
+              "required": [
+                "id"
+              ]
+            },
+            "update_record": {
+              "arguments": [
+                "id"
+              ],
+              "required": [
+                "id"
+              ]
+            }
+          }
+        },
+        "runtime": {
+          "max_plan_steps": 4
+        }
+      }
+    }
+  ]
+}

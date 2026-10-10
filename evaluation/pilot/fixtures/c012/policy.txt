@@ -1,0 +1,2 @@
+Place every import at top level, without exceptions.
+Do not place this import at top level, without exceptions.

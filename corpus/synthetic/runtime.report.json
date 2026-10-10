@@ -1,0 +1,643 @@
+{
+  "version": 1,
+  "contract": {
+    "version": 1,
+    "sources": [
+      {
+        "id": "bulk",
+        "path": "bulk.skill.txt"
+      }
+    ],
+    "skills": [],
+    "rules": [
+      {
+        "id": "advertised_support",
+        "source": {
+          "source_id": "bulk",
+          "start_line": 1,
+          "end_line": 1,
+          "quote": "Advertised support: update every requested node for lists of 1-200 nodes within one run."
+        },
+        "priority": 100,
+        "kind": "requirement",
+        "when": {},
+        "skills": [],
+        "scope": {
+          "entity": "requested_nodes",
+          "temporal": "one_run"
+        },
+        "exceptions": []
+      },
+      {
+        "id": "submission_capacity",
+        "source": {
+          "source_id": "bulk",
+          "start_line": 2,
+          "end_line": 2,
+          "quote": "Each submission handles at most 10 nodes and returns exactly one task."
+        },
+        "priority": 100,
+        "kind": "requirement",
+        "when": {},
+        "skills": [],
+        "scope": {
+          "entity": "requested_nodes",
+          "temporal": "one_run"
+        },
+        "exceptions": []
+      },
+      {
+        "id": "mandatory_polling",
+        "source": {
+          "source_id": "bulk",
+          "start_line": 3,
+          "end_line": 3,
+          "quote": "Every task needs at least one separate polling call; each poll handles exactly one task."
+        },
+        "priority": 100,
+        "kind": "requirement",
+        "when": {},
+        "skills": [],
+        "scope": {
+          "entity": "requested_nodes",
+          "temporal": "one_run"
+        },
+        "exceptions": []
+      },
+      {
+        "id": "call_budget",
+        "source": {
+          "source_id": "bulk",
+          "start_line": 4,
+          "end_line": 4,
+          "quote": "The run permits at most 30 counted service calls."
+        },
+        "priority": 100,
+        "kind": "requirement",
+        "when": {},
+        "skills": [],
+        "scope": {
+          "entity": "requested_nodes",
+          "temporal": "one_run"
+        },
+        "exceptions": []
+      }
+    ],
+    "contexts": [
+      {
+        "id": "synthetic_bulk",
+        "facts": {},
+        "active_skills": []
+      }
+    ],
+    "declared_facts": [
+      "Advertised support: update every requested node for lists of 1-200 nodes within one run.",
+      "Each submission handles at most 10 nodes and returns exactly one task.",
+      "Every task needs at least one separate polling call; each poll handles exactly one task.",
+      "The run permits at most 30 counted service calls.",
+      "No prior tasks, batching shortcuts, alternative update operations, or bulk polling exist in this synthetic model."
+    ],
+    "assumptions": [
+      "Explicitly synthetic, author-reviewed contract; no natural-language extraction.",
+      "s and p are nonnegative integers.",
+      "Each submission returns exactly one new task and each task requires a distinct polling call.",
+      "No prior tasks, batching shortcuts, alternate updates or bulk polling are available.",
+      "This is a lower bound: schema retrieval, retries, failed requests and additional polls may consume more calls.",
+      "Runtime budget variants explicitly replace the budget requirement for controls."
+    ],
+    "bulk_model": {
+      "nodes_per_submission": 10,
+      "advertised_min": 1,
+      "advertised_max": 200,
+      "advertisement_rule": "advertised_support",
+      "constraint_rules": {
+        "coverage": "submission_capacity",
+        "polling": "mandatory_polling",
+        "budget": "call_budget"
+      }
+    }
+  },
+  "diagnostics": [
+    {
+      "code": "UNREACHABLE_COMPLETION",
+      "class": "exact",
+      "severity": "error",
+      "source_spans": [
+        {
+          "source_id": "bulk",
+          "start_line": 2,
+          "end_line": 2,
+          "quote": "Each submission handles at most 10 nodes and returns exactly one task."
+        },
+        {
+          "source_id": "bulk",
+          "start_line": 3,
+          "end_line": 3,
+          "quote": "Every task needs at least one separate polling call; each poll handles exactly one task."
+        },
+        {
+          "source_id": "bulk",
+          "start_line": 4,
+          "end_line": 4,
+          "quote": "The run permits at most 30 counted service calls."
+        }
+      ],
+      "interpreted_rules": [
+        {
+          "id": "submission_capacity",
+          "source": {
+            "source_id": "bulk",
+            "start_line": 2,
+            "end_line": 2,
+            "quote": "Each submission handles at most 10 nodes and returns exactly one task."
+          },
+          "priority": 100,
+          "kind": "requirement",
+          "when": {},
+          "skills": [],
+          "scope": {
+            "entity": "requested_nodes",
+            "temporal": "one_run"
+          },
+          "exceptions": []
+        },
+        {
+          "id": "mandatory_polling",
+          "source": {
+            "source_id": "bulk",
+            "start_line": 3,
+            "end_line": 3,
+            "quote": "Every task needs at least one separate polling call; each poll handles exactly one task."
+          },
+          "priority": 100,
+          "kind": "requirement",
+          "when": {},
+          "skills": [],
+          "scope": {
+            "entity": "requested_nodes",
+            "temporal": "one_run"
+          },
+          "exceptions": []
+        },
+        {
+          "id": "call_budget",
+          "source": {
+            "source_id": "bulk",
+            "start_line": 4,
+            "end_line": 4,
+            "quote": "The run permits at most 30 counted service calls."
+          },
+          "priority": 100,
+          "kind": "requirement",
+          "when": {},
+          "skills": [],
+          "scope": {
+            "entity": "requested_nodes",
+            "temporal": "one_run"
+          },
+          "exceptions": []
+        }
+      ],
+      "resolved_priorities": {
+        "submission_capacity": 100,
+        "mandatory_polling": 100,
+        "call_budget": 100
+      },
+      "triggering_context": {
+        "request_size": 151,
+        "service_call_budget": 30
+      },
+      "witness": {
+        "request_size": 151,
+        "minimum_submissions": 16,
+        "minimum_polls": 16,
+        "lower_bound_calls": 32,
+        "budget": 30,
+        "constraints": [
+          "10*s >= 151",
+          "p >= s",
+          "s+p <= 30"
+        ],
+        "domain": "s,p are nonnegative integers",
+        "minimal_core_constraints": [
+          "coverage",
+          "polling",
+          "budget"
+        ],
+        "minimality_checked": true,
+        "removal_witnesses": {
+          "coverage": {
+            "s": 0,
+            "p": 0,
+            "total_calls": 0
+          },
+          "polling": {
+            "s": 16,
+            "p": 0,
+            "total_calls": 16
+          },
+          "budget": {
+            "s": 16,
+            "p": 16,
+            "total_calls": 32
+          }
+        },
+        "pairwise_witnesses": {
+          "coverage+polling": {
+            "s": 16,
+            "p": 16,
+            "total_calls": 32
+          },
+          "coverage+budget": {
+            "s": 16,
+            "p": 0,
+            "total_calls": 16
+          },
+          "polling+budget": {
+            "s": 0,
+            "p": 0,
+            "total_calls": 0
+          }
+        },
+        "affected_advertised_range": [
+          151,
+          200
+        ]
+      },
+      "responsible_rule_set": [
+        "submission_capacity",
+        "mandatory_polling",
+        "call_budget"
+      ],
+      "assumptions": [
+        "Explicitly synthetic, author-reviewed contract; no natural-language extraction.",
+        "s and p are nonnegative integers.",
+        "Each submission returns exactly one new task and each task requires a distinct polling call.",
+        "No prior tasks, batching shortcuts, alternate updates or bulk polling are available.",
+        "This is a lower bound: schema retrieval, retries, failed requests and additional polls may consume more calls.",
+        "Runtime budget variants explicitly replace the budget requirement for controls."
+      ],
+      "repairs": [
+        {
+          "changes_requirement": "call_budget",
+          "proposal": "Increase the counted-call budget to at least 32; this only meets the lower bound."
+        },
+        {
+          "changes_requirement": "advertised_support",
+          "proposal": "Reduce the advertised maximum to at most 150 nodes for this budget."
+        },
+        {
+          "changes_requirement": "mandatory_polling",
+          "proposal": "Redesign polling to support multiple tasks per call, then replace and revalidate the model."
+        }
+      ],
+      "regression_case": {
+        "context": {
+          "request_size": 151,
+          "service_call_budget": 30
+        },
+        "expected_code": "UNREACHABLE_COMPLETION",
+        "expected_lower_bound_calls": 32
+      },
+      "provenance_limitations": []
+    },
+    {
+      "code": "UNREACHABLE_COMPLETION",
+      "class": "exact",
+      "severity": "error",
+      "source_spans": [
+        {
+          "source_id": "bulk",
+          "start_line": 2,
+          "end_line": 2,
+          "quote": "Each submission handles at most 10 nodes and returns exactly one task."
+        },
+        {
+          "source_id": "bulk",
+          "start_line": 3,
+          "end_line": 3,
+          "quote": "Every task needs at least one separate polling call; each poll handles exactly one task."
+        },
+        {
+          "source_id": "bulk",
+          "start_line": 4,
+          "end_line": 4,
+          "quote": "The run permits at most 30 counted service calls."
+        }
+      ],
+      "interpreted_rules": [
+        {
+          "id": "submission_capacity",
+          "source": {
+            "source_id": "bulk",
+            "start_line": 2,
+            "end_line": 2,
+            "quote": "Each submission handles at most 10 nodes and returns exactly one task."
+          },
+          "priority": 100,
+          "kind": "requirement",
+          "when": {},
+          "skills": [],
+          "scope": {
+            "entity": "requested_nodes",
+            "temporal": "one_run"
+          },
+          "exceptions": []
+        },
+        {
+          "id": "mandatory_polling",
+          "source": {
+            "source_id": "bulk",
+            "start_line": 3,
+            "end_line": 3,
+            "quote": "Every task needs at least one separate polling call; each poll handles exactly one task."
+          },
+          "priority": 100,
+          "kind": "requirement",
+          "when": {},
+          "skills": [],
+          "scope": {
+            "entity": "requested_nodes",
+            "temporal": "one_run"
+          },
+          "exceptions": []
+        },
+        {
+          "id": "call_budget",
+          "source": {
+            "source_id": "bulk",
+            "start_line": 4,
+            "end_line": 4,
+            "quote": "The run permits at most 30 counted service calls."
+          },
+          "priority": 100,
+          "kind": "requirement",
+          "when": {},
+          "skills": [],
+          "scope": {
+            "entity": "requested_nodes",
+            "temporal": "one_run"
+          },
+          "exceptions": []
+        }
+      ],
+      "resolved_priorities": {
+        "submission_capacity": 100,
+        "mandatory_polling": 100,
+        "call_budget": 100
+      },
+      "triggering_context": {
+        "request_size": 184,
+        "service_call_budget": 30
+      },
+      "witness": {
+        "request_size": 184,
+        "minimum_submissions": 19,
+        "minimum_polls": 19,
+        "lower_bound_calls": 38,
+        "budget": 30,
+        "constraints": [
+          "10*s >= 184",
+          "p >= s",
+          "s+p <= 30"
+        ],
+        "domain": "s,p are nonnegative integers",
+        "minimal_core_constraints": [
+          "coverage",
+          "polling",
+          "budget"
+        ],
+        "minimality_checked": true,
+        "removal_witnesses": {
+          "coverage": {
+            "s": 0,
+            "p": 0,
+            "total_calls": 0
+          },
+          "polling": {
+            "s": 19,
+            "p": 0,
+            "total_calls": 19
+          },
+          "budget": {
+            "s": 19,
+            "p": 19,
+            "total_calls": 38
+          }
+        },
+        "pairwise_witnesses": {
+          "coverage+polling": {
+            "s": 19,
+            "p": 19,
+            "total_calls": 38
+          },
+          "coverage+budget": {
+            "s": 19,
+            "p": 0,
+            "total_calls": 19
+          },
+          "polling+budget": {
+            "s": 0,
+            "p": 0,
+            "total_calls": 0
+          }
+        },
+        "affected_advertised_range": [
+          151,
+          200
+        ]
+      },
+      "responsible_rule_set": [
+        "submission_capacity",
+        "mandatory_polling",
+        "call_budget"
+      ],
+      "assumptions": [
+        "Explicitly synthetic, author-reviewed contract; no natural-language extraction.",
+        "s and p are nonnegative integers.",
+        "Each submission returns exactly one new task and each task requires a distinct polling call.",
+        "No prior tasks, batching shortcuts, alternate updates or bulk polling are available.",
+        "This is a lower bound: schema retrieval, retries, failed requests and additional polls may consume more calls.",
+        "Runtime budget variants explicitly replace the budget requirement for controls."
+      ],
+      "repairs": [
+        {
+          "changes_requirement": "call_budget",
+          "proposal": "Increase the counted-call budget to at least 38; this only meets the lower bound."
+        },
+        {
+          "changes_requirement": "advertised_support",
+          "proposal": "Reduce the advertised maximum to at most 150 nodes for this budget."
+        },
+        {
+          "changes_requirement": "mandatory_polling",
+          "proposal": "Redesign polling to support multiple tasks per call, then replace and revalidate the model."
+        }
+      ],
+      "regression_case": {
+        "context": {
+          "request_size": 184,
+          "service_call_budget": 30
+        },
+        "expected_code": "UNREACHABLE_COMPLETION",
+        "expected_lower_bound_calls": 38
+      },
+      "provenance_limitations": []
+    }
+  ],
+  "resource_checks": [
+    {
+      "request_size": 150,
+      "status": "lower_bound_pass",
+      "witness": {
+        "request_size": 150,
+        "minimum_submissions": 15,
+        "minimum_polls": 15,
+        "lower_bound_calls": 30,
+        "budget": 30,
+        "constraints": [
+          "10*s >= 150",
+          "p >= s",
+          "s+p <= 30"
+        ],
+        "domain": "s,p are nonnegative integers"
+      },
+      "completion_guaranteed": false
+    },
+    {
+      "request_size": 151,
+      "status": "infeasible",
+      "witness": {
+        "request_size": 151,
+        "minimum_submissions": 16,
+        "minimum_polls": 16,
+        "lower_bound_calls": 32,
+        "budget": 30,
+        "constraints": [
+          "10*s >= 151",
+          "p >= s",
+          "s+p <= 30"
+        ],
+        "domain": "s,p are nonnegative integers",
+        "minimal_core_constraints": [
+          "coverage",
+          "polling",
+          "budget"
+        ],
+        "minimality_checked": true,
+        "removal_witnesses": {
+          "coverage": {
+            "s": 0,
+            "p": 0,
+            "total_calls": 0
+          },
+          "polling": {
+            "s": 16,
+            "p": 0,
+            "total_calls": 16
+          },
+          "budget": {
+            "s": 16,
+            "p": 16,
+            "total_calls": 32
+          }
+        },
+        "pairwise_witnesses": {
+          "coverage+polling": {
+            "s": 16,
+            "p": 16,
+            "total_calls": 32
+          },
+          "coverage+budget": {
+            "s": 16,
+            "p": 0,
+            "total_calls": 16
+          },
+          "polling+budget": {
+            "s": 0,
+            "p": 0,
+            "total_calls": 0
+          }
+        },
+        "affected_advertised_range": [
+          151,
+          200
+        ]
+      },
+      "completion_guaranteed": false
+    },
+    {
+      "request_size": 184,
+      "status": "infeasible",
+      "witness": {
+        "request_size": 184,
+        "minimum_submissions": 19,
+        "minimum_polls": 19,
+        "lower_bound_calls": 38,
+        "budget": 30,
+        "constraints": [
+          "10*s >= 184",
+          "p >= s",
+          "s+p <= 30"
+        ],
+        "domain": "s,p are nonnegative integers",
+        "minimal_core_constraints": [
+          "coverage",
+          "polling",
+          "budget"
+        ],
+        "minimality_checked": true,
+        "removal_witnesses": {
+          "coverage": {
+            "s": 0,
+            "p": 0,
+            "total_calls": 0
+          },
+          "polling": {
+            "s": 19,
+            "p": 0,
+            "total_calls": 19
+          },
+          "budget": {
+            "s": 19,
+            "p": 19,
+            "total_calls": 38
+          }
+        },
+        "pairwise_witnesses": {
+          "coverage+polling": {
+            "s": 19,
+            "p": 19,
+            "total_calls": 38
+          },
+          "coverage+budget": {
+            "s": 19,
+            "p": 0,
+            "total_calls": 19
+          },
+          "polling+budget": {
+            "s": 0,
+            "p": 0,
+            "total_calls": 0
+          }
+        },
+        "affected_advertised_range": [
+          151,
+          200
+        ]
+      },
+      "completion_guaranteed": false
+    }
+  ],
+  "coverage": {
+    "translation": "declared_only",
+    "context_count": 1,
+    "plan_bound": 20,
+    "universal_prompt_correctness_certified": false
+  },
+  "summary": {
+    "error": 2,
+    "warning": 0,
+    "info": 0
+  }
+}

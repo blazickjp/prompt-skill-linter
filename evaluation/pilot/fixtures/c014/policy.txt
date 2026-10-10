@@ -1,0 +1,2 @@
+Use only ASCII in this file, without exceptions.
+Include a non-ASCII character in this file.
