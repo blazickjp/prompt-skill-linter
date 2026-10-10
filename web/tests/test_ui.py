@@ -133,7 +133,9 @@ def run(browser_path=None):
                 page.locator('#accept-btn').click()
                 expect(page.locator('#intake-dialog')).not_to_be_visible()
                 expect(page.locator('#analyze-btn')).to_be_enabled()
+                expect(page.locator('#run-status')).to_contain_text('1 error-level finding')
                 expect(page.locator('#run-status')).to_contain_text('Incomplete source coverage')
+                expect(page.locator('#findings-list')).to_contain_text('Incomplete source coverage')
                 assert int(page.locator('#model-count').inner_text()) > 0
             check('review-first-extraction', extraction_review)
 

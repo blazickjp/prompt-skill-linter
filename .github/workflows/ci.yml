@@ -23,6 +23,7 @@ jobs:
       - run: python -m evaluation.run verify
       - run: python -m compileall -q prompt_skill_linter tests scripts
       - run: python scripts/reproduce.py
+      - run: node web/tests/test_state.js
       - run: |
           while IFS= read -r -d '' file; do
             node --check "$file" || exit 1
