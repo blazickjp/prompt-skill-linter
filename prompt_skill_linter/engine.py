@@ -688,6 +688,13 @@ def lint(contract, manifest, runtime, root, strict_providers=None):
         for diag in strict_result['diagnostics']:
             # Convert strict mode diagnostics to engine diagnostic format
             if diag['code'] == 'STRICT_MODE_INCOMPATIBLE':
+                witness = {
+                    'rule_id': diag['rule_id'],
+                    'schema_path': diag['schema_path'],
+                    'description': diag['description']
+                }
+                if 'enforcement' in diag:
+                    witness['enforcement'] = diag['enforcement']
                 diagnostics.append({
                     'code': diag['code'],
                     'class': diag['class'],
@@ -696,11 +703,7 @@ def lint(contract, manifest, runtime, root, strict_providers=None):
                     'interpreted_rules': [],
                     'resolved_priorities': {},
                     'triggering_context': {'tool': diag['tool'], 'provider': diag['provider']},
-                    'witness': {
-                        'rule_id': diag['rule_id'],
-                        'schema_path': diag['schema_path'],
-                        'description': diag['description']
-                    },
+                    'witness': witness,
                     'responsible_rule_set': [],
                     'assumptions': ['Offline check against official provider documentation; no API calls made.'],
                     'repairs': [{'changes_requirement': 'tool_schema', 'proposal': diag['fix']}],

@@ -59,57 +59,32 @@ class MutationTests(unittest.TestCase):
                 'required': ['x'],
                 'additionalProperties': False
             },
-            'unsupported_minLength': {
+            'unsupported_dependentRequired': {
                 'type': 'object',
-                'properties': {'name': {'type': 'string', 'minLength': 1}},
+                'properties': {'name': {'type': 'string'}, 'credit_card': {'type': 'string'}},
                 'required': ['name'],
+                'dependentRequired': {'credit_card': ['billing_address']},
                 'additionalProperties': False
             },
-            'unsupported_maxLength': {
+            'unsupported_dependentSchemas': {
                 'type': 'object',
-                'properties': {'name': {'type': 'string', 'maxLength': 100}},
+                'properties': {'name': {'type': 'string'}},
                 'required': ['name'],
-                'additionalProperties': False
-            },
-            'unsupported_minimum': {
-                'type': 'object',
-                'properties': {'age': {'type': 'integer', 'minimum': 0}},
-                'required': ['age'],
-                'additionalProperties': False
-            },
-            'unsupported_maximum': {
-                'type': 'object',
-                'properties': {'age': {'type': 'integer', 'maximum': 120}},
-                'required': ['age'],
-                'additionalProperties': False
-            },
-            'unsupported_multipleOf': {
-                'type': 'object',
-                'properties': {'score': {'type': 'number', 'multipleOf': 0.5}},
-                'required': ['score'],
-                'additionalProperties': False
-            },
-            'unsupported_exclusiveMinimum': {
-                'type': 'object',
-                'properties': {'value': {'type': 'number', 'exclusiveMinimum': 0}},
-                'required': ['value'],
-                'additionalProperties': False
-            },
-            'unsupported_exclusiveMaximum': {
-                'type': 'object',
-                'properties': {'value': {'type': 'number', 'exclusiveMaximum': 100}},
-                'required': ['value'],
-                'additionalProperties': False
-            },
-            'unsupported_oneOf': {
-                'type': 'object',
-                'properties': {
-                    'value': {
-                        'oneOf': [{'type': 'string'}, {'type': 'integer'}]
+                'dependentSchemas': {
+                    'credit_card': {
+                        'properties': {'billing_address': {'type': 'string'}},
+                        'required': ['billing_address']
                     }
                 },
-                'required': ['value'],
                 'additionalProperties': False
+            },
+            'unsupported_if_then_else': {
+                'type': 'object',
+                'properties': {'value': {'type': 'string'}},
+                'required': ['value'],
+                'additionalProperties': False,
+                'if': {'properties': {'value': {'const': 'special'}}},
+                'then': {'properties': {'extra': {'type': 'string'}}}
             },
             'unsupported_allOf': {
                 'type': 'object',
@@ -127,19 +102,6 @@ class MutationTests(unittest.TestCase):
                     'value': {'not': {'type': 'null'}}
                 },
                 'required': ['value'],
-                'additionalProperties': False
-            },
-            'unsupported_patternProperties': {
-                'type': 'object',
-                'patternProperties': {'^S_': {'type': 'string'}},
-                'additionalProperties': False
-            },
-            'unsupported_uniqueItems': {
-                'type': 'object',
-                'properties': {
-                    'items': {'type': 'array', 'items': {'type': 'string'}, 'uniqueItems': True}
-                },
-                'required': ['items'],
                 'additionalProperties': False
             },
             'root_anyOf_forbidden': {

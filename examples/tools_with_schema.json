@@ -1,25 +1,26 @@
 {
   "tools": {
-    "get_weather": {
-      "arguments": ["location", "units"],
-      "required": ["location"],
+    "get_temperature": {
+      "arguments": ["location", "value"],
+      "required": ["location", "value"],
       "schema": {
         "type": "object",
         "properties": {
           "location": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           },
-          "units": {
-            "type": "string",
-            "enum": ["celsius", "fahrenheit"]
+          "value": {
+            "type": "number",
+            "minimum": -273.15,
+            "maximum": 1000,
+            "description": "Temperature value"
           }
         },
-        "required": ["location"],
+        "required": ["location", "value"],
         "additionalProperties": false
       },
       "capabilities": [
-        "get current weather for a location"
+        "get temperature for a location with validation"
       ]
     },
     "submit": {

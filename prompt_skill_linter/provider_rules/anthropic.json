@@ -6,11 +6,14 @@
     "https://platform.claude.com/docs/en/agents-and-tools/tool-use/strict-tool-use",
     "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
   ],
+  "notes": "SDK helpers transform unsupported constraints by moving them to descriptions. API returns 400 error for unsupported keywords.",
   "rules": [
     {
       "id": "additionalProperties_required",
       "severity": "error",
       "description": "Objects must have additionalProperties set to false",
+      "doc_quote": "required and additionalProperties (must be set to false for objects)",
+      "enforcement": "API rejects schema with 400 error",
       "path_pattern": "$..*[?(@.type == 'object')]",
       "check": "additionalProperties must be false",
       "fix": "Set \"additionalProperties\": false on all object schemas"
@@ -18,63 +21,59 @@
     {
       "id": "unsupported_minimum",
       "severity": "error",
-      "description": "minimum is not supported in strict mode",
+      "description": "minimum is not supported (API rejects with 400 error)",
+      "doc_quote": "Not supported: Numerical constraints (such as minimum, maximum, multipleOf)",
+      "enforcement": "API rejects schema with 400 error; SDK helpers strip and move to description",
       "path_pattern": "$..*[?(@.minimum)]",
       "check": "minimum keyword not allowed",
-      "fix": "Remove minimum constraint (SDK helpers can move it to description)"
+      "fix": "Remove minimum constraint (SDK helpers can move it to description for client-side validation)"
     },
     {
       "id": "unsupported_maximum",
       "severity": "error",
-      "description": "maximum is not supported in strict mode",
+      "description": "maximum is not supported (API rejects with 400 error)",
+      "doc_quote": "Not supported: Numerical constraints (such as minimum, maximum, multipleOf)",
+      "enforcement": "API rejects schema with 400 error; SDK helpers strip and move to description",
       "path_pattern": "$..*[?(@.maximum)]",
       "check": "maximum keyword not allowed",
-      "fix": "Remove maximum constraint (SDK helpers can move it to description)"
-    },
-    {
-      "id": "unsupported_exclusiveMinimum",
-      "severity": "error",
-      "description": "exclusiveMinimum is not supported in strict mode",
-      "path_pattern": "$..*[?(@.exclusiveMinimum)]",
-      "check": "exclusiveMinimum keyword not allowed",
-      "fix": "Remove exclusiveMinimum constraint"
-    },
-    {
-      "id": "unsupported_exclusiveMaximum",
-      "severity": "error",
-      "description": "exclusiveMaximum is not supported in strict mode",
-      "path_pattern": "$..*[?(@.exclusiveMaximum)]",
-      "check": "exclusiveMaximum keyword not allowed",
-      "fix": "Remove exclusiveMaximum constraint"
+      "fix": "Remove maximum constraint (SDK helpers can move it to description for client-side validation)"
     },
     {
       "id": "unsupported_multipleOf",
       "severity": "error",
-      "description": "multipleOf is not supported in strict mode",
+      "description": "multipleOf is not supported (API rejects with 400 error)",
+      "doc_quote": "Not supported: Numerical constraints (such as minimum, maximum, multipleOf)",
+      "enforcement": "API rejects schema with 400 error; SDK helpers strip and move to description",
       "path_pattern": "$..*[?(@.multipleOf)]",
       "check": "multipleOf keyword not allowed",
-      "fix": "Remove multipleOf constraint"
+      "fix": "Remove multipleOf constraint (SDK helpers can move it to description for client-side validation)"
     },
     {
       "id": "unsupported_minLength",
       "severity": "error",
-      "description": "minLength is not supported in strict mode",
+      "description": "minLength is not supported (API rejects with 400 error)",
+      "doc_quote": "Not supported: String constraints (minLength, maxLength)",
+      "enforcement": "API rejects schema with 400 error; SDK helpers strip and move to description",
       "path_pattern": "$..*[?(@.type == 'string' && @.minLength)]",
       "check": "minLength keyword not allowed on strings",
-      "fix": "Remove minLength constraint (SDK helpers can move it to description)"
+      "fix": "Remove minLength constraint (SDK helpers can move it to description for client-side validation)"
     },
     {
       "id": "unsupported_maxLength",
       "severity": "error",
-      "description": "maxLength is not supported in strict mode",
+      "description": "maxLength is not supported (API rejects with 400 error)",
+      "doc_quote": "Not supported: String constraints (minLength, maxLength)",
+      "enforcement": "API rejects schema with 400 error; SDK helpers strip and move to description",
       "path_pattern": "$..*[?(@.type == 'string' && @.maxLength)]",
       "check": "maxLength keyword not allowed on strings",
-      "fix": "Remove maxLength constraint (SDK helpers can move it to description)"
+      "fix": "Remove maxLength constraint (SDK helpers can move it to description for client-side validation)"
     },
     {
       "id": "unsupported_minItems_beyond_1",
       "severity": "error",
-      "description": "Array minItems only supports values 0 and 1",
+      "description": "Array minItems only supports values 0 and 1 (API rejects with 400 error)",
+      "doc_quote": "Array minItems (only values 0 and 1 supported) [...] Array constraints beyond minItems of 0 or 1",
+      "enforcement": "API rejects schema with 400 error if minItems > 1",
       "path_pattern": "$..*[?(@.type == 'array' && @.minItems)]",
       "check": "minItems must be 0 or 1",
       "fix": "Set minItems to 0 or 1, or remove it"
@@ -82,10 +81,12 @@
     {
       "id": "unsupported_recursive_schema",
       "severity": "error",
-      "description": "Recursive schemas are not supported",
+      "description": "Recursive schemas are not supported (API rejects with 400 error)",
+      "doc_quote": "Not supported: Recursive schemas",
+      "enforcement": "API rejects schema with 400 error",
       "path_pattern": "$",
       "check": "No recursive $ref cycles allowed",
-      "fix": "Remove recursive references"
+      "fix": "Remove recursive references or flatten the schema"
     }
   ]
 }

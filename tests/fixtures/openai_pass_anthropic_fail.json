@@ -1,21 +1,18 @@
 {
   "tools": {
-    "get_weather": {
-      "arguments": ["location", "units"],
-      "required": ["location", "units"],
+    "get_temperature": {
+      "arguments": ["value"],
+      "required": ["value"],
       "schema": {
         "type": "object",
         "properties": {
-          "location": {
-            "type": "string",
-            "minLength": 1
-          },
-          "units": {
-            "type": "string",
-            "enum": ["celsius", "fahrenheit"]
+          "value": {
+            "type": "number",
+            "minimum": -273.15,
+            "maximum": 1000
           }
         },
-        "required": ["location", "units"],
+        "required": ["value"],
         "additionalProperties": false
       }
     }

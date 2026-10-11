@@ -1,23 +1,23 @@
 {
   "tools": {
-    "search": {
-      "arguments": ["query", "filters"],
-      "required": ["query"],
+    "conditional_update": {
+      "arguments": ["data"],
+      "required": ["data"],
       "schema": {
         "type": "object",
         "properties": {
-          "query": {
+          "data": {
             "type": "string"
-          },
-          "filters": {
-            "oneOf": [
-              {"type": "string"},
-              {"type": "object", "properties": {"category": {"type": "string"}}, "additionalProperties": false}
-            ]
           }
         },
-        "required": ["query"],
-        "additionalProperties": false
+        "required": ["data"],
+        "additionalProperties": false,
+        "if": {
+          "properties": {"data": {"const": "special"}}
+        },
+        "then": {
+          "properties": {"extra": {"type": "string"}}
+        }
       }
     }
   }

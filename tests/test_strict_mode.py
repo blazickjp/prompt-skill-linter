@@ -121,36 +121,46 @@ class StrictModeTests(unittest.TestCase):
         codes = [v['rule_id'] for v in violations]
         self.assertNotIn('all_properties_required', codes)
     
-    def test_openai_unsupported_minLength(self):
-        """OpenAI rejects minLength on strings."""
+    def test_openai_unsupported_dependentRequired(self):
+        """OpenAI rejects dependentRequired."""
         schema = {
             "type": "object",
             "properties": {
-                "name": {"type": "string", "minLength": 1}
+                "name": {"type": "string"},
+                "credit_card": {"type": "string"}
             },
             "required": ["name"],
+            "dependentRequired": {
+                "credit_card": ["billing_address"]
+            },
             "additionalProperties": False
         }
         violations = check_schema_against_provider(schema, 'openai')
         codes = [v['rule_id'] for v in violations]
-        self.assertIn('unsupported_minLength', codes)
+        self.assertIn('unsupported_dependentRequired', codes)
     
-    def test_openai_unsupported_maxLength(self):
-        """OpenAI rejects maxLength on strings."""
+    def test_openai_unsupported_dependentSchemas(self):
+        """OpenAI rejects dependentSchemas."""
         schema = {
             "type": "object",
             "properties": {
-                "name": {"type": "string", "maxLength": 100}
+                "name": {"type": "string"}
             },
             "required": ["name"],
+            "dependentSchemas": {
+                "credit_card": {
+                    "properties": {"billing_address": {"type": "string"}},
+                    "required": ["billing_address"]
+                }
+            },
             "additionalProperties": False
         }
         violations = check_schema_against_provider(schema, 'openai')
         codes = [v['rule_id'] for v in violations]
-        self.assertIn('unsupported_maxLength', codes)
+        self.assertIn('unsupported_dependentSchemas', codes)
     
-    def test_openai_unsupported_numeric_constraints(self):
-        """OpenAI rejects numeric constraints (minimum, maximum, multipleOf)."""
+    def test_openai_supports_numeric_constraints(self):
+        """OpenAI base models SUPPORT numeric constraints."""
         schema = {
             "type": "object",
             "properties": {
@@ -162,28 +172,26 @@ class StrictModeTests(unittest.TestCase):
         }
         violations = check_schema_against_provider(schema, 'openai')
         codes = [v['rule_id'] for v in violations]
-        self.assertIn('unsupported_minimum', codes)
-        self.assertIn('unsupported_maximum', codes)
-        self.assertIn('unsupported_multipleOf', codes)
+        # These should NOT be violations for base models
+        self.assertNotIn('unsupported_minimum', codes)
+        self.assertNotIn('unsupported_maximum', codes)
+        self.assertNotIn('unsupported_multipleOf', codes)
     
-    def test_openai_unsupported_oneOf(self):
-        """OpenAI rejects oneOf."""
+    def test_openai_unsupported_if_then_else(self):
+        """OpenAI rejects if/then/else."""
         schema = {
             "type": "object",
             "properties": {
-                "value": {
-                    "oneOf": [
-                        {"type": "string"},
-                        {"type": "integer"}
-                    ]
-                }
+                "value": {"type": "string"}
             },
             "required": ["value"],
-            "additionalProperties": False
+            "additionalProperties": False,
+            "if": {"properties": {"value": {"const": "special"}}},
+            "then": {"properties": {"extra": {"type": "string"}}}
         }
         violations = check_schema_against_provider(schema, 'openai')
         codes = [v['rule_id'] for v in violations]
-        self.assertIn('unsupported_oneOf', codes)
+        self.assertIn('unsupported_if_then_else', codes)
     
     def test_openai_root_anyOf_forbidden(self):
         """OpenAI forbids anyOf at root level."""
@@ -273,22 +281,22 @@ class StrictModeTests(unittest.TestCase):
         self.assertIn('unsupported_recursive_schema', codes)
     
     def test_check_tool_schemas_fixture_openai_pass_anthropic_fail(self):
-        """Fixture with minLength passes OpenAI but fails Anthropic."""
+        """Fixture with numeric constraints passes OpenAI but fails Anthropic."""
         manifest = json.loads((ROOT / 'tests/fixtures/openai_pass_anthropic_fail.json').read_text())
         result = check_tool_schemas(manifest, ['openai', 'anthropic'])
         
         compat = result['provider_compatibility']
-        self.assertFalse(compat['get_weather']['openai'])  # minLength unsupported by OpenAI
-        self.assertFalse(compat['get_weather']['anthropic'])  # minLength unsupported by Anthropic
+        self.assertTrue(compat['get_temperature']['openai'])  # minimum/maximum supported
+        self.assertFalse(compat['get_temperature']['anthropic'])  # minimum/maximum unsupported
     
     def test_check_tool_schemas_fixture_anthropic_pass_openai_fail(self):
-        """Fixture with oneOf passes Anthropic but fails OpenAI."""
+        """Fixture with if/then/else passes Anthropic but fails OpenAI."""
         manifest = json.loads((ROOT / 'tests/fixtures/anthropic_pass_openai_fail.json').read_text())
         result = check_tool_schemas(manifest, ['openai', 'anthropic'])
         
         compat = result['provider_compatibility']
-        self.assertFalse(compat['search']['openai'])  # oneOf unsupported
-        self.assertTrue(compat['search']['anthropic'])  # oneOf supported
+        self.assertFalse(compat['conditional_update']['openai'])  # if/then/else unsupported
+        self.assertTrue(compat['conditional_update']['anthropic'])  # if/then/else not mentioned in limitations
     
     def test_check_tool_schemas_fixture_both_pass(self):
         """Simple fixture passes both providers."""

@@ -119,16 +119,20 @@ Input manifest (`examples/tools_with_schema.json`):
 ```json
 {
   "tools": {
-    "get_weather": {
-      "arguments": ["location", "units"],
-      "required": ["location"],
+    "get_temperature": {
+      "arguments": ["location", "value"],
+      "required": ["location", "value"],
       "schema": {
         "type": "object",
         "properties": {
-          "location": {"type": "string", "minLength": 1},
-          "units": {"type": "string", "enum": ["celsius", "fahrenheit"]}
+          "location": {"type": "string"},
+          "value": {
+            "type": "number",
+            "minimum": -273.15,
+            "maximum": 1000
+          }
         },
-        "required": ["location"],
+        "required": ["location", "value"],
         "additionalProperties": false
       }
     }
@@ -148,15 +152,21 @@ Output excerpt:
 
 ```
 [exact/error] STRICT_MODE_INCOMPATIBLE
-  Context: {"provider": "openai", "tool": "get_weather"}
-  Witness: {"description": "All properties in an object must be listed in required array (missing: units)", "rule_id": "all_properties_required", "schema_path": "$.properties"}
-  Repair (changes tool_schema): Add all property keys to the "required" array
+  Context: {"provider": "anthropic", "tool": "get_temperature"}
+  Witness: {"description": "minimum is not supported (API rejects with 400 error)", "enforcement": "API rejects schema with 400 error; SDK helpers strip and move to description", "rule_id": "unsupported_minimum", "schema_path": "$.properties.value"}
+  Repair (changes tool_schema): Remove minimum constraint (SDK helpers can move it to description for client-side validation)
 
 [exact/error] STRICT_MODE_INCOMPATIBLE
-  Context: {"provider": "openai", "tool": "get_weather"}
-  Witness: {"description": "minLength is not supported in strict mode", "rule_id": "unsupported_minLength", "schema_path": "$.properties.location"}
-  Repair (changes tool_schema): Remove minLength constraint
+  Context: {"provider": "anthropic", "tool": "get_temperature"}
+  Witness: {"description": "maximum is not supported (API rejects with 400 error)", "enforcement": "API rejects schema with 400 error; SDK helpers strip and move to description", "rule_id": "unsupported_maximum", "schema_path": "$.properties.value"}
+  Repair (changes tool_schema): Remove maximum constraint (SDK helpers can move it to description for client-side validation)
+
+[model_based/warning] PROVIDER_DIVERGENCE
+  Context: {"tool": "get_temperature"}
+  Witness: {"compatible_with": ["openai"], "incompatible_with": ["anthropic"], "description": "Tool schema passes strict mode for openai but fails for anthropic"}
 ```
+
+This demonstrates a real divergence: OpenAI's base models enforce `minimum` and `maximum` constraints, while Anthropic's API rejects them (returns 400 error). The Anthropic SDK can strip these constraints and move them to field descriptions for client-side validation only.
 
 Provider rules are stored in `prompt_skill_linter/provider_rules/{openai,anthropic}.json` with doc URLs and check dates.
 

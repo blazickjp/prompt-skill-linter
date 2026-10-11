@@ -151,13 +151,9 @@ def check_schema_against_provider(schema: dict, provider: str, tool_name: str = 
                     'fix': rule['fix']
                 })
         
-        elif rule_id.startswith('unsupported_'):
-            keyword = rule_id.replace('unsupported_', '')
+        elif rule_id == 'unsupported_if_then_else':
             for path, node in nodes:
-                if not isinstance(node, dict):
-                    continue
-                
-                if keyword in node:
+                if isinstance(node, dict) and ('if' in node or 'then' in node or 'else' in node):
                     violations.append({
                         'rule_id': rule_id,
                         'provider': provider,
@@ -165,6 +161,24 @@ def check_schema_against_provider(schema: dict, provider: str, tool_name: str = 
                         'description': rule['description'],
                         'fix': rule['fix']
                     })
+        
+        elif rule_id.startswith('unsupported_'):
+            keyword = rule_id.replace('unsupported_', '')
+            for path, node in nodes:
+                if not isinstance(node, dict):
+                    continue
+                
+                if keyword in node:
+                    violation = {
+                        'rule_id': rule_id,
+                        'provider': provider,
+                        'path': path,
+                        'description': rule['description'],
+                        'fix': rule['fix']
+                    }
+                    if 'enforcement' in rule:
+                        violation['enforcement'] = rule['enforcement']
+                    violations.append(violation)
     
     return violations
 
