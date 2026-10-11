@@ -1,0 +1,84 @@
+{
+  "provider": "openai",
+  "feature": "Structured Outputs / Function Calling Strict Mode (base models)",
+  "checked_date": "2026-10-11",
+  "documentation_urls": [
+    "https://developers.openai.com/api/docs/guides/function-calling",
+    "https://developers.openai.com/api/docs/guides/structured-outputs"
+  ],
+  "notes": "These rules apply to base models. Fine-tuned models have additional restrictions.",
+  "rules": [
+    {
+      "id": "additionalProperties_required",
+      "severity": "error",
+      "description": "Every object must have additionalProperties set to false",
+      "doc_quote": "All fields or function parameters must be specified as required. [...] additionalProperties: false",
+      "path_pattern": "$..*[?(@.type == 'object')]",
+      "check": "additionalProperties must be false",
+      "fix": "Set \"additionalProperties\": false on all object schemas"
+    },
+    {
+      "id": "all_properties_required",
+      "severity": "error",
+      "description": "All properties in an object must be listed in required array",
+      "doc_quote": "All fields must be required: To use Structured Outputs, all fields or function parameters must be specified as required.",
+      "path_pattern": "$..*[?(@.type == 'object' && @.properties)]",
+      "check": "required array must contain all keys from properties",
+      "fix": "Add all property keys to the \"required\" array, or use union with null to emulate optional"
+    },
+    {
+      "id": "unsupported_allOf",
+      "severity": "error",
+      "description": "allOf is not supported in strict mode",
+      "doc_quote": "Some type-specific keywords are not yet supported: Composition: allOf, not, dependentRequired, dependentSchemas, if, then, else",
+      "path_pattern": "$..*[?(@.allOf)]",
+      "check": "allOf keyword not allowed",
+      "fix": "Remove allOf or merge schemas manually"
+    },
+    {
+      "id": "unsupported_not",
+      "severity": "error",
+      "description": "not is not supported in strict mode",
+      "doc_quote": "Some type-specific keywords are not yet supported: Composition: allOf, not, dependentRequired, dependentSchemas, if, then, else",
+      "path_pattern": "$..*[?(@.not)]",
+      "check": "not keyword not allowed",
+      "fix": "Remove not constraint"
+    },
+    {
+      "id": "unsupported_dependentRequired",
+      "severity": "error",
+      "description": "dependentRequired is not supported in strict mode",
+      "doc_quote": "Some type-specific keywords are not yet supported: Composition: allOf, not, dependentRequired, dependentSchemas, if, then, else",
+      "path_pattern": "$..*[?(@.dependentRequired)]",
+      "check": "dependentRequired keyword not allowed",
+      "fix": "Remove dependentRequired or restructure schema"
+    },
+    {
+      "id": "unsupported_dependentSchemas",
+      "severity": "error",
+      "description": "dependentSchemas is not supported in strict mode",
+      "doc_quote": "Some type-specific keywords are not yet supported: Composition: allOf, not, dependentRequired, dependentSchemas, if, then, else",
+      "path_pattern": "$..*[?(@.dependentSchemas)]",
+      "check": "dependentSchemas keyword not allowed",
+      "fix": "Remove dependentSchemas or restructure schema"
+    },
+    {
+      "id": "unsupported_if_then_else",
+      "severity": "error",
+      "description": "if/then/else conditional schemas are not supported in strict mode",
+      "doc_quote": "Some type-specific keywords are not yet supported: Composition: allOf, not, dependentRequired, dependentSchemas, if, then, else",
+      "path_pattern": "$..*[?(@.if || @.then || @.else)]",
+      "check": "if/then/else keywords not allowed",
+      "fix": "Remove if/then/else conditional logic"
+    },
+    {
+      "id": "root_anyOf_forbidden",
+      "severity": "error",
+      "description": "anyOf cannot appear at the root schema",
+      "doc_quote": "Root objects must not be anyOf and must be an object: the root level object of a schema must be an object, and not use anyOf.",
+      "path_pattern": "$[?(@.anyOf)]",
+      "check": "anyOf at root level not allowed",
+      "fix": "Wrap anyOf in an object schema"
+    }
+  ]
+}

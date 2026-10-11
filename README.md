@@ -98,6 +98,78 @@ post-audit trace regressions. Both native arms answered 9/13 cases; the conserva
 checker answered 4/13 and kept unsupported-source warnings. No upstream source
 contradiction or advantage over model review was established.
 
+## Cross-provider strict mode validation (prototype)
+
+Tool argument schemas can be checked for compatibility with OpenAI Structured Outputs and Anthropic strict tool use. All checks run offline using rules grounded in official provider documentation; no API calls are made.
+
+```sh
+python3 -m prompt_skill_linter examples/bulk.contract.json \
+  --tools examples/tools_with_schema.json --runtime examples/runtime.json \
+  --strict-mode openai,anthropic --format json
+```
+
+Use `--strict-mode all` to check all providers, or specify a comma-separated list like `openai,anthropic`. Omit the flag to skip strict mode checks.
+
+The checker flags schemas that won't be accepted or enforced under each provider's strict mode, and warns when providers diverge. For example, OpenAI rejects `oneOf` and requires all properties to be in the `required` array, while Anthropic rejects `minimum`/`maximum` and recursive schemas. Each diagnostic points to the schema path and suggests a fix.
+
+### Worked example
+
+Input manifest (`examples/tools_with_schema.json`):
+
+```json
+{
+  "tools": {
+    "get_temperature": {
+      "arguments": ["location", "value"],
+      "required": ["location", "value"],
+      "schema": {
+        "type": "object",
+        "properties": {
+          "location": {"type": "string"},
+          "value": {
+            "type": "number",
+            "minimum": -273.15,
+            "maximum": 1000
+          }
+        },
+        "required": ["location", "value"],
+        "additionalProperties": false
+      }
+    }
+  }
+}
+```
+
+Command:
+
+```sh
+python3 -m prompt_skill_linter examples/bulk.contract.json \
+  --tools examples/tools_with_schema.json --runtime examples/runtime.json \
+  --strict-mode all
+```
+
+Output excerpt:
+
+```
+[exact/error] STRICT_MODE_INCOMPATIBLE
+  Context: {"provider": "anthropic", "tool": "get_temperature"}
+  Witness: {"description": "minimum is not supported (API rejects with 400 error)", "enforcement": "API rejects schema with 400 error; SDK helpers strip and move to description", "rule_id": "unsupported_minimum", "schema_path": "$.properties.value"}
+  Repair (changes tool_schema): Remove minimum constraint (SDK helpers can move it to description for client-side validation)
+
+[exact/error] STRICT_MODE_INCOMPATIBLE
+  Context: {"provider": "anthropic", "tool": "get_temperature"}
+  Witness: {"description": "maximum is not supported (API rejects with 400 error)", "enforcement": "API rejects schema with 400 error; SDK helpers strip and move to description", "rule_id": "unsupported_maximum", "schema_path": "$.properties.value"}
+  Repair (changes tool_schema): Remove maximum constraint (SDK helpers can move it to description for client-side validation)
+
+[model_based/warning] PROVIDER_DIVERGENCE
+  Context: {"tool": "get_temperature"}
+  Witness: {"compatible_with": ["openai"], "incompatible_with": ["anthropic"], "description": "Tool schema passes strict mode for openai but fails for anthropic"}
+```
+
+This demonstrates a real divergence: OpenAI's base models enforce `minimum` and `maximum` constraints, while Anthropic's API rejects them (returns 400 error). The Anthropic SDK can strip these constraints and move them to field descriptions for client-side validation only.
+
+Provider rules are stored in `prompt_skill_linter/provider_rules/{openai,anthropic}.json` with doc URLs and check dates.
+
 ## Intentional limits
 
 No validated arbitrary-English extraction, general SMT solver, unconstrained temporal logic, arbitrary conditional expressions, retry/failure model, dynamic skill discovery, argument type checker, automatic policy repair, automatic specificity inference, or inferred fallback compliance. Explicit CNF and finite-state models are bounded and isolated by documented fragment guards. Dependency diagnostics currently point to JSON declarations rather than a source-prose span and explicitly disclose that provenance gap. Read `docs/contracts.md` before interpreting a result.
