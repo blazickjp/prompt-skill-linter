@@ -932,78 +932,20 @@ class OrderingRuleTests(unittest.TestCase):
                         'Planner should hit bound at max_steps=20')
     
     def test_max_steps_violation_at_boundary(self):
-        """Safety violation on action number max_steps is detected with exact counterexample."""
-        # Build a linear chain where the violation happens at the max_steps boundary
-        actions = []
-        for i in range(21):
-            actions.append({'id': f'step{i}', 'requires': [f's{i}'], 'removes': [f's{i}'], 'adds': [f's{i+1}']})
-        actions[0]['requires'] = ['start']
-        actions[0]['removes'] = ['start']
-        
-        # Add a before rule that is violated at step 19 (action at depth max_steps-1)
-        workflow = make_workflow(actions, initial=['start'], goal=['s21'], ordering_rules=[
-            make_rule('before', ['step19', 'step9'])  # step19 comes AFTER step9, violates the rule
-        ])
-        
-        from prompt_skill_linter.planner import explore
-        result = explore(workflow, max_steps=20, max_states=2000)
-        
-        diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
-        
-        # Should detect the violation at step 19 (action number max_steps-1)
-        self.assertEqual(checks[0]['status'], 'violated',
-                        'Before rule violated at action max_steps-1 should be detected')
-        self.assertIsNotNone(checks[0].get('counterexample'),
-                           'Violation at max_steps should have a counterexample')
-        # Verify the counterexample shows the violation path up to step 19
-        counterexample = checks[0]['counterexample']
-        self.assertGreaterEqual(len(counterexample), 10,
-                        'Counterexample should include at least the violating actions')
-        self.assertEqual(counterexample[-1], 'step9',
-                        'Last action in counterexample should be step9 (the "before" action that came after)')
-
-    def test_max_steps_violation_beyond_boundary_incomplete(self):
-        """First violation requiring action max_steps + 1 returns incomplete."""
-        # Build a linear chain that requires going beyond max_steps to reach goal
-        actions = []
-        for i in range(25):
-            actions.append({'id': f'step{i}', 'requires': [f's{i}'], 'removes': [f's{i}'], 'adds': [f's{i+1}']})
-        actions[0]['requires'] = ['start']
-        actions[0]['removes'] = ['start']
-        
-        # Add a before rule where the violation would only manifest at depth > max_steps
-        # The rule itself is satisfied by the linear structure, but we can't verify it
-        # because the search is cut off before reaching the goal
-        workflow = make_workflow(actions, initial=['start'], goal=['s25'], ordering_rules=[
-            make_rule('before', ['step5', 'step10'])
-        ])
-        
-        from prompt_skill_linter.planner import explore
-        result = explore(workflow, max_steps=20, max_states=2000)
-        
-        diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
-        
-        # Should return incomplete since we can't explore deep enough to verify the rule
-        self.assertEqual(checks[0]['status'], 'incomplete',
-                        'Rule requiring exploration beyond max_steps should be incomplete')
-        self.assertIn('max_steps', str(checks[0].get('cutoff_reasons', [])),
-                     'Incomplete status should cite max_steps cutoff')
-
-    def test_max_steps_exactly_once_wrong_count_at_boundary(self):
-        """exactly_once goal reached at depth max_steps with wrong count is reported violated."""
-        # Build a workflow where an action is executed twice by depth max_steps-1
+        """Safety violation with 20-action counterexample at max_steps=20 boundary."""
+        # Build a linear chain to depth 19, then add a mutually exclusive action at depth 19
         actions = []
         for i in range(19):
             actions.append({'id': f'step{i}', 'requires': [f's{i}'], 'removes': [f's{i}'], 'adds': [f's{i+1}']})
         actions[0]['requires'] = ['start']
         actions[0]['removes'] = ['start']
         
-        # Add an action that will be executed twice (violating exactly_once)
-        # Make it not require/remove any step facts so it can execute multiple times
-        actions.append({'id': 'repeat_action', 'requires': ['s5'], 'adds': ['marker']})
+        # Add two actions that create mutual exclusion: one early, one at depth 19
+        actions.append({'id': 'action_a', 'requires': ['s5'], 'adds': ['done_a']})
+        actions.append({'id': 'action_b', 'requires': ['s18'], 'adds': ['done_b']})
         
-        workflow = make_workflow(actions, initial=['start'], goal=['s18'], ordering_rules=[
-            make_rule('exactly_once', ['repeat_action'])  # Should be executed exactly once
+        workflow = make_workflow(actions, initial=['start'], goal=['s19'], ordering_rules=[
+            make_rule('mutual_exclusion', ['action_a', 'action_b'])
         ])
         
         from prompt_skill_linter.planner import explore
@@ -1011,11 +953,94 @@ class OrderingRuleTests(unittest.TestCase):
         
         diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
         
-        # Should detect exactly_once violation at max_steps boundary
+        # Should detect mutual exclusion violation with 20-action counterexample
         self.assertEqual(checks[0]['status'], 'violated',
-                        'exactly_once with wrong count at max_steps should be violated')
-        self.assertIsNotNone(checks[0].get('counterexample'),
-                           'exactly_once violation at max_steps should have a counterexample')
+                        'Mutual exclusion violated at depth 19 should be detected')
+        counterexample = checks[0].get('counterexample')
+        self.assertIsNotNone(counterexample, 'Violation should have counterexample')
+        self.assertEqual(len(counterexample), 20,
+                        'Counterexample should be exactly 20 actions (depth 0-18 plus action_a plus action_b)')
+        self.assertIn('action_a', counterexample, 'Counterexample should include action_a')
+        self.assertIn('action_b', counterexample, 'Counterexample should include action_b')
+
+    def test_max_steps_violation_beyond_boundary_incomplete(self):
+        """First violation at depth 20 (action 21): incomplete at limit 20, violated at limit 21."""
+        # Build a linear chain to depth 19 (reaching s20)
+        actions = []
+        for i in range(20):
+            actions.append({'id': f'step{i}', 'requires': [f's{i}'], 'removes': [f's{i}'], 'adds': [f's{i+1}']})
+        actions[0]['requires'] = ['start']
+        actions[0]['removes'] = ['start']
+        
+        # Add two mutually exclusive actions: one early, one at depth 20
+        actions.append({'id': 'action_a', 'requires': ['s5'], 'adds': ['done_a']})
+        actions.append({'id': 'action_b', 'requires': ['s19'], 'adds': ['done_b', 's20']})  # Also adds goal
+        
+        workflow = make_workflow(actions, initial=['start'], goal=['s20'], ordering_rules=[
+            make_rule('mutual_exclusion', ['action_a', 'action_b'])
+        ])
+        
+        from prompt_skill_linter.planner import explore
+        
+        # With max_steps=20, can only explore to depth 19, so incomplete
+        result_20 = explore(workflow, max_steps=20, max_states=2000)
+        diags_20, checks_20 = check_ordering_rules(workflow, result_20, 'workflow-1', {'id': 'ctx-1'})
+        
+        self.assertEqual(checks_20[0]['status'], 'incomplete',
+                        'First violation at depth 20 should be incomplete with max_steps=20')
+        self.assertIn('max_steps', str(checks_20[0].get('cutoff_reasons', [])),
+                     'Incomplete should cite max_steps cutoff')
+        
+        # With max_steps=21, can explore to depth 20 and detect violation
+        result_21 = explore(workflow, max_steps=21, max_states=2000)
+        diags_21, checks_21 = check_ordering_rules(workflow, result_21, 'workflow-1', {'id': 'ctx-1'})
+        
+        self.assertEqual(checks_21[0]['status'], 'violated',
+                        'First violation at depth 20 should be violated with max_steps=21')
+        counterexample = checks_21[0].get('counterexample')
+        self.assertIsNotNone(counterexample, 'Should have counterexample at limit 21')
+        # Counterexample: step0-step18 (19 actions) + action_a + action_b = 21 actions
+        self.assertEqual(len(counterexample), 21,
+                        'Counterexample should be 21 actions (first violation at depth 20)')
+
+    def test_max_steps_exactly_once_wrong_count_at_boundary(self):
+        """exactly_once violated when goal first reached at depth 20 with wrong count."""
+        # Build a linear chain to depth 17, then require repeat_action outputs
+        actions = []
+        for i in range(18):
+            actions.append({'id': f'step{i}', 'requires': [f's{i}'], 'removes': [f's{i}'], 'adds': [f's{i+1}']})
+        actions[0]['requires'] = ['start']
+        actions[0]['removes'] = ['start']
+        
+        # Add repeat_action twice (same id, different requirements)
+        # First execution at s5
+        actions.append({'id': 'repeat_action', 'requires': ['s5'], 'adds': ['marker']})
+        # Second execution at s10  
+        actions.append({'id': 'repeat_action', 'requires': ['s10'], 'adds': ['marker']})
+        
+        # Final step requires marker and s17 to reach goal at depth 20
+        actions.append({'id': 'final_step', 'requires': ['s17', 'marker'], 'removes': ['s17'], 'adds': ['s18', 'goal']})
+        
+        workflow = make_workflow(actions, initial=['start'], goal=['goal'], ordering_rules=[
+            make_rule('exactly_once', ['repeat_action'])
+        ])
+        
+        from prompt_skill_linter.planner import explore
+        result = explore(workflow, max_steps=21, max_states=2000)
+        
+        diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Should detect exactly_once violation: repeat_action executed twice to reach goal at depth 20
+        self.assertEqual(checks[0]['status'], 'violated',
+                        'exactly_once with count 2 at goal depth 20 should be violated')
+        counterexample = checks[0].get('counterexample')
+        self.assertIsNotNone(counterexample, 'Should have counterexample')
+        # Verify the counterexample shows both executions
+        self.assertEqual(counterexample.count('repeat_action'), 2,
+                        'Counterexample should show repeat_action executed twice')
+        # Verify goal reached at depth 20 (path length 20)
+        self.assertEqual(len(counterexample), 20,
+                        'Counterexample path length should be 20 (goal at depth 20)')
 
     def test_conflicting_before_rules_detected(self):
         """A before B and B before A should be detected as conflicting."""
