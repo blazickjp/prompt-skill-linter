@@ -836,40 +836,45 @@ class OrderingRuleTests(unittest.TestCase):
     
     def test_planner_nonexhaustive_incomplete(self):
         """Planner's search_exhaustive=False must propagate to INCOMPLETE."""
-        # Safety property: before rule
-        # Partial graph shows only safe prefix, but planner truncated before exploring violation
+        # Partial graph shows valid path with no violation visible
+        # But planner truncated - violation may exist in unexplored states
         actions = [
-            {'id': 'safe_start', 'requires': ['start'], 'adds': ['s1']},
-            {'id': 'violation_beyond', 'requires': ['s1'], 'adds': ['bad']},  # Not in partial graph!
+            {'id': 'step1', 'requires': ['start'], 'adds': ['s1']},
+            {'id': 'step2', 'requires': ['s1'], 'adds': ['complete']},
         ]
-        workflow = make_workflow(actions, ordering_rules=[
-            make_rule('before', ['never_seen', 'violation_beyond'])  # Violation not visible in partial graph
+        workflow = make_workflow(actions, initial=['start'], goal=['complete'], ordering_rules=[
+            make_rule('before', ['step1', 'step2'])  # Satisfied in partial graph
         ])
         
-        # Partial graph: planner stopped early, only shows safe_start edge
+        # Partial graph: both actions reachable, rule satisfied
         states = [
-            {'id': 0, 'facts': ['start'], 'depth': 0, 'goal': True},
-            {'id': 1, 'facts': ['s1', 'start'], 'depth': 1, 'goal': True}
+            {'id': 0, 'facts': ['start'], 'depth': 0, 'goal': False},
+            {'id': 1, 'facts': ['s1', 'start'], 'depth': 1, 'goal': False},
+            {'id': 2, 'facts': ['complete', 's1', 'start'], 'depth': 2, 'goal': True}
         ]
-        edges = [{'from': 0, 'to': 1, 'action': 'safe_start'}]
+        edges = [
+            {'from': 0, 'to': 1, 'action': 'step1'},
+            {'from': 1, 'to': 2, 'action': 'step2'}
+        ]
         
-        # CRITICAL: search_exhaustive=False but bounds are high (no product BFS bounds hit)
+        # CRITICAL: search_exhaustive=False but no product bounds hit
+        # Without inheriting flag, would return 'satisfied'
+        # With flag, returns 'incomplete'
         explored = {'status': 'unknown', 'search_exhaustive': False,
-                   'visited_states': 2,
+                   'visited_states': 3,
                    'bounds': {'max_steps': 100, 'max_states': 1000},
                    'graph': {'states': states, 'edges': edges}}
         
         diags, checks = check_ordering_rules(workflow, explored, 'workflow-1', {'id': 'ctx-1'})
         
-        # Must be incomplete due to planner truncation, not satisfied
         self.assertEqual(checks[0]['status'], 'incomplete',
-                        'Planner non-exhaustive search must propagate to INCOMPLETE')
+                        'Planner non-exhaustive must cause INCOMPLETE, not satisfied')
         self.assertIn('workflow_search_incomplete', str(checks[0].get('cutoff_reasons', [])),
                      'Must cite planner incomplete')
         
         # exactly_once case
-        workflow2 = make_workflow(actions, ordering_rules=[
-            make_rule('exactly_once', ['safe_start'])
+        workflow2 = make_workflow(actions, initial=['start'], goal=['complete'], ordering_rules=[
+            make_rule('exactly_once', ['step1'])
         ])
         
         diags2, checks2 = check_ordering_rules(workflow2, explored, 'workflow-1', {'id': 'ctx-1'})
