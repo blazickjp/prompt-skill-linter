@@ -193,7 +193,7 @@ def validate_ordering_rules(workflow, sources, root):
             raise ValueError(f"{rule['id']}: at most 32 assumptions per rule")
 
 
-def check_ordering_rules(workflow, explored_result, workflow_id, context):
+def check_ordering_rules(workflow, explored_result, workflow_id, context, forbidden=frozenset()):
     """Check ordering rules via independent product construction over (facts, monitor_state).
     
     CRITICAL: Does NOT depend on planner's display graph at all. Runs its own BFS over
@@ -203,7 +203,7 @@ def check_ordering_rules(workflow, explored_result, workflow_id, context):
     This makes the planner's display caps (graph_limit) completely irrelevant. The only
     dependencies on the planner are:
     - Initial facts (workflow initial + context facts if any)
-    - Forbidden actions (unavailable tools)
+    - Forbidden actions (unavailable tools + active prohibitions)
     - Search bounds (max_steps, max_states)
     - search_exhaustive flag (whether planner hit its own bounds)
     
@@ -228,10 +228,9 @@ def check_ordering_rules(workflow, explored_result, workflow_id, context):
     initial_facts = frozenset(workflow.get('initial', []))
     goal_facts = set(workflow.get('goal', []))
     
-    # Get forbidden actions (unavailable tools)
-    # For now, assume none unless passed explicitly
-    # TODO: If engine.py passes forbidden actions, use them here
-    forbidden = frozenset()
+    # Use forbidden actions passed from engine (prohibitions + unavailable tools)
+    # Ensure it's a frozenset for efficient membership checks
+    forbidden = frozenset(forbidden) if not isinstance(forbidden, frozenset) else forbidden
     
     # Get bounds from planner
     bounds = explored_result.get('bounds', {})
@@ -342,31 +341,35 @@ def _check_rule_with_independent_product(rule, initial_facts, goal_facts, action
         monitor = BeforeMonitor(rule_actions[0])
         return _check_safety_property_independent(
             rule, initial_facts, goal_facts, actions, compute_successor,
-            monitor, _before_checker, max_steps, max_states, planner_exhaustive
+            monitor, _before_checker, max_steps, max_states, planner_exhaustive,
+            workflow_id, context
         )
     elif kind == 'mutual_exclusion':
         monitor = MutualExclusionMonitor(rule_actions[0], rule_actions[1])
         return _check_safety_property_independent(
             rule, initial_facts, goal_facts, actions, compute_successor,
-            monitor, _mutual_exclusion_checker, max_steps, max_states, planner_exhaustive
+            monitor, _mutual_exclusion_checker, max_steps, max_states, planner_exhaustive,
+            workflow_id, context
         )
     elif kind == 'at_most_once':
         monitor = CountMonitor(rule_actions[0])
         return _check_safety_property_independent(
             rule, initial_facts, goal_facts, actions, compute_successor,
-            monitor, _at_most_once_checker, max_steps, max_states, planner_exhaustive
+            monitor, _at_most_once_checker, max_steps, max_states, planner_exhaustive,
+            workflow_id, context
         )
     elif kind == 'exactly_once':
         monitor = CountMonitor(rule_actions[0])
         return _check_exactly_once_independent(
             rule, initial_facts, goal_facts, actions, compute_successor,
-            monitor, max_steps, max_states, planner_exhaustive
+            monitor, max_steps, max_states, planner_exhaustive,
+            workflow_id, context
         )
 
 
 def _check_safety_property_independent(rule, initial_facts, goal_facts, actions, compute_successor,
                                        initial_monitor, violation_checker, max_steps, max_states,
-                                       planner_exhaustive):
+                                       planner_exhaustive, workflow_id, context):
     """Check safety property via independent product BFS over (facts, monitor)."""
     # Product BFS: (facts, monitor, path, depth)
     queue = deque([(initial_facts, initial_monitor, [], 0)])
@@ -400,8 +403,8 @@ def _check_safety_property_independent(rule, initial_facts, goal_facts, actions,
                 counterexample = path + [action_id]
                 result = {
                     'ordering_rule_id': rule['id'],
-                    'workflow': '',
-                    'context_id': '',
+                    'workflow': workflow_id,
+                    'context_id': context['id'],
                     'status': 'violated',
                     'kind': rule['kind'],
                     'counterexample': counterexample,
@@ -437,8 +440,8 @@ def _check_safety_property_independent(rule, initial_facts, goal_facts, actions,
     if hit_depth_bound or hit_state_bound or not planner_exhaustive:
         return {
             'ordering_rule_id': rule['id'],
-            'workflow': '',
-            'context_id': '',
+            'workflow': workflow_id,
+            'context_id': context['id'],
             'status': 'incomplete',
             'kind': rule['kind'],
             'reason': 'Search truncated by bounds; cannot prove satisfaction',
@@ -472,8 +475,8 @@ def _check_safety_property_independent(rule, initial_facts, goal_facts, actions,
         
         return {
             'ordering_rule_id': rule['id'],
-            'workflow': '',
-            'context_id': '',
+            'workflow': workflow_id,
+            'context_id': context['id'],
             'status': 'warning',
             'kind': rule['kind'],
             'reason': reason,
@@ -484,8 +487,8 @@ def _check_safety_property_independent(rule, initial_facts, goal_facts, actions,
     
     return {
         'ordering_rule_id': rule['id'],
-        'workflow': '',
-        'context_id': '',
+        'workflow': workflow_id,
+        'context_id': context['id'],
         'status': 'satisfied',
         'kind': rule['kind'],
         'search_exhaustive': True,
@@ -495,7 +498,8 @@ def _check_safety_property_independent(rule, initial_facts, goal_facts, actions,
 
 
 def _check_exactly_once_independent(rule, initial_facts, goal_facts, actions, compute_successor,
-                                    initial_monitor, max_steps, max_states, planner_exhaustive):
+                                    initial_monitor, max_steps, max_states, planner_exhaustive,
+                                    workflow_id, context):
     """Check exactly_once via independent product BFS, evaluating at goal states."""
     queue = deque([(initial_facts, initial_monitor, [], 0)])
     seen = {(initial_facts, initial_monitor)}
@@ -553,8 +557,8 @@ def _check_exactly_once_independent(rule, initial_facts, goal_facts, actions, co
         if monitor.count != 1:
             return {
                 'ordering_rule_id': rule['id'],
-                'workflow': '',
-                'context_id': '',
+                'workflow': workflow_id,
+                'context_id': context['id'],
                 'status': 'violated',
                 'kind': rule['kind'],
                 'counterexample': path,
@@ -570,8 +574,8 @@ def _check_exactly_once_independent(rule, initial_facts, goal_facts, actions, co
     if hit_depth_bound or hit_state_bound or not planner_exhaustive:
         return {
             'ordering_rule_id': rule['id'],
-            'workflow': '',
-            'context_id': '',
+            'workflow': workflow_id,
+            'context_id': context['id'],
             'status': 'incomplete',
             'kind': rule['kind'],
             'reason': 'Search truncated; cannot prove satisfaction',
@@ -592,8 +596,8 @@ def _check_exactly_once_independent(rule, initial_facts, goal_facts, actions, co
     if rule_action not in all_actions_seen:
         return {
             'ordering_rule_id': rule['id'],
-            'workflow': '',
-            'context_id': '',
+            'workflow': workflow_id,
+            'context_id': context['id'],
             'status': 'warning',
             'kind': rule['kind'],
             'reason': f"Action '{rule_action}' is unreachable; rule never applies",
@@ -604,8 +608,8 @@ def _check_exactly_once_independent(rule, initial_facts, goal_facts, actions, co
     
     return {
         'ordering_rule_id': rule['id'],
-        'workflow': '',
-        'context_id': '',
+        'workflow': workflow_id,
+        'context_id': context['id'],
         'status': 'satisfied',
         'kind': rule['kind'],
         'search_exhaustive': True,

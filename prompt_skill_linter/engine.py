@@ -588,7 +588,9 @@ def workflow_analysis(contract, manifest, runtime):
             # Check ordering rules
             if workflow.get('ordering_rules'):
                 from .ordering import check_ordering_rules
-                ordering_diags, ordering_checks = check_ordering_rules(workflow, result, workflow['id'], context)
+                ordering_diags, ordering_checks = check_ordering_rules(
+                    workflow, result, workflow['id'], context, forbidden
+                )
                 diagnostics.extend(ordering_diags)
                 result['ordering_rules'] = ordering_checks
             
