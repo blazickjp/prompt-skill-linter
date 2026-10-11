@@ -1,0 +1,2 @@
+Authorization must complete before data access.
+Unauthorized data access is not allowed.
