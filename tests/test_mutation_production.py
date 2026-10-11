@@ -190,9 +190,145 @@ class ProductionReportingTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, f"CLI failed: {result.stderr}")
         output = json.loads(result.stdout)
         
-        # No scorable mutants should produce null score
+        # Empty contract: no mutants, score should be null
         self.assertEqual(output['statistics']['scorable_mutants'], 0)
         self.assertIsNone(output['statistics']['mutation_score'])
+    
+    def test_json_output_all_invalid_nonempty(self):
+        """Test JSON output with nonempty all-invalid mutants."""
+        # Contract with advertisement rule referenced by workflow
+        # Deleting the rule makes workflow reference invalid
+        span = {'source_id': 'policy', 'start_line': 1, 'end_line': 1, 'quote': 'Advertisement'}
+        contract = {
+            'version': 1,
+            'sources': [{'id': 'policy', 'path': 'policy.txt'}],
+            'skills': [],
+            'contexts': [],
+            'rules': [
+                {
+                    'id': 'adv_rule',
+                    'source': span,
+                    'priority': 100,
+                    'kind': 'requirement',
+                    'scope': {'entity': 'agent', 'temporal': 'session'}
+                }
+            ],
+            'workflows': [
+                {
+                    'id': 'test_wf',
+                    'initial': [],
+                    'goal': [],
+                    'advertisement_rule': 'adv_rule',  # References the rule
+                    'actions': [
+                        {
+                            'id': 'test_action',
+                            'requires': [],
+                            'adds': [],
+                            'removes': [],
+                            'provenance': {'source_spans': [span], 'assumptions': []}
+                        }
+                    ],
+                    'ordering_rules': []
+                }
+            ]
+        }
+        
+        contract_path = Path(self.temp_dir) / 'invalid_contract.json'
+        manifest_path = Path(self.temp_dir) / 'invalid_manifest.json'
+        runtime_path = Path(self.temp_dir) / 'invalid_runtime.json'
+        policy_path = Path(self.temp_dir) / 'policy.txt'
+        
+        contract_path.write_text(json.dumps(contract))
+        manifest_path.write_text(json.dumps({'tools': {}}))
+        runtime_path.write_text(json.dumps(self.runtime))
+        policy_path.write_text('Advertisement\n')
+        
+        result = subprocess.run(
+            ['python3', '-m', 'prompt_skill_linter',
+             str(contract_path),
+             '--tools', str(manifest_path),
+             '--runtime', str(runtime_path),
+             '--format', 'json',
+             '--mutate',
+             '--operators', 'delete_rule'],
+            capture_output=True,
+            text=True
+        )
+        
+        self.assertEqual(result.returncode, 0, f"CLI failed: {result.stderr}")
+        output = json.loads(result.stdout)
+        
+        # Nonempty all-invalid: 1 total, 1 invalid, 0 scorable, null score
+        self.assertEqual(output['statistics']['total_mutants'], 1)
+        self.assertEqual(output['statistics']['invalid'], 1)
+        self.assertEqual(output['statistics']['scorable_mutants'], 0)
+        self.assertIsNone(output['statistics']['mutation_score'])
+    
+    def test_text_output_all_invalid_nonempty(self):
+        """Test text output with nonempty all-invalid shows N/A."""
+        # Same contract as JSON test
+        span = {'source_id': 'policy', 'start_line': 1, 'end_line': 1, 'quote': 'Advertisement'}
+        contract = {
+            'version': 1,
+            'sources': [{'id': 'policy', 'path': 'policy.txt'}],
+            'skills': [],
+            'contexts': [],
+            'rules': [
+                {
+                    'id': 'adv_rule',
+                    'source': span,
+                    'priority': 100,
+                    'kind': 'requirement',
+                    'scope': {'entity': 'agent', 'temporal': 'session'}
+                }
+            ],
+            'workflows': [
+                {
+                    'id': 'test_wf',
+                    'initial': [],
+                    'goal': [],
+                    'advertisement_rule': 'adv_rule',
+                    'actions': [
+                        {
+                            'id': 'test_action',
+                            'requires': [],
+                            'adds': [],
+                            'removes': [],
+                            'provenance': {'source_spans': [span], 'assumptions': []}
+                        }
+                    ],
+                    'ordering_rules': []
+                }
+            ]
+        }
+        
+        contract_path = Path(self.temp_dir) / 'invalid_text_contract.json'
+        manifest_path = Path(self.temp_dir) / 'invalid_text_manifest.json'
+        runtime_path = Path(self.temp_dir) / 'invalid_text_runtime.json'
+        policy_path = Path(self.temp_dir) / 'policy.txt'
+        
+        contract_path.write_text(json.dumps(contract))
+        manifest_path.write_text(json.dumps({'tools': {}}))
+        runtime_path.write_text(json.dumps(self.runtime))
+        policy_path.write_text('Advertisement\n')
+        
+        result = subprocess.run(
+            ['python3', '-m', 'prompt_skill_linter',
+             str(contract_path),
+             '--tools', str(manifest_path),
+             '--runtime', str(runtime_path),
+             '--format', 'text',
+             '--mutate',
+             '--operators', 'delete_rule'],
+            capture_output=True,
+            text=True
+        )
+        
+        self.assertEqual(result.returncode, 0, f"CLI failed: {result.stderr}")
+        
+        # Must contain "N/A" and "0 scorable mutants"
+        self.assertIn('N/A', result.stdout)
+        self.assertIn('0 scorable mutants', result.stdout)
     
     def test_text_output_no_scorable_mutants(self):
         """Test text output with no scorable mutants shows N/A."""
@@ -222,11 +358,12 @@ class ProductionReportingTests(unittest.TestCase):
         self.assertIn('0 scorable mutants', result.stdout)
     
     def test_json_output_genuine_zero_percent(self):
-        """Test JSON output with scorable but unsurving mutants produces 0.0."""
+        """Test JSON output with scorable but unkilled mutants produces 0.0."""
         contract_path = Path(self.temp_dir) / 'contract.json'
         manifest_path = Path(self.temp_dir) / 'manifest.json'
         runtime_path = Path(self.temp_dir) / 'runtime.json'
         
+        # Use flip_kind on zero_percent_contract to force exactly one valid survivor
         contract_path.write_text(json.dumps(self.zero_percent_contract))
         manifest_path.write_text(json.dumps(self.manifest))
         runtime_path.write_text(json.dumps(self.runtime))
@@ -238,7 +375,7 @@ class ProductionReportingTests(unittest.TestCase):
              '--runtime', str(runtime_path),
              '--format', 'json',
              '--mutate',
-             '--max-mutants', '5'],  # Limit mutants for speed
+             '--operators', 'flip_kind'],
             capture_output=True,
             text=True
         )
@@ -246,9 +383,12 @@ class ProductionReportingTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, f"CLI failed: {result.stderr}")
         output = json.loads(result.stdout)
         
-        # If we have scorable mutants but zero killed, score should be 0.0 (not null)
-        if output['statistics']['scorable_mutants'] > 0 and output['statistics']['killed'] == 0:
-            self.assertEqual(output['statistics']['mutation_score'], 0.0)
+        # Unconditional assertions: exactly one valid survivor
+        self.assertEqual(output['statistics']['total_mutants'], 1)
+        self.assertEqual(output['statistics']['survived'], 1)
+        self.assertEqual(output['statistics']['killed'], 0)
+        self.assertEqual(output['statistics']['scorable_mutants'], 1)
+        self.assertEqual(output['statistics']['mutation_score'], 0.0)  # Genuine 0%, not null
     
     def test_text_output_genuine_zero_percent(self):
         """Test text output with genuine 0% shows 0.00%."""
@@ -256,6 +396,7 @@ class ProductionReportingTests(unittest.TestCase):
         manifest_path = Path(self.temp_dir) / 'manifest.json'
         runtime_path = Path(self.temp_dir) / 'runtime.json'
         
+        # Use flip_kind to force exactly one valid survivor
         contract_path.write_text(json.dumps(self.zero_percent_contract))
         manifest_path.write_text(json.dumps(self.manifest))
         runtime_path.write_text(json.dumps(self.runtime))
@@ -267,68 +408,136 @@ class ProductionReportingTests(unittest.TestCase):
              '--runtime', str(runtime_path),
              '--format', 'text',
              '--mutate',
-             '--max-mutants', '5'],
+             '--operators', 'flip_kind'],
             capture_output=True,
             text=True
         )
         
         self.assertEqual(result.returncode, 0, f"CLI failed: {result.stderr}")
         
-        # If genuine 0%, should show "0.00%" not "N/A"
-        if 'Killed: 0' in result.stdout and 'Survived:' in result.stdout:
-            # Extract the score line
-            for line in result.stdout.split('\n'):
-                if 'Mutation score:' in line:
-                    if 'N/A' not in line:
-                        self.assertIn('0.00%', line)
+        # Unconditional assertions: must contain 0.00%, must not contain N/A
+        self.assertIn('0.00%', result.stdout)
+        self.assertNotIn('N/A', result.stdout)
 
 
 class WitnessFieldProductionTests(unittest.TestCase):
     """Test witness field normalization through actual lint/classification."""
     
     def test_trace_violation_path_through_production(self):
-        """Test that witness field normalization works through production lint/classification."""
+        """Test that dropping precondition changes trace violation_path and is KILLED."""
         from prompt_skill_linter.engine import lint
         from prompt_skill_linter.mutate import generate_mutants, classify_mutant
         import json
         import tempfile
         from pathlib import Path
-        import os
         
-        # Find the examples directory relative to the test file
-        test_dir = Path(__file__).parent
-        examples_dir = test_dir.parent / 'examples'
-        
-        # Use the ordering-auth-pass example which has actual ordering rules and diagnostics
+        # Create temp directory
         temp_dir = tempfile.mkdtemp()
+        policy_path = Path(temp_dir) / 'policy.txt'
+        policy_path.write_text('Action a at most once\n')
         
-        # Load the actual ordering-auth-pass contract
-        contract = json.loads((examples_dir / 'ordering-auth-pass.contract.json').read_text())
+        # Contract with action_count trace assertion: a at most once
+        # setup adds 'ready', action 'a' requires 'ready'
+        # Original violation path: ['setup', 'a', 'a']
+        span = {'source_id': 'policy', 'start_line': 1, 'end_line': 1, 'quote': 'Action a at most once'}
+        contract = {
+            'version': 1,
+            'sources': [{'id': 'policy', 'path': 'policy.txt'}],
+            'skills': [],
+            'contexts': [
+                {
+                    'id': 'test_ctx',
+                    'facts': {},
+                    'active_skills': []
+                }
+            ],
+            'rules': [
+                {
+                    'id': 'advertise',
+                    'source': span,
+                    'priority': 100,
+                    'kind': 'requirement',
+                    'scope': {'entity': 'test_ctx', 'temporal': 'one_run'}
+                }
+            ],
+            'workflows': [
+                {
+                    'id': 'test_wf',
+                    'initial': [],
+                    'goal': ['done'],
+                    'advertisement_rule': 'advertise',
+                    'actions': [
+                        {
+                            'id': 'setup',
+                            'requires': [],
+                            'adds': ['ready'],
+                            'removes': [],
+                            'provenance': {'source_spans': [span], 'assumptions': []}
+                        },
+                        {
+                            'id': 'a',
+                            'requires': ['ready'],  # Precondition makes violation [setup, a, a]
+                            'adds': ['done'],
+                            'removes': [],
+                            'provenance': {'source_spans': [span], 'assumptions': []}
+                        }
+                    ],
+                    'ordering_rules': [],
+                    'trace_assertions': [{
+                        'id': 'max-one',
+                        'kind': 'action_count',
+                        'actions': ['a'],
+                        'max_count': 1,
+                        'source': span,
+                        'assumptions': []
+                    }]
+                }
+            ]
+        }
         
-        policy_src = (examples_dir / 'ordering-auth-pass-policy.txt').read_text()
-        policy_path = Path(temp_dir) / 'ordering-auth-pass-policy.txt'
-        policy_path.write_text(policy_src)
+        manifest = {'tools': {}}
+        runtime = {'max_plan_steps': 20}
         
-        tools = json.loads((examples_dir / 'ordering-tools.json').read_text())
-        runtime = json.loads((examples_dir / 'ordering-runtime.json').read_text())
+        # Lint original contract
+        original_report = lint(contract, manifest, runtime, temp_dir)
         
-        # Get original lint report
-        original_report = lint(contract, tools, runtime, temp_dir)
+        # Verify original violation_path is ['setup', 'a', 'a']
+        trace_diags = [d for d in original_report['diagnostics'] if d['code'] == 'TRACE_ASSERTION_VIOLATED']
+        self.assertEqual(len(trace_diags), 1)
+        original_diag = trace_diags[0]
+        self.assertEqual(original_diag['witness']['violation_path'], ['setup', 'a', 'a'])
         
-        # Generate mutants with swap_before_actions which changes ordering witnesses
-        mutants = generate_mutants(contract, tools, operator_filter={'swap_before_actions'})
+        # Generate mutant: drop a's ready precondition
+        mutants = generate_mutants(contract, manifest, operator_filter={'drop_precondition'})
         
-        # Classify each mutant
-        killed_count = 0
-        for mutant in mutants:
-            mutant_report = lint(mutant.contract, tools, runtime, temp_dir)
-            result = classify_mutant(mutant, original_report, mutant_report)
-            if result.status == 'KILLED':
-                killed_count += 1
+        # Find the mutant that drops a's precondition (workflow 0, action 1, precond 0)
+        target_mutant = None
+        for m in mutants:
+            if 'workflow_0_action_1_drop_precond_0' in m.id:
+                target_mutant = m
+                break
         
-        # Should have at least one killed mutant due to witness field differences
-        self.assertGreater(killed_count, 0, 
-                          "Should have at least one KILLED mutant when ordering changes affect witnesses")
+        self.assertIsNotNone(target_mutant, "Should find mutant that drops a's ready precondition")
+        
+        # Lint mutant contract
+        mutant_report = lint(target_mutant.contract, manifest, runtime, temp_dir)
+        
+        # Verify mutant violation_path is ['a', 'a'] (no setup needed)
+        mutant_trace_diags = [d for d in mutant_report['diagnostics'] if d['code'] == 'TRACE_ASSERTION_VIOLATED']
+        self.assertEqual(len(mutant_trace_diags), 1)
+        mutant_diag = mutant_trace_diags[0]
+        self.assertEqual(mutant_diag['witness']['violation_path'], ['a', 'a'])
+        
+        # Verify same diagnostic code/rule/status
+        self.assertEqual(original_diag['code'], mutant_diag['code'])
+        self.assertEqual(original_diag['severity'], mutant_diag['severity'])
+        
+        # Classify mutant
+        result = classify_mutant(target_mutant, original_report, mutant_report)
+        
+        # Should be KILLED because violation_path changed
+        self.assertEqual(result.status, 'KILLED',
+                        f"Mutant should be KILLED due to changed violation_path, got {result.status}")
         
         # Clean up
         import shutil
