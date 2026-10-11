@@ -834,6 +834,51 @@ class OrderingRuleTests(unittest.TestCase):
         self.assertIn('max_states', str(checks[0].get('cutoff_reasons', [])),
                      'Must cite state bound')
     
+    def test_planner_nonexhaustive_incomplete(self):
+        """Planner's search_exhaustive=False must propagate to INCOMPLETE."""
+        # Safety property: before rule
+        # Partial graph shows only safe prefix, but planner truncated before exploring violation
+        actions = [
+            {'id': 'safe_start', 'requires': ['start'], 'adds': ['s1']},
+            {'id': 'violation_beyond', 'requires': ['s1'], 'adds': ['bad']},  # Not in partial graph!
+        ]
+        workflow = make_workflow(actions, ordering_rules=[
+            make_rule('before', ['never_seen', 'violation_beyond'])  # Violation not visible in partial graph
+        ])
+        
+        # Partial graph: planner stopped early, only shows safe_start edge
+        states = [
+            {'id': 0, 'facts': ['start'], 'depth': 0, 'goal': True},
+            {'id': 1, 'facts': ['s1', 'start'], 'depth': 1, 'goal': True}
+        ]
+        edges = [{'from': 0, 'to': 1, 'action': 'safe_start'}]
+        
+        # CRITICAL: search_exhaustive=False but bounds are high (no product BFS bounds hit)
+        explored = {'status': 'unknown', 'search_exhaustive': False,
+                   'visited_states': 2,
+                   'bounds': {'max_steps': 100, 'max_states': 1000},
+                   'graph': {'states': states, 'edges': edges}}
+        
+        diags, checks = check_ordering_rules(workflow, explored, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Must be incomplete due to planner truncation, not satisfied
+        self.assertEqual(checks[0]['status'], 'incomplete',
+                        'Planner non-exhaustive search must propagate to INCOMPLETE')
+        self.assertIn('workflow_search_incomplete', str(checks[0].get('cutoff_reasons', [])),
+                     'Must cite planner incomplete')
+        
+        # exactly_once case
+        workflow2 = make_workflow(actions, ordering_rules=[
+            make_rule('exactly_once', ['safe_start'])
+        ])
+        
+        diags2, checks2 = check_ordering_rules(workflow2, explored, 'workflow-1', {'id': 'ctx-1'})
+        
+        self.assertEqual(checks2[0]['status'], 'incomplete',
+                        'Planner non-exhaustive must cause exactly_once INCOMPLETE')
+        self.assertIn('workflow_search_incomplete', str(checks2[0].get('cutoff_reasons', [])),
+                     'Must cite planner incomplete for exactly_once')
+    
     def test_max_steps_boundary(self):
         """Max_steps semantics: paths up to max_steps-1 are fully explored."""
         actions = [
