@@ -931,6 +931,92 @@ class OrderingRuleTests(unittest.TestCase):
         self.assertFalse(result2['search_exhaustive'],
                         'Planner should hit bound at max_steps=20')
     
+    def test_max_steps_violation_at_boundary(self):
+        """Safety violation on action number max_steps is detected with exact counterexample."""
+        # Build a linear chain where the violation happens at the max_steps boundary
+        actions = []
+        for i in range(21):
+            actions.append({'id': f'step{i}', 'requires': [f's{i}'], 'removes': [f's{i}'], 'adds': [f's{i+1}']})
+        actions[0]['requires'] = ['start']
+        actions[0]['removes'] = ['start']
+        
+        # Add a before rule that is violated at step 19 (action at depth max_steps-1)
+        workflow = make_workflow(actions, initial=['start'], goal=['s21'], ordering_rules=[
+            make_rule('before', ['step19', 'step9'])  # step19 comes AFTER step9, violates the rule
+        ])
+        
+        from prompt_skill_linter.planner import explore
+        result = explore(workflow, max_steps=20, max_states=2000)
+        
+        diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Should detect the violation at step 19 (action number max_steps-1)
+        self.assertEqual(checks[0]['status'], 'violated',
+                        'Before rule violated at action max_steps-1 should be detected')
+        self.assertIsNotNone(checks[0].get('counterexample'),
+                           'Violation at max_steps should have a counterexample')
+        # Verify the counterexample shows the violation path up to step 19
+        counterexample = checks[0]['counterexample']
+        self.assertGreaterEqual(len(counterexample), 10,
+                        'Counterexample should include at least the violating actions')
+        self.assertEqual(counterexample[-1], 'step9',
+                        'Last action in counterexample should be step9 (the "before" action that came after)')
+
+    def test_max_steps_violation_beyond_boundary_incomplete(self):
+        """First violation requiring action max_steps + 1 returns incomplete."""
+        # Build a linear chain that requires going beyond max_steps to reach goal
+        actions = []
+        for i in range(25):
+            actions.append({'id': f'step{i}', 'requires': [f's{i}'], 'removes': [f's{i}'], 'adds': [f's{i+1}']})
+        actions[0]['requires'] = ['start']
+        actions[0]['removes'] = ['start']
+        
+        # Add a before rule where the violation would only manifest at depth > max_steps
+        # The rule itself is satisfied by the linear structure, but we can't verify it
+        # because the search is cut off before reaching the goal
+        workflow = make_workflow(actions, initial=['start'], goal=['s25'], ordering_rules=[
+            make_rule('before', ['step5', 'step10'])
+        ])
+        
+        from prompt_skill_linter.planner import explore
+        result = explore(workflow, max_steps=20, max_states=2000)
+        
+        diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Should return incomplete since we can't explore deep enough to verify the rule
+        self.assertEqual(checks[0]['status'], 'incomplete',
+                        'Rule requiring exploration beyond max_steps should be incomplete')
+        self.assertIn('max_steps', str(checks[0].get('cutoff_reasons', [])),
+                     'Incomplete status should cite max_steps cutoff')
+
+    def test_max_steps_exactly_once_wrong_count_at_boundary(self):
+        """exactly_once goal reached at depth max_steps with wrong count is reported violated."""
+        # Build a workflow where an action is executed twice by depth max_steps-1
+        actions = []
+        for i in range(19):
+            actions.append({'id': f'step{i}', 'requires': [f's{i}'], 'removes': [f's{i}'], 'adds': [f's{i+1}']})
+        actions[0]['requires'] = ['start']
+        actions[0]['removes'] = ['start']
+        
+        # Add an action that will be executed twice (violating exactly_once)
+        # Make it not require/remove any step facts so it can execute multiple times
+        actions.append({'id': 'repeat_action', 'requires': ['s5'], 'adds': ['marker']})
+        
+        workflow = make_workflow(actions, initial=['start'], goal=['s18'], ordering_rules=[
+            make_rule('exactly_once', ['repeat_action'])  # Should be executed exactly once
+        ])
+        
+        from prompt_skill_linter.planner import explore
+        result = explore(workflow, max_steps=20, max_states=2000)
+        
+        diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Should detect exactly_once violation at max_steps boundary
+        self.assertEqual(checks[0]['status'], 'violated',
+                        'exactly_once with wrong count at max_steps should be violated')
+        self.assertIsNotNone(checks[0].get('counterexample'),
+                           'exactly_once violation at max_steps should have a counterexample')
+
     def test_conflicting_before_rules_detected(self):
         """A before B and B before A should be detected as conflicting."""
         actions = [
@@ -1098,6 +1184,241 @@ class OrderingIntegrationTests(unittest.TestCase):
             self.assertIn('access', counterexample, 'Counterexample must include access')
             self.assertEqual(counterexample, ['bypass', 'access'],
                            'Counterexample should be shortest: [bypass, access]')
+    
+    def test_lint_prohibition_blocks_ordering_violation(self):
+        """Active prohibition of bypass prevents ordering violation."""
+        import tempfile
+        from pathlib import Path
+        from prompt_skill_linter.engine import lint
+        
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            (root / 'contract.txt').write_text('auth before access\nbypass forbidden')
+            
+            src = {'source_id': 'contract', 'start_line': 1, 'end_line': 1, 'quote': 'auth before access'}
+            src2 = {'source_id': 'contract', 'start_line': 2, 'end_line': 2, 'quote': 'bypass forbidden'}
+            
+            # Add prohibition of bypass action with same scope
+            contract = {
+                'version': 1,
+                'sources': [{'id': 'contract', 'path': 'contract.txt'}],
+                'rules': [
+                    {'id': 'adv', 'source': src, 'scope': {'entity': 'session', 'temporal': 'always'},
+                     'priority': 0, 'kind': 'permission', 'when': {}, 'exceptions': [],
+                     'effect': {'literal': 'allow', 'value': True}},
+                    {'id': 'no-bypass', 'source': src2, 'scope': {'entity': 'session', 'temporal': 'always'},
+                     'priority': 0, 'kind': 'prohibition', 'when': {}, 'exceptions': [],
+                     'forbid_action': 'bypass'}
+                ],
+                'workflows': [{
+                    'id': 'auth-workflow',
+                    'initial': ['start'],
+                    'goal': ['done'],
+                    'advertisement_rule': 'adv',
+                    'actions': [
+                        {'id': 'auth', 'requires': ['start'], 'removes': ['start'], 'adds': ['authorized', 'ready']},
+                        {'id': 'access', 'requires': ['ready'], 'removes': ['ready'], 'adds': ['done']},
+                        {'id': 'bypass', 'requires': ['start'], 'removes': ['start'], 'adds': ['ready']}
+                    ],
+                    'ordering_rules': [{
+                        'id': 'auth-before-access',
+                        'kind': 'before',
+                        'actions': ['auth', 'access'],
+                        'scope': {'entity': 'session', 'temporal': 'always'},
+                        'source': src,
+                        'assumptions': []
+                    }]
+                }],
+                'contexts': [{'id': 'default', 'facts': {}, 'active_skills': []}]
+            }
+            
+            result = lint(contract, {'tools': {}}, {}, root)
+            
+            # With bypass prohibited, only auth->access path remains, so rule is satisfied
+            ordering_diags = [d for d in result.get('diagnostics', [])
+                            if d.get('code', '').startswith('ORDERING_')]
+            # Should have NO violation (bypass was excluded)
+            violations = [d for d in ordering_diags 
+                         if d.get('code') == 'ORDERING_BEFORE_VIOLATED']
+            self.assertEqual(len(violations), 0, 'Prohibition should prevent bypass violation')
+    
+    def test_lint_permission_overrides_prohibition(self):
+        """Higher-priority permission overrides prohibition, allowing violation."""
+        import tempfile
+        from pathlib import Path
+        from prompt_skill_linter.engine import lint
+        
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            (root / 'contract.txt').write_text('policy')
+            
+            src = {'source_id': 'contract', 'start_line': 1, 'end_line': 1, 'quote': 'policy'}
+            
+            # Higher-priority permission overrides prohibition
+            contract = {
+                'version': 1,
+                'sources': [{'id': 'contract', 'path': 'contract.txt'}],
+                'rules': [
+                    {'id': 'adv', 'source': src, 'scope': {'entity': 'session', 'temporal': 'always'},
+                     'priority': 0, 'kind': 'permission', 'when': {}, 'exceptions': [],
+                     'effect': {'literal': 'allow', 'value': True}},
+                    {'id': 'no-bypass', 'source': src, 'scope': {'entity': 'session', 'temporal': 'always'},
+                     'priority': 0, 'kind': 'prohibition', 'when': {}, 'exceptions': [],
+                     'forbid_action': 'bypass'},
+                    {'id': 'override', 'source': src, 'scope': {'entity': 'session', 'temporal': 'always'},
+                     'priority': 10, 'kind': 'permission', 'when': {}, 'exceptions': [],
+                     'allow_action': 'bypass'}
+                ],
+                'workflows': [{
+                    'id': 'auth-workflow',
+                    'initial': ['start'],
+                    'goal': ['done'],
+                    'advertisement_rule': 'adv',
+                    'actions': [
+                        {'id': 'auth', 'requires': ['start'], 'removes': ['start'], 'adds': ['authorized', 'ready']},
+                        {'id': 'access', 'requires': ['ready'], 'removes': ['ready'], 'adds': ['done']},
+                        {'id': 'bypass', 'requires': ['start'], 'removes': ['start'], 'adds': ['ready']}
+                    ],
+                    'ordering_rules': [{
+                        'id': 'auth-before-access',
+                        'kind': 'before',
+                        'actions': ['auth', 'access'],
+                        'scope': {'entity': 'session', 'temporal': 'always'},
+                        'source': src,
+                        'assumptions': []
+                    }]
+                }],
+                'contexts': [{'id': 'default', 'facts': {}, 'active_skills': []}]
+            }
+            
+            result = lint(contract, {'tools': {}}, {}, root)
+            
+            # Higher-priority permission allows bypass, so violation should be detected
+            ordering_diags = [d for d in result.get('diagnostics', [])
+                            if d.get('code', '').startswith('ORDERING_')]
+            violations = [d for d in ordering_diags 
+                         if d.get('code') == 'ORDERING_BEFORE_VIOLATED']
+            self.assertEqual(len(violations), 1, 'Override permission should allow bypass violation')
+            self.assertEqual(violations[0]['witness']['counterexample'], ['bypass', 'access'])
+    
+    def test_lint_unavailable_tool_blocks_violation(self):
+        """Unavailable tool action is excluded from ordering analysis."""
+        import tempfile
+        from pathlib import Path
+        from prompt_skill_linter.engine import lint
+        
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            (root / 'contract.txt').write_text('policy')
+            
+            src = {'source_id': 'contract', 'start_line': 1, 'end_line': 1, 'quote': 'policy'}
+            
+            # bypass action requires missing tool
+            contract = {
+                'version': 1,
+                'sources': [{'id': 'contract', 'path': 'contract.txt'}],
+                'rules': [
+                    {'id': 'adv', 'source': src, 'scope': {'entity': 'session', 'temporal': 'always'},
+                     'priority': 0, 'kind': 'permission', 'when': {}, 'exceptions': [],
+                     'effect': {'literal': 'allow', 'value': True}}
+                ],
+                'workflows': [{
+                    'id': 'auth-workflow',
+                    'initial': ['start'],
+                    'goal': ['done'],
+                    'advertisement_rule': 'adv',
+                    'actions': [
+                        {'id': 'auth', 'requires': ['start'], 'removes': ['start'], 'adds': ['authorized', 'ready']},
+                        {'id': 'access', 'requires': ['ready'], 'removes': ['ready'], 'adds': ['done']},
+                        {'id': 'bypass', 'requires': ['start'], 'removes': ['start'], 'adds': ['ready'],
+                         'tool_call': {'tool': 'missing_tool', 'arguments': {}}}
+                    ],
+                    'ordering_rules': [{
+                        'id': 'auth-before-access',
+                        'kind': 'before',
+                        'actions': ['auth', 'access'],
+                        'scope': {'entity': 'session', 'temporal': 'always'},
+                        'source': src,
+                        'assumptions': []
+                    }]
+                }],
+                'contexts': [{'id': 'default', 'facts': {}, 'active_skills': []}]
+            }
+            
+            # Manifest doesn't include missing_tool
+            result = lint(contract, {'tools': {}}, {}, root)
+            
+            # bypass is unavailable (missing tool), so only auth->access path, no violation
+            ordering_diags = [d for d in result.get('diagnostics', [])
+                            if d.get('code', '').startswith('ORDERING_')]
+            violations = [d for d in ordering_diags 
+                         if d.get('code') == 'ORDERING_BEFORE_VIOLATED']
+            self.assertEqual(len(violations), 0, 'Unavailable tool should exclude bypass action')
+    
+    def test_lint_60_noop_bypass_regression(self):
+        """Joe's exact 60-no-op regression through lint() (not just planner)."""
+        import tempfile
+        from pathlib import Path
+        from prompt_skill_linter.engine import lint
+        
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            (root / 'contract.txt').write_text('auth before access')
+            
+            src = {'source_id': 'contract', 'start_line': 1, 'end_line': 1, 'quote': 'auth before access'}
+            
+            # 60 no-ops + auth flow + bypass
+            actions = []
+            for i in range(60):
+                actions.append({'id': f'noop{i}', 'requires': [], 'adds': [], 'removes': []})
+            
+            actions.extend([
+                {'id': 'auth', 'requires': ['start'], 'removes': ['start'], 'adds': ['authorized', 'ready']},
+                {'id': 'access', 'requires': ['ready'], 'removes': ['ready'], 'adds': ['done']},
+                {'id': 'bypass1', 'requires': ['start'], 'removes': ['start'], 'adds': ['stage']},
+                {'id': 'bypass2', 'requires': ['stage'], 'removes': ['stage'], 'adds': ['ready']},
+            ])
+            
+            contract = {
+                'version': 1,
+                'sources': [{'id': 'contract', 'path': 'contract.txt'}],
+                'rules': [
+                    {'id': 'adv', 'source': src, 'scope': {'entity': 'session', 'temporal': 'always'},
+                     'priority': 0, 'kind': 'permission', 'when': {}, 'exceptions': [],
+                     'effect': {'literal': 'allow', 'value': True}}
+                ],
+                'workflows': [{
+                    'id': 'auth-workflow',
+                    'initial': ['start'],
+                    'goal': ['done'],
+                    'advertisement_rule': 'adv',
+                    'actions': actions,
+                    'ordering_rules': [{
+                        'id': 'auth-before-access',
+                        'kind': 'before',
+                        'actions': ['auth', 'access'],
+                        'scope': {'entity': 'session', 'temporal': 'always'},
+                        'source': src,
+                        'assumptions': []
+                    }]
+                }],
+                'contexts': [{'id': 'default', 'facts': {}, 'active_skills': []}]
+            }
+            
+            result = lint(contract, {'tools': {}}, {}, root)
+            
+            # Must detect bypass violation through lint() despite display graph truncation
+            ordering_diags = [d for d in result.get('diagnostics', [])
+                            if d.get('code', '').startswith('ORDERING_')]
+            violations = [d for d in ordering_diags 
+                         if d.get('code') == 'ORDERING_BEFORE_VIOLATED']
+            self.assertEqual(len(violations), 1, 'Must detect bypass through full lint() path')
+            
+            witness = violations[0].get('witness', {})
+            self.assertEqual(witness['counterexample'], ['bypass1', 'bypass2', 'access'])
+            # Assert IDs are populated
+            self.assertEqual(witness['workflow'], 'auth-workflow')
+            self.assertEqual(witness['context_id'], 'default')
 
 
 if __name__ == '__main__':
