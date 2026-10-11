@@ -991,6 +991,11 @@ class OrderingRuleTests(unittest.TestCase):
         self.assertIn('max_steps', str(checks_20[0].get('cutoff_reasons', [])),
                      'Incomplete should cite max_steps cutoff')
         
+        # Assert ORDERING_CHECK_INCOMPLETE diagnostic is present
+        incomplete_diags = [d for d in diags_20 if d['code'] == 'ORDERING_CHECK_INCOMPLETE']
+        self.assertGreater(len(incomplete_diags), 0,
+                          'diags_20 must contain ORDERING_CHECK_INCOMPLETE diagnostic')
+        
         # With max_steps=21, can explore to depth 20 and detect violation
         result_21 = explore(workflow, max_steps=21, max_states=2000)
         diags_21, checks_21 = check_ordering_rules(workflow, result_21, 'workflow-1', {'id': 'ctx-1'})
@@ -1004,43 +1009,78 @@ class OrderingRuleTests(unittest.TestCase):
                         'Counterexample should be 21 actions (first violation at depth 20)')
 
     def test_max_steps_exactly_once_wrong_count_at_boundary(self):
-        """exactly_once violated when goal first reached at depth 20 with wrong count."""
-        # Build a linear chain to depth 17, then require repeat_action outputs
+        """exactly_once violated when goal first reached at depth 20 with count=0."""
+        # Build a 20-action linear chain reaching goal s20 at depth 20
         actions = []
-        for i in range(18):
+        for i in range(20):
             actions.append({'id': f'step{i}', 'requires': [f's{i}'], 'removes': [f's{i}'], 'adds': [f's{i+1}']})
         actions[0]['requires'] = ['start']
         actions[0]['removes'] = ['start']
         
-        # Add repeat_action twice (same id, different requirements)
-        # First execution at s5
-        actions.append({'id': 'repeat_action', 'requires': ['s5'], 'adds': ['marker']})
-        # Second execution at s10  
-        actions.append({'id': 'repeat_action', 'requires': ['s10'], 'adds': ['marker']})
+        # Add one counted action that requires an unreachable fact (never executes)
+        actions.append({'id': 'required_action', 'requires': ['unreachable'], 'adds': ['marker']})
         
-        # Final step requires marker and s17 to reach goal at depth 20
-        actions.append({'id': 'final_step', 'requires': ['s17', 'marker'], 'removes': ['s17'], 'adds': ['s18', 'goal']})
+        # Validate contract (ensure schema-valid fixture)
+        from prompt_skill_linter.engine import lint
+        import tempfile
+        from pathlib import Path
         
-        workflow = make_workflow(actions, initial=['start'], goal=['goal'], ordering_rules=[
-            make_rule('exactly_once', ['repeat_action'])
-        ])
-        
-        from prompt_skill_linter.planner import explore
-        result = explore(workflow, max_steps=21, max_states=2000)
-        
-        diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
-        
-        # Should detect exactly_once violation: repeat_action executed twice to reach goal at depth 20
-        self.assertEqual(checks[0]['status'], 'violated',
-                        'exactly_once with count 2 at goal depth 20 should be violated')
-        counterexample = checks[0].get('counterexample')
-        self.assertIsNotNone(counterexample, 'Should have counterexample')
-        # Verify the counterexample shows both executions
-        self.assertEqual(counterexample.count('repeat_action'), 2,
-                        'Counterexample should show repeat_action executed twice')
-        # Verify goal reached at depth 20 (path length 20)
-        self.assertEqual(len(counterexample), 20,
-                        'Counterexample path length should be 20 (goal at depth 20)')
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            
+            # Write source file
+            (root / 'rule.txt').write_text('Required action must execute exactly once.')
+            
+            src = {'source_id': 'rule', 'start_line': 1, 'end_line': 1, 
+                   'quote': 'Required action must execute exactly once.'}
+            
+            contract = {
+                'version': 1,
+                'sources': [{'id': 'rule', 'path': 'rule.txt'}],
+                'rules': [{'id': 'adv', 'source': src, 'scope': {'entity': 'task', 'temporal': 'run'},
+                          'priority': 0, 'kind': 'permission', 'when': {}, 'exceptions': [],
+                          'effect': {'literal': 'allow', 'value': True}}],
+                'workflows': [{
+                    'id': 'test-workflow',
+                    'initial': ['start'],
+                    'goal': ['s20'],
+                    'advertisement_rule': 'adv',
+                    'actions': actions,
+                    'ordering_rules': [{
+                        'id': 'ord-1',
+                        'kind': 'exactly_once',
+                        'actions': ['required_action'],
+                        'scope': {'entity': 'session', 'temporal': 'always'},
+                        'source': src,
+                        'assumptions': []
+                    }]
+                }],
+                'contexts': [{'id': 'default', 'facts': {}, 'active_skills': []}]
+            }
+            
+            result = lint(contract, {'tools': {}}, {}, root)
+            
+            # Extract ordering diagnostics
+            ordering_diags = [d for d in result['diagnostics'] 
+                             if d['code'] == 'ORDERING_EXACTLY_ONCE_VIOLATED']
+            self.assertEqual(len(ordering_diags), 1, 'Should have exactly one exactly_once violation')
+            
+            diag = ordering_diags[0]
+            witness = diag.get('witness', {})
+            self.assertEqual(witness.get('status'), 'violated', 'Status should be violated')
+            
+            # Verify counterexample and observed count
+            counterexample = witness.get('counterexample')
+            self.assertIsNotNone(counterexample, 'Should have counterexample')
+            self.assertEqual(len(counterexample), 20, 
+                            'Counterexample should be exactly 20 actions (goal at depth 20)')
+            self.assertEqual(witness.get('observed_count'), 0,
+                            'Observed count should be 0 (action never executed)')
+            
+            # Verify all actions are step0-step19 (required_action never executed)
+            expected_actions = [f'step{i}' for i in range(20)]
+            self.assertEqual(counterexample, expected_actions,
+                            'Counterexample should be linear chain to goal')
 
     def test_conflicting_before_rules_detected(self):
         """A before B and B before A should be detected as conflicting."""
