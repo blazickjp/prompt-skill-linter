@@ -175,18 +175,18 @@ class OrderingRuleTests(unittest.TestCase):
     def test_mutual_exclusion_satisfied(self):
         """Fast path and slow path are mutually exclusive."""
         actions = [
-            {'id': 'fast', 'requires': ['start'], 'adds': ['complete']},
-            {'id': 'slow', 'requires': ['start'], 'adds': ['complete']}
+            {'id': 'fast', 'requires': ['start'], 'removes': ['start'], 'adds': ['complete']},
+            {'id': 'slow', 'requires': ['start'], 'removes': ['start'], 'adds': ['complete']}
         ]
         workflow = make_workflow(actions, ordering_rules=[
             make_rule('mutual_exclusion', ['fast', 'slow'])
         ])
         
-        # Two separate paths, never both
+        # Two separate paths, never both (removes ensure exclusivity)
         states = [
             {'id': 0, 'facts': ['start'], 'depth': 0, 'goal': False},
-            {'id': 1, 'facts': ['complete', 'start'], 'depth': 1, 'goal': True},
-            {'id': 2, 'facts': ['complete', 'start'], 'depth': 1, 'goal': True}
+            {'id': 1, 'facts': ['complete'], 'depth': 1, 'goal': True},
+            {'id': 2, 'facts': ['complete'], 'depth': 1, 'goal': True}
         ]
         edges = [
             {'from': 0, 'to': 1, 'action': 'fast'},
@@ -257,7 +257,7 @@ class OrderingRuleTests(unittest.TestCase):
     def test_exactly_once_satisfied(self):
         """Action occurs exactly once on goal path."""
         actions = [
-            {'id': 'init', 'requires': ['start'], 'adds': ['initialized']},
+            {'id': 'init', 'requires': ['start'], 'removes': ['start'], 'adds': ['initialized']},
             {'id': 'process', 'requires': ['initialized'], 'adds': ['complete']}
         ]
         workflow = make_workflow(actions, ordering_rules=[
@@ -266,8 +266,8 @@ class OrderingRuleTests(unittest.TestCase):
         
         states = [
             {'id': 0, 'facts': ['start'], 'depth': 0, 'goal': False},
-            {'id': 1, 'facts': ['initialized', 'start'], 'depth': 1, 'goal': False},
-            {'id': 2, 'facts': ['complete', 'initialized', 'start'], 'depth': 2, 'goal': True}
+            {'id': 1, 'facts': ['initialized'], 'depth': 1, 'goal': False},
+            {'id': 2, 'facts': ['complete', 'initialized'], 'depth': 2, 'goal': True}
         ]
         edges = [
             {'from': 0, 'to': 1, 'action': 'init'},
@@ -339,9 +339,9 @@ class OrderingRuleTests(unittest.TestCase):
     def test_exactly_once_only_checks_complete_paths(self):
         """exactly_once only applies to paths reaching the goal."""
         actions = [
-            {'id': 'init', 'requires': ['start'], 'adds': ['initialized']},
-            {'id': 'fail', 'requires': ['initialized'], 'adds': ['failed']},
-            {'id': 'retry_init', 'requires': ['failed'], 'adds': ['initialized']},
+            {'id': 'init', 'requires': ['start'], 'removes': ['start'], 'adds': ['initialized']},
+            {'id': 'fail', 'requires': ['initialized'], 'removes': ['initialized'], 'adds': ['failed']},
+            {'id': 'retry_init', 'requires': ['failed'], 'removes': ['failed'], 'adds': ['initialized']},
             {'id': 'succeed', 'requires': ['initialized'], 'adds': ['complete']}
         ]
         workflow = make_workflow(actions, ordering_rules=[
@@ -352,9 +352,9 @@ class OrderingRuleTests(unittest.TestCase):
         # Path 2: init, fail, retry_init (incomplete, init twice) - doesn't count
         states = [
             {'id': 0, 'facts': ['start'], 'depth': 0, 'goal': False},
-            {'id': 1, 'facts': ['initialized', 'start'], 'depth': 1, 'goal': False},
-            {'id': 2, 'facts': ['complete', 'initialized', 'start'], 'depth': 2, 'goal': True},
-            {'id': 3, 'facts': ['failed', 'start'], 'depth': 2, 'goal': False}
+            {'id': 1, 'facts': ['initialized'], 'depth': 1, 'goal': False},
+            {'id': 2, 'facts': ['complete', 'initialized'], 'depth': 2, 'goal': True},
+            {'id': 3, 'facts': ['failed'], 'depth': 2, 'goal': False}
         ]
         edges = [
             {'from': 0, 'to': 1, 'action': 'init'},
@@ -398,7 +398,7 @@ class OrderingRuleTests(unittest.TestCase):
     def test_at_most_once_satisfied_once(self):
         """Action occurring once satisfies at_most_once."""
         actions = [
-            {'id': 'setup', 'requires': ['start'], 'adds': ['ready']},
+            {'id': 'setup', 'requires': ['start'], 'removes': ['start'], 'adds': ['ready']},
             {'id': 'process', 'requires': ['ready'], 'adds': ['complete']}
         ]
         workflow = make_workflow(actions, ordering_rules=[
@@ -407,8 +407,8 @@ class OrderingRuleTests(unittest.TestCase):
         
         states = [
             {'id': 0, 'facts': ['start'], 'depth': 0, 'goal': False},
-            {'id': 1, 'facts': ['ready', 'start'], 'depth': 1, 'goal': False},
-            {'id': 2, 'facts': ['complete', 'ready', 'start'], 'depth': 2, 'goal': True}
+            {'id': 1, 'facts': ['ready'], 'depth': 1, 'goal': False},
+            {'id': 2, 'facts': ['complete', 'ready'], 'depth': 2, 'goal': True}
         ]
         edges = [
             {'from': 0, 'to': 1, 'action': 'setup'},
@@ -775,17 +775,18 @@ class OrderingRuleTests(unittest.TestCase):
     def test_depth_bound_isolated(self):
         """Depth bound alone (not state bound or planner incomplete) triggers INCOMPLETE."""
         # Linear chain to force deep exploration
-        actions = [{'id': f'step{i}', 'requires': [f's{i}'], 'adds': [f's{i+1}']} 
+        actions = [{'id': f'step{i}', 'requires': [f's{i}'], 'removes': [f's{i}'], 'adds': [f's{i+1}']} 
                    for i in range(22)]
         actions[0]['requires'] = ['start']
+        actions[0]['removes'] = ['start']
         
-        workflow = make_workflow(actions, initial=['start'], goal=['complete'], ordering_rules=[
+        workflow = make_workflow(actions, initial=['start'], goal=['s22'], ordering_rules=[
             make_rule('at_most_once', ['step0'])
         ])
         
         # Chain goes to depth 21, but max_steps=20
         # Graph shows edges that WOULD be explored if not for depth bound
-        states = [{'id': i, 'facts': [f's{i}' if i > 0 else 'start'], 'depth': i, 'goal': True} 
+        states = [{'id': i, 'facts': [f's{i}' if i > 0 else 'start'], 'depth': i, 'goal': i == 22} 
                  for i in range(22)]
         edges = [{'from': i, 'to': i+1, 'action': f'step{i}'} for i in range(21)]
         
@@ -803,10 +804,9 @@ class OrderingRuleTests(unittest.TestCase):
         self.assertIn('max_steps', str(checks[0].get('cutoff_reasons', [])),
                      'Must cite depth bound')
     
-    @unittest.skip("TODO: Redesign for action-based building")
     def test_state_bound_isolated(self):
         """State bound alone (not depth bound or planner incomplete) triggers INCOMPLETE."""
-        # Many parallel branches, low depth
+        # Many parallel branches, low depth - creates a state space larger than max_states
         actions = [{'id': f'branch{i}', 'requires': ['start'], 'adds': [f'end{i}']} 
                    for i in range(100)]
         
@@ -814,22 +814,16 @@ class OrderingRuleTests(unittest.TestCase):
             make_rule('at_most_once', ['branch0'])
         ])
         
-        # Only 11 states but visited_states says we hit the limit
-        states = [{'id': 0, 'facts': ['start'], 'depth': 0, 'goal': True}]
-        states += [{'id': i+1, 'facts': [f'end{i}', 'start'], 'depth': 1, 'goal': True} 
-                  for i in range(10)]
-        edges = [{'from': 0, 'to': i+1, 'action': f'branch{i}'} for i in range(10)]
-        
-        # CRITICAL: exhaustive=True, low depth, but we say we hit state limit
+        # Set very low max_states bound (but high max_steps)
+        # Planner exhaustive=True means planner didn't hit its bound
         explored = {'status': 'reachable', 'search_exhaustive': True,
-                   'visited_states': 15,  # More than max_states
-                   'bounds': {'max_steps': 100, 'max_states': 10},  # Hit state bound
-                   'graph': {'states': states, 'edges': edges}}
+                   'visited_states': 100,  # Doesn't matter for independent BFS
+                   'bounds': {'max_steps': 100, 'max_states': 10},  # Low state limit
+                   'graph': {'states': [], 'edges': []}}  # Not used by independent BFS
         
         diags, checks = check_ordering_rules(workflow, explored, 'workflow-1', {'id': 'ctx-1'})
         
-        # Without state bound guard, would return satisfied
-        # With state bound guard, returns incomplete
+        # State bound should trigger incomplete (not satisfied, not violated)
         self.assertEqual(checks[0]['status'], 'incomplete',
                         'State bound must trigger INCOMPLETE')
         self.assertIn('max_states', str(checks[0].get('cutoff_reasons', [])),
@@ -840,7 +834,7 @@ class OrderingRuleTests(unittest.TestCase):
         # Partial graph shows valid path with no violation visible
         # But planner truncated - violation may exist in unexplored states
         actions = [
-            {'id': 'step1', 'requires': ['start'], 'adds': ['s1']},
+            {'id': 'step1', 'requires': ['start'], 'removes': ['start'], 'adds': ['s1']},
             {'id': 'step2', 'requires': ['s1'], 'adds': ['complete']},
         ]
         workflow = make_workflow(actions, initial=['start'], goal=['complete'], ordering_rules=[
@@ -850,8 +844,8 @@ class OrderingRuleTests(unittest.TestCase):
         # Partial graph: both actions reachable, rule satisfied
         states = [
             {'id': 0, 'facts': ['start'], 'depth': 0, 'goal': False},
-            {'id': 1, 'facts': ['s1', 'start'], 'depth': 1, 'goal': False},
-            {'id': 2, 'facts': ['complete', 's1', 'start'], 'depth': 2, 'goal': True}
+            {'id': 1, 'facts': ['s1'], 'depth': 1, 'goal': False},
+            {'id': 2, 'facts': ['complete', 's1'], 'depth': 2, 'goal': True}
         ]
         edges = [
             {'from': 0, 'to': 1, 'action': 'step1'},
@@ -888,10 +882,11 @@ class OrderingRuleTests(unittest.TestCase):
     def test_max_steps_boundary(self):
         """Max_steps semantics: paths up to max_steps-1 are fully explored."""
         actions = [
-            {'id': f'step{i}', 'requires': [f's{i}'], 'adds': [f's{i+1}']}
+            {'id': f'step{i}', 'requires': [f's{i}'], 'removes': [f's{i}'], 'adds': [f's{i+1}']}
             for i in range(22)
         ]
         actions[0]['requires'] = ['start']
+        actions[0]['removes'] = ['start']
         
         workflow = make_workflow(actions, initial=['start'], goal=['s19'], ordering_rules=[
             make_rule('before', ['step0', 'step18'])
@@ -966,10 +961,6 @@ class OrderingRuleTests(unittest.TestCase):
             rule_ids = conflict_diags[0]['responsible_rule_set']
             self.assertIn('ord-1', rule_ids, 'Conflict must mention first rule')
             self.assertIn('ord-2', rule_ids, 'Conflict must mention second rule')
-
-
-if __name__ == '__main__':
-    unittest.main()
 
 
 class OrderingIntegrationTests(unittest.TestCase):
