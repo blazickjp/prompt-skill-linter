@@ -34,7 +34,7 @@ class MutationResult:
     """Classification of one mutant."""
     
     mutant: Mutant
-    status: str  # KILLED, SURVIVED, EQUIVALENT_SUSPECTED, CRASHED
+    status: str  # KILLED, SURVIVED, EQUIVALENT_SUSPECTED, INVALID, CRASHED
     original_diagnostics: frozenset
     mutant_diagnostics: frozenset | None
     error: str | None = None
@@ -47,11 +47,51 @@ class MutationResult:
 
 
 def normalize_diagnostic(d: dict) -> tuple:
-    """Normalize a diagnostic to a comparable key."""
+    """Normalize a diagnostic to a comparable key.
+    
+    Includes witness semantic content (counterexample paths, violation status)
+    while excluding volatile metadata (line numbers, timestamps).
+    """
+    witness = d.get('witness', {})
+    
+    # Extract semantic witness content
+    witness_content = []
+    
+    # For ordering violations: include counterexample
+    if 'counterexample' in witness:
+        witness_content.append(('counterexample', tuple(witness['counterexample'])))
+    
+    # For trace violations: include violating path
+    if 'violating_path' in witness:
+        witness_content.append(('violating_path', tuple(witness['violating_path'])))
+    
+    # For workflow checks: include blocked actions, status
+    if 'blocked_actions' in witness:
+        witness_content.append(('blocked_actions', tuple(sorted(witness['blocked_actions']))))
+    
+    if 'status' in witness:
+        witness_content.append(('status', witness['status']))
+    
+    # For ordering: include violation kind
+    if 'violated' in witness:
+        witness_content.append(('violated', witness['violated']))
+    
+    # For resource checks: include bounds
+    if 'lower_bound_calls' in witness:
+        witness_content.append(('lower_bound_calls', witness['lower_bound_calls']))
+    
+    # For trigger coverage
+    if 'trigger_coverage' in witness:
+        cov = witness['trigger_coverage']
+        witness_content.append(('trigger_status', cov.get('status')))
+        if 'trigger_actions' in cov:
+            witness_content.append(('trigger_actions', tuple(sorted(cov['trigger_actions']))))
+    
     return (
         d['code'],
         tuple(sorted(d['responsible_rule_set'])),
-        d['severity']
+        d['severity'],
+        tuple(sorted(witness_content))
     )
 
 
@@ -472,7 +512,7 @@ def generate_mutants(contract: dict, manifest: dict, max_mutants: int | None = N
     
     Args:
         contract: The contract to mutate
-        manifest: The tool manifest (may also be mutated)
+        manifest: The tool manifest (not mutated - tool schema mutations disabled)
         max_mutants: Maximum number of mutants to generate (None = unlimited)
         operator_filter: Set of operator names to include (None = all)
     
@@ -535,15 +575,8 @@ def generate_mutants(contract: dict, manifest: dict, max_mutants: int | None = N
             if should_include('swap_mutual_exclusion'):
                 mutants.extend(swap_mutual_exclusion_actions(contract, wf_idx, ord_idx))
     
-    # Tool manifest mutations
-    for tool_name, tool in manifest.get('tools', {}).items():
-        for arg_idx in range(len(tool.get('required', []))):
-            if should_include('make_required_optional'):
-                mutants.extend(make_required_arg_optional(manifest, tool_name, arg_idx))
-        
-        for arg_idx in range(len(tool.get('arguments', []))):
-            if should_include('remove_tool_argument'):
-                mutants.extend(remove_tool_argument(manifest, tool_name, arg_idx))
+    # Tool manifest mutations are disabled - they were producing invalid schemas
+    # (mutations removed the 'tools' wrapper, breaking manifest structure)
     
     # Sort by ID for determinism
     mutants.sort(key=lambda m: m.id)
@@ -555,11 +588,23 @@ def generate_mutants(contract: dict, manifest: dict, max_mutants: int | None = N
 
 
 def classify_mutant(mutant: Mutant, original_report: dict, mutant_report: dict | None, error: str | None) -> MutationResult:
-    """Classify a mutant as KILLED, SURVIVED, EQUIVALENT_SUSPECTED, or CRASHED."""
+    """Classify a mutant as KILLED, SURVIVED, EQUIVALENT_SUSPECTED, INVALID, or CRASHED."""
     if error is not None:
+        # Distinguish schema-invalid mutants from real linter bugs
+        invalid_patterns = [
+            'bulk constraints must be unconditional',
+            'references unknown rule',
+            'references unknown action',
+            'must be unconditional declared requirements',
+            'missing version',
+        ]
+        
+        is_invalid = any(pattern in error for pattern in invalid_patterns)
+        status = 'INVALID' if is_invalid else 'CRASHED'
+        
         return MutationResult(
             mutant=mutant,
-            status='CRASHED',
+            status=status,
             original_diagnostics=frozenset(),
             mutant_diagnostics=None,
             error=error
@@ -571,9 +616,10 @@ def classify_mutant(mutant: Mutant, original_report: dict, mutant_report: dict |
     )
     
     if orig_diags == mut_diags:
-        # Check if this is likely equivalent
-        # Heuristic: if both have no errors, might be equivalent
-        if not orig_diags:
+        # Only mark as EQUIVALENT_SUSPECTED if we have evidence of equivalence
+        # For now, only swap_mutual_exclusion is truly equivalent (symmetric)
+        # All other surviving mutants are genuine blind spots
+        if mutant.operator == 'swap_mutual_exclusion':
             status = 'EQUIVALENT_SUSPECTED'
         else:
             status = 'SURVIVED'
@@ -594,11 +640,12 @@ def compute_mutation_score(results: list[MutationResult]) -> dict:
     killed = sum(1 for r in results if r.status == 'KILLED')
     survived = sum(1 for r in results if r.status == 'SURVIVED')
     equivalent = sum(1 for r in results if r.status == 'EQUIVALENT_SUSPECTED')
+    invalid = sum(1 for r in results if r.status == 'INVALID')
     crashed = sum(1 for r in results if r.status == 'CRASHED')
     
-    # Mutation score = killed / (total - equivalent)
-    # We don't count suspected equivalent mutants in the denominator
-    effective_total = total - equivalent
+    # Mutation score = killed / (total - equivalent - invalid)
+    # We exclude equivalent mutants (likely symmetric) and invalid mutants (schema violations)
+    effective_total = total - equivalent - invalid
     score = killed / effective_total if effective_total > 0 else 0.0
     
     # Operator statistics
@@ -606,7 +653,7 @@ def compute_mutation_score(results: list[MutationResult]) -> dict:
     for result in results:
         op = result.mutant.operator
         if op not in operator_stats:
-            operator_stats[op] = {'total': 0, 'killed': 0, 'survived': 0, 'equivalent': 0, 'crashed': 0}
+            operator_stats[op] = {'total': 0, 'killed': 0, 'survived': 0, 'equivalent': 0, 'invalid': 0, 'crashed': 0}
         operator_stats[op]['total'] += 1
         operator_stats[op][result.status.lower()] += 1
     
@@ -615,6 +662,7 @@ def compute_mutation_score(results: list[MutationResult]) -> dict:
         'killed': killed,
         'survived': survived,
         'equivalent_suspected': equivalent,
+        'invalid': invalid,
         'crashed': crashed,
         'mutation_score': score,
         'operator_stats': operator_stats

@@ -61,6 +61,7 @@ def run_mutation_testing(contract, manifest, runtime, root, max_mutants=None, op
     
     stats = compute_mutation_score(results)
     surviving_mutants = [r for r in results if r.status == 'SURVIVED']
+    invalid_mutants = [r for r in results if r.status == 'INVALID']
     crashed_mutants = [r for r in results if r.status == 'CRASHED']
     
     if output_format == 'json':
@@ -75,6 +76,16 @@ def run_mutation_testing(contract, manifest, runtime, root, max_mutants=None, op
                     'hint': r.hint()
                 }
                 for r in surviving_mutants
+            ],
+            'invalid_mutants': [
+                {
+                    'id': r.mutant.id,
+                    'operator': r.mutant.operator,
+                    'description': r.mutant.description,
+                    'pointer': r.mutant.pointer,
+                    'error': r.error
+                }
+                for r in invalid_mutants
             ],
             'crashed_mutants': [
                 {
@@ -93,6 +104,7 @@ def run_mutation_testing(contract, manifest, runtime, root, max_mutants=None, op
         lines.append(f"Killed: {stats['killed']}")
         lines.append(f"Survived: {stats['survived']}")
         lines.append(f"Equivalent (suspected): {stats['equivalent_suspected']}")
+        lines.append(f"Invalid: {stats['invalid']}")
         lines.append(f"Crashed: {stats['crashed']}")
         lines.append(f"Mutation score: {stats['mutation_score']:.2%}")
         lines.append('')
@@ -103,7 +115,7 @@ def run_mutation_testing(contract, manifest, runtime, root, max_mutants=None, op
             lines.append(f"{op}:")
             lines.append(f"  Total: {op_stats['total']}, Killed: {op_stats['killed']}, "
                         f"Survived: {op_stats['survived']}, Equivalent: {op_stats['equivalent']}, "
-                        f"Crashed: {op_stats['crashed']}")
+                        f"Invalid: {op_stats['invalid']}, Crashed: {op_stats['crashed']}")
         lines.append('')
         
         if surviving_mutants:
@@ -114,6 +126,16 @@ def run_mutation_testing(contract, manifest, runtime, root, max_mutants=None, op
                 lines.append(f"  {r.mutant.description}")
                 lines.append(f"  Location: {r.mutant.pointer}")
                 lines.append(f"  Hint: {r.hint()}")
+                lines.append('')
+        
+        if invalid_mutants:
+            lines.append(f'Invalid mutants ({len(invalid_mutants)}):')
+            lines.append('-' * 50)
+            for r in invalid_mutants:
+                lines.append(f"[{r.mutant.id}] {r.mutant.operator}")
+                lines.append(f"  {r.mutant.description}")
+                lines.append(f"  Location: {r.mutant.pointer}")
+                lines.append(f"  Error: {r.error}")
                 lines.append('')
         
         if crashed_mutants:
@@ -128,6 +150,7 @@ def run_mutation_testing(contract, manifest, runtime, root, max_mutants=None, op
         
         lines.append('Note: Mutation testing is performed in-memory only.')
         lines.append('No source files or contracts are modified on disk.')
+        lines.append('Invalid mutants violate schema constraints and are excluded from the mutation score.')
         return '\n'.join(lines) + '\n'
 
 

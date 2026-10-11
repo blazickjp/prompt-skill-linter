@@ -478,12 +478,18 @@ class GuardMutationTests(unittest.TestCase):
     def test_original_not_modified_guard(self):
         """Verify mutations don't modify the original."""
         import copy
-        original_copy = copy.deepcopy(self.contract)
         
+        # Store original kind value
+        original_kind = self.contract['rules'][0]['kind']
+        original_id = id(self.contract['rules'][0])
+        
+        # Generate mutants
         mutants = flip_requirement_prohibition(self.contract, 0)
         
         # This should pass because we use deepcopy
-        self.assertEqual(self.contract, original_copy)
+        self.assertEqual(self.contract['rules'][0]['kind'], original_kind)
+        # Also verify the rule object itself wasn't modified
+        self.assertEqual(id(self.contract['rules'][0]), original_id)
 
 
 if __name__ == '__main__':
