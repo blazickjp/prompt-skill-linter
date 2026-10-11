@@ -655,7 +655,7 @@ def compute_mutation_score(results: list[MutationResult]) -> dict:
         'total_mutants': total,
         'killed': killed,
         'survived': survived,
-        'equivalent_suspected': equivalent,
+        'equivalent': equivalent,  # Use 'equivalent', not 'equivalent_suspected'
         'invalid': invalid,
         'crashed': crashed,
         'mutation_score': score,

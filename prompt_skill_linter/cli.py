@@ -131,7 +131,7 @@ def run_mutation_testing(contract, manifest, runtime, root, max_mutants=None, op
         lines.append(f"Total mutants: {stats['total_mutants']}")
         lines.append(f"Killed: {stats['killed']}")
         lines.append(f"Survived: {stats['survived']}")
-        lines.append(f"Equivalent (suspected): {stats['equivalent_suspected']}")
+        lines.append(f"Equivalent: {stats['equivalent']}")  # Use 'equivalent' consistently
         lines.append(f"Invalid: {stats['invalid']}")
         lines.append(f"Crashed: {stats['crashed']}")
         lines.append(f"Mutation score: {stats['mutation_score']:.2%}")

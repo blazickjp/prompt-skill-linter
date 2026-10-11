@@ -529,7 +529,7 @@ class EquivalentMutantRegressionTests(unittest.TestCase):
         stats = compute_mutation_score([result])
         
         self.assertEqual(stats['total_mutants'], 1)
-        self.assertEqual(stats['equivalent_suspected'], 1)
+        self.assertEqual(stats['equivalent'], 1)  # Use 'equivalent' consistently
         self.assertEqual(stats['killed'], 0)
         self.assertEqual(stats['survived'], 0)
         # Score denominator excludes equivalent
@@ -599,7 +599,7 @@ class EquivalentMutantRegressionTests(unittest.TestCase):
         
         # Should have exactly 1 equivalent mutant (the swap)
         self.assertEqual(stats['total_mutants'], 1)
-        self.assertEqual(stats['equivalent_suspected'], 1)
+        self.assertEqual(stats['equivalent'], 1)  # Use 'equivalent' consistently
         self.assertEqual(stats['killed'], 0)
         self.assertEqual(stats['survived'], 0)
         
@@ -642,7 +642,7 @@ class EquivalentMutantRegressionTests(unittest.TestCase):
         self.assertEqual(stats['total_mutants'], 5)
         self.assertEqual(stats['killed'], 1)
         self.assertEqual(stats['survived'], 1)
-        self.assertEqual(stats['equivalent_suspected'], 1)
+        self.assertEqual(stats['equivalent'], 1)  # Use 'equivalent' consistently
         self.assertEqual(stats['invalid'], 1)
         self.assertEqual(stats['crashed'], 1)
         
