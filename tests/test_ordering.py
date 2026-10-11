@@ -1033,6 +1033,71 @@ class OrderingIntegrationTests(unittest.TestCase):
         counterexample = checks[0].get('counterexample', [])
         self.assertEqual(counterexample, ['bypass1', 'bypass2', 'access'],
                         'Counterexample must show unauthorized bypass path')
+    
+    def test_joe_lint_end_to_end(self):
+        """End-to-end test through lint() on a contract with ordering rules."""
+        import tempfile
+        from pathlib import Path
+        from prompt_skill_linter.engine import lint
+        
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            
+            # Write source file
+            (root / 'contract.txt').write_text('auth before access')
+            
+            src = {'source_id': 'contract', 'start_line': 1, 'end_line': 1, 'quote': 'auth before access'}
+            
+            # Create minimal contract with ordering rule
+            contract = {
+                'version': 1,
+                'sources': [{'id': 'contract', 'path': 'contract.txt'}],
+                'rules': [{'id': 'adv', 'source': src, 'scope': {'entity': 'task', 'temporal': 'run'},
+                          'priority': 0, 'kind': 'permission', 'when': {}, 'exceptions': [],
+                          'effect': {'literal': 'allow', 'value': True}}],
+                'workflows': [{
+                    'id': 'auth-workflow',
+                    'initial': ['start'],
+                    'goal': ['done'],
+                    'advertisement_rule': 'adv',
+                    'actions': [
+                        {'id': 'auth', 'requires': ['start'], 'removes': ['start'], 'adds': ['authorized', 'ready']},
+                        {'id': 'access', 'requires': ['ready'], 'removes': ['ready'], 'adds': ['done']},
+                        {'id': 'bypass', 'requires': ['start'], 'removes': ['start'], 'adds': ['ready']}
+                    ],
+                    'ordering_rules': [{
+                        'id': 'auth-before-access',
+                        'kind': 'before',
+                        'actions': ['auth', 'access'],
+                        'scope': {'entity': 'session', 'temporal': 'always'},
+                        'source': src,
+                        'assumptions': ['Bypass path must not be allowed']
+                    }]
+                }],
+                'contexts': [{'id': 'default', 'facts': {}, 'active_skills': []}]
+            }
+            
+            # Run lint() - should detect violation via bypass path
+            result = lint(contract, {'tools': {}}, {}, root)
+            
+            # Check for ordering violation
+            ordering_diags = [d for d in result.get('diagnostics', [])
+                            if d.get('code', '').startswith('ORDERING_')]
+            self.assertGreater(len(ordering_diags), 0, 'Must detect ordering violation')
+            
+            # Verify it's the before violation
+            violations = [d for d in ordering_diags 
+                         if d.get('code') == 'ORDERING_BEFORE_VIOLATED']
+            self.assertEqual(len(violations), 1, 'Must have exactly one before violation')
+            
+            # Check counterexample includes bypass and access
+            witness = violations[0].get('witness', {})
+            self.assertEqual(witness.get('status'), 'violated')
+            counterexample = witness.get('counterexample', [])
+            self.assertIn('bypass', counterexample, 'Counterexample must include bypass')
+            self.assertIn('access', counterexample, 'Counterexample must include access')
+            self.assertEqual(counterexample, ['bypass', 'access'],
+                           'Counterexample should be shortest: [bypass, access]')
 
 
 if __name__ == '__main__':
