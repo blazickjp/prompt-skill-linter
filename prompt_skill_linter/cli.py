@@ -134,7 +134,13 @@ def run_mutation_testing(contract, manifest, runtime, root, max_mutants=None, op
         lines.append(f"Equivalent: {stats['equivalent']}")  # Use 'equivalent' consistently
         lines.append(f"Invalid: {stats['invalid']}")
         lines.append(f"Crashed: {stats['crashed']}")
-        lines.append(f"Mutation score: {stats['mutation_score']:.2%}")
+        
+        # Format mutation score: null becomes "N/A", numbers become percentages
+        if stats['mutation_score'] is None:
+            score_str = "N/A (0 scorable mutants)"
+        else:
+            score_str = f"{stats['mutation_score']:.2%}"
+        lines.append(f"Mutation score: {score_str}")
         lines.append('')
         
         lines.append('Per-operator statistics:')

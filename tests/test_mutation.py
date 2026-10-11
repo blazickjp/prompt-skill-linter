@@ -532,8 +532,9 @@ class EquivalentMutantRegressionTests(unittest.TestCase):
         self.assertEqual(stats['equivalent'], 1)  # Use 'equivalent' consistently
         self.assertEqual(stats['killed'], 0)
         self.assertEqual(stats['survived'], 0)
-        # Score denominator excludes equivalent
-        self.assertEqual(stats['mutation_score'], 0.0)
+        # Score denominator excludes equivalent: 1 - 1 - 0 = 0 scorable mutants
+        self.assertIsNone(stats['mutation_score'])
+        self.assertEqual(stats['scorable_mutants'], 0)
         
         # Check operator stats
         self.assertEqual(stats['operator_stats']['swap_mutual_exclusion']['equivalent'], 1)
@@ -603,8 +604,9 @@ class EquivalentMutantRegressionTests(unittest.TestCase):
         self.assertEqual(stats['killed'], 0)
         self.assertEqual(stats['survived'], 0)
         
-        # Score denominator should exclude equivalent: 0 / (1 - 1) = 0
-        self.assertEqual(stats['mutation_score'], 0.0)
+        # Score denominator should exclude equivalent: 0 / (1 - 1) = 0 scorable, so score is undefined
+        self.assertIsNone(stats['mutation_score'])
+        self.assertEqual(stats['scorable_mutants'], 0)
         
         # Operator stats should use 'equivalent' key
         self.assertIn('swap_mutual_exclusion', stats['operator_stats'])
@@ -645,6 +647,10 @@ class EquivalentMutantRegressionTests(unittest.TestCase):
         self.assertEqual(stats['equivalent'], 1)  # Use 'equivalent' consistently
         self.assertEqual(stats['invalid'], 1)
         self.assertEqual(stats['crashed'], 1)
+        
+        # Score: 1 killed / (5 - 1 equivalent - 1 invalid) = 1 / 3
+        self.assertAlmostEqual(stats['mutation_score'], 1.0 / 3.0)
+        self.assertEqual(stats['scorable_mutants'], 3)
         
         # Verify operator stats has correct keys
         op_stats = stats['operator_stats']['test_operator']

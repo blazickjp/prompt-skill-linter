@@ -71,9 +71,11 @@ def normalize_diagnostic(d: dict) -> tuple:
     if 'counterexample' in witness:
         witness_content.append(('counterexample', tuple(witness['counterexample'])))
     
-    # For trace violations: include violating path
-    if 'violating_path' in witness:
-        witness_content.append(('violating_path', tuple(witness['violating_path'])))
+    # For trace violations: include violation path (note: trace.py emits 'violation_path', not 'violating_path')
+    if 'violation_path' in witness:
+        path = witness['violation_path']
+        if path is not None:
+            witness_content.append(('violation_path', tuple(path)))
     
     # For workflow checks: include blocked actions, status
     if 'blocked_actions' in witness:
@@ -504,6 +506,25 @@ def remove_tool_argument(manifest: dict, tool_name: str, arg_index: int) -> list
 
 # Generator: apply all applicable operators
 
+# Map operator functions to their canonical IDs (as stored in Mutant.operator)
+OPERATOR_IDS = {
+    'flip_requirement_prohibition': 'flip_kind',
+    'negate_effect_value': 'negate_effect',
+    'add_trivial_exception': 'add_trivial_exception',
+    'delete_rule': 'delete_rule',
+    'swap_priority': 'swap_priority',
+    'equalize_priority': 'equalize_priority',
+    'drop_exception': 'drop_exception',
+    'drop_precondition': 'drop_precondition',
+    'drop_effect': 'drop_effect',
+    'delete_action': 'delete_action',
+    'remove_goal_literal': 'remove_goal_literal',
+    'swap_before_actions': 'swap_before_actions',
+    'change_exactly_once_to_at_most_once': 'change_exactly_to_at_most',
+    'drop_ordering_rule': 'drop_ordering_rule',
+    'swap_mutual_exclusion': 'swap_mutual_exclusion',
+}
+
 RULE_OPERATORS = [
     flip_requirement_prohibition,
     negate_effect_value,
@@ -524,25 +545,30 @@ def generate_mutants(contract: dict, manifest: dict, max_mutants: int | None = N
         contract: The contract to mutate
         manifest: The tool manifest (not mutated - tool schema mutations disabled)
         max_mutants: Maximum number of mutants to generate (None = unlimited)
-        operator_filter: Set of operator names to include (None = all)
+        operator_filter: Set of operator names to include (None = all), using canonical operator IDs
     
     Returns:
         List of mutants, deterministically ordered by ID
     """
     mutants = []
     
-    def should_include(op_name: str) -> bool:
-        return operator_filter is None or op_name in operator_filter
+    def should_include(op_func) -> bool:
+        """Check if operator should be included based on canonical ID."""
+        if operator_filter is None:
+            return True
+        canonical_id = OPERATOR_IDS.get(op_func.__name__, op_func.__name__)
+        return canonical_id in operator_filter
     
     # Rule mutations
     for i, rule in enumerate(contract.get('rules', [])):
         for op_func in RULE_OPERATORS:
-            if should_include(op_func.__name__):
+            if should_include(op_func):
                 mutants.extend(op_func(contract, i))
         
         # Exception mutations
         for j in range(len(rule.get('exceptions', []))):
-            if should_include('drop_exception'):
+            canonical_id = OPERATOR_IDS.get('drop_exception', 'drop_exception')
+            if operator_filter is None or canonical_id in operator_filter:
                 mutants.extend(drop_exception(contract, i, j))
     
     # Rule pair mutations
@@ -550,39 +576,47 @@ def generate_mutants(contract: dict, manifest: dict, max_mutants: int | None = N
     for i in range(len(rules)):
         for j in range(i + 1, len(rules)):
             for op_func in RULE_PAIR_OPERATORS:
-                if should_include(op_func.__name__):
+                if should_include(op_func):
                     mutants.extend(op_func(contract, i, j))
     
     # Workflow mutations
     for wf_idx, workflow in enumerate(contract.get('workflows', [])):
         # Action mutations
         for act_idx, action in enumerate(workflow.get('actions', [])):
-            if should_include('delete_action'):
+            canonical_id = OPERATOR_IDS.get('delete_action', 'delete_action')
+            if operator_filter is None or canonical_id in operator_filter:
                 mutants.extend(delete_action(contract, wf_idx, act_idx))
             
             for pre_idx in range(len(action.get('requires', []))):
-                if should_include('drop_precondition'):
+                canonical_id = OPERATOR_IDS.get('drop_precondition', 'drop_precondition')
+                if operator_filter is None or canonical_id in operator_filter:
                     mutants.extend(drop_precondition(contract, wf_idx, act_idx, pre_idx))
             
             for eff_kind in ('adds', 'removes'):
                 for eff_idx in range(len(action.get(eff_kind, []))):
-                    if should_include('drop_effect'):
+                    canonical_id = OPERATOR_IDS.get('drop_effect', 'drop_effect')
+                    if operator_filter is None or canonical_id in operator_filter:
                         mutants.extend(drop_effect(contract, wf_idx, act_idx, eff_kind, eff_idx))
         
         # Goal mutations
         for goal_idx in range(len(workflow.get('goal', []))):
-            if should_include('remove_goal_literal'):
+            canonical_id = OPERATOR_IDS.get('remove_goal_literal', 'remove_goal_literal')
+            if operator_filter is None or canonical_id in operator_filter:
                 mutants.extend(remove_goal_literal(contract, wf_idx, goal_idx))
         
         # Ordering rule mutations
         for ord_idx, ord_rule in enumerate(workflow.get('ordering_rules', [])):
-            if should_include('drop_ordering_rule'):
+            canonical_id = OPERATOR_IDS.get('drop_ordering_rule', 'drop_ordering_rule')
+            if operator_filter is None or canonical_id in operator_filter:
                 mutants.extend(drop_ordering_rule(contract, wf_idx, ord_idx))
-            if should_include('swap_before_actions'):
+            canonical_id = OPERATOR_IDS.get('swap_before_actions', 'swap_before_actions')
+            if operator_filter is None or canonical_id in operator_filter:
                 mutants.extend(swap_before_actions(contract, wf_idx, ord_idx))
-            if should_include('change_exactly_to_at_most'):
+            canonical_id = OPERATOR_IDS.get('change_exactly_once_to_at_most_once', 'change_exactly_to_at_most')
+            if operator_filter is None or canonical_id in operator_filter:
                 mutants.extend(change_exactly_once_to_at_most_once(contract, wf_idx, ord_idx))
-            if should_include('swap_mutual_exclusion'):
+            canonical_id = OPERATOR_IDS.get('swap_mutual_exclusion', 'swap_mutual_exclusion')
+            if operator_filter is None or canonical_id in operator_filter:
                 mutants.extend(swap_mutual_exclusion_actions(contract, wf_idx, ord_idx))
     
     # Tool manifest mutations are disabled - they were producing invalid schemas
@@ -638,7 +672,7 @@ def compute_mutation_score(results: list[MutationResult]) -> dict:
     # Mutation score = killed / (total - equivalent - invalid)
     # We exclude equivalent mutants (likely symmetric) and invalid mutants (schema violations)
     effective_total = total - equivalent - invalid
-    score = killed / effective_total if effective_total > 0 else 0.0
+    score = (killed / effective_total) if effective_total > 0 else None
     
     # Operator statistics
     operator_stats = {}
@@ -659,5 +693,6 @@ def compute_mutation_score(results: list[MutationResult]) -> dict:
         'invalid': invalid,
         'crashed': crashed,
         'mutation_score': score,
+        'scorable_mutants': effective_total,
         'operator_stats': operator_stats
     }
