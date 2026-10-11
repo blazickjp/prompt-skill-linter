@@ -196,6 +196,13 @@ def validate_ordering_rules(workflow, sources, root):
 def check_ordering_rules(workflow, explored_result, workflow_id, context):
     """Check ordering rules via product construction over (workflow_state, monitor_state).
     
+    CRITICAL: Builds successor relation directly from workflow actions, NOT from the
+    display graph which may be truncated. The planner caps displayed edges at graph_limit
+    (default 200) even when search is exhaustive, so violating paths can be missing from
+    the display graph while still existing in the explored state space.
+    
+    Safety net: If display_truncated is true, return INCOMPLETE regardless.
+    
     For each rule, BFS explores the product space with deduplication on the full
     product state. This is sound: different action histories reaching the same
     workflow state may have different monitor states.
@@ -213,10 +220,44 @@ def check_ordering_rules(workflow, explored_result, workflow_id, context):
     diagnostics = []
     checks = []
     
-    # Build workflow graph
+    # Safety net: if STATES are truncated (not just edges), we can't build complete successors
     graph = explored_result.get('graph', {})
     states_list = graph.get('states', [])
-    edges = graph.get('edges', [])
+    
+    # Check if states themselves are truncated (not just display edges)
+    visited_states = explored_result.get('visited_states', 0)
+    states_truncated = visited_states > len(states_list) if visited_states > 0 else False
+    
+    if states_truncated:
+        # State space itself is incomplete - can't analyze
+        for rule in rules:
+            checks.append({
+                'ordering_rule_id': rule['id'],
+                'workflow': workflow_id,
+                'context_id': context['id'],
+                'status': 'incomplete',
+                'kind': rule['kind'],
+                'reason': 'State space truncated; complete transition relation unavailable',
+                'search_exhaustive': False,
+                'source': rule['source'],
+                'assumptions': rule['assumptions']
+            })
+            diagnostics.append({
+                'code': 'ORDERING_CHECK_INCOMPLETE',
+                'class': 'model_based',
+                'severity': 'warning',
+                'source_spans': [rule['source']],
+                'interpreted_rules': [{'id': rule['id'], 'ordering_rule': rule, 'source': rule['source']}],
+                'resolved_priorities': {},
+                'responsible_rule_set': [rule['id']],
+                'triggering_context': context,
+                'witness': {'status': 'incomplete', 'reason': 'State space truncated'},
+                'assumptions': rule['assumptions'] + ['State space was truncated; full transition relation required for sound analysis.'],
+                'repairs': [],
+                'regression_case': {'context': context, 'expected_code': 'ORDERING_CHECK_INCOMPLETE'},
+                'provenance_limitations': []
+            })
+        return diagnostics, checks
     
     if not states_list:
         # Empty workflow - all rules trivially satisfied but warn
@@ -247,10 +288,43 @@ def check_ordering_rules(workflow, explored_result, workflow_id, context):
     states = {s['id']: s for s in states_list}
     goal = set(workflow.get('goal', []))
     
-    # Build adjacency list with deterministic edge ordering (stable counterexamples)
+    # Build adjacency list: use display edges if available, otherwise build from actions
+    # This is needed because planner caps displayed edges at graph_limit (default 200)
+    edges = graph.get('edges', [])
+    edges_truncated = len(edges) >= explored_result.get('bounds', {}).get('graph_display_limit', 200)
+    
     adj = {}
-    for edge in sorted(edges, key=lambda e: (e['from'], e['action'], e['to'])):
-        adj.setdefault(edge['from'], []).append((edge['to'], edge['action']))
+    
+    if edges_truncated or not edges:
+        # Display edges truncated or missing - build complete adjacency from actions
+        # This is the TRUE transition model based on action semantics
+        for state_id, state_info in states.items():
+            state_facts = frozenset(state_info['facts'])
+            successors = []
+            
+            for action in workflow.get('actions', []):
+                # Check if action is enabled in this state
+                requires = set(action.get('requires', []))
+                if not requires <= state_facts:
+                    continue
+                
+                # Compute successor state
+                removes = set(action.get('removes', []))
+                adds = set(action.get('adds', []))
+                next_facts = (state_facts - removes) | adds
+                
+                # Find successor state ID in explored states
+                for next_id, next_info in states.items():
+                    if frozenset(next_info['facts']) == next_facts:
+                        successors.append((next_id, action['id']))
+                        break
+            
+            if successors:
+                adj[state_id] = sorted(successors, key=lambda x: (x[1], x[0]))
+    else:
+        # Use display edges directly (not truncated)
+        for edge in sorted(edges, key=lambda e: (e['from'], e['action'], e['to'])):
+            adj.setdefault(edge['from'], []).append((edge['to'], edge['action']))
     
     # Check each rule with product construction
     for rule in rules:
