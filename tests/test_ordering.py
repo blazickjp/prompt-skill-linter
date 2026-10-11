@@ -546,34 +546,38 @@ class OrderingRuleTests(unittest.TestCase):
     
     def test_conflicting_rules_both_checked(self):
         """Conflicting ordering rules are both checked independently."""
+        # Actions that remove 'start' make them mutually exclusive on first step
         actions = [
-            {'id': 'a', 'requires': ['start'], 'adds': ['done_a']},
-            {'id': 'b', 'requires': ['start'], 'adds': ['complete']}
+            {'id': 'a', 'requires': ['start'], 'removes': ['start'], 'adds': ['done_a']},
+            {'id': 'b', 'requires': ['start'], 'removes': ['start'], 'adds': ['complete']}
         ]
         workflow = make_workflow(actions, ordering_rules=[
             make_rule('before', ['a', 'b'], rule_id='ord-1'),
-            make_rule('before', ['b', 'a'], rule_id='ord-2')
+            make_rule('before', ['b', 'a'], rule_id='ord-2')  # Conflicts with ord-1
         ])
         
-        # A path with a then b will violate ord-2
-        states = [
-            {'id': 0, 'facts': ['start'], 'depth': 0, 'goal': False},
-            {'id': 1, 'facts': ['done_a', 'start'], 'depth': 1, 'goal': False},
-            {'id': 2, 'facts': ['complete', 'done_a', 'start'], 'depth': 2, 'goal': True}
-        ]
-        edges = [
-            {'from': 0, 'to': 1, 'action': 'a'},
-            {'from': 1, 'to': 2, 'action': 'b'}
-        ]
-        explored = make_explored_result(states, edges)
+        # Run real planner - will explore both 'a' first and 'b' first paths
+        from prompt_skill_linter.planner import explore
+        result = explore(workflow)
         
-        diags, checks = check_ordering_rules(workflow, explored, 'workflow-1', {'id': 'ctx-1'})
+        diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
         
+        # Should detect the conflict - both rules violated on different paths
         self.assertEqual(len(checks), 2)
-        self.assertEqual(checks[0]['status'], 'satisfied')  # a before b
-        self.assertEqual(checks[1]['status'], 'violated')   # b before a violated
-        # Now we generate both a violation diagnostic AND a conflict diagnostic
-        self.assertGreaterEqual(len(diags), 1, 'Should have at least the violation diagnostic')
+        statuses = [c['status'] for c in checks]
+        self.assertEqual(statuses.count('violated'), 2, 
+                        'Both conflicting rules should be violated on different paths')
+        
+        # Must produce an ORDERING_RULES_CONFLICT diagnostic
+        conflict_diags = [d for d in diags if d['code'] == 'ORDERING_RULES_CONFLICT']
+        self.assertGreater(len(conflict_diags), 0, 
+                          'Conflict detection must produce ORDERING_RULES_CONFLICT diagnostic')
+        
+        # Conflict diagnostic must mention both rule IDs
+        if conflict_diags:
+            rule_ids = conflict_diags[0]['responsible_rule_set']
+            self.assertIn('ord-1', rule_ids, 'Conflict must mention first rule')
+            self.assertIn('ord-2', rule_ids, 'Conflict must mention second rule')
     
     def test_deterministic_output(self):
         """Check results are deterministic."""
@@ -806,24 +810,22 @@ class OrderingRuleTests(unittest.TestCase):
     
     def test_state_bound_isolated(self):
         """State bound alone (not depth bound or planner incomplete) triggers INCOMPLETE."""
-        # Many parallel branches, low depth - creates a state space larger than max_states
-        actions = [{'id': f'branch{i}', 'requires': ['start'], 'adds': [f'end{i}']} 
+        # Many parallel branches with removes to prevent repetition
+        actions = [{'id': f'branch{i}', 'requires': ['start'], 'removes': ['start'], 'adds': [f'end{i}']} 
                    for i in range(100)]
         
         workflow = make_workflow(actions, ordering_rules=[
             make_rule('at_most_once', ['branch0'])
         ])
         
-        # Set very low max_states bound (but high max_steps)
-        # Planner exhaustive=True means planner didn't hit its bound
-        explored = {'status': 'reachable', 'search_exhaustive': True,
-                   'visited_states': 100,  # Doesn't matter for independent BFS
-                   'bounds': {'max_steps': 100, 'max_states': 10},  # Low state limit
-                   'graph': {'states': [], 'edges': []}}  # Not used by independent BFS
+        # Run real planner with low state bound, high depth bound
+        from prompt_skill_linter.planner import explore
+        result = explore(workflow, max_steps=100, max_states=10)
         
-        diags, checks = check_ordering_rules(workflow, explored, 'workflow-1', {'id': 'ctx-1'})
+        diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
         
         # State bound should trigger incomplete (not satisfied, not violated)
+        # The planner hit max_states, so search is not exhaustive
         self.assertEqual(checks[0]['status'], 'incomplete',
                         'State bound must trigger INCOMPLETE')
         self.assertIn('max_states', str(checks[0].get('cutoff_reasons', [])),
@@ -880,47 +882,54 @@ class OrderingRuleTests(unittest.TestCase):
                      'Must cite planner incomplete for exactly_once')
     
     def test_max_steps_boundary(self):
-        """Max_steps semantics: paths up to max_steps-1 are fully explored."""
-        actions = [
-            {'id': f'step{i}', 'requires': [f's{i}'], 'removes': [f's{i}'], 'adds': [f's{i+1}']}
-            for i in range(22)
-        ]
+        """Max_steps semantics: paths explored up to depth max_steps-1, cut at max_steps."""
+        # Build a linear chain where goal is terminal (no further actions enabled)
+        actions = []
+        for i in range(17):
+            actions.append({'id': f'step{i}', 'requires': [f's{i}'], 'removes': [f's{i}'], 'adds': [f's{i+1}']})
         actions[0]['requires'] = ['start']
         actions[0]['removes'] = ['start']
+        # Make final action also add 'goal' fact
+        actions[16]['adds'] = [actions[16]['adds'][0], 'goal']
         
-        workflow = make_workflow(actions, initial=['start'], goal=['s19'], ordering_rules=[
-            make_rule('before', ['step0', 'step18'])
+        # First case: goal at depth 17, well under max_steps=20, no further actions
+        workflow = make_workflow(actions, initial=['start'], goal=['goal'], ordering_rules=[
+            make_rule('before', ['step0', 'step16'])
         ])
         
-        # Build a chain that stays under max_steps=20 (path length 19)
-        states = [{'id': i, 'facts': [f's{i}' if i > 0 else 'start'], 'depth': i, 'goal': (i == 19)}
-                 for i in range(20)]
-        edges = [{'from': i, 'to': i+1, 'action': f'step{i}'} for i in range(19)]
+        # Run real planner with max_steps=20
+        from prompt_skill_linter.planner import explore
+        result = explore(workflow, max_steps=20, max_states=2000)
         
-        explored = make_explored_result(states, edges, exhaustive=True)
-        explored['bounds'] = {'max_steps': 20, 'max_states': 2000}
+        diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
         
-        diags, checks = check_ordering_rules(workflow, explored, 'workflow-1', {'id': 'ctx-1'})
-        
-        # Path of length 19 (< max_steps=20) should be fully explored
+        # Path of length 17 (< max_steps=20), terminal state, should be fully explored
         self.assertEqual(checks[0]['status'], 'satisfied',
-                        'Path of length < max_steps should be fully explored')
+                        'Path of length 17 with max_steps=20 should be satisfied')
+        self.assertTrue(result['search_exhaustive'],
+                       'Planner should be exhaustive when goal is terminal')
         
-        # Now test that path of exactly max_steps gets cut
-        workflow2 = make_workflow(actions, initial=['start'], goal=['s20'], ordering_rules=[
+        # Second case: goal at depth 20 (exactly at max_steps), bound will be hit
+        actions2 = []
+        for i in range(20):
+            actions2.append({'id': f'step{i}', 'requires': [f's{i}'], 'removes': [f's{i}'], 'adds': [f's{i+1}']})
+        actions2[0]['requires'] = ['start']
+        actions2[0]['removes'] = ['start']
+        # Add one more action beyond to ensure bound is tested
+        actions2.append({'id': 'step20', 'requires': ['s20'], 'removes': ['s20'], 'adds': ['s21']})
+        
+        workflow2 = make_workflow(actions2, initial=['start'], goal=['s20'], ordering_rules=[
             make_rule('before', ['step0', 'step19'])
         ])
-        states2 = [{'id': i, 'facts': [f's{i}' if i > 0 else 'start'], 'depth': i, 'goal': (i == 20)}
-                  for i in range(21)]
-        edges2 = [{'from': i, 'to': i+1, 'action': f'step{i}'} for i in range(20)]
-        explored2 = make_explored_result(states2, edges2, exhaustive=True)
-        explored2['bounds'] = {'max_steps': 20, 'max_states': 2000}
+        result2 = explore(workflow2, max_steps=20, max_states=2000)
         
-        diags2, checks2 = check_ordering_rules(workflow2, explored2, 'workflow-1', {'id': 'ctx-1'})
+        diags2, checks2 = check_ordering_rules(workflow2, result2, 'workflow-1', {'id': 'ctx-1'})
         
-        # Path of length 20 (>= max_steps=20) should be cut
+        # Path of length 20 hits max_steps boundary
         self.assertEqual(checks2[0]['status'], 'incomplete',
-                        'Path of length >= max_steps should be truncated')
+                        'Path at max_steps=20 should be incomplete')
+        self.assertFalse(result2['search_exhaustive'],
+                        'Planner should hit bound at max_steps=20')
     
     def test_conflicting_before_rules_detected(self):
         """A before B and B before A should be detected as conflicting."""
