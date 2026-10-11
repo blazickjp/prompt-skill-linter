@@ -256,12 +256,6 @@ def _check_single_rule(rule, paths, search_exhaustive, workflow, explored_result
 def _check_before(rule, first, second, paths, search_exhaustive, workflow, explored_result):
     """Check that first occurs before second on all paths where second occurs."""
     # Find paths where second occurs
-    # MUTATED: Always return satisfied
-    return {
-        "status": "satisfied",
-        "kind": "before",
-        "search_exhaustive": search_exhaustive
-    }
     violating_paths = []
     
     for path in paths:
@@ -325,12 +319,6 @@ def _check_before(rule, first, second, paths, search_exhaustive, workflow, explo
 
 def _check_mutual_exclusion(rule, action_a, action_b, paths, search_exhaustive):
     """Check that action_a and action_b never both occur on the same path."""
-    # MUTATED: Always return satisfied
-    return {
-        "status": "satisfied",
-        "kind": "mutual-exclusion",
-        "search_exhaustive": search_exhaustive
-    }
     violating_paths = []
     
     for path in paths:
@@ -388,12 +376,6 @@ def _check_mutual_exclusion(rule, action_a, action_b, paths, search_exhaustive):
 
 def _check_exactly_once(rule, action, paths, search_exhaustive, workflow):
     """Check that action occurs exactly once on every complete path (paths reaching goal)."""
-    # MUTATED: Always return satisfied
-    return {
-        "status": "satisfied",
-        "kind": "exactly-once",
-        "search_exhaustive": search_exhaustive
-    }
     goal = set(workflow.get('goal', []))
     violating_paths = []
     reason_counts = {}
@@ -472,12 +454,6 @@ def _check_exactly_once(rule, action, paths, search_exhaustive, workflow):
 
 def _check_at_most_once(rule, action, paths, search_exhaustive):
     """Check that action occurs at most once on every path."""
-    # MUTATED: Always return satisfied
-    return {
-        "status": "satisfied",
-        "kind": "at-most-once",
-        "search_exhaustive": search_exhaustive
-    }
     violating_paths = []
     
     for path in paths:
