@@ -595,7 +595,7 @@ def _detect_conflicts(rules, checks):
     """Detect pairwise conflicts in before rules.
     
     Simple heuristic: A before B and B before A is a cycle.
-    Only warn when BOTH rules are problematic (both violated, or can't both be satisfied).
+    Flag when both rules exist (logical conflict), especially when at least one is violated.
     """
     conflicts = []
     before_rules = [(r, c) for r, c in zip(rules, checks) if r['kind'] == 'before']
@@ -607,16 +607,13 @@ def _detect_conflicts(rules, checks):
             a2, b2 = rule2['actions']
             
             if (a1 == b2 and b1 == a2):  # Direct cycle
-                # Only report conflict if BOTH are violated/problematic
-                both_violated = (check1['status'] == 'violated' and check2['status'] == 'violated')
-                both_problematic = (check1['status'] in ('violated', 'incomplete') and 
-                                  check2['status'] in ('violated', 'incomplete'))
-                
-                if both_violated:
+                # This is a logical conflict - the rules are mutually incompatible
+                # At least one must be violated (or both incomplete)
+                if check1['status'] in ('violated', 'incomplete') or check2['status'] in ('violated', 'incomplete'):
                     conflicts.append({
                         'rules': [rule1, rule2],
-                        'reason': f'Cycle detected: {a1} before {b1} and {b1} before {a1}, both violated',
-                        'both_violated': True
+                        'reason': f'Cycle detected: {a1} before {b1} and {b1} before {a1} are mutually incompatible',
+                        'both_checked': True
                     })
     
     return conflicts

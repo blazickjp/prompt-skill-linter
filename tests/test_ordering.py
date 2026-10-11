@@ -572,7 +572,8 @@ class OrderingRuleTests(unittest.TestCase):
         self.assertEqual(len(checks), 2)
         self.assertEqual(checks[0]['status'], 'satisfied')  # a before b
         self.assertEqual(checks[1]['status'], 'violated')   # b before a violated
-        self.assertEqual(len(diags), 1)  # Only the violated one
+        # Now we generate both a violation diagnostic AND a conflict diagnostic
+        self.assertGreaterEqual(len(diags), 1, 'Should have at least the violation diagnostic')
     
     def test_deterministic_output(self):
         """Check results are deterministic."""
@@ -744,24 +745,136 @@ class OrderingRuleTests(unittest.TestCase):
     def test_non_zero_initial_state(self):
         """Initial state ID should not be hardcoded to 0."""
         actions = [
-            {'id': 'a', 'requires': ['start'], 'adds': ['complete']}
+            {'id': 'step1', 'requires': ['start'], 'adds': ['mid']},
+            {'id': 'step2', 'requires': ['mid'], 'adds': ['complete']}
         ]
-        workflow = make_workflow(actions, ordering_rules=[
-            make_rule('at_most_once', ['a'])
+        workflow = make_workflow(actions, initial=['start'], goal=['complete'], ordering_rules=[
+            make_rule('before', ['step1', 'step2'])
         ])
         
-        # Initial state is 5, not 0
+        # Put initial state (depth=0) AFTER other states in the list
+        # States are intentionally out of order - ID 0 is NOT the initial state
         states = [
-            {'id': 5, 'facts': ['start'], 'depth': 0, 'goal': False},
-            {'id': 6, 'facts': ['complete', 'start'], 'depth': 1, 'goal': True}
+            {'id': 0, 'facts': ['mid'], 'depth': 1, 'goal': False},  # Decoy at ID 0
+            {'id': 1, 'facts': ['complete', 'mid', 'start'], 'depth': 2, 'goal': True},
+            {'id': 99, 'facts': ['start'], 'depth': 0, 'goal': False},  # True initial! depth=0, but ID=99
         ]
-        edges = [{'from': 5, 'to': 6, 'action': 'a'}]
+        edges = [
+            {'from': 99, 'to': 0, 'action': 'step1'},
+            {'from': 0, 'to': 1, 'action': 'step2'}
+        ]
         explored = make_explored_result(states, edges)
         
         diags, checks = check_ordering_rules(workflow, explored, 'workflow-1', {'id': 'ctx-1'})
         
-        # Should work correctly even with non-zero initial state
-        self.assertEqual(checks[0]['status'], 'satisfied')
+        # Should be satisfied (step1 always before step2)
+        # If code uses ID 0 or states[0], it will start from wrong state and fail
+        self.assertEqual(checks[0]['status'], 'satisfied',
+                        'Must use depth=0 state, not hardcoded ID or states[0]')
+    
+    def test_depth_bound_isolated(self):
+        """Depth bound alone (not state bound or planner incomplete) triggers INCOMPLETE."""
+        # Linear chain to force deep exploration
+        actions = [{'id': f'step{i}', 'requires': [f's{i}'], 'adds': [f's{i+1}']} 
+                   for i in range(22)]
+        actions[0]['requires'] = ['start']
+        
+        workflow = make_workflow(actions, initial=['start'], goal=['complete'], ordering_rules=[
+            make_rule('at_most_once', ['step0'])
+        ])
+        
+        # Chain goes to depth 21, but max_steps=20
+        # Graph shows edges that WOULD be explored if not for depth bound
+        states = [{'id': i, 'facts': [f's{i}' if i > 0 else 'start'], 'depth': i, 'goal': True} 
+                 for i in range(22)]
+        edges = [{'from': i, 'to': i+1, 'action': f'step{i}'} for i in range(21)]
+        
+        # CRITICAL: search_exhaustive=True, under max_states, but depth 21 > max_steps 20
+        explored = {'status': 'reachable', 'search_exhaustive': True, 
+                   'visited_states': 22,
+                   'bounds': {'max_steps': 20, 'max_states': 2000},
+                   'graph': {'states': states, 'edges': edges}}
+        
+        diags, checks = check_ordering_rules(workflow, explored, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Depth bound guard should trigger incomplete
+        self.assertEqual(checks[0]['status'], 'incomplete',
+                        'Depth bound must trigger INCOMPLETE')
+        self.assertIn('max_steps', str(checks[0].get('cutoff_reasons', [])),
+                     'Must cite depth bound')
+    
+    def test_state_bound_isolated(self):
+        """State bound alone (not depth bound or planner incomplete) triggers INCOMPLETE."""
+        # Many parallel branches, low depth
+        actions = [{'id': f'branch{i}', 'requires': ['start'], 'adds': [f'end{i}']} 
+                   for i in range(100)]
+        
+        workflow = make_workflow(actions, ordering_rules=[
+            make_rule('at_most_once', ['branch0'])
+        ])
+        
+        # Only 11 states but visited_states says we hit the limit
+        states = [{'id': 0, 'facts': ['start'], 'depth': 0, 'goal': True}]
+        states += [{'id': i+1, 'facts': [f'end{i}', 'start'], 'depth': 1, 'goal': True} 
+                  for i in range(10)]
+        edges = [{'from': 0, 'to': i+1, 'action': f'branch{i}'} for i in range(10)]
+        
+        # CRITICAL: exhaustive=True, low depth, but we say we hit state limit
+        explored = {'status': 'reachable', 'search_exhaustive': True,
+                   'visited_states': 15,  # More than max_states
+                   'bounds': {'max_steps': 100, 'max_states': 10},  # Hit state bound
+                   'graph': {'states': states, 'edges': edges}}
+        
+        diags, checks = check_ordering_rules(workflow, explored, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Without state bound guard, would return satisfied
+        # With state bound guard, returns incomplete
+        self.assertEqual(checks[0]['status'], 'incomplete',
+                        'State bound must trigger INCOMPLETE')
+        self.assertIn('max_states', str(checks[0].get('cutoff_reasons', [])),
+                     'Must cite state bound')
+    
+    def test_max_steps_boundary(self):
+        """Max_steps semantics: paths up to max_steps-1 are fully explored."""
+        actions = [
+            {'id': f'step{i}', 'requires': [f's{i}'], 'adds': [f's{i+1}']}
+            for i in range(22)
+        ]
+        actions[0]['requires'] = ['start']
+        
+        workflow = make_workflow(actions, initial=['start'], goal=['s19'], ordering_rules=[
+            make_rule('before', ['step0', 'step18'])
+        ])
+        
+        # Build a chain that stays under max_steps=20 (path length 19)
+        states = [{'id': i, 'facts': [f's{i}' if i > 0 else 'start'], 'depth': i, 'goal': (i == 19)}
+                 for i in range(20)]
+        edges = [{'from': i, 'to': i+1, 'action': f'step{i}'} for i in range(19)]
+        
+        explored = make_explored_result(states, edges, exhaustive=True)
+        explored['bounds'] = {'max_steps': 20, 'max_states': 2000}
+        
+        diags, checks = check_ordering_rules(workflow, explored, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Path of length 19 (< max_steps=20) should be fully explored
+        self.assertEqual(checks[0]['status'], 'satisfied',
+                        'Path of length < max_steps should be fully explored')
+        
+        # Now test that path of exactly max_steps gets cut
+        workflow2 = make_workflow(actions, initial=['start'], goal=['s20'], ordering_rules=[
+            make_rule('before', ['step0', 'step19'])
+        ])
+        states2 = [{'id': i, 'facts': [f's{i}' if i > 0 else 'start'], 'depth': i, 'goal': (i == 20)}
+                  for i in range(21)]
+        edges2 = [{'from': i, 'to': i+1, 'action': f'step{i}'} for i in range(20)]
+        explored2 = make_explored_result(states2, edges2, exhaustive=True)
+        explored2['bounds'] = {'max_steps': 20, 'max_states': 2000}
+        
+        diags2, checks2 = check_ordering_rules(workflow2, explored2, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Path of length 20 (>= max_steps=20) should be cut
+        self.assertEqual(checks2[0]['status'], 'incomplete',
+                        'Path of length >= max_steps should be truncated')
     
     def test_conflicting_before_rules_detected(self):
         """A before B and B before A should be detected as conflicting."""
@@ -791,6 +904,17 @@ class OrderingRuleTests(unittest.TestCase):
         # At minimum, one rule should violate
         statuses = [c['status'] for c in checks]
         self.assertIn('violated', statuses, 'Conflicting rules should cause at least one violation')
+        
+        # Must produce an ORDERING_RULES_CONFLICT diagnostic
+        conflict_diags = [d for d in diags if d['code'] == 'ORDERING_RULES_CONFLICT']
+        self.assertGreater(len(conflict_diags), 0, 
+                          'Conflict detection must produce ORDERING_RULES_CONFLICT diagnostic')
+        
+        # Conflict diagnostic must mention both rule IDs
+        if conflict_diags:
+            rule_ids = conflict_diags[0]['responsible_rule_set']
+            self.assertIn('ord-1', rule_ids, 'Conflict must mention first rule')
+            self.assertIn('ord-2', rule_ids, 'Conflict must mention second rule')
 
 
 if __name__ == '__main__':
