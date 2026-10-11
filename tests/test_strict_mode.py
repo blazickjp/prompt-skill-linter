@@ -412,8 +412,8 @@ class StrictModeTests(unittest.TestCase):
         codes = [v['rule_id'] for v in violations]
         self.assertNotIn('unsupported_allOf', codes)
     
-    def test_argument_name_ref_not_flagged(self):
-        """Property named '$ref' should not cause issues."""
+    def test_argument_name_ref_not_flagged_openai(self):
+        """Property named '$ref' should not cause issues (OpenAI)."""
         schema = {
             'type': 'object',
             'properties': {
@@ -425,6 +425,27 @@ class StrictModeTests(unittest.TestCase):
         violations = check_schema_against_provider(schema, 'openai')
         # Should not crash or produce spurious errors
         self.assertIsInstance(violations, list)
+        codes = [v['rule_id'] for v in violations]
+        # Should not flag recursive schema (it's just a property name)
+        self.assertNotIn('unsupported_recursive_schema', codes)
+    
+    def test_argument_name_ref_not_flagged_anthropic(self):
+        """Property named '$ref' should not crash recursive detector (Anthropic)."""
+        schema = {
+            'type': 'object',
+            'properties': {
+                '$ref': {'type': 'string'}
+            },
+            'required': ['$ref'],
+            'additionalProperties': False
+        }
+        # This used to crash with "TypeError: unhashable type: 'dict'"
+        violations = check_schema_against_provider(schema, 'anthropic')
+        # Should not crash or produce spurious errors
+        self.assertIsInstance(violations, list)
+        codes = [v['rule_id'] for v in violations]
+        # Should not flag recursive schema (it's just a property name)
+        self.assertNotIn('unsupported_recursive_schema', codes)
     
     def test_argument_name_default_not_flagged(self):
         """Property named 'default' should not cause issues."""
@@ -469,6 +490,71 @@ class StrictModeTests(unittest.TestCase):
         self.assertNotIn('unsupported_if_then_else', codes)
         self.assertNotIn('unsupported_allOf', codes)
     
+    def test_instance_data_with_ref_in_default(self):
+        """Instance data with $ref in default should not crash recursive detector."""
+        schema = {
+            'type': 'object',
+            'properties': {
+                'config': {
+                    'type': 'object',
+                    'properties': {
+                        'mode': {'type': 'string'}
+                    },
+                    'required': ['mode'],
+                    'additionalProperties': False,
+                    'default': {
+                        '$ref': '#/definitions/someRef',
+                        'value': 123
+                    }
+                }
+            },
+            'required': ['config'],
+            'additionalProperties': False
+        }
+        # Should not crash when checking for recursive refs
+        violations_openai = check_schema_against_provider(schema, 'openai')
+        violations_anthropic = check_schema_against_provider(schema, 'anthropic')
+        self.assertIsInstance(violations_openai, list)
+        self.assertIsInstance(violations_anthropic, list)
+    
+    def test_instance_data_with_ref_in_enum(self):
+        """Instance data with $ref in enum should not crash recursive detector."""
+        schema = {
+            'type': 'object',
+            'properties': {
+                'selector': {
+                    'type': 'string',
+                    'enum': ['$ref', 'value', 'other']
+                }
+            },
+            'required': ['selector'],
+            'additionalProperties': False
+        }
+        # Should not crash when checking for recursive refs
+        violations_openai = check_schema_against_provider(schema, 'openai')
+        violations_anthropic = check_schema_against_provider(schema, 'anthropic')
+        self.assertIsInstance(violations_openai, list)
+        self.assertIsInstance(violations_anthropic, list)
+    
+    def test_instance_data_with_ref_in_examples(self):
+        """Instance data with $ref in examples should not crash recursive detector."""
+        schema = {
+            'type': 'object',
+            'properties': {
+                'path': {
+                    'type': 'string',
+                    'examples': ['$ref', '/api/endpoint']
+                }
+            },
+            'required': ['path'],
+            'additionalProperties': False
+        }
+        # Should not crash when checking for recursive refs
+        violations_openai = check_schema_against_provider(schema, 'openai')
+        violations_anthropic = check_schema_against_provider(schema, 'anthropic')
+        self.assertIsInstance(violations_openai, list)
+        self.assertIsInstance(violations_anthropic, list)
+    
     def test_real_nested_keyword_still_rejected(self):
         """Real nested unsupported keywords in actual schema positions are still caught."""
         schema = {
@@ -493,6 +579,28 @@ class StrictModeTests(unittest.TestCase):
         # And it should point to the right location
         paths = [v['path'] for v in violations if v['rule_id'] == 'unsupported_minimum']
         self.assertEqual(paths, ['$.properties.data.properties.value'])
+    
+    def test_real_recursive_ref_still_detected(self):
+        """Real recursive $ref cycles are still detected by Anthropic check."""
+        schema = {
+            '$defs': {
+                'node': {
+                    'type': 'object',
+                    'properties': {
+                        'children': {
+                            'type': 'array',
+                            'items': {'$ref': '#/$defs/node'}
+                        }
+                    },
+                    'additionalProperties': False
+                }
+            },
+            '$ref': '#/$defs/node'
+        }
+        violations = check_schema_against_provider(schema, 'anthropic')
+        codes = [v['rule_id'] for v in violations]
+        # Real recursion should be caught
+        self.assertIn('unsupported_recursive_schema', codes)
 
 
 if __name__ == '__main__':

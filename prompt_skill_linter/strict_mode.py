@@ -85,16 +85,30 @@ def traverse_schema(schema: Any, path: str = '$') -> list[tuple[str, Any]]:
 
 
 def detect_recursive_refs(schema: dict) -> list[str]:
-    """Detect recursive $ref cycles in a schema."""
-    refs_seen = set()
+    """Detect recursive $ref cycles in a schema.
+    
+    Schema-aware: only follows $ref in actual schema positions, not in
+    property names or instance data.
+    """
     cycles = []
+    
+    # Schema positions (same as traverse_schema)
+    schema_value_maps = {'properties', 'patternProperties', '$defs', 'definitions', 'dependentSchemas'}
+    single_schema_keys = {'items', 'additionalItems', 'contains', 'propertyNames', 
+                         'if', 'then', 'else', 'not'}
+    schema_array_keys = {'allOf', 'anyOf', 'oneOf', 'prefixItems'}
+    instance_data_keys = {'default', 'const', 'enum', 'examples'}
     
     def visit(node, path, visiting):
         if not isinstance(node, dict):
             return
         
+        # Check if this node has a $ref
         if '$ref' in node:
             ref = node['$ref']
+            if not isinstance(ref, str):
+                # $ref value should be a string; skip if not
+                return
             if ref in visiting:
                 cycles.append(path)
                 return
@@ -104,18 +118,35 @@ def detect_recursive_refs(schema: dict) -> list[str]:
                 try:
                     for segment in target_path:
                         target = target[segment]
-                    visit(target, path, visiting | {ref})
+                    if isinstance(target, dict):
+                        visit(target, path, visiting | {ref})
                 except (KeyError, TypeError):
                     pass
         
+        # Recurse into schema positions only (skip instance data and property name maps)
         for key, value in node.items():
-            if key != '$ref':
+            if key == '$ref' or key in instance_data_keys:
+                continue
+            
+            if key in schema_value_maps:
+                if isinstance(value, dict):
+                    for prop_name, prop_schema in value.items():
+                        if isinstance(prop_schema, dict):
+                            visit(prop_schema, f'{path}.{key}.{prop_name}', visiting)
+            
+            elif key in single_schema_keys:
                 if isinstance(value, dict):
                     visit(value, f'{path}.{key}', visiting)
-                elif isinstance(value, list):
+            
+            elif key in schema_array_keys:
+                if isinstance(value, list):
                     for i, item in enumerate(value):
                         if isinstance(item, dict):
                             visit(item, f'{path}.{key}[{i}]', visiting)
+            
+            elif key == 'additionalProperties':
+                if isinstance(value, dict):
+                    visit(value, f'{path}.{key}', visiting)
     
     visit(schema, '$', set())
     return cycles
