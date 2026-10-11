@@ -21,19 +21,66 @@ def load_provider_rules(provider: str) -> dict:
 
 
 def traverse_schema(schema: Any, path: str = '$') -> list[tuple[str, Any]]:
-    """Yield (json_pointer, node) for every node in the schema tree."""
+    """Yield (json_pointer, node) for every schema node in the tree.
+    
+    Schema-aware traversal: recurses into schema positions (properties values,
+    items, anyOf/allOf/oneOf entries, etc.) but not into property name maps
+    or instance data (default, enum, const, examples).
+    """
     if not isinstance(schema, dict):
         return [(path, schema)]
     
     result = [(path, schema)]
+    
+    # Schema positions that contain nested schemas (map property names to schemas)
+    schema_value_maps = {'properties', 'patternProperties', '$defs', 'definitions', 'dependentSchemas'}
+    
+    # Schema positions that contain a single schema
+    single_schema_keys = {'items', 'additionalItems', 'contains', 'propertyNames', 
+                         'if', 'then', 'else', 'not'}
+    
+    # Schema positions that contain arrays of schemas
+    schema_array_keys = {'allOf', 'anyOf', 'oneOf', 'prefixItems'}
+    
+    # Instance data keys (not schemas)
+    instance_data_keys = {'default', 'const', 'enum', 'examples'}
+    
     for key, value in schema.items():
-        child_path = f'{path}.{key}' if key not in ('$ref', '$defs', 'definitions') else f'{path}/{key}'
-        if isinstance(value, dict):
-            result.extend(traverse_schema(value, child_path))
-        elif isinstance(value, list):
-            for i, item in enumerate(value):
-                if isinstance(item, dict):
-                    result.extend(traverse_schema(item, f'{child_path}[{i}]'))
+        # Skip instance data - these contain example values, not schemas
+        if key in instance_data_keys:
+            continue
+        
+        # Handle schema value maps (properties, $defs, etc.)
+        if key in schema_value_maps:
+            if isinstance(value, dict):
+                for prop_name, prop_schema in value.items():
+                    child_path = f'{path}.{key}.{prop_name}'
+                    if isinstance(prop_schema, dict):
+                        result.extend(traverse_schema(prop_schema, child_path))
+        
+        # Handle single schema positions
+        elif key in single_schema_keys:
+            child_path = f'{path}.{key}'
+            if isinstance(value, dict):
+                result.extend(traverse_schema(value, child_path))
+        
+        # Handle schema arrays
+        elif key in schema_array_keys:
+            if isinstance(value, list):
+                for i, item in enumerate(value):
+                    if isinstance(item, dict):
+                        result.extend(traverse_schema(item, f'{path}.{key}[{i}]'))
+        
+        # Handle additionalProperties (can be boolean or schema)
+        elif key == 'additionalProperties':
+            if isinstance(value, dict):
+                result.extend(traverse_schema(value, f'{path}.{key}'))
+        
+        # Handle $ref specially
+        elif key == '$ref':
+            # Don't recurse into $ref values (they're strings), but track the path
+            pass
+    
     return result
 
 

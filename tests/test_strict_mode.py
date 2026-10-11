@@ -30,7 +30,7 @@ class StrictModeTests(unittest.TestCase):
         self.assertTrue(len(anthropic['rules']) > 0)
     
     def test_traverse_schema(self):
-        """Schema traversal visits all nodes."""
+        """Schema traversal visits schema nodes but not property name maps."""
         schema = {
             "type": "object",
             "properties": {
@@ -40,10 +40,13 @@ class StrictModeTests(unittest.TestCase):
         }
         nodes = traverse_schema(schema)
         paths = [path for path, _ in nodes]
+        # Root schema
         self.assertIn('$', paths)
-        self.assertIn('$.properties', paths)
+        # Property schemas (values in the properties map)
         self.assertIn('$.properties.name', paths)
         self.assertIn('$.properties.age', paths)
+        # Property name map itself should NOT be included (it's not a schema)
+        self.assertNotIn('$.properties', paths)
     
     def test_detect_recursive_refs(self):
         """Recursive schema detection works."""
@@ -338,6 +341,158 @@ class StrictModeTests(unittest.TestCase):
         json1 = json.dumps(result1, sort_keys=True)
         json2 = json.dumps(result2, sort_keys=True)
         self.assertEqual(json1, json2)
+    
+    def test_argument_name_minimum_not_flagged(self):
+        """Property named 'minimum' should not trigger unsupported_minimum."""
+        schema = {
+            'type': 'object',
+            'properties': {
+                'minimum': {'type': 'number'}
+            },
+            'required': ['minimum'],
+            'additionalProperties': False
+        }
+        violations = check_schema_against_provider(schema, 'anthropic')
+        codes = [v['rule_id'] for v in violations]
+        self.assertNotIn('unsupported_minimum', codes)
+    
+    def test_argument_name_maxLength_not_flagged(self):
+        """Property named 'maxLength' should not trigger unsupported_maxLength."""
+        schema = {
+            'type': 'object',
+            'properties': {
+                'maxLength': {'type': 'number'}
+            },
+            'required': ['maxLength'],
+            'additionalProperties': False
+        }
+        violations = check_schema_against_provider(schema, 'anthropic')
+        codes = [v['rule_id'] for v in violations]
+        self.assertNotIn('unsupported_maxLength', codes)
+    
+    def test_argument_name_if_not_flagged(self):
+        """Property named 'if' should not trigger unsupported_if_then_else."""
+        schema = {
+            'type': 'object',
+            'properties': {
+                'if': {'type': 'string'}
+            },
+            'required': ['if'],
+            'additionalProperties': False
+        }
+        violations = check_schema_against_provider(schema, 'openai')
+        codes = [v['rule_id'] for v in violations]
+        self.assertNotIn('unsupported_if_then_else', codes)
+    
+    def test_argument_name_not_not_flagged(self):
+        """Property named 'not' should not trigger unsupported_not."""
+        schema = {
+            'type': 'object',
+            'properties': {
+                'not': {'type': 'boolean'}
+            },
+            'required': ['not'],
+            'additionalProperties': False
+        }
+        violations = check_schema_against_provider(schema, 'openai')
+        codes = [v['rule_id'] for v in violations]
+        self.assertNotIn('unsupported_not', codes)
+    
+    def test_argument_name_allOf_not_flagged(self):
+        """Property named 'allOf' should not trigger unsupported_allOf."""
+        schema = {
+            'type': 'object',
+            'properties': {
+                'allOf': {'type': 'array', 'items': {'type': 'string'}}
+            },
+            'required': ['allOf'],
+            'additionalProperties': False
+        }
+        violations = check_schema_against_provider(schema, 'openai')
+        codes = [v['rule_id'] for v in violations]
+        self.assertNotIn('unsupported_allOf', codes)
+    
+    def test_argument_name_ref_not_flagged(self):
+        """Property named '$ref' should not cause issues."""
+        schema = {
+            'type': 'object',
+            'properties': {
+                '$ref': {'type': 'string'}
+            },
+            'required': ['$ref'],
+            'additionalProperties': False
+        }
+        violations = check_schema_against_provider(schema, 'openai')
+        # Should not crash or produce spurious errors
+        self.assertIsInstance(violations, list)
+    
+    def test_argument_name_default_not_flagged(self):
+        """Property named 'default' should not cause issues."""
+        schema = {
+            'type': 'object',
+            'properties': {
+                'default': {'type': 'string'}
+            },
+            'required': ['default'],
+            'additionalProperties': False
+        }
+        violations = check_schema_against_provider(schema, 'openai')
+        # Should not crash or produce spurious errors
+        self.assertIsInstance(violations, list)
+    
+    def test_instance_data_with_keyword_like_keys(self):
+        """Instance data (default, enum, const) with keyword-like keys should not be flagged."""
+        schema = {
+            'type': 'object',
+            'properties': {
+                'config': {
+                    'type': 'object',
+                    'properties': {
+                        'mode': {'type': 'string'}
+                    },
+                    'required': ['mode'],
+                    'additionalProperties': False,
+                    'default': {
+                        'minimum': 10,
+                        'if': True,
+                        'allOf': []
+                    }
+                }
+            },
+            'required': ['config'],
+            'additionalProperties': False
+        }
+        violations = check_schema_against_provider(schema, 'openai')
+        codes = [v['rule_id'] for v in violations]
+        # default object contains keyword-like keys, but they're instance data
+        self.assertNotIn('unsupported_minimum', codes)
+        self.assertNotIn('unsupported_if_then_else', codes)
+        self.assertNotIn('unsupported_allOf', codes)
+    
+    def test_real_nested_keyword_still_rejected(self):
+        """Real nested unsupported keywords in actual schema positions are still caught."""
+        schema = {
+            'type': 'object',
+            'properties': {
+                'data': {
+                    'type': 'object',
+                    'properties': {
+                        'value': {'type': 'number', 'minimum': 0}
+                    },
+                    'required': ['value'],
+                    'additionalProperties': False
+                }
+            },
+            'required': ['data'],
+            'additionalProperties': False
+        }
+        violations = check_schema_against_provider(schema, 'anthropic')
+        codes = [v['rule_id'] for v in violations]
+        # Real minimum constraint should be caught
+        self.assertIn('unsupported_minimum', codes)
+        # And it should point to the right location
+        paths = [v['path'] for v in violations if v['rule_id'] == 'unsupported_minimum']
+        self.assertEqual(paths, ['$.properties.data.properties.value'])
 
 
 if __name__ == '__main__':

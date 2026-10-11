@@ -181,5 +181,52 @@ class MutationTests(unittest.TestCase):
         self.assertEqual(uncaught, [], f"Rules not caught by any test: {uncaught}")
 
 
+    def test_mutation_traversal_must_skip_property_maps(self):
+        """Treating property name maps as schema nodes must fail tests."""
+        # Save original traverse_schema
+        from prompt_skill_linter import strict_mode
+        original_traverse = strict_mode.traverse_schema
+        
+        # Create buggy version that treats property maps as schemas (old behavior)
+        def buggy_traverse(schema, path='$'):
+            if not isinstance(schema, dict):
+                return [(path, schema)]
+            result = [(path, schema)]
+            for key, value in schema.items():
+                child_path = f'{path}.{key}'
+                if isinstance(value, dict):
+                    result.extend(buggy_traverse(value, child_path))
+                elif isinstance(value, list):
+                    for i, item in enumerate(value):
+                        if isinstance(item, dict):
+                            result.extend(buggy_traverse(item, f'{child_path}[{i}]'))
+            return result
+        
+        # Temporarily use buggy version
+        strict_mode.traverse_schema = buggy_traverse
+        
+        try:
+            # Schema with property named 'minimum' should fail with buggy traversal
+            schema = {
+                'type': 'object',
+                'properties': {
+                    'minimum': {'type': 'number'}
+                },
+                'required': ['minimum'],
+                'additionalProperties': False
+            }
+            violations = strict_mode.check_schema_against_provider(schema, 'anthropic')
+            codes = [v['rule_id'] for v in violations]
+            
+            # Buggy traversal SHOULD flag this (proving the bug exists)
+            has_spurious_error = 'unsupported_minimum' in codes
+            
+            self.assertTrue(has_spurious_error, 
+                "Buggy traversal should have caused spurious error, proving the fix is necessary")
+        finally:
+            # Restore original
+            strict_mode.traverse_schema = original_traverse
+
+
 if __name__ == '__main__':
     unittest.main()
