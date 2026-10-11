@@ -30,7 +30,8 @@ def render(report):
             lines.append('  Assumption: ' + assumption)
         for limitation in d.get('provenance_limitations', []):
             lines.append('  Provenance limitation: ' + limitation)
-        lines.append('  Rules: ' + ', '.join(d['responsible_rule_set']))
+        if d['responsible_rule_set']:
+            lines.append('  Rules: ' + ', '.join(d['responsible_rule_set']))
         for src in d['source_spans']:
             lines.append(f"  {src['source_id']}:{src['start_line']}-{src['end_line']}: {src['quote']}")
         lines.append('  Context: ' + json.dumps(d['triggering_context'], sort_keys=True))
@@ -63,10 +64,17 @@ def main(argv=None):
     parser.add_argument('--output', help='write report to a file instead of stdout')
     parser.add_argument('--contract-out', help='write the validated, inspectable contract to JSON')
     parser.add_argument('--baseline', help='previous JSON report; add diagnostic-set regressions')
+    parser.add_argument('--strict-mode', help='check tool schemas for provider strict mode compatibility (comma-separated: openai,anthropic or "all")')
     args = parser.parse_args(argv)
     try:
         contract, manifest, runtime = load(args.contract), load(args.tools), load(args.runtime)
-        report = lint(contract, manifest, runtime, Path(args.contract).parent)
+        strict_providers = None
+        if args.strict_mode:
+            if args.strict_mode == 'all':
+                strict_providers = ['openai', 'anthropic']
+            else:
+                strict_providers = [p.strip() for p in args.strict_mode.split(',')]
+        report = lint(contract, manifest, runtime, Path(args.contract).parent, strict_providers=strict_providers)
         if args.baseline:
             baseline = load(args.baseline)
             def key(d):

@@ -24,7 +24,7 @@ def validate(contract, manifest, runtime, root):
         validate_shape(contract)
         string_array = {'type': 'array', 'items': {'type': 'string'}}
         tool_shape = {'type': 'object', 'required': ['arguments'], 'additionalProperties': False,
-                      'properties': {'arguments': string_array, 'required': string_array, 'capabilities': string_array}}
+                      'properties': {'arguments': string_array, 'required': string_array, 'capabilities': string_array, 'schema': {'type': 'object'}}}
         check(manifest, {'type': 'object', 'required': ['tools'], 'additionalProperties': False,
                          'properties': {'tools': {'type': 'object', 'additionalProperties': tool_shape}}})
         check(runtime, {'type': 'object', 'additionalProperties': False, 'properties': {
@@ -677,9 +677,56 @@ def check_clauses(contract):
     return diagnostics, checks
 
 
-def lint(contract, manifest, runtime, root):
+def lint(contract, manifest, runtime, root, strict_providers=None):
     validate(contract, manifest, runtime, root)
     diagnostics = check_references(contract, manifest)
+    
+    # Check tool schemas for provider strict mode compatibility
+    if strict_providers:
+        from .strict_mode import check_tool_schemas
+        strict_result = check_tool_schemas(manifest, strict_providers)
+        for diag in strict_result['diagnostics']:
+            # Convert strict mode diagnostics to engine diagnostic format
+            if diag['code'] == 'STRICT_MODE_INCOMPATIBLE':
+                diagnostics.append({
+                    'code': diag['code'],
+                    'class': diag['class'],
+                    'severity': diag['severity'],
+                    'source_spans': [],
+                    'interpreted_rules': [],
+                    'resolved_priorities': {},
+                    'triggering_context': {'tool': diag['tool'], 'provider': diag['provider']},
+                    'witness': {
+                        'rule_id': diag['rule_id'],
+                        'schema_path': diag['schema_path'],
+                        'description': diag['description']
+                    },
+                    'responsible_rule_set': [],
+                    'assumptions': ['Offline check against official provider documentation; no API calls made.'],
+                    'repairs': [{'changes_requirement': 'tool_schema', 'proposal': diag['fix']}],
+                    'regression_case': {'tool': diag['tool'], 'provider': diag['provider'], 'expected_code': diag['code']},
+                    'provenance_limitations': ['Tool schema reference points to manifest declaration, not source prose.']
+                })
+            elif diag['code'] == 'PROVIDER_DIVERGENCE':
+                diagnostics.append({
+                    'code': diag['code'],
+                    'class': diag['class'],
+                    'severity': diag['severity'],
+                    'source_spans': [],
+                    'interpreted_rules': [],
+                    'resolved_priorities': {},
+                    'triggering_context': {'tool': diag['tool']},
+                    'witness': {
+                        'compatible_with': diag['compatible_with'],
+                        'incompatible_with': diag['incompatible_with'],
+                        'description': diag['description']
+                    },
+                    'responsible_rule_set': [],
+                    'assumptions': ['Provider divergence indicates portability risk; schema valid for some providers but not others.'],
+                    'repairs': [],
+                    'regression_case': {'tool': diag['tool'], 'expected_code': diag['code']},
+                    'provenance_limitations': ['Tool schema reference points to manifest declaration, not source prose.']
+                })
     for context in contract['contexts']:
         for rule in contract['rules']:
             if activation_status(rule, context) == 'unknown':

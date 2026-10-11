@@ -1,0 +1,24 @@
+{
+  "tools": {
+    "search": {
+      "arguments": ["query", "filters"],
+      "required": ["query"],
+      "schema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "filters": {
+            "oneOf": [
+              {"type": "string"},
+              {"type": "object", "properties": {"category": {"type": "string"}}, "additionalProperties": false}
+            ]
+          }
+        },
+        "required": ["query"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

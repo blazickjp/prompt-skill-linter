@@ -1,0 +1,91 @@
+{
+  "provider": "anthropic",
+  "feature": "Strict Tool Use / Structured Outputs",
+  "checked_date": "2026-10-11",
+  "documentation_urls": [
+    "https://platform.claude.com/docs/en/agents-and-tools/tool-use/strict-tool-use",
+    "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
+  ],
+  "rules": [
+    {
+      "id": "additionalProperties_required",
+      "severity": "error",
+      "description": "Objects must have additionalProperties set to false",
+      "path_pattern": "$..*[?(@.type == 'object')]",
+      "check": "additionalProperties must be false",
+      "fix": "Set \"additionalProperties\": false on all object schemas"
+    },
+    {
+      "id": "unsupported_minimum",
+      "severity": "error",
+      "description": "minimum is not supported in strict mode",
+      "path_pattern": "$..*[?(@.minimum)]",
+      "check": "minimum keyword not allowed",
+      "fix": "Remove minimum constraint (SDK helpers can move it to description)"
+    },
+    {
+      "id": "unsupported_maximum",
+      "severity": "error",
+      "description": "maximum is not supported in strict mode",
+      "path_pattern": "$..*[?(@.maximum)]",
+      "check": "maximum keyword not allowed",
+      "fix": "Remove maximum constraint (SDK helpers can move it to description)"
+    },
+    {
+      "id": "unsupported_exclusiveMinimum",
+      "severity": "error",
+      "description": "exclusiveMinimum is not supported in strict mode",
+      "path_pattern": "$..*[?(@.exclusiveMinimum)]",
+      "check": "exclusiveMinimum keyword not allowed",
+      "fix": "Remove exclusiveMinimum constraint"
+    },
+    {
+      "id": "unsupported_exclusiveMaximum",
+      "severity": "error",
+      "description": "exclusiveMaximum is not supported in strict mode",
+      "path_pattern": "$..*[?(@.exclusiveMaximum)]",
+      "check": "exclusiveMaximum keyword not allowed",
+      "fix": "Remove exclusiveMaximum constraint"
+    },
+    {
+      "id": "unsupported_multipleOf",
+      "severity": "error",
+      "description": "multipleOf is not supported in strict mode",
+      "path_pattern": "$..*[?(@.multipleOf)]",
+      "check": "multipleOf keyword not allowed",
+      "fix": "Remove multipleOf constraint"
+    },
+    {
+      "id": "unsupported_minLength",
+      "severity": "error",
+      "description": "minLength is not supported in strict mode",
+      "path_pattern": "$..*[?(@.type == 'string' && @.minLength)]",
+      "check": "minLength keyword not allowed on strings",
+      "fix": "Remove minLength constraint (SDK helpers can move it to description)"
+    },
+    {
+      "id": "unsupported_maxLength",
+      "severity": "error",
+      "description": "maxLength is not supported in strict mode",
+      "path_pattern": "$..*[?(@.type == 'string' && @.maxLength)]",
+      "check": "maxLength keyword not allowed on strings",
+      "fix": "Remove maxLength constraint (SDK helpers can move it to description)"
+    },
+    {
+      "id": "unsupported_minItems_beyond_1",
+      "severity": "error",
+      "description": "Array minItems only supports values 0 and 1",
+      "path_pattern": "$..*[?(@.type == 'array' && @.minItems)]",
+      "check": "minItems must be 0 or 1",
+      "fix": "Set minItems to 0 or 1, or remove it"
+    },
+    {
+      "id": "unsupported_recursive_schema",
+      "severity": "error",
+      "description": "Recursive schemas are not supported",
+      "path_pattern": "$",
+      "check": "No recursive $ref cycles allowed",
+      "fix": "Remove recursive references"
+    }
+  ]
+}

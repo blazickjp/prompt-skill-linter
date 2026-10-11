@@ -1,0 +1,23 @@
+{
+  "tools": {
+    "get_weather": {
+      "arguments": ["location", "units"],
+      "required": ["location", "units"],
+      "schema": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "minLength": 1
+          },
+          "units": {
+            "type": "string",
+            "enum": ["celsius", "fahrenheit"]
+          }
+        },
+        "required": ["location", "units"],
+        "additionalProperties": false
+      }
+    }
+  }
+}
