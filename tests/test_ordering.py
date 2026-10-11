@@ -509,6 +509,41 @@ class OrderingRuleTests(unittest.TestCase):
         self.assertEqual(checks[0]['status'], 'violated')
         self.assertEqual(checks[0]['observed_count'], 2)
     
+    def test_small_cycle_fully_explored_not_incomplete(self):
+        """Small cyclic workflow fully explored under max_steps reports satisfied, not incomplete."""
+        actions = [
+            {'id': 'a', 'requires': ['start'], 'adds': ['s1']},
+            {'id': 'b', 'requires': ['s1'], 'adds': ['s2']},
+            {'id': 'reset', 'requires': ['s2'], 'adds': ['start'], 'removes': ['s1', 's2']},
+            {'id': 'finish', 'requires': ['s2'], 'adds': ['complete']}
+        ]
+        workflow = make_workflow(actions, initial=['start'], goal=['complete'], ordering_rules=[
+            make_rule('before', ['a', 'finish'])
+        ])
+        
+        # Fully explored cyclic graph (well under max_steps=20)
+        states = [
+            {'id': 0, 'facts': ['start'], 'depth': 0, 'goal': False},
+            {'id': 1, 'facts': ['s1', 'start'], 'depth': 1, 'goal': False},
+            {'id': 2, 'facts': ['s1', 's2', 'start'], 'depth': 2, 'goal': False},
+            {'id': 3, 'facts': ['complete', 's1', 's2', 'start'], 'depth': 3, 'goal': True}
+        ]
+        edges = [
+            {'from': 0, 'to': 1, 'action': 'a'},
+            {'from': 1, 'to': 2, 'action': 'b'},
+            {'from': 2, 'to': 0, 'action': 'reset'},  # Cycle back to start
+            {'from': 2, 'to': 3, 'action': 'finish'}
+        ]
+        explored = make_explored_result(states, edges, exhaustive=True)
+        
+        diags, checks = check_ordering_rules(workflow, explored, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Should be satisfied, not incomplete (cycle is fully explored, 'a' always before 'finish')
+        self.assertEqual(checks[0]['status'], 'satisfied',
+                        'Fully explored cycle should report satisfied, not incomplete')
+        self.assertTrue(checks[0].get('search_exhaustive', False),
+                       'Search should be marked exhaustive')
+    
     def test_conflicting_rules_both_checked(self):
         """Conflicting ordering rules are both checked independently."""
         actions = [

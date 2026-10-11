@@ -360,7 +360,7 @@ def _check_safety_property(rule, initial_monitor, adj, states, initial_state_id,
     
     # Product BFS: (wf_state_id, monitor, path, depth)
     queue = deque([(initial_state_id, initial_monitor, [], 0)])
-    seen = {(initial_state_id, hash(initial_monitor))}
+    seen = {(initial_state_id, initial_monitor)}
     visited_product_states = 1
     hit_depth_bound = False
     hit_state_bound = False
@@ -393,21 +393,23 @@ def _check_safety_property(rule, initial_monitor, adj, states, initial_state_id,
             new_path = path + [action]
             new_depth = depth + 1
             
-            # Check bounds
+            # Dedupe on FULL product state (using monitor object directly, not hash)
+            prod_state = (next_wf, new_monitor)
+            if prod_state in seen:
+                continue  # Already explored this product state
+            
+            # Check bounds only for NEW product states
             if new_depth >= max_steps:
                 hit_depth_bound = True
                 continue
             
-            # Dedupe on FULL product state
-            prod_state = (next_wf, hash(new_monitor))
-            if prod_state not in seen:
-                if visited_product_states >= max_states:
-                    hit_state_bound = True
-                    continue
-                
-                seen.add(prod_state)
-                visited_product_states += 1
-                queue.append((next_wf, new_monitor, new_path, new_depth))
+            if visited_product_states >= max_states:
+                hit_state_bound = True
+                continue
+            
+            seen.add(prod_state)
+            visited_product_states += 1
+            queue.append((next_wf, new_monitor, new_path, new_depth))
     
     # No violation found - check completeness
     if hit_depth_bound or hit_state_bound or not explored_result.get('search_exhaustive', False):
@@ -482,7 +484,7 @@ def _check_exactly_once(rule, initial_monitor, adj, states, initial_state_id, go
     max_states = explored_result.get('bounds', {}).get('max_states', 2000)
     
     queue = deque([(initial_state_id, initial_monitor, [], 0)])
-    seen = {(initial_state_id, hash(initial_monitor))}
+    seen = {(initial_state_id, initial_monitor)}
     visited_product_states = 1
     hit_depth_bound = False
     hit_state_bound = False
@@ -516,6 +518,11 @@ def _check_exactly_once(rule, initial_monitor, adj, states, initial_state_id, go
             new_path = path + [action]
             new_depth = depth + 1
             
+            prod_state = (next_wf, new_monitor)
+            if prod_state in seen:
+                continue  # Already explored
+            
+            # Check bounds only for NEW product states
             if new_depth >= max_steps:
                 hit_depth_bound = True
                 # This path was cut before reaching terminal state
@@ -523,16 +530,14 @@ def _check_exactly_once(rule, initial_monitor, adj, states, initial_state_id, go
                     incomplete_paths = True
                 continue
             
-            prod_state = (next_wf, hash(new_monitor))
-            if prod_state not in seen:
-                if visited_product_states >= max_states:
-                    hit_state_bound = True
-                    incomplete_paths = True
-                    continue
-                
-                seen.add(prod_state)
-                visited_product_states += 1
-                queue.append((next_wf, new_monitor, new_path, new_depth))
+            if visited_product_states >= max_states:
+                hit_state_bound = True
+                incomplete_paths = True
+                continue
+            
+            seen.add(prod_state)
+            visited_product_states += 1
+            queue.append((next_wf, new_monitor, new_path, new_depth))
     
     if found_violation:
         count = violation_path.count(rule['actions'][0])
