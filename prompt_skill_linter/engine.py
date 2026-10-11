@@ -147,6 +147,11 @@ def validate(contract, manifest, runtime, root):
         raise ContractError('Trace analysis supports 16 assertions and 128 assertion/context pairs per bundle.')
     if len(assertion_ids) != len(set(assertion_ids)) or set(assertion_ids) & {r['id'] for r in contract['rules']}:
         raise ContractError('Trace assertion IDs must be globally unique and distinct from rule IDs.')
+    ordering_rule_ids = [o['id'] for w in contract.get('workflows', []) for o in w.get('ordering_rules', [])]
+    if len(ordering_rule_ids) != len(set(ordering_rule_ids)):
+        raise ContractError('Ordering rule IDs must be globally unique.')
+    if set(ordering_rule_ids) & ({r['id'] for r in contract['rules']} | set(assertion_ids)):
+        raise ContractError('Ordering rule IDs must be distinct from rule IDs and trace assertion IDs.')
     if contract.get('field_contracts'):
         from .fields import FieldContractError, validate_field_contracts
         try:
@@ -163,6 +168,12 @@ def validate(contract, manifest, runtime, root):
             from .trace import validate_assertions
             try:
                 validate_assertions(workflow)
+            except ValueError as exc:
+                raise ContractError(str(exc)) from exc
+        if workflow.get('ordering_rules'):
+            from .ordering import validate_ordering_rules
+            try:
+                validate_ordering_rules(workflow, sources, root)
             except ValueError as exc:
                 raise ContractError(str(exc)) from exc
         evidence_holders = workflow['actions'] + [
@@ -573,6 +584,14 @@ def workflow_analysis(contract, manifest, runtime):
                     if missing_action_evidence:
                         item['provenance_limitations'].append('Witness action source evidence is absent for: ' + ', '.join(missing_action_evidence))
                     diagnostics.append(item)
+            
+            # Check ordering rules
+            if workflow.get('ordering_rules'):
+                from .ordering import check_ordering_rules
+                ordering_diags, ordering_checks = check_ordering_rules(workflow, result, workflow['id'], context)
+                diagnostics.extend(ordering_diags)
+                result['ordering_rules'] = ordering_checks
+            
             checks.append(result)
             if unavailable:
                 diagnostics.append(diagnostic('UNAVAILABLE_WORKFLOW_ACTION', 'exact', 'error', [advertised], context,
@@ -712,7 +731,7 @@ def lint(contract, manifest, runtime, root):
     incomplete_reasons = []
     if interpretation.get('untranslated_line_count', 0) or interpretation.get('excluded_candidate_ids'):
         incomplete_reasons.append('source_coverage')
-    if any(d['code'] in ('PLAN_BOUND_EXHAUSTED', 'SOLVER_BOUND_EXHAUSTED', 'TRACE_ANALYSIS_UNKNOWN', 'TRACE_TRIGGER_COVERAGE_UNKNOWN') for d in diagnostics):
+    if any(d['code'] in ('PLAN_BOUND_EXHAUSTED', 'SOLVER_BOUND_EXHAUSTED', 'TRACE_ANALYSIS_UNKNOWN', 'TRACE_TRIGGER_COVERAGE_UNKNOWN', 'ORDERING_CHECK_INCOMPLETE') for d in diagnostics):
         incomplete_reasons.append('search_bounds')
     if any(d['class'] == 'semantic_warning' and d['code'] != 'INCOMPLETE_SOURCE_COVERAGE' for d in diagnostics):
         incomplete_reasons.append('semantic_review')

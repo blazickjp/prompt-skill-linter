@@ -521,6 +521,88 @@
                 }
               }
             }
+          },
+          "ordering_rules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "kind",
+                "actions",
+                "scope",
+                "source",
+                "assumptions"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "kind": {
+                  "enum": [
+                    "before",
+                    "mutual_exclusion",
+                    "exactly_once",
+                    "at_most_once"
+                  ]
+                },
+                "actions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "scope": {
+                  "type": "object",
+                  "properties": {
+                    "entity": {
+                      "type": "string"
+                    },
+                    "temporal": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "entity",
+                    "temporal"
+                  ],
+                  "additionalProperties": false
+                },
+                "source": {
+                  "type": "object",
+                  "properties": {
+                    "source_id": {
+                      "type": "string"
+                    },
+                    "start_line": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "end_line": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "quote": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "source_id",
+                    "start_line",
+                    "end_line",
+                    "quote"
+                  ],
+                  "additionalProperties": false
+                },
+                "assumptions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
           }
         },
         "required": [
