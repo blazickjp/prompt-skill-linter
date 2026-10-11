@@ -15,6 +15,16 @@ from dataclasses import dataclass
 from typing import Any, Callable
 
 
+# Explicit status-to-stat-key mapping for aggregation
+STATUS_TO_STAT_KEY = {
+    'KILLED': 'killed',
+    'SURVIVED': 'survived',
+    'EQUIVALENT_SUSPECTED': 'equivalent',
+    'INVALID': 'invalid',
+    'CRASHED': 'crashed'
+}
+
+
 @dataclass(frozen=True)
 class Mutant:
     """A single mutated contract with provenance."""
@@ -637,7 +647,9 @@ def compute_mutation_score(results: list[MutationResult]) -> dict:
         if op not in operator_stats:
             operator_stats[op] = {'total': 0, 'killed': 0, 'survived': 0, 'equivalent': 0, 'invalid': 0, 'crashed': 0}
         operator_stats[op]['total'] += 1
-        operator_stats[op][result.status.lower()] += 1
+        # Map status to stat key using explicit mapping
+        stat_key = STATUS_TO_STAT_KEY[result.status]
+        operator_stats[op][stat_key] += 1
     
     return {
         'total_mutants': total,

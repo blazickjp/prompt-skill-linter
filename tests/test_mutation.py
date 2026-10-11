@@ -496,5 +496,164 @@ class GuardMutationTests(unittest.TestCase):
         self.assertEqual(id(self.contract['rules'][0]), original_id)
 
 
+class EquivalentMutantRegressionTests(unittest.TestCase):
+    """Regression tests for EQUIVALENT_SUSPECTED classification and aggregation."""
+    
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.root = Path(self.tmp.name)
+        (self.root / 'policy.txt').write_text('Mutual exclusion: A and B cannot both occur.\n')
+    
+    def test_classification_and_aggregation_regression(self):
+        """Test that EQUIVALENT_SUSPECTED classifies and aggregates without KeyError."""
+        from prompt_skill_linter.mutate import compute_mutation_score, MutationResult, Mutant
+        
+        # Create a dummy EQUIVALENT_SUSPECTED result
+        mutant = Mutant(
+            id='test_equiv',
+            operator='swap_mutual_exclusion',
+            description='Test equivalent mutant',
+            contract={},
+            pointer='/test'
+        )
+        
+        result = MutationResult(
+            mutant=mutant,
+            status='EQUIVALENT_SUSPECTED',
+            original_diagnostics=frozenset(),
+            mutant_diagnostics=frozenset()
+        )
+        
+        # This should not raise KeyError
+        stats = compute_mutation_score([result])
+        
+        self.assertEqual(stats['total_mutants'], 1)
+        self.assertEqual(stats['equivalent_suspected'], 1)
+        self.assertEqual(stats['killed'], 0)
+        self.assertEqual(stats['survived'], 0)
+        # Score denominator excludes equivalent
+        self.assertEqual(stats['mutation_score'], 0.0)
+        
+        # Check operator stats
+        self.assertEqual(stats['operator_stats']['swap_mutual_exclusion']['equivalent'], 1)
+        self.assertEqual(stats['operator_stats']['swap_mutual_exclusion']['total'], 1)
+    
+    def test_mutual_exclusion_swap_end_to_end(self):
+        """End-to-end CLI test with schema-valid symmetric mutual_exclusion swap."""
+        # Create contract with mutually exclusive branches A/B
+        # Both require and remove 'start', making them symmetric
+        contract = {
+            'version': 1,
+            'sources': [{'id': 'policy', 'path': 'policy.txt'}],
+            'skills': [],
+            'rules': [
+                {
+                    'id': 'adv',
+                    'source': {'source_id': 'policy', 'start_line': 1, 'end_line': 1, 
+                               'quote': 'Mutual exclusion: A and B cannot both occur.'},
+                    'priority': 1,
+                    'kind': 'requirement',
+                    'when': {},
+                    'skills': [],
+                    'scope': {'entity': 'task', 'temporal': 'run'},
+                    'exceptions': [],
+                    'effect': {'literal': 'declared', 'value': True}
+                }
+            ],
+            'contexts': [{'id': 'ctx', 'facts': {}, 'active_skills': []}],
+            'assumptions': [],
+            'workflows': [{
+                'id': 'wf',
+                'goal': ['goal'],
+                'actions': [
+                    {'id': 'branch_a', 'requires': ['start'], 'removes': ['start'], 'adds': ['goal']},
+                    {'id': 'branch_b', 'requires': ['start'], 'removes': ['start'], 'adds': ['goal']}
+                ],
+                'initial': ['start'],
+                'advertisement_rule': 'adv',
+                'ordering_rules': [{
+                    'id': 'mutex',
+                    'kind': 'mutual_exclusion',
+                    'actions': ['branch_a', 'branch_b'],
+                    'scope': {'entity': 'task', 'temporal': 'run'},
+                    'source': {'source_id': 'policy', 'start_line': 1, 'end_line': 1,
+                               'quote': 'Mutual exclusion: A and B cannot both occur.'},
+                    'assumptions': []
+                }]
+            }]
+        }
+        
+        manifest = {'tools': {}}
+        runtime = {}
+        
+        from prompt_skill_linter.cli import run_mutation_testing
+        
+        # Run mutation testing
+        output = run_mutation_testing(contract, manifest, runtime, self.root, 
+                                     operator_filter={'swap_mutual_exclusion'}, 
+                                     output_format='json')
+        
+        result = json.loads(output)
+        stats = result['statistics']
+        
+        # Should have exactly 1 equivalent mutant (the swap)
+        self.assertEqual(stats['total_mutants'], 1)
+        self.assertEqual(stats['equivalent_suspected'], 1)
+        self.assertEqual(stats['killed'], 0)
+        self.assertEqual(stats['survived'], 0)
+        
+        # Score denominator should exclude equivalent: 0 / (1 - 1) = 0
+        self.assertEqual(stats['mutation_score'], 0.0)
+        
+        # Operator stats should use 'equivalent' key
+        self.assertIn('swap_mutual_exclusion', stats['operator_stats'])
+        self.assertEqual(stats['operator_stats']['swap_mutual_exclusion']['equivalent'], 1)
+    
+    def test_all_statuses_aggregate_without_error(self):
+        """Test that every status value aggregates without KeyError."""
+        from prompt_skill_linter.mutate import compute_mutation_score, MutationResult, Mutant, STATUS_TO_STAT_KEY
+        
+        results = []
+        
+        # Create one result for each status
+        for status in STATUS_TO_STAT_KEY.keys():
+            mutant = Mutant(
+                id=f'test_{status}',
+                operator='test_operator',
+                description=f'Test {status}',
+                contract={},
+                pointer='/test'
+            )
+            
+            result = MutationResult(
+                mutant=mutant,
+                status=status,
+                original_diagnostics=frozenset(),
+                mutant_diagnostics=frozenset() if status != 'KILLED' else frozenset([('CODE', ('rule',), 'error', ())]),
+                error='test error' if status in ('INVALID', 'CRASHED') else None
+            )
+            results.append(result)
+        
+        # This should not raise KeyError for any status
+        stats = compute_mutation_score(results)
+        
+        # Verify counts
+        self.assertEqual(stats['total_mutants'], 5)
+        self.assertEqual(stats['killed'], 1)
+        self.assertEqual(stats['survived'], 1)
+        self.assertEqual(stats['equivalent_suspected'], 1)
+        self.assertEqual(stats['invalid'], 1)
+        self.assertEqual(stats['crashed'], 1)
+        
+        # Verify operator stats has correct keys
+        op_stats = stats['operator_stats']['test_operator']
+        self.assertEqual(op_stats['killed'], 1)
+        self.assertEqual(op_stats['survived'], 1)
+        self.assertEqual(op_stats['equivalent'], 1)  # Not 'equivalent_suspected'
+        self.assertEqual(op_stats['invalid'], 1)
+        self.assertEqual(op_stats['crashed'], 1)
+
+
 if __name__ == '__main__':
     unittest.main()
