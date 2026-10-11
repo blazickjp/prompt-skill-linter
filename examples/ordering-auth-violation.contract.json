@@ -1,0 +1,110 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "id": "policy",
+      "path": "ordering-auth-policy.txt"
+    }
+  ],
+  "rules": [
+    {
+      "id": "workflow-adv",
+      "source": {
+        "source_id": "policy",
+        "start_line": 1,
+        "end_line": 2,
+        "quote": "Authorization must complete before data access.\nUnauthorized data access is not allowed."
+      },
+      "priority": 100,
+      "kind": "requirement",
+      "scope": {
+        "entity": "agent",
+        "temporal": "session"
+      }
+    }
+  ],
+  "contexts": [
+    {
+      "id": "normal-session",
+      "facts": {
+        "mode": "interactive"
+      },
+      "active_skills": []
+    }
+  ],
+  "skills": [],
+  "assumptions": [
+    "This is a demonstration of ordering rules checking.",
+    "The workflow model is a reviewed abstraction of actual behavior."
+  ],
+  "workflows": [
+    {
+      "id": "data-access-workflow",
+      "advertisement_rule": "workflow-adv",
+      "initial": ["start"],
+      "goal": ["data_processed"],
+      "actions": [
+        {
+          "id": "check_auth",
+          "requires": ["start"],
+          "adds": ["auth_checked"],
+          "removes": []
+        },
+        {
+          "id": "grant_auth",
+          "requires": ["auth_checked"],
+          "adds": ["authorized"],
+          "removes": []
+        },
+        {
+          "id": "skip_auth",
+          "requires": ["start"],
+          "adds": ["auth_skipped"],
+          "removes": []
+        },
+        {
+          "id": "access_data",
+          "requires": ["start"],
+          "adds": ["data_accessed"],
+          "removes": [],
+          "provenance": {
+            "source_spans": [{
+              "source_id": "policy",
+              "start_line": 1,
+              "end_line": 2,
+              "quote": "Authorization must complete before data access.\nUnauthorized data access is not allowed."
+            }],
+            "assumptions": ["Data access can occur from authorized or unauthorized paths"]
+          }
+        },
+        {
+          "id": "process_data",
+          "requires": ["data_accessed"],
+          "adds": ["data_processed"],
+          "removes": []
+        }
+      ],
+      "ordering_rules": [
+        {
+          "id": "auth-before-data",
+          "kind": "before",
+          "actions": ["grant_auth", "access_data"],
+          "scope": {
+            "entity": "agent",
+            "temporal": "session"
+          },
+          "source": {
+            "source_id": "policy",
+            "start_line": 1,
+            "end_line": 1,
+            "quote": "Authorization must complete before data access."
+          },
+          "assumptions": [
+            "Ordering rule checked against finite-state workflow paths.",
+            "A violation shows a concrete counterexample path."
+          ]
+        }
+      ]
+    }
+  ]
+}

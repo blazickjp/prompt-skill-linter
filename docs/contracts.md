@@ -175,3 +175,41 @@ and the existing candidate-review requirement still apply.
 See `corpus/research_extensions/bundles/GH-MANUAL.json` for a full source-grounded
 entry and `GH-HELPER.json` for its separately scoped real control. Hypothetical
 adapters and open/optional variants are labeled `SYN-*`, not upstream repairs.
+
+## Ordering rules (1.3 development)
+
+Workflows may declare optional `ordering_rules` that specify temporal ordering
+constraints on actions. Each rule has a unique `id`, a `kind`, referenced `actions`,
+a `scope`, exact `source` span, and `assumptions`. Supported rule kinds:
+
+- `before`: Two actions [first, second]; second may only occur if first occurred
+  earlier on that path.
+- `mutual_exclusion`: Two actions that cannot both occur on the same path.
+- `exactly_once`: One action that must occur exactly once on every complete path
+  (a path reaching the goal state).
+- `at_most_once`: One action that may occur zero or one time on any path.
+
+Ordering rules are checked against the bounded finite-state workflow exploration
+performed by the planner (same bounds: max_steps, max_states). Violations produce
+concrete counterexample paths—action sequences from the reviewed model. Exhaustive
+absence of violations proves the rule holds within the bounded model. Truncated
+search yields `ORDERING_CHECK_INCOMPLETE` (warning).
+
+Rules on unreachable actions produce warnings (`ORDERING_RULE_UNREACHABLE_ACTIONS`).
+A rule satisfied vacuously (e.g., before rule where second action never occurs)
+still warns to flag potential modeling mistakes. Conflicting rules (e.g., A before B
+and B before A) are checked independently; both can apply to different paths, or
+one may violate.
+
+Limits: 32 rules per workflow, 32 assumptions per rule. Rule IDs must be globally
+unique and distinct from rule/trace-assertion IDs. All referenced actions must
+exist in the workflow. Source quote matching follows the same validation as other
+contract elements. No proof of semantic fidelity to prose requirements is provided.
+
+Example: `examples/ordering-auth-violation.contract.json` demonstrates a before
+rule requiring authorization before data access, with a violating path shown.
+
+Ordering rules are plain data, designed for contract mutation testing and
+compositional checking. They do not execute code, infer temporal logic from prose,
+or modify workflow states. The checker reports when bounds truncate coverage rather
+than claiming absence of violations on unexplored paths.
