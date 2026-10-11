@@ -1,26 +1,114 @@
 """Declarative temporal ordering constraints for workflow actions.
 
-Checks static ordering properties against explored workflow paths:
-- before: action A must occur before B on every path where B occurs
-- mutual_exclusion: actions C and D can't both occur on the same path
-- exactly_once: E occurs exactly once on every complete path
+Checks static ordering properties via product construction: BFS over
+(workflow_state, monitor_state) where each rule has a finite monitor.
 
-These are plain-data contracts that can be mutated and checked independently.
+Monitor types:
+- before: tracks whether first action has been seen (safety)
+- mutual_exclusion: tracks which actions have been seen (safety)
+- at_most_once: tracks count capped at 2 (safety)
+- exactly_once: tracks count, checked at goal states (liveness)
+
+Deduplication is on the full product state, which is sound even when
+different action sequences reach the same workflow state. Parent pointers
+enable shortest counterexample reconstruction with deterministic ordering.
+
+This is exact within configured bounds and stays small even with cycles.
 """
 from collections import deque
 
 
-def validate_ordering_rules(workflow, sources, root):
-    """Validate ordering rule declarations before analysis.
+# Monitor classes with proper hashing for product-state deduplication
+
+class BeforeMonitor:
+    """Monitor for 'before A B' rule: tracks if A has been seen."""
     
-    Args:
-        workflow: Workflow dict with optional ordering_rules
-        sources: Contract sources dict
-        root: Root path for source validation
-        
-    Raises:
-        ValueError: On invalid ordering rule declaration
-    """
+    def __init__(self, first_action, seen_first=False):
+        self.first_action = first_action
+        self.seen_first = seen_first
+    
+    def step(self, action):
+        """Return new monitor state after taking action."""
+        return BeforeMonitor(
+            self.first_action,
+            self.seen_first or (action == self.first_action)
+        )
+    
+    def violates(self, action, second_action):
+        """Check if taking action would violate the rule."""
+        return action == second_action and not self.seen_first
+    
+    def __hash__(self):
+        return hash(self.seen_first)
+    
+    def __eq__(self, other):
+        return isinstance(other, BeforeMonitor) and self.seen_first == other.seen_first
+
+
+class MutualExclusionMonitor:
+    """Monitor for mutual_exclusion: tracks which of two actions seen."""
+    
+    def __init__(self, action_a, action_b, seen_a=False, seen_b=False):
+        self.action_a = action_a
+        self.action_b = action_b
+        self.seen_a = seen_a
+        self.seen_b = seen_b
+    
+    def step(self, action):
+        """Return new monitor state after taking action."""
+        return MutualExclusionMonitor(
+            self.action_a, self.action_b,
+            self.seen_a or (action == self.action_a),
+            self.seen_b or (action == self.action_b)
+        )
+    
+    def violates(self, action):
+        """Check if taking action would violate the rule."""
+        if action == self.action_a and self.seen_b:
+            return True
+        if action == self.action_b and self.seen_a:
+            return True
+        return False
+    
+    def __hash__(self):
+        return hash((self.seen_a, self.seen_b))
+    
+    def __eq__(self, other):
+        return (isinstance(other, MutualExclusionMonitor) and
+                self.seen_a == other.seen_a and self.seen_b == other.seen_b)
+
+
+class CountMonitor:
+    """Monitor for at_most_once/exactly_once: tracks count capped at 2."""
+    
+    def __init__(self, action, count=0):
+        self.action = action
+        self.count = count
+    
+    def step(self, action):
+        """Return new monitor state after taking action."""
+        new_count = self.count
+        if action == self.action:
+            new_count = min(self.count + 1, 2)  # Cap at 2 (sufficient to detect violations)
+        return CountMonitor(self.action, new_count)
+    
+    def violates_at_most_once(self, action):
+        """Check if taking action would violate at_most_once (safety)."""
+        return action == self.action and self.count >= 1
+    
+    def violates_exactly_once_at_goal(self):
+        """Check if current count violates exactly_once at a goal state."""
+        return self.count != 1
+    
+    def __hash__(self):
+        return hash(self.count)
+    
+    def __eq__(self, other):
+        return isinstance(other, CountMonitor) and self.count == other.count
+
+
+def validate_ordering_rules(workflow, sources, root):
+    """Validate ordering rule declarations before analysis."""
     from pathlib import Path
     
     rules = workflow.get('ordering_rules', [])
@@ -30,8 +118,6 @@ def validate_ordering_rules(workflow, sources, root):
     rule_ids = [r['id'] for r in rules]
     if len(rule_ids) != len(set(rule_ids)):
         raise ValueError('Ordering rule IDs must be unique within a workflow.')
-    
-    # Check for ID collisions with global contract elements (checked externally)
     
     action_ids = {a['id'] for a in workflow['actions']}
     action_source_lines = {}
@@ -61,12 +147,10 @@ def validate_ordering_rules(workflow, sources, root):
         if len(set(actions)) != len(actions):
             raise ValueError(f"{rule['id']}: actions must be unique")
         
-        # Check that referenced actions exist
         unknown = set(actions) - action_ids
         if unknown:
             raise ValueError(f"{rule['id']}: references unknown actions: {', '.join(sorted(unknown))}")
         
-        # Validate scope
         scope = rule.get('scope')
         if not isinstance(scope, dict) or set(scope.keys()) != {'entity', 'temporal'}:
             raise ValueError(f"{rule['id']}: scope must have entity and temporal")
@@ -74,7 +158,6 @@ def validate_ordering_rules(workflow, sources, root):
         if not all(isinstance(scope[k], str) for k in ('entity', 'temporal')):
             raise ValueError(f"{rule['id']}: scope entity and temporal must be strings")
         
-        # Validate source span
         src = rule.get('source')
         if not isinstance(src, dict):
             raise ValueError(f"{rule['id']}: source must be an object")
@@ -86,7 +169,6 @@ def validate_ordering_rules(workflow, sources, root):
         if not path.is_relative_to(Path(root).resolve()):
             raise ValueError(f"{rule['id']}: source path must stay within contract directory")
         
-        # Read and verify source quote
         if path not in action_source_lines:
             try:
                 if path.stat().st_size > 1_500_000:
@@ -103,7 +185,6 @@ def validate_ordering_rules(workflow, sources, root):
         if src.get('quote') != '\n'.join(lines[start - 1:end]):
             raise ValueError(f"{rule['id']}: source quote does not match exact lines")
         
-        # Validate assumptions
         assumptions = rule.get('assumptions', [])
         if not isinstance(assumptions, list) or not all(isinstance(a, str) for a in assumptions):
             raise ValueError(f"{rule['id']}: assumptions must be an array of strings")
@@ -113,17 +194,17 @@ def validate_ordering_rules(workflow, sources, root):
 
 
 def check_ordering_rules(workflow, explored_result, workflow_id, context):
-    """Check ordering rules against explored workflow paths.
+    """Check ordering rules via product construction over (workflow_state, monitor_state).
     
-    Args:
-        workflow: Workflow dict with ordering_rules
-        explored_result: Result from planner.explore()
-        workflow_id: Workflow identifier string
-        context: Context dict
-        
-    Returns:
-        tuple: (diagnostics, checks) where diagnostics is a list of violations
-               and checks is a list of check results
+    For each rule, BFS explores the product space with deduplication on the full
+    product state. This is sound: different action histories reaching the same
+    workflow state may have different monitor states.
+    
+    Safety properties (before, mutual_exclusion, at_most_once) report violations
+    immediately. Liveness properties (exactly_once) are checked at goal states.
+    
+    Any bound that truncates exploration produces ORDERING_CHECK_INCOMPLETE unless
+    a violation was already found.
     """
     rules = workflow.get('ordering_rules', [])
     if not rules:
@@ -132,30 +213,65 @@ def check_ordering_rules(workflow, explored_result, workflow_id, context):
     diagnostics = []
     checks = []
     
-    # Build all paths from the explored graph for checking
-    # We need to explore all paths up to the bound, not just the goal path
-    paths = _enumerate_paths_from_graph(explored_result)
+    # Build workflow graph
+    graph = explored_result.get('graph', {})
+    states_list = graph.get('states', [])
+    edges = graph.get('edges', [])
     
-    # If search was truncated, we can't prove properties hold
-    search_exhaustive = explored_result.get('search_exhaustive', False)
+    if not states_list:
+        # Empty workflow - all rules trivially satisfied but warn
+        for rule in rules:
+            checks.append({
+                'ordering_rule_id': rule['id'],
+                'workflow': workflow_id,
+                'context_id': context['id'],
+                'status': 'warning',
+                'kind': rule['kind'],
+                'reason': 'Empty workflow',
+                'search_exhaustive': True,
+                'source': rule['source'],
+                'assumptions': rule['assumptions']
+            })
+        return diagnostics, checks
     
+    # Find initial state (not hardcoded to 0!)
+    initial_state_id = None
+    for state in states_list:
+        if state.get('depth', 0) == 0:
+            initial_state_id = state['id']
+            break
+    if initial_state_id is None:
+        initial_state_id = states_list[0]['id']  # Fallback to first state
+    
+    # Build state info map
+    states = {s['id']: s for s in states_list}
+    goal = set(workflow.get('goal', []))
+    
+    # Build adjacency list with deterministic edge ordering (stable counterexamples)
+    adj = {}
+    for edge in sorted(edges, key=lambda e: (e['from'], e['action'], e['to'])):
+        adj.setdefault(edge['from'], []).append((edge['to'], edge['action']))
+    
+    # Check each rule with product construction
     for rule in rules:
-        result = _check_single_rule(rule, paths, search_exhaustive, workflow, explored_result)
+        result = _check_rule_with_product(
+            rule, adj, states, initial_state_id, goal, workflow, explored_result
+        )
         result.update({
             'ordering_rule_id': rule['id'],
             'workflow': workflow_id,
             'context_id': context['id'],
             'source': rule['source'],
-            'assumptions': rule['assumptions'],
+            'assumptions': rule['assumptions']
         })
         checks.append(result)
         
-        # Create diagnostic for violations or warnings
+        # Create diagnostics for violations, warnings, or incomplete
         if result['status'] in ('violated', 'warning', 'incomplete'):
             code = _get_diagnostic_code(result)
             severity = 'error' if result['status'] == 'violated' else 'warning'
             
-            diagnostic = {
+            diagnostics.append({
                 'code': code,
                 'class': 'model_based',
                 'severity': severity,
@@ -171,9 +287,10 @@ def check_ordering_rules(workflow, explored_result, workflow_id, context):
                 'triggering_context': context,
                 'witness': result,
                 'assumptions': rule['assumptions'] + [
-                    'Ordering rule checked against bounded finite-state workflow exploration.',
-                    'Counterexample paths are concrete action sequences from the reviewed model.',
-                    'Truncated search reports incomplete coverage, not rule satisfaction.'
+                    'Ordering rule checked via product construction (workflow_state, monitor_state).',
+                    'Within configured bounds, this check is deterministic and exact.',
+                    'Counterexamples are shortest violating prefixes from the reviewed model.',
+                    'Truncated search reports incomplete, never satisfied.'
                 ],
                 'repairs': [],
                 'regression_case': {
@@ -183,329 +300,342 @@ def check_ordering_rules(workflow, explored_result, workflow_id, context):
                     'counterexample': result.get('counterexample')
                 },
                 'provenance_limitations': [
-                    'Ordering rule quote establishes provenance only; semantic fidelity to prose requirements remains a review assumption.'
+                    'Source quote establishes provenance; semantic fidelity remains a review assumption.'
                 ]
-            }
-            
-            diagnostics.append(diagnostic)
+            })
+    
+    # Simple conflict detection: pairwise before cycles
+    # Only warn when BOTH rules cannot be satisfied (both violated or both incomplete)
+    conflicts = _detect_conflicts(rules, checks)
+    for conflict in conflicts:
+        diagnostics.append({
+            'code': 'ORDERING_RULES_CONFLICT',
+            'class': 'model_based',
+            'severity': 'warning',
+            'source_spans': [r['source'] for r in conflict['rules']],
+            'interpreted_rules': [{'id': r['id'], 'ordering_rule': r, 'source': r['source']} 
+                                 for r in conflict['rules']],
+            'resolved_priorities': {},
+            'responsible_rule_set': [r['id'] for r in conflict['rules']],
+            'triggering_context': context,
+            'witness': conflict,
+            'assumptions': ['Conflicting ordering rules detected via pairwise analysis.'],
+            'repairs': [],
+            'regression_case': {'context': context, 'expected_code': 'ORDERING_RULES_CONFLICT'},
+            'provenance_limitations': []
+        })
     
     return diagnostics, checks
 
 
-def _enumerate_paths_from_graph(explored_result):
-    """Extract paths from the planner result up to the exploration bounds.
-    
-    We use the same bounded BFS approach as the planner to avoid
-    enumerating exponentially many paths in workflows with cycles.
-    """
-    graph = explored_result.get('graph', {})
-    states = {s['id']: s for s in graph.get('states', [])}
-    edges = graph.get('edges', [])
-    
-    if not states:
-        return [[]]  # Empty path for empty workflow
-    
-    # Build adjacency list
-    adj = {}
-    for edge in edges:
-        adj.setdefault(edge['from'], []).append((edge['to'], edge['action']))
-    
-    # BFS with path limits to avoid memory explosion
-    MAX_PATHS = 1000  # Limit number of unique paths to explore
-    MAX_PATH_LENGTH = explored_result.get('bounds', {}).get('max_steps', 20)
-    
-    paths = []
-    queue = deque([(0, [])])  # (state_id, path)
-    seen_state_paths = set()  # Track (state_id, path_length) to deduplicate
-    
-    while queue and len(paths) < MAX_PATHS:
-        state_id, path = queue.popleft()
-        
-        # Deduplicate by state and path length to limit explosion
-        path_sig = (state_id, len(path))
-        if path_sig in seen_state_paths:
-            continue
-        seen_state_paths.add(path_sig)
-        
-        # Record this path
-        paths.append(list(path))
-        
-        # Explore successors if within depth limit
-        if len(path) < MAX_PATH_LENGTH:
-            for next_state, action in adj.get(state_id, []):
-                queue.append((next_state, path + [action]))
-    
-    return paths if paths else [[]]
-
-
-def _check_single_rule(rule, paths, search_exhaustive, workflow, explored_result):
-    """Check a single ordering rule against all paths."""
+def _check_rule_with_product(rule, adj, states, initial_state_id, goal, workflow, explored_result):
+    """Check one rule via product construction BFS."""
     kind = rule['kind']
     actions = rule['actions']
     
+    # Create initial monitor
     if kind == 'before':
-        return _check_before(rule, actions[0], actions[1], paths, search_exhaustive, workflow, explored_result)
+        monitor = BeforeMonitor(actions[0])
+        return _check_safety_property(rule, monitor, adj, states, initial_state_id, 
+                                      explored_result, _before_checker)
     elif kind == 'mutual_exclusion':
-        return _check_mutual_exclusion(rule, actions[0], actions[1], paths, search_exhaustive)
-    elif kind == 'exactly_once':
-        return _check_exactly_once(rule, actions[0], paths, search_exhaustive, workflow)
+        monitor = MutualExclusionMonitor(actions[0], actions[1])
+        return _check_safety_property(rule, monitor, adj, states, initial_state_id,
+                                      explored_result, _mutual_exclusion_checker)
     elif kind == 'at_most_once':
-        return _check_at_most_once(rule, actions[0], paths, search_exhaustive)
+        monitor = CountMonitor(actions[0])
+        return _check_safety_property(rule, monitor, adj, states, initial_state_id,
+                                      explored_result, _at_most_once_checker)
+    elif kind == 'exactly_once':
+        monitor = CountMonitor(actions[0])
+        return _check_exactly_once(rule, monitor, adj, states, initial_state_id, goal,
+                                   workflow, explored_result)
 
 
-def _check_before(rule, first, second, paths, search_exhaustive, workflow, explored_result):
-    """Check that first occurs before second on all paths where second occurs."""
-    # Find paths where second occurs
-    violating_paths = []
+def _check_safety_property(rule, initial_monitor, adj, states, initial_state_id, 
+                           explored_result, violation_checker):
+    """Check a safety property: report shortest violating prefix immediately."""
+    max_steps = explored_result.get('bounds', {}).get('max_steps', 20)
+    max_states = explored_result.get('bounds', {}).get('max_states', 2000)
     
-    for path in paths:
-        if second not in path:
-            continue  # Rule doesn't apply to paths without second
+    # Product BFS: (wf_state_id, monitor, path, depth)
+    queue = deque([(initial_state_id, initial_monitor, [], 0)])
+    seen = {(initial_state_id, hash(initial_monitor))}
+    visited_product_states = 1
+    hit_depth_bound = False
+    hit_state_bound = False
+    all_actions_seen = set()  # Track all actions encountered
+    
+    while queue:
+        wf_state, monitor, path, depth = queue.popleft()
         
-        # Check if first occurs before second
-        first_indices = [i for i, a in enumerate(path) if a == first]
-        second_indices = [i for i, a in enumerate(path) if a == second]
-        
-        # For each occurrence of second, there must be an occurrence of first before it
-        for second_idx in second_indices:
-            if not any(first_idx < second_idx for first_idx in first_indices):
-                violating_paths.append(path)
-                break  # One violation per path is enough
+        # Explore successors
+        for next_wf, action in adj.get(wf_state, []):
+            all_actions_seen.add(action)
+            
+            # Check for violation BEFORE stepping monitor
+            if violation_checker(monitor, action, rule):
+                counterexample = path + [action]
+                result = {
+                    'status': 'violated',
+                    'kind': rule['kind'],
+                    'counterexample': counterexample,
+                    'reason': f"Shortest violating prefix found",
+                    'search_exhaustive': explored_result.get('search_exhaustive', False)
+                }
+                # Add observed_count for at_most_once violations
+                if rule['kind'] == 'at_most_once':
+                    result['observed_count'] = counterexample.count(rule['actions'][0])
+                return result
+            
+            # Step monitor
+            new_monitor = monitor.step(action)
+            new_path = path + [action]
+            new_depth = depth + 1
+            
+            # Check bounds
+            if new_depth >= max_steps:
+                hit_depth_bound = True
+                continue
+            
+            # Dedupe on FULL product state
+            prod_state = (next_wf, hash(new_monitor))
+            if prod_state not in seen:
+                if visited_product_states >= max_states:
+                    hit_state_bound = True
+                    continue
+                
+                seen.add(prod_state)
+                visited_product_states += 1
+                queue.append((next_wf, new_monitor, new_path, new_depth))
     
-    if violating_paths:
-        return {
-            'status': 'violated',
-            'kind': 'before',
-            'first_action': first,
-            'second_action': second,
-            'counterexample': violating_paths[0],  # Shortest or first found
-            'reason': f'Action {second} occurs without {first} occurring first',
-            'search_exhaustive': search_exhaustive
-        }
-    
-    # Check for incomplete search before warnings
-    if not search_exhaustive:
+    # No violation found - check completeness
+    if hit_depth_bound or hit_state_bound or not explored_result.get('search_exhaustive', False):
         return {
             'status': 'incomplete',
-            'kind': 'before',
-            'first_action': first,
-            'second_action': second,
-            'reason': 'Search was truncated; rule may be violated on unexplored paths',
-            'search_exhaustive': False
+            'kind': rule['kind'],
+            'reason': 'Search truncated by bounds; cannot prove satisfaction',
+            'search_exhaustive': False,
+            'cutoff_reasons': [
+                r for r, hit in [
+                    ('max_steps', hit_depth_bound),
+                    ('max_states', hit_state_bound),
+                    ('workflow_search_incomplete', not explored_result.get('search_exhaustive', False))
+                ] if hit
+            ]
         }
     
-    # Check for warnings about unreachable actions
-    all_actions = set(action for path in paths for action in path)
-    
-    if second not in all_actions:
-        # second never occurs, rule vacuously satisfied but might be a mistake
+    # Check for unreachable actions (warning)
+    rule_actions = set(rule['actions'])
+    unreachable = rule_actions - all_actions_seen
+    if unreachable:
+        # Different messages for different rule kinds
+        if rule['kind'] == 'before' and rule['actions'][1] in unreachable:
+            if rule['actions'][0] in unreachable:
+                reason = f"Both actions are unreachable; rule never applies"
+            else:
+                reason = f"Second action '{rule['actions'][1]}' is unreachable; rule vacuously satisfied"
+        elif rule['kind'] == 'mutual_exclusion' and len(unreachable) == 2:
+            reason = "Both actions are unreachable; rule never applies"
+        elif unreachable == rule_actions:
+            reason = f"Actions {rule_actions} are unreachable; rule never applies"
+        else:
+            reason = f"Some actions are unreachable: {unreachable}"
+        
         return {
             'status': 'warning',
-            'kind': 'before',
-            'first_action': first,
-            'second_action': second,
-            'reason': f'Action {second} is unreachable; before rule never applies',
-            'search_exhaustive': search_exhaustive
+            'kind': rule['kind'],
+            'reason': reason,
+            'search_exhaustive': True
         }
     
     return {
         'status': 'satisfied',
-        'kind': 'before',
-        'first_action': first,
-        'second_action': second,
-        'search_exhaustive': search_exhaustive
+        'kind': rule['kind'],
+        'search_exhaustive': True
     }
 
 
-def _check_mutual_exclusion(rule, action_a, action_b, paths, search_exhaustive):
-    """Check that action_a and action_b never both occur on the same path."""
-    violating_paths = []
-    
-    for path in paths:
-        if action_a in path and action_b in path:
-            violating_paths.append(path)
-    
-    if violating_paths:
-        return {
-            'status': 'violated',
-            'kind': 'mutual_exclusion',
-            'excluded_actions': [action_a, action_b],
-            'counterexample': violating_paths[0],
-            'reason': f'Actions {action_a} and {action_b} both occur on the same path',
-            'search_exhaustive': search_exhaustive
-        }
-    
-    # Check for incomplete search before warnings
-    if not search_exhaustive:
-        return {
-            'status': 'incomplete',
-            'kind': 'mutual_exclusion',
-            'excluded_actions': [action_a, action_b],
-            'reason': 'Search was truncated; rule may be violated on unexplored paths',
-            'search_exhaustive': False
-        }
-    
-    # Check for warnings
-    all_actions = set(action for path in paths for action in path)
-    unreachable = [a for a in [action_a, action_b] if a not in all_actions]
-    
-    if len(unreachable) == 2:
-        return {
-            'status': 'warning',
-            'kind': 'mutual_exclusion',
-            'excluded_actions': [action_a, action_b],
-            'reason': f'Both actions are unreachable; mutual_exclusion never applies',
-            'search_exhaustive': search_exhaustive
-        }
-    elif unreachable:
-        return {
-            'status': 'warning',
-            'kind': 'mutual_exclusion',
-            'excluded_actions': [action_a, action_b],
-            'reason': f'Action {unreachable[0]} is unreachable',
-            'search_exhaustive': search_exhaustive
-        }
-    
-    return {
-        'status': 'satisfied',
-        'kind': 'mutual_exclusion',
-        'excluded_actions': [action_a, action_b],
-        'search_exhaustive': search_exhaustive
-    }
+def _before_checker(monitor, action, rule):
+    """Check if action violates before rule with current monitor."""
+    return monitor.violates(action, rule['actions'][1])
 
 
-def _check_exactly_once(rule, action, paths, search_exhaustive, workflow):
-    """Check that action occurs exactly once on every complete path (paths reaching goal)."""
-    goal = set(workflow.get('goal', []))
-    violating_paths = []
-    reason_counts = {}
+def _mutual_exclusion_checker(monitor, action, rule):
+    """Check if action violates mutual_exclusion with current monitor."""
+    return monitor.violates(action)
+
+
+def _at_most_once_checker(monitor, action, rule):
+    """Check if action violates at_most_once with current monitor."""
+    return monitor.violates_at_most_once(action)
+
+
+def _check_exactly_once(rule, initial_monitor, adj, states, initial_state_id, goal,
+                       workflow, explored_result):
+    """Check exactly_once: must occur exactly once on every complete path.
     
-    for path in paths:
-        # Determine if this is a complete path (reaches goal)
-        # We need to check the final state after following this path
-        final_state = _get_final_state(path, workflow)
-        is_complete = goal <= final_state
-        
-        if not is_complete:
-            continue  # Rule only applies to complete paths
-        
-        count = path.count(action)
-        if count != 1:
-            violating_paths.append(path)
-            reason_counts[count] = reason_counts.get(count, 0) + 1
-            if len(violating_paths) == 1:  # Save first counterexample
-                first_violation_count = count
+    This is a liveness property checked at goal states. Paths cut at max_steps
+    before reaching a goal make the result incomplete.
+    """
+    max_steps = explored_result.get('bounds', {}).get('max_steps', 20)
+    max_states = explored_result.get('bounds', {}).get('max_states', 2000)
     
-    if violating_paths:
-        # Report the most common violation count
-        first_violation_count = violating_paths[0].count(action)
+    queue = deque([(initial_state_id, initial_monitor, [], 0)])
+    seen = {(initial_state_id, hash(initial_monitor))}
+    visited_product_states = 1
+    hit_depth_bound = False
+    hit_state_bound = False
+    found_violation = False
+    violation_path = None
+    found_complete_path = False
+    incomplete_paths = False
+    all_actions_seen = set()
+    
+    while queue:
+        wf_state, monitor, path, depth = queue.popleft()
+        
+        # Get current workflow state facts
+        state_facts = set(states[wf_state].get('facts', []))
+        is_goal = goal <= state_facts
+        
+        if is_goal:
+            found_complete_path = True
+            # Check count at goal
+            if monitor.violates_exactly_once_at_goal():
+                found_violation = True
+                violation_path = path
+                break  # Found violation, stop search
+        
+        # Explore successors
+        has_successors = False
+        for next_wf, action in adj.get(wf_state, []):
+            has_successors = True
+            all_actions_seen.add(action)
+            new_monitor = monitor.step(action)
+            new_path = path + [action]
+            new_depth = depth + 1
+            
+            if new_depth >= max_steps:
+                hit_depth_bound = True
+                # This path was cut before reaching terminal state
+                if not is_goal:
+                    incomplete_paths = True
+                continue
+            
+            prod_state = (next_wf, hash(new_monitor))
+            if prod_state not in seen:
+                if visited_product_states >= max_states:
+                    hit_state_bound = True
+                    incomplete_paths = True
+                    continue
+                
+                seen.add(prod_state)
+                visited_product_states += 1
+                queue.append((next_wf, new_monitor, new_path, new_depth))
+    
+    if found_violation:
+        count = violation_path.count(rule['actions'][0])
         return {
             'status': 'violated',
             'kind': 'exactly_once',
-            'action': action,
-            'counterexample': violating_paths[0],
-            'observed_count': first_violation_count,
+            'counterexample': violation_path,
+            'reason': f"Action occurs {count} times (expected exactly 1)",
+            'observed_count': count,
             'expected_count': 1,
-            'reason': f'Action {action} occurs {first_violation_count} times on a complete path (expected exactly 1)',
-            'search_exhaustive': search_exhaustive
+            'search_exhaustive': explored_result.get('search_exhaustive', False)
         }
     
-    # Check if any complete paths exist (needed to distinguish from warnings)
-    complete_paths = [p for p in paths if goal <= _get_final_state(p, workflow)]
-    
-    # Check for incomplete search before warnings (but only if complete paths exist)
-    if not search_exhaustive and complete_paths:
+    # Check if search was complete
+    if incomplete_paths or hit_depth_bound or hit_state_bound or not explored_result.get('search_exhaustive', False):
         return {
             'status': 'incomplete',
             'kind': 'exactly_once',
-            'action': action,
-            'reason': 'Search was truncated; rule may be violated on unexplored complete paths',
-            'search_exhaustive': False
+            'reason': 'Paths cut before goal; cannot prove exactly_once',
+            'search_exhaustive': False,
+            'cutoff_reasons': [
+                r for r, hit in [
+                    ('max_steps_before_goal', incomplete_paths or hit_depth_bound),
+                    ('max_states', hit_state_bound),
+                    ('workflow_search_incomplete', not explored_result.get('search_exhaustive', False))
+                ] if hit
+            ]
         }
     
-    # Check warnings
-    all_actions = set(action for path in paths for action in path)
-    
-    if action not in all_actions:
+    if not found_complete_path:
         return {
             'status': 'warning',
             'kind': 'exactly_once',
-            'action': action,
-            'reason': f'Action {action} is unreachable; exactly_once cannot be satisfied',
-            'search_exhaustive': search_exhaustive
+            'reason': 'No complete paths found; exactly_once cannot apply',
+            'search_exhaustive': True
         }
     
-    if not complete_paths:
+    # Check unreachable
+    if rule['actions'][0] not in all_actions_seen:
         return {
             'status': 'warning',
             'kind': 'exactly_once',
-            'action': action,
-            'reason': 'No complete paths found; exactly_once rule cannot apply',
-            'search_exhaustive': search_exhaustive
+            'reason': f"Action {rule['actions'][0]} is unreachable",
+            'search_exhaustive': True
         }
     
     return {
         'status': 'satisfied',
         'kind': 'exactly_once',
-        'action': action,
-        'search_exhaustive': search_exhaustive
+        'search_exhaustive': True
     }
 
 
-def _check_at_most_once(rule, action, paths, search_exhaustive):
-    """Check that action occurs at most once on every path."""
-    violating_paths = []
+def _detect_conflicts(rules, checks):
+    """Detect pairwise conflicts in before rules.
     
-    for path in paths:
-        count = path.count(action)
-        if count > 1:
-            violating_paths.append(path)
+    Simple heuristic: A before B and B before A is a cycle.
+    Only warn when BOTH rules are problematic (both violated, or can't both be satisfied).
+    """
+    conflicts = []
+    before_rules = [(r, c) for r, c in zip(rules, checks) if r['kind'] == 'before']
     
-    if violating_paths:
-        first_violation_count = violating_paths[0].count(action)
-        return {
-            'status': 'violated',
-            'kind': 'at_most_once',
-            'action': action,
-            'counterexample': violating_paths[0],
-            'observed_count': first_violation_count,
-            'max_count': 1,
-            'reason': f'Action {action} occurs {first_violation_count} times (expected at most 1)',
-            'search_exhaustive': search_exhaustive
-        }
+    for i, (rule1, check1) in enumerate(before_rules):
+        for rule2, check2 in before_rules[i+1:]:
+            # Check for cycle: A before B and B before A
+            a1, b1 = rule1['actions']
+            a2, b2 = rule2['actions']
+            
+            if (a1 == b2 and b1 == a2):  # Direct cycle
+                # Only report conflict if BOTH are violated/problematic
+                both_violated = (check1['status'] == 'violated' and check2['status'] == 'violated')
+                both_problematic = (check1['status'] in ('violated', 'incomplete') and 
+                                  check2['status'] in ('violated', 'incomplete'))
+                
+                if both_violated:
+                    conflicts.append({
+                        'rules': [rule1, rule2],
+                        'reason': f'Cycle detected: {a1} before {b1} and {b1} before {a1}, both violated',
+                        'both_violated': True
+                    })
     
-    # Check for incomplete search before warnings
-    if not search_exhaustive:
-        return {
-            'status': 'incomplete',
-            'kind': 'at_most_once',
-            'action': action,
-            'reason': 'Search was truncated; rule may be violated on unexplored paths',
-            'search_exhaustive': False
-        }
-    
-    # Check warnings
-    all_actions = set(action for path in paths for action in path)
-    
-    if action not in all_actions:
-        return {
-            'status': 'warning',
-            'kind': 'at_most_once',
-            'action': action,
-            'reason': f'Action {action} is unreachable',
-            'search_exhaustive': search_exhaustive
-        }
-    
-    return {
-        'status': 'satisfied',
-        'kind': 'at_most_once',
-        'action': action,
-        'search_exhaustive': search_exhaustive
-    }
+    return conflicts
 
 
+def _get_diagnostic_code(result):
+    """Map result status and kind to diagnostic code."""
+    if result['status'] == 'violated':
+        return {
+            'before': 'ORDERING_BEFORE_VIOLATED',
+            'mutual_exclusion': 'ORDERING_MUTUAL_EXCLUSION_VIOLATED',
+            'exactly_once': 'ORDERING_EXACTLY_ONCE_VIOLATED',
+            'at_most_once': 'ORDERING_AT_MOST_ONCE_VIOLATED'
+        }.get(result['kind'], 'ORDERING_RULE_VIOLATION')
+    elif result['status'] == 'incomplete':
+        return 'ORDERING_CHECK_INCOMPLETE'
+    elif result['status'] == 'warning':
+        return 'ORDERING_RULE_UNREACHABLE_ACTIONS'
+    return 'ORDERING_RULE_UNKNOWN'
+
+
+# Helper for backwards compatibility with tests
 def _get_final_state(path, workflow):
-    """Compute the final state after following a path."""
+    """Compute final state after following a path (for test compatibility)."""
     state = set(workflow.get('initial', []))
     action_map = {a['id']: a for a in workflow['actions']}
     
@@ -515,23 +645,3 @@ def _get_final_state(path, workflow):
             state = (state - set(action.get('removes', []))) | set(action.get('adds', []))
     
     return state
-
-
-def _get_diagnostic_code(result):
-    """Get the appropriate diagnostic code for a check result."""
-    if result['status'] == 'violated':
-        kind = result['kind']
-        if kind == 'before':
-            return 'ORDERING_BEFORE_VIOLATED'
-        elif kind == 'mutual_exclusion':
-            return 'ORDERING_MUTUAL_EXCLUSION_VIOLATED'
-        elif kind == 'exactly_once':
-            return 'ORDERING_EXACTLY_ONCE_VIOLATED'
-        elif kind == 'at_most_once':
-            return 'ORDERING_AT_MOST_ONCE_VIOLATED'
-    elif result['status'] == 'warning':
-        return 'ORDERING_RULE_UNREACHABLE_ACTIONS'
-    elif result['status'] == 'incomplete':
-        return 'ORDERING_CHECK_INCOMPLETE'
-    
-    return 'ORDERING_RULE_UNKNOWN_STATUS'

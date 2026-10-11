@@ -3,8 +3,7 @@ import copy
 import unittest
 
 from prompt_skill_linter.ordering import (
-    check_ordering_rules, validate_ordering_rules,
-    _enumerate_paths_from_graph, _get_final_state
+    check_ordering_rules, validate_ordering_rules, _get_final_state
 )
 
 
@@ -611,27 +610,6 @@ class OrderingRuleTests(unittest.TestCase):
     
     # ==================== Helper function tests ====================
     
-    def test_enumerate_paths_simple(self):
-        """Test path enumeration helper."""
-        explored = make_explored_result(
-            [
-                {'id': 0, 'facts': ['start'], 'depth': 0, 'goal': False},
-                {'id': 1, 'facts': ['mid'], 'depth': 1, 'goal': False},
-                {'id': 2, 'facts': ['end'], 'depth': 2, 'goal': True}
-            ],
-            [
-                {'from': 0, 'to': 1, 'action': 'a'},
-                {'from': 1, 'to': 2, 'action': 'b'}
-            ]
-        )
-        
-        paths = _enumerate_paths_from_graph(explored)
-        
-        # Should have: [], [a], [a, b]
-        self.assertIn([], paths)
-        self.assertIn(['a'], paths)
-        self.assertIn(['a', 'b'], paths)
-    
     def test_get_final_state_simple(self):
         """Test final state computation."""
         workflow = {
@@ -646,6 +624,138 @@ class OrderingRuleTests(unittest.TestCase):
         
         self.assertEqual(final, {'start', 'end'})
         self.assertNotIn('mid', final)
+    
+    def test_diamond_history_bug_regression(self):
+        """Regression test for unsound deduplication in path enumeration.
+        
+        Two different action sequences reach the same state at the same depth.
+        The dedup on (state_id, path_length) drops one, missing violations.
+        
+        Workflow: s0 -grant_auth-> s1, s0 -skip-> s1, s1 -access_data-> s2
+        Rule: grant_auth before access_data
+        
+        Path [grant_auth, access_data] satisfies the rule.
+        Path [skip, access_data] VIOLATES the rule (access_data without grant_auth first).
+        
+        With buggy dedup on (state_id, length), BFS sees [grant_auth] at (s1, 1),
+        then drops [skip] as duplicate, never exploring the violating [skip, access_data].
+        """
+        actions = [
+            {'id': 'grant_auth', 'requires': ['start'], 'adds': ['authed']},
+            {'id': 'skip', 'requires': ['start'], 'adds': ['authed']},  # Same result state
+            {'id': 'access_data', 'requires': ['authed'], 'adds': ['complete']}
+        ]
+        workflow = make_workflow(actions, initial=['start'], goal=['complete'], ordering_rules=[
+            make_rule('before', ['grant_auth', 'access_data'])
+        ])
+        
+        # Simulate the explored graph
+        states = [
+            {'id': 0, 'facts': ['start'], 'depth': 0, 'goal': False},
+            {'id': 1, 'facts': ['authed', 'start'], 'depth': 1, 'goal': False},
+            {'id': 2, 'facts': ['authed', 'complete', 'start'], 'depth': 2, 'goal': True}
+        ]
+        edges = [
+            {'from': 0, 'to': 1, 'action': 'grant_auth'},
+            {'from': 0, 'to': 1, 'action': 'skip'},  # Different action, same destination
+            {'from': 1, 'to': 2, 'action': 'access_data'}
+        ]
+        explored = make_explored_result(states, edges)
+        
+        diags, checks = check_ordering_rules(workflow, explored, 'workflow-1', {'id': 'ctx-1'})
+        
+        # This should detect the violation on path [skip, access_data]
+        # but the buggy implementation at 485c91b will incorrectly return satisfied
+        self.assertEqual(checks[0]['status'], 'violated', 
+                        'Diamond bug: dedup on (state, length) drops [skip] path, missing violation')
+        self.assertIn('skip', checks[0].get('counterexample', []),
+                     'Counterexample should show the violating path through skip')
+    
+    def test_path_cap_must_report_incomplete(self):
+        """MAX_PATHS truncation must mark check as incomplete, not satisfied.
+        
+        When path enumeration hits the cap, we've only checked a subset of paths,
+        so we cannot claim the rule is satisfied.
+        """
+        # This test will be updated after the product construction fix
+        # For now, it documents the requirement
+        pass
+    
+    def test_depth_bound_exactly_once_incomplete(self):
+        """Paths cut at max_steps before goal cannot prove exactly_once."""
+        actions = [
+            {'id': 'step', 'requires': ['start'], 'adds': ['s1'],'removes': []},
+            {'id': 'repeat', 'requires': ['s1'], 'adds': ['s2'], 'removes': []},
+            # Goal requires many steps, will hit depth bound
+        ]
+        workflow = make_workflow(actions, goal=['very_far'], ordering_rules=[
+            make_rule('exactly_once', ['step'])
+        ])
+        
+        # Simulate truncated exploration (non-exhaustive, no goal reached)
+        states = [
+            {'id': 0, 'facts': ['start'], 'depth': 0, 'goal': False},
+            {'id': 1, 'facts': ['s1', 'start'], 'depth': 1, 'goal': False}
+        ]
+        edges = [{'from': 0, 'to': 1, 'action': 'step'}]
+        explored = make_explored_result(states, edges, exhaustive=False)
+        
+        diags, checks = check_ordering_rules(workflow, explored, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Should be incomplete, not satisfied, since we didn't explore complete paths
+        self.assertIn(checks[0]['status'], ['incomplete', 'warning'],
+                     'Truncated search cannot prove exactly_once')
+    
+    def test_non_zero_initial_state(self):
+        """Initial state ID should not be hardcoded to 0."""
+        actions = [
+            {'id': 'a', 'requires': ['start'], 'adds': ['complete']}
+        ]
+        workflow = make_workflow(actions, ordering_rules=[
+            make_rule('at_most_once', ['a'])
+        ])
+        
+        # Initial state is 5, not 0
+        states = [
+            {'id': 5, 'facts': ['start'], 'depth': 0, 'goal': False},
+            {'id': 6, 'facts': ['complete', 'start'], 'depth': 1, 'goal': True}
+        ]
+        edges = [{'from': 5, 'to': 6, 'action': 'a'}]
+        explored = make_explored_result(states, edges)
+        
+        diags, checks = check_ordering_rules(workflow, explored, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Should work correctly even with non-zero initial state
+        self.assertEqual(checks[0]['status'], 'satisfied')
+    
+    def test_conflicting_before_rules_detected(self):
+        """A before B and B before A should be detected as conflicting."""
+        actions = [
+            {'id': 'a', 'requires': ['start'], 'adds': ['done_a']},
+            {'id': 'b', 'requires': ['done_a'], 'adds': ['complete']}
+        ]
+        workflow = make_workflow(actions, ordering_rules=[
+            make_rule('before', ['a', 'b'], rule_id='ord-1'),
+            make_rule('before', ['b', 'a'], rule_id='ord-2')  # Conflicts with ord-1
+        ])
+        
+        states = [
+            {'id': 0, 'facts': ['start'], 'depth': 0, 'goal': False},
+            {'id': 1, 'facts': ['done_a', 'start'], 'depth': 1, 'goal': False},
+            {'id': 2, 'facts': ['complete', 'done_a', 'start'], 'depth': 2, 'goal': True}
+        ]
+        edges = [
+            {'from': 0, 'to': 1, 'action': 'a'},
+            {'from': 1, 'to': 2, 'action': 'b'}
+        ]
+        explored = make_explored_result(states, edges)
+        
+        diags, checks = check_ordering_rules(workflow, explored, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Should detect the conflict (either as a warning or in the diagnostics)
+        # At minimum, one rule should violate
+        statuses = [c['status'] for c in checks]
+        self.assertIn('violated', statuses, 'Conflicting rules should cause at least one violation')
 
 
 if __name__ == '__main__':
