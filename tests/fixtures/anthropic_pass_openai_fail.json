@@ -1,0 +1,24 @@
+{
+  "tools": {
+    "conditional_update": {
+      "arguments": ["data"],
+      "required": ["data"],
+      "schema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "string"
+          }
+        },
+        "required": ["data"],
+        "additionalProperties": false,
+        "if": {
+          "properties": {"data": {"const": "special"}}
+        },
+        "then": {
+          "properties": {"extra": {"type": "string"}}
+        }
+      }
+    }
+  }
+}

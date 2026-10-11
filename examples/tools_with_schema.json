@@ -1,0 +1,41 @@
+{
+  "tools": {
+    "get_temperature": {
+      "arguments": ["location", "value"],
+      "required": ["location", "value"],
+      "schema": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string"
+          },
+          "value": {
+            "type": "number",
+            "minimum": -273.15,
+            "maximum": 1000,
+            "description": "Temperature value"
+          }
+        },
+        "required": ["location", "value"],
+        "additionalProperties": false
+      },
+      "capabilities": [
+        "get temperature for a location with validation"
+      ]
+    },
+    "submit": {
+      "arguments": ["nodes"],
+      "required": ["nodes"],
+      "capabilities": [
+        "submit up to 10 nodes; returns exactly one task"
+      ]
+    },
+    "poll": {
+      "arguments": ["task_id"],
+      "required": ["task_id"],
+      "capabilities": [
+        "poll exactly one task"
+      ]
+    }
+  }
+}

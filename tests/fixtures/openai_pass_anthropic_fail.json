@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "get_temperature": {
+      "arguments": ["value"],
+      "required": ["value"],
+      "schema": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "minimum": -273.15,
+            "maximum": 1000
+          }
+        },
+        "required": ["value"],
+        "additionalProperties": false
+      }
+    }
+  }
+}
