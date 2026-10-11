@@ -238,7 +238,7 @@ class MutationClassificationTests(unittest.TestCase):
         mutant = mutants[0]
         
         mutant_report = lint(mutant.contract, self.tools, self.runtime, self.root)
-        result = classify_mutant(mutant, original_report, mutant_report, None)
+        result = classify_mutant(mutant, original_report, mutant_report)
         
         # Should be SURVIVED or EQUIVALENT_SUSPECTED because the lower-priority rule is shadowed
         # and doesn't affect diagnostics
@@ -289,7 +289,7 @@ class MutationClassificationTests(unittest.TestCase):
         mutant = mutants[0]
         
         mutant_report = lint(mutant.contract, self.tools, self.runtime, self.root)
-        result = classify_mutant(mutant, original_report, mutant_report, None)
+        result = classify_mutant(mutant, original_report, mutant_report)
         
         # Should be killed because conflict disappears
         self.assertEqual(result.status, 'KILLED')
@@ -344,7 +344,7 @@ class MutationClassificationTests(unittest.TestCase):
         mutant = mutants[0]
         
         mutant_report = lint(mutant.contract, self.tools, self.runtime, self.root)
-        result = classify_mutant(mutant, original_report, mutant_report, None)
+        result = classify_mutant(mutant, original_report, mutant_report)
         
         # Should be killed because swapping before changes semantics
         self.assertEqual(result.status, 'KILLED')
@@ -423,7 +423,7 @@ class MutationCrashHandlingTests(unittest.TestCase):
             'assumptions': []
         }
         
-        from prompt_skill_linter.mutate import Mutant
+        from prompt_skill_linter.mutate import Mutant, MutationResult
         
         # Create a mutant with invalid contract
         bad_contract = contract.copy()
@@ -437,12 +437,16 @@ class MutationCrashHandlingTests(unittest.TestCase):
             pointer='/version'
         )
         
-        original_report = lint(contract, {'tools': {}}, {}, self.root)
+        # Schema validation should reject this, making it INVALID
+        # not CRASHED
+        from prompt_skill_linter.engine import validate
+        try:
+            validate(mutant.contract, {'tools': {}}, {}, self.root)
+            is_valid = True
+        except Exception:
+            is_valid = False
         
-        result = classify_mutant(mutant, original_report, None, 'contract.version must be 1')
-        
-        self.assertEqual(result.status, 'CRASHED')
-        self.assertIsNotNone(result.error)
+        self.assertFalse(is_valid)
 
 
 class GuardMutationTests(unittest.TestCase):

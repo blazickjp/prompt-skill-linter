@@ -6,7 +6,7 @@ import sys
 
 from .engine import ContractError, lint
 from .schema import unique_object
-from .mutate import generate_mutants, classify_mutant, compute_mutation_score
+from .mutate import generate_mutants, classify_mutant, compute_mutation_score, MutationResult
 
 
 def load(path):
@@ -47,16 +47,44 @@ def render(report):
 
 def run_mutation_testing(contract, manifest, runtime, root, max_mutants=None, operator_filter=None, output_format='text'):
     """Run mutation testing and return results."""
+    from .engine import validate
+    
     original_report = lint(contract, manifest, runtime, root)
     mutants = generate_mutants(contract, manifest, max_mutants, operator_filter)
     
     results = []
     for mutant in mutants:
+        # First, validate the mutant's schema
         try:
-            mutant_report = lint(mutant.contract, manifest, runtime, root)
-            result = classify_mutant(mutant, original_report, mutant_report, None)
-        except Exception as e:
-            result = classify_mutant(mutant, original_report, None, str(e))
+            validate(mutant.contract, manifest, runtime, root)
+            mutant_is_valid = True
+        except Exception:
+            mutant_is_valid = False
+        
+        # Now try to lint it
+        if not mutant_is_valid:
+            # Schema validation failed - this is an INVALID mutant
+            result = MutationResult(
+                mutant=mutant,
+                status='INVALID',
+                original_diagnostics=frozenset(),
+                mutant_diagnostics=None,
+                error='Schema validation rejected mutant'
+            )
+        else:
+            # Schema is valid, try linting
+            try:
+                mutant_report = lint(mutant.contract, manifest, runtime, root)
+                result = classify_mutant(mutant, original_report, mutant_report)
+            except Exception as e:
+                # Linting crashed on a schema-valid mutant - this is a CRASHED mutant (linter bug)
+                result = MutationResult(
+                    mutant=mutant,
+                    status='CRASHED',
+                    original_diagnostics=frozenset(),
+                    mutant_diagnostics=None,
+                    error=str(e)
+                )
         results.append(result)
     
     stats = compute_mutation_score(results)

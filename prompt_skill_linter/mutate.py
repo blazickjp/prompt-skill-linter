@@ -587,29 +587,11 @@ def generate_mutants(contract: dict, manifest: dict, max_mutants: int | None = N
     return mutants
 
 
-def classify_mutant(mutant: Mutant, original_report: dict, mutant_report: dict | None, error: str | None) -> MutationResult:
-    """Classify a mutant as KILLED, SURVIVED, EQUIVALENT_SUSPECTED, INVALID, or CRASHED."""
-    if error is not None:
-        # Distinguish schema-invalid mutants from real linter bugs
-        invalid_patterns = [
-            'bulk constraints must be unconditional',
-            'references unknown rule',
-            'references unknown action',
-            'must be unconditional declared requirements',
-            'missing version',
-        ]
-        
-        is_invalid = any(pattern in error for pattern in invalid_patterns)
-        status = 'INVALID' if is_invalid else 'CRASHED'
-        
-        return MutationResult(
-            mutant=mutant,
-            status=status,
-            original_diagnostics=frozenset(),
-            mutant_diagnostics=None,
-            error=error
-        )
+def classify_mutant(mutant: Mutant, original_report: dict, mutant_report: dict) -> MutationResult:
+    """Classify a mutant as KILLED, SURVIVED, or EQUIVALENT_SUSPECTED.
     
+    This function should only be called for mutants that passed schema validation.
+    """
     orig_diags, mut_diags = compare_diagnostics(
         original_report['diagnostics'],
         mutant_report['diagnostics']
