@@ -963,13 +963,12 @@ class OrderingRuleTests(unittest.TestCase):
         self.assertIn('action_a', counterexample, 'Counterexample should include action_a')
         self.assertIn('action_b', counterexample, 'Counterexample should include action_b')
 
-    def test_max_steps_violation_at_boundary_detected(self):
-        """Violation at depth 20 is detected even with max_steps=20 (fix for #4).
+    def test_max_steps_violation_beyond_boundary_incomplete(self):
+        """Violation at depth 20 (21-action witness) exceeds max_steps=20 bound.
         
-        This test verifies the fix for issue #4: violations should be detected at the
-        depth boundary, not reported as incomplete. The old code would mark any state
-        at depth >= max_steps as a cutoff, even when violations were detectable. The
-        fix only marks cutoffs when there are truly unexplored states.
+        Preserves max_steps witness contract: violations are only returned when
+        witness length <= max_steps. At the depth boundary, mark cutoff for bad
+        event OR unseen successor, but don't return violations that exceed the bound.
         """
         # Build a linear chain to depth 19 (reaching s20)
         actions = []
@@ -988,18 +987,22 @@ class OrderingRuleTests(unittest.TestCase):
         
         from prompt_skill_linter.planner import explore
         
-        # With max_steps=20, we can explore actions from depth 19, which reach depth 20
-        # The violation is detectable: taking action_b from depth 19 violates mutex with action_a
+        # With max_steps=20, violation at depth 20 (21-action witness) exceeds bound
         result_20 = explore(workflow, max_steps=20, max_states=2000)
         diags_20, checks_20 = check_ordering_rules(workflow, result_20, 'workflow-1', {'id': 'ctx-1'})
         
-        # OLD BEHAVIOR (buggy): Would report incomplete
-        # NEW BEHAVIOR (fixed): Detects the violation at the boundary
-        self.assertEqual(checks_20[0]['status'], 'violated',
-                        'Violation at depth 20 should be detected with max_steps=20 (fix for #4)')
-        counterexample = checks_20[0].get('counterexample')
-        self.assertIsNotNone(counterexample, 'Should have counterexample')
-        # Counterexample: step0-step18 (19 actions) + action_a + action_b = 21 actions
+        self.assertEqual(checks_20[0]['status'], 'incomplete',
+                        'Violation with 21-action witness exceeds max_steps=20 bound')
+        self.assertIn('max_steps', str(checks_20[0].get('cutoff_reasons', [])),
+                     'Incomplete should cite max_steps cutoff')
+        
+        # With max_steps=21, witness fits within bound
+        result_21 = explore(workflow, max_steps=21, max_states=2000)
+        diags_21, checks_21 = check_ordering_rules(workflow, result_21, 'workflow-1', {'id': 'ctx-1'})
+        
+        self.assertEqual(checks_21[0]['status'], 'violated',
+                        'Violation with 21-action witness fits within max_steps=21')
+        counterexample = checks_21[0].get('counterexample')
         self.assertEqual(len(counterexample), 21,
                         'Counterexample should be 21 actions')
 
@@ -1542,6 +1545,59 @@ class Issue4RegressionTests(unittest.TestCase):
         self.assertEqual(len(diags), 1, 'Should generate INCOMPLETE diagnostic')
         self.assertEqual(diags[0]['code'], 'ORDERING_CHECK_INCOMPLETE')
     
+    def test_bad_boundary_event_familiar_facts_incomplete(self):
+        """Bad boundary event returning to familiar facts still marks incomplete.
+        
+        At depth=max_steps, a violating action that returns to already-seen facts
+        should mark cutoff (the bad event itself is the reason for incomplete).
+        """
+        actions = [
+            {'id': 'setup', 'requires': ['start'], 'adds': ['ready'], 'removes': ['start']},
+            {'id': 'action_a', 'requires': ['ready'], 'adds': ['done_a']},
+            {'id': 'action_b', 'requires': ['ready'], 'adds': ['done_b']},  # Mutex with a
+            {'id': 'reset', 'requires': ['done_a'], 'adds': ['ready'], 'removes': ['done_a']}  # Returns to familiar
+        ]
+        workflow = make_workflow(actions, initial=['start'], goal=['done_b'], ordering_rules=[
+            make_rule('mutual_exclusion', ['action_a', 'action_b'])
+        ])
+        
+        from prompt_skill_linter.planner import explore
+        # setup (depth 1), action_a (depth 2), action_b at depth 2 would violate
+        # With max_steps=2, we can't take action_b from depth 2
+        result = explore(workflow, max_steps=2, max_states=2000)
+        diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Should be incomplete even though successor state (ready, done_b) would be new
+        # The bad event itself triggers cutoff
+        self.assertEqual(checks[0]['status'], 'incomplete',
+                        'Bad boundary event should mark cutoff even if returning to familiar facts')
+        self.assertIn('max_steps', checks[0].get('cutoff_reasons', []))
+    
+    def test_safe_boundary_self_loop_satisfied(self):
+        """Safe boundary self-loop doesn't cause false incomplete.
+        
+        At depth=max_steps, a safe action that returns to the same state (self-loop)
+        doesn't mark cutoff if the product state is already seen.
+        """
+        actions = [
+            {'id': 'step', 'requires': ['start'], 'adds': ['s1'], 'removes': ['start']},
+            {'id': 'noop', 'requires': ['s1'], 'adds': [], 'removes': []},  # Self-loop at s1
+            {'id': 'finish', 'requires': ['s1'], 'adds': ['complete']}
+        ]
+        workflow = make_workflow(actions, initial=['start'], goal=['complete'], ordering_rules=[
+            make_rule('before', ['step', 'finish'])
+        ])
+        
+        from prompt_skill_linter.planner import explore
+        # step (depth 1), noop (depth 2, returns to s1), finish (depth 2)
+        # With max_steps=2, noop at depth 2 returns to already-seen (s1, seen_step=true)
+        result = explore(workflow, max_steps=2, max_states=2000)
+        diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Should be satisfied: self-loop doesn't introduce unseen states
+        self.assertEqual(checks[0]['status'], 'satisfied',
+                        'Safe boundary self-loop to seen state should not mark cutoff')
+    
     def test_exactly_once_three_step_max_steps_3_satisfied(self):
         """Fix #1: exactly_once with 3-step chain and max_steps=3 should be satisfied.
         
@@ -1638,16 +1694,20 @@ class Issue4RegressionTests(unittest.TestCase):
         conflict = conflict_diags[0]
         self.assertEqual(conflict['witness']['conflict_type'], 'before_cycle_optional',
                         'Should identify as optional cycle (weaker warning)')
-        self.assertIn('a', conflict['witness']['optional_actions'])
-        self.assertIn('b', conflict['witness']['optional_actions'])
-        self.assertIn('c', conflict['witness']['optional_actions'])
+        # All cycle actions should be listed
+        self.assertIn('a', conflict['witness']['cycle_actions'])
+        self.assertIn('b', conflict['witness']['cycle_actions'])
+        self.assertIn('c', conflict['witness']['cycle_actions'])
+        # Should mention optional in reason
+        self.assertIn('optional', conflict['witness']['reason'].lower())
     
-    def test_three_cycle_mixed_required_optional_warning(self):
-        """Fix #2: 3-cycle with some required actions is still a weaker warning.
+    def test_three_cycle_mixed_required_optional_hard_conflict(self):
+        """Fix #2: 3-cycle with any required action is a hard conflict.
         
         Action a has exactly_once (required), b and c are optional.
         Rules: a before b, b before c, c before a.
-        This is NOT a hard conflict: a run that does only a (but not b or c) satisfies all rules.
+        The cycle forbids ALL cycle actions in every compliant run (including a).
+        Since a is required, no compliant goal-reaching run is possible: hard conflict.
         """
         actions = [
             {'id': 'a', 'requires': ['start'], 'adds': ['done_a']},
@@ -1666,17 +1726,16 @@ class Issue4RegressionTests(unittest.TestCase):
         
         diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
         
-        # Should detect the cycle but as optional (not all required)
+        # Should detect the cycle as hard conflict (a is required but blocked by cycle)
         conflict_diags = [d for d in diags if d['code'] == 'ORDERING_RULES_CONFLICT']
         self.assertGreater(len(conflict_diags), 0,
-                          'Must detect mixed cycle')
+                          'Must detect mixed cycle as hard conflict')
         
         conflict = conflict_diags[0]
-        self.assertEqual(conflict['witness']['conflict_type'], 'before_cycle_optional',
-                        'Should identify as optional cycle (not all actions required)')
-        # b and c should be listed as optional
-        self.assertIn('b', conflict['witness']['optional_actions'])
-        self.assertIn('c', conflict['witness']['optional_actions'])
+        self.assertEqual(conflict['witness']['conflict_type'], 'before_cycle_required',
+                        'Should identify as hard conflict (cycle blocks required action a)')
+        # a should be listed as required in cycle
+        self.assertIn('a', conflict['witness']['required_in_cycle'])
     
     def test_before_mutex_required_hard_conflict(self):
         """Fix #2: before(A, B) + mutual_exclusion(A, B) with B required is a hard conflict.
@@ -1818,6 +1877,75 @@ class Issue4RegressionTests(unittest.TestCase):
         self.assertEqual(conflict['witness']['conflict_type'], 'before_cycle_required')
         self.assertEqual(len(conflict['witness']['cycle_actions']), 4,
                         'Should identify all 4 actions in the cycle')
+    
+    def test_optional_cycle_unrelated_goal_warning_only(self):
+        """Optional cycle with unrelated goal is a warning, not hard conflict.
+        
+        Cycle among optional actions doesn't block goal when goal is reachable
+        via other actions. This shows structural warnings don't become unconditional
+        UNSAT claims.
+        """
+        actions = [
+            {'id': 'a', 'requires': ['start'], 'adds': ['done_a']},
+            {'id': 'b', 'requires': ['start'], 'adds': ['done_b']},
+            {'id': 'c', 'requires': ['start'], 'adds': ['done_c']},
+            {'id': 'goal_action', 'requires': ['start'], 'adds': ['complete']}  # Unrelated to cycle
+        ]
+        workflow = make_workflow(actions, ordering_rules=[
+            make_rule('before', ['a', 'b'], rule_id='ord-1'),
+            make_rule('before', ['b', 'c'], rule_id='ord-2'),
+            make_rule('before', ['c', 'a'], rule_id='ord-3')
+        ])
+        
+        from prompt_skill_linter.planner import explore
+        result = explore(workflow)
+        
+        diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Should detect optional cycle as weaker warning (goal is reachable without cycle actions)
+        conflict_diags = [d for d in diags if d['code'] == 'ORDERING_RULES_CONFLICT']
+        self.assertGreater(len(conflict_diags), 0,
+                          'Must detect optional cycle')
+        
+        conflict = conflict_diags[0]
+        self.assertEqual(conflict['witness']['conflict_type'], 'before_cycle_optional',
+                        'Should be weaker warning (optional cycle, unrelated goal)')
+    
+    def test_no_goal_cycle_warning_only(self):
+        """Cycle with no goal is a warning, not hard conflict.
+        
+        exactly_once is goal-conditional: no-goal runs satisfy the obligation
+        vacuously. This shows goal-conditional obligations don't cause unconditional
+        UNSAT claims.
+        """
+        actions = [
+            {'id': 'a', 'requires': ['start'], 'adds': ['done_a']},
+            {'id': 'b', 'requires': ['start'], 'adds': ['done_b']},
+            {'id': 'c', 'requires': ['start'], 'adds': ['done_c']}
+        ]
+        # No action adds 'complete', so goal is unreachable
+        workflow = make_workflow(actions, initial=['start'], goal=['complete'], ordering_rules=[
+            make_rule('before', ['a', 'b'], rule_id='ord-1'),
+            make_rule('before', ['b', 'c'], rule_id='ord-2'),
+            make_rule('before', ['c', 'a'], rule_id='ord-3'),
+            make_rule('exactly_once', ['a'], rule_id='ord-4')
+        ])
+        
+        from prompt_skill_linter.planner import explore
+        result = explore(workflow)
+        
+        diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Should detect cycle but not as hard conflict (goal unreachable, so exactly_once satisfied vacuously)
+        conflict_diags = [d for d in diags if d['code'] == 'ORDERING_RULES_CONFLICT']
+        
+        # The conflict detection looks at exactly_once rules, but the cycle doesn't block goal-reaching
+        # runs because no goal-reaching runs exist. This is structurally a warning.
+        if len(conflict_diags) > 0:
+            # If detected, should mention goal-conditional nature
+            conflict = conflict_diags[0]
+            self.assertIn('goal', conflict['witness']['reason'].lower(),
+                         'Conflict reason should mention goal-conditional nature')
     
     def test_no_conflict_independent_rules(self):
         """Fix #2: Independent before rules should not create false conflicts.

@@ -25,14 +25,18 @@ only when an unseen product state (facts, monitor) remains reachable but unexplo
 exact within configured bounds and stays small even with cycles.
 
 Conflict detection identifies structural patterns in rule sets:
-- Before-cycles (A before B, B before C, C before A) are hard conflicts when all involved
-  actions are required (e.g., in exactly_once rules), since they cannot all occur in any
-  order. Cycles among optional actions are weaker warnings, since a run that omits them
-  satisfies all rules.
+- Before-cycles (A before B, B before C, C before A) forbid all cycle actions in every
+  compliant run. Hard conflicts when any involved action is required (in exactly_once),
+  since no compliant goal-reaching run is possible. Cycles among entirely optional actions
+  are weaker warnings.
 - before(A, B) + mutual_exclusion(A, B): If B is required, this is a hard conflict (B must
-  occur but cannot, since before needs A first and mutex forbids both). If B is optional,
-  it's a weaker warning (the rules together forbid B in every compliant run, but that's
-  acceptable since B wasn't required).
+  occur for goal-reaching runs but cannot, since before needs A first and mutex forbids both).
+  If B is optional, it's a weaker warning (the rules together forbid B in every compliant run,
+  but that's acceptable since B wasn't required for goals).
+
+Hard conflicts explicitly describe impossibility of compliant goal-reaching runs. exactly_once
+obligations are goal-conditional: no-goal runs satisfy them vacuously. Conflict evidence includes
+the exactly_once declarations that supply requiredness.
 
 Note: "Required" currently means "appears in an exactly_once rule". Actions required by
 every goal path are not yet considered (known limitation).
@@ -426,9 +430,24 @@ def _check_safety_property_independent(rule, initial_facts, goal_facts, actions,
             
             all_actions_seen.add(action_id)
             
-            # NOW check for violation (only for enabled actions)
+            # Step monitor and compute successor product state
+            new_monitor = monitor.step(action_id)
+            new_path = path + [action_id]
+            new_depth = depth + 1
+            prod_state = (next_facts, new_monitor)
+            
+            # Check depth bound: at the bound, mark cutoff for bad event OR unseen successor
+            # Only return violations when witness length <= max_steps (preserves witness contract)
+            if depth >= max_steps:
+                is_bad = violation_checker(monitor, action_id, rule)
+                is_unseen = prod_state not in seen
+                if is_bad or is_unseen:
+                    hit_depth_bound = True
+                continue
+            
+            # Check for violation (only for enabled actions with witness length <= max_steps)
             if violation_checker(monitor, action_id, rule):
-                counterexample = path + [action_id]
+                counterexample = new_path
                 result = {
                     'ordering_rule_id': rule['id'],
                     'workflow': workflow_id,
@@ -445,18 +464,6 @@ def _check_safety_property_independent(rule, initial_facts, goal_facts, actions,
                     result['observed_count'] = counterexample.count(rule['actions'][0])
                 return result
             
-            # Step monitor and compute successor product state
-            new_monitor = monitor.step(action_id)
-            new_path = path + [action_id]
-            prod_state = (next_facts, new_monitor)
-            
-            # Check depth bound: at the bound, only mark cutoff if successor is unseen
-            # This matches trace.py's safer boundary behavior (lines 211-220)
-            if depth >= max_steps:
-                if prod_state not in seen:
-                    hit_depth_bound = True
-                continue
-            
             # Dedupe on full product state
             if prod_state in seen:
                 continue
@@ -468,7 +475,7 @@ def _check_safety_property_independent(rule, initial_facts, goal_facts, actions,
             
             seen.add(prod_state)
             visited_product_states += 1
-            queue.append((next_facts, new_monitor, new_path, depth + 1))
+            queue.append((next_facts, new_monitor, new_path, new_depth))
     
     # No violation found - check completeness
     if hit_depth_bound or hit_state_bound or not planner_exhaustive:
@@ -557,7 +564,7 @@ def _check_exactly_once_independent(rule, initial_facts, goal_facts, actions, co
     while queue:
         facts, monitor, path, depth = queue.popleft()
         
-        # Check if at goal
+        # Check if at goal (only admit goal states within depth bound)
         at_goal = goal_facts <= facts
         if at_goal:
             goal_states.append((facts, monitor, path))
@@ -576,10 +583,11 @@ def _check_exactly_once_independent(rule, initial_facts, goal_facts, actions, co
             # Step monitor and compute successor product state
             new_monitor = monitor.step(action_id)
             new_path = path + [action_id]
+            new_depth = depth + 1
             prod_state = (next_facts, new_monitor)
             
-            # Check depth bound: at the bound, only mark cutoff if successor is unseen
-            # This matches trace.py's safer boundary behavior
+            # Check depth bound: at the bound, mark cutoff if successor is unseen
+            # Only admit goal states within depth bound (preserves witness contract)
             if depth >= max_steps:
                 if prod_state not in seen:
                     hit_depth_bound = True
@@ -596,7 +604,7 @@ def _check_exactly_once_independent(rule, initial_facts, goal_facts, actions, co
             
             seen.add(prod_state)
             visited_product_states += 1
-            queue.append((next_facts, new_monitor, new_path, depth + 1))
+            queue.append((next_facts, new_monitor, new_path, new_depth))
     
     # Check liveness property at goal states
     for facts, monitor, path in goal_states:
@@ -715,8 +723,10 @@ def _detect_conflicts(rules, checks):
         if len(scc) <= 1:
             continue
         
-        # Check if all actions in the cycle are required
-        scc_required = scc <= required_actions
+        # Check if any action in the cycle is required
+        # A before-cycle forbids all cycle actions in a compliant run, so requiring
+        # even one member blocks compliant goal-reaching runs
+        scc_intersects_required = bool(scc & required_actions)
         
         # Collect the rules involved in this cycle
         cycle_rules = []
@@ -729,25 +739,35 @@ def _detect_conflicts(rules, checks):
                         cycle_rules.append(rule)
                     cycle_edges.append((action, next_action))
         
-        if scc_required:
-            # Hard conflict: all actions are required
+        if scc_intersects_required:
+            # Hard conflict: at least one action is required, but the cycle forbids all
             action_list = ', '.join(sorted(scc))
+            required_in_cycle = sorted(scc & required_actions)
+            
+            # Include the exactly_once declarations that supply requiredness
+            exactly_once_rules = [r for r in rules 
+                                 if r['kind'] == 'exactly_once' and r['actions'][0] in required_in_cycle]
+            
             conflicts.append({
-                'rules': cycle_rules,
-                'reason': f'Before-cycle among required actions: {action_list}. These actions cannot all occur in any order.',
+                'rules': cycle_rules + exactly_once_rules,
+                'reason': f'Before-cycle blocks required actions: {action_list}. '
+                         f'Cycle forbids all these actions in every compliant run, '
+                         f'but {", ".join(required_in_cycle)} required for goal-reaching runs. '
+                         f'No compliant goal-reaching run possible.',
                 'conflict_type': 'before_cycle_required',
-                'cycle_actions': sorted(scc)
+                'cycle_actions': sorted(scc),
+                'required_in_cycle': required_in_cycle
             })
         else:
-            # Weaker warning: cycle among optional actions
+            # Weaker warning: cycle among entirely optional actions
             action_list = ', '.join(sorted(scc))
-            optional_actions = sorted(scc - required_actions)
             conflicts.append({
                 'rules': cycle_rules,
-                'reason': f'Before-cycle detected: {action_list}. These actions can never all occur, but a run that omits {", ".join(optional_actions)} satisfies all rules.',
+                'reason': f'Before-cycle detected: {action_list}. '
+                         f'Cycle forbids all these actions in every compliant run. '
+                         f'This is acceptable since all are optional.',
                 'conflict_type': 'before_cycle_optional',
-                'cycle_actions': sorted(scc),
-                'optional_actions': optional_actions
+                'cycle_actions': sorted(scc)
             })
     
     # Check for before + mutual_exclusion conflicts
@@ -771,10 +791,19 @@ def _detect_conflicts(rules, checks):
                 
                 if second_required:
                     # Hard conflict: second must occur (required) but cannot (mutex forbids it)
+                    # Include the exactly_once declaration that supplies requiredness
+                    exactly_once_rule = next((r for r in rules 
+                                             if r['kind'] == 'exactly_once' and r['actions'][0] == second), None)
+                    rule_list = [before_rule, mutex_rule]
+                    if exactly_once_rule:
+                        rule_list.append(exactly_once_rule)
+                    
                     conflicts.append({
-                        'rules': [before_rule, mutex_rule],
+                        'rules': rule_list,
                         'reason': f'before({first}, {second}) + mutual_exclusion({mutex_a}, {mutex_b}): '
-                                 f'{second} is required but cannot occur (before needs {first} first, mutex forbids both).',
+                                 f'{second} is required for goal-reaching runs but cannot occur '
+                                 f'(before needs {first} first, mutex forbids both). '
+                                 f'No compliant goal-reaching run possible.',
                         'conflict_type': 'before_mutex_required',
                         'blocked_action': second,
                         'actions': sorted([first, second])
