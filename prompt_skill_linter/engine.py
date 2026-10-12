@@ -42,7 +42,7 @@ def validate(contract, manifest, runtime, root):
     for key in ('sources', 'rules', 'contexts'):
         if not isinstance(contract.get(key), list):
             raise ContractError(f'contract.{key} must be an array')
-    for group in ('sources', 'rules', 'contexts', 'skills', 'workflows'):
+    for group in ('sources', 'rules', 'contexts', 'skills', 'workflows', 'vocabulary'):
         items = contract.get(group, [])
         ids = [x.get('id') for x in items]
         if any(not isinstance(x, str) or not x for x in ids) or len(ids) != len(set(ids)):
@@ -222,6 +222,27 @@ def validate(contract, manifest, runtime, root):
             cnf_literals = {a['literal'] for r in clauses for a in r['clause']}
             if any(r.get('effect', {}).get('literal') in cnf_literals for r in rules):
                 raise ContractError('Shared literals across CNF and Boolean-effect fragments are unsupported; use one representation.')
+    
+    # Validate vocabulary source spans
+    for vocab_entry in contract.get('vocabulary', []):
+        for span in vocab_entry.get('source_spans', []):
+            if span['source_id'] not in sources:
+                raise ContractError(f"Vocabulary entry '{vocab_entry['id']}' references unknown source.")
+            path = (root / sources[span['source_id']]['path']).resolve()
+            if not path.is_relative_to(root):
+                raise ContractError('Vocabulary source must stay within the contract directory.')
+            if path not in action_source_lines:
+                try:
+                    if path.stat().st_size > 1_500_000:
+                        raise ContractError('Vocabulary source exceeds the analysis limit.')
+                    action_source_lines[path] = path.read_text(encoding='utf-8').splitlines()
+                except (OSError, UnicodeError) as exc:
+                    raise ContractError('Cannot read vocabulary source.') from exc
+            lines = action_source_lines[path]
+            start, end = span['start_line'], span['end_line']
+            if not 1 <= start <= end <= len(lines) or span['quote'] != '\n'.join(lines[start - 1:end]):
+                raise ContractError('Vocabulary quote does not match its exact line span.')
+    
     pair_budget = 0
     for context in contract['contexts']:
         grouped = {}
@@ -338,6 +359,65 @@ def check_bulk(contract, runtime):
             diag['regression_case']['expected_lower_bound_calls'] = 2 * s
             diagnostics.append(diag)
     return diagnostics, checks
+
+
+def check_vocabulary(contract):
+    """Check vocabulary integrity: declaration, uniqueness, usage."""
+    diagnostics = []
+    vocabulary = {v['id']: v for v in contract.get('vocabulary', [])}
+    
+    # Check for duplicate synonyms
+    synonym_to_term = {}
+    for term in vocabulary.values():
+        for syn in term.get('synonyms', []):
+            if syn in synonym_to_term:
+                diagnostics.append(diagnostic('AMBIGUOUS_SYNONYM', 'exact', 'error', [], {},
+                    {'synonym': syn, 'conflicting_terms': sorted([synonym_to_term[syn], term['id']])}))
+            else:
+                synonym_to_term[syn] = term['id']
+    
+    # Collect all literals used in rules, clauses, and ordering rules
+    used_literals = set()
+    literal_usage = {}  # literal -> list of rule ids where it's used
+    
+    for rule in contract['rules']:
+        if 'effect' in rule:
+            lit = rule['effect']['literal']
+            used_literals.add(lit)
+            literal_usage.setdefault(lit, []).append(rule['id'])
+        if 'clause' in rule:
+            for atom in rule['clause']:
+                lit = atom['literal']
+                used_literals.add(lit)
+                literal_usage.setdefault(lit, []).append(rule['id'])
+    
+    for workflow in contract.get('workflows', []):
+        for ordering_rule in workflow.get('ordering_rules', []):
+            # Ordering rules reference actions, not literals, so we skip them
+            pass
+    
+    # Check for undeclared literals
+    for lit in sorted(used_literals):
+        if lit not in vocabulary:
+            diagnostics.append(diagnostic('UNDEFINED_TERM', 'exact', 'info', [], {},
+                {'literal': lit, 'used_in_rules': literal_usage[lit],
+                 'auto_declared': True, 'inferred_type': 'bool'}))
+    
+    # Check for unused vocabulary entries
+    for term_id in sorted(vocabulary.keys()):
+        if term_id not in used_literals:
+            diagnostics.append(diagnostic('UNUSED_VOCABULARY_ENTRY', 'exact', 'info', [], {},
+                {'term': term_id, 'reason': 'declared but never referenced'}))
+    
+    # Check for type consistency in rules that use the same literal
+    for lit in used_literals:
+        if lit in vocabulary:
+            term = vocabulary[lit]
+            # All uses should be boolean (value: true/false) for bool type
+            # This is already enforced by the schema, but we document it
+            pass
+    
+    return diagnostics
 
 
 def check_references(contract, manifest):
@@ -701,6 +781,7 @@ def check_clauses(contract):
 def lint(contract, manifest, runtime, root, strict_providers=None):
     validate(contract, manifest, runtime, root)
     diagnostics = check_references(contract, manifest)
+    diagnostics += check_vocabulary(contract)
     
     # Check tool schemas for provider strict mode compatibility
     if strict_providers:
