@@ -1486,5 +1486,365 @@ class OrderingIntegrationTests(unittest.TestCase):
             self.assertEqual(witness['context_id'], 'default')
 
 
+class Issue4RegressionTests(unittest.TestCase):
+    """Regression tests for issue #4 fixes: false INCOMPLETE and conflict detection."""
+    
+    def test_three_step_linear_max_steps_3_satisfied(self):
+        """Fix #1: 3-step linear chain with max_steps=3 should be satisfied, not incomplete.
+        
+        Repro from issue #4: 3-action linear chain, before(a1, a3).
+        With max_steps=3, all 4 states (depth 0,1,2,3) are reachable.
+        The old code marked hit_depth_bound=True at state depth=3, even though
+        that state has no enabled successors, causing a false INCOMPLETE.
+        The fix only marks cutoff when an unseen successor exists.
+        """
+        actions = [
+            {'id': 'a1', 'requires': ['s0'], 'adds': ['s1'], 'removes': ['s0']},
+            {'id': 'a2', 'requires': ['s1'], 'adds': ['s2'], 'removes': ['s1']},
+            {'id': 'a3', 'requires': ['s2'], 'adds': ['s3'], 'removes': ['s2']}
+        ]
+        workflow = make_workflow(actions, initial=['s0'], goal=['s3'], ordering_rules=[
+            make_rule('before', ['a1', 'a3'])
+        ])
+        
+        # Run real planner with max_steps=3 (just enough for 3 actions)
+        from prompt_skill_linter.planner import explore
+        result = explore(workflow, max_steps=3, max_states=2000)
+        
+        diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Should be satisfied, not incomplete (all paths explored within bound)
+        self.assertEqual(checks[0]['status'], 'satisfied',
+                        '3-step chain with max_steps=3 should be satisfied (fix for false INCOMPLETE)')
+        self.assertEqual(len(diags), 0, 'No diagnostics should be generated')
+    
+    def test_three_step_linear_max_steps_2_incomplete(self):
+        """Fix #1: 3-step chain with max_steps=2 should be incomplete (real cutoff).
+        
+        With max_steps=2, we can only explore depth 0,1 states. The state at depth 2
+        has an enabled successor (a3) that would reach depth 3, so this is a real
+        cutoff and should report INCOMPLETE.
+        """
+        actions = [
+            {'id': 'a1', 'requires': ['s0'], 'adds': ['s1'], 'removes': ['s0']},
+            {'id': 'a2', 'requires': ['s1'], 'adds': ['s2'], 'removes': ['s1']},
+            {'id': 'a3', 'requires': ['s2'], 'adds': ['s3'], 'removes': ['s2']}
+        ]
+        workflow = make_workflow(actions, initial=['s0'], goal=['s3'], ordering_rules=[
+            make_rule('before', ['a1', 'a3'])
+        ])
+        
+        from prompt_skill_linter.planner import explore
+        result = explore(workflow, max_steps=2, max_states=2000)
+        
+        diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Should be incomplete (real cutoff at depth bound)
+        self.assertEqual(checks[0]['status'], 'incomplete',
+                        'Real cutoff at max_steps=2 should report incomplete')
+        self.assertIn('max_steps', checks[0].get('cutoff_reasons', []),
+                     'Should cite max_steps as cutoff reason')
+        self.assertEqual(len(diags), 1, 'Should generate INCOMPLETE diagnostic')
+        self.assertEqual(diags[0]['code'], 'ORDERING_CHECK_INCOMPLETE')
+    
+    def test_real_cutoff_hides_violation(self):
+        """Fix #1: When bound cuts off before finding a violation, report INCOMPLETE.
+        
+        Workflow has a violation at depth 3 (a3 without a1 first), but max_steps=2
+        prevents us from reaching it. This is a real cutoff that hides a violation,
+        so we must report INCOMPLETE, not satisfied.
+        """
+        actions = [
+            {'id': 'a1', 'requires': ['s0'], 'adds': ['s1']},
+            {'id': 'a2', 'requires': ['s0'], 'adds': ['s2'], 'removes': ['s0']},
+            {'id': 'a3', 'requires': ['s2'], 'adds': ['s3']},
+        ]
+        workflow = make_workflow(actions, initial=['s0'], goal=['s3'], ordering_rules=[
+            make_rule('before', ['a1', 'a3'])
+        ])
+        
+        from prompt_skill_linter.planner import explore
+        result = explore(workflow, max_steps=2, max_states=2000)
+        
+        diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Should be incomplete (violation exists but hidden by bound)
+        self.assertEqual(checks[0]['status'], 'incomplete',
+                        'Bound that hides violation should report incomplete')
+        self.assertIn('max_steps', checks[0].get('cutoff_reasons', []))
+        
+        # With max_steps=3, we should find the violation
+        result3 = explore(workflow, max_steps=3, max_states=2000)
+        diags3, checks3 = check_ordering_rules(workflow, result3, 'workflow-1', {'id': 'ctx-1'})
+        
+        self.assertEqual(checks3[0]['status'], 'violated',
+                        'With higher bound, violation should be found')
+        self.assertEqual(checks3[0]['counterexample'], ['a2', 'a3'],
+                        'Counterexample should show path without a1')
+    
+    def test_exactly_once_three_step_max_steps_3_satisfied(self):
+        """Fix #1: exactly_once with 3-step chain and max_steps=3 should be satisfied.
+        
+        Same fix applies to exactly_once: only mark cutoff when there's an unseen
+        successor at the depth bound.
+        """
+        actions = [
+            {'id': 'a1', 'requires': ['s0'], 'adds': ['s1'], 'removes': ['s0']},
+            {'id': 'a2', 'requires': ['s1'], 'adds': ['s2'], 'removes': ['s1']},
+            {'id': 'a3', 'requires': ['s2'], 'adds': ['s3'], 'removes': ['s2']}
+        ]
+        workflow = make_workflow(actions, initial=['s0'], goal=['s3'], ordering_rules=[
+            make_rule('exactly_once', ['a1'])
+        ])
+        
+        from prompt_skill_linter.planner import explore
+        result = explore(workflow, max_steps=3, max_states=2000)
+        
+        diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Should be satisfied (goal reached with a1 exactly once, no further exploration needed)
+        self.assertEqual(checks[0]['status'], 'satisfied',
+                        'exactly_once with max_steps=3 should be satisfied (fix for false INCOMPLETE)')
+    
+    def test_three_cycle_required_actions_conflict(self):
+        """Fix #2: 3-cycle among required actions (all in exactly_once) is a hard conflict.
+        
+        Actions a, b, c all have exactly_once rules (making them required).
+        Rules: a before b, b before c, c before a.
+        This is a hard conflict: they cannot all occur in any order.
+        """
+        actions = [
+            {'id': 'a', 'requires': ['start'], 'adds': ['done_a']},
+            {'id': 'b', 'requires': ['start'], 'adds': ['done_b']},
+            {'id': 'c', 'requires': ['start'], 'adds': ['complete']}
+        ]
+        workflow = make_workflow(actions, ordering_rules=[
+            make_rule('before', ['a', 'b'], rule_id='ord-1'),
+            make_rule('before', ['b', 'c'], rule_id='ord-2'),
+            make_rule('before', ['c', 'a'], rule_id='ord-3'),
+            make_rule('exactly_once', ['a'], rule_id='ord-4'),
+            make_rule('exactly_once', ['b'], rule_id='ord-5'),
+            make_rule('exactly_once', ['c'], rule_id='ord-6')
+        ])
+        
+        from prompt_skill_linter.planner import explore
+        result = explore(workflow)
+        
+        diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Should detect the 3-cycle conflict
+        conflict_diags = [d for d in diags if d['code'] == 'ORDERING_RULES_CONFLICT']
+        self.assertGreater(len(conflict_diags), 0,
+                          'Must detect 3-cycle among required actions as a conflict')
+        
+        # Verify it's a hard conflict (all actions required)
+        conflict = conflict_diags[0]
+        self.assertEqual(conflict['witness']['conflict_type'], 'before_cycle_required',
+                        'Should identify as a hard conflict (all required)')
+        self.assertIn('a', conflict['witness']['cycle_actions'])
+        self.assertIn('b', conflict['witness']['cycle_actions'])
+        self.assertIn('c', conflict['witness']['cycle_actions'])
+    
+    def test_three_cycle_optional_actions_warning(self):
+        """Fix #2: 3-cycle among optional actions (no exactly_once) is a weaker warning.
+        
+        Actions a, b, c have no exactly_once rules (all optional).
+        Rules: a before b, b before c, c before a.
+        This is NOT a hard conflict: a run that does none of them satisfies all rules.
+        Report as a weaker warning instead.
+        """
+        actions = [
+            {'id': 'a', 'requires': ['start'], 'adds': ['done_a']},
+            {'id': 'b', 'requires': ['start'], 'adds': ['done_b']},
+            {'id': 'c', 'requires': ['start'], 'adds': ['complete']}
+        ]
+        workflow = make_workflow(actions, ordering_rules=[
+            make_rule('before', ['a', 'b'], rule_id='ord-1'),
+            make_rule('before', ['b', 'c'], rule_id='ord-2'),
+            make_rule('before', ['c', 'a'], rule_id='ord-3')
+        ])
+        
+        from prompt_skill_linter.planner import explore
+        result = explore(workflow)
+        
+        diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Should detect the cycle but as optional (weaker warning)
+        conflict_diags = [d for d in diags if d['code'] == 'ORDERING_RULES_CONFLICT']
+        self.assertGreater(len(conflict_diags), 0,
+                          'Must detect 3-cycle among optional actions')
+        
+        # Verify it's NOT a hard conflict
+        conflict = conflict_diags[0]
+        self.assertEqual(conflict['witness']['conflict_type'], 'before_cycle_optional',
+                        'Should identify as optional cycle (weaker warning)')
+        self.assertIn('a', conflict['witness']['optional_actions'])
+        self.assertIn('b', conflict['witness']['optional_actions'])
+        self.assertIn('c', conflict['witness']['optional_actions'])
+    
+    def test_three_cycle_mixed_required_optional_warning(self):
+        """Fix #2: 3-cycle with some required actions is still a weaker warning.
+        
+        Action a has exactly_once (required), b and c are optional.
+        Rules: a before b, b before c, c before a.
+        This is NOT a hard conflict: a run that does only a (but not b or c) satisfies all rules.
+        """
+        actions = [
+            {'id': 'a', 'requires': ['start'], 'adds': ['done_a']},
+            {'id': 'b', 'requires': ['start'], 'adds': ['done_b']},
+            {'id': 'c', 'requires': ['start'], 'adds': ['complete']}
+        ]
+        workflow = make_workflow(actions, ordering_rules=[
+            make_rule('before', ['a', 'b'], rule_id='ord-1'),
+            make_rule('before', ['b', 'c'], rule_id='ord-2'),
+            make_rule('before', ['c', 'a'], rule_id='ord-3'),
+            make_rule('exactly_once', ['a'], rule_id='ord-4')
+        ])
+        
+        from prompt_skill_linter.planner import explore
+        result = explore(workflow)
+        
+        diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Should detect the cycle but as optional (not all required)
+        conflict_diags = [d for d in diags if d['code'] == 'ORDERING_RULES_CONFLICT']
+        self.assertGreater(len(conflict_diags), 0,
+                          'Must detect mixed cycle')
+        
+        conflict = conflict_diags[0]
+        self.assertEqual(conflict['witness']['conflict_type'], 'before_cycle_optional',
+                        'Should identify as optional cycle (not all actions required)')
+        # b and c should be listed as optional
+        self.assertIn('b', conflict['witness']['optional_actions'])
+        self.assertIn('c', conflict['witness']['optional_actions'])
+    
+    def test_before_mutex_conflict(self):
+        """Fix #2: before(A, B) + mutual_exclusion(A, B) is a conflict.
+        
+        before requires B to occur (with A before it), but mutual_exclusion
+        forbids both A and B from occurring. This is a conflict.
+        """
+        actions = [
+            {'id': 'a', 'requires': ['start'], 'adds': ['done_a']},
+            {'id': 'b', 'requires': ['start'], 'adds': ['complete']}
+        ]
+        workflow = make_workflow(actions, ordering_rules=[
+            make_rule('before', ['a', 'b'], rule_id='ord-1'),
+            make_rule('mutual_exclusion', ['a', 'b'], rule_id='ord-2')
+        ])
+        
+        from prompt_skill_linter.planner import explore
+        result = explore(workflow)
+        
+        diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Should detect the before + mutex conflict
+        conflict_diags = [d for d in diags if d['code'] == 'ORDERING_RULES_CONFLICT']
+        self.assertGreater(len(conflict_diags), 0,
+                          'Must detect before + mutex conflict')
+        
+        # Find the before_mutex conflict specifically
+        mutex_conflicts = [c for c in conflict_diags 
+                          if c['witness']['conflict_type'] == 'before_mutex']
+        self.assertGreater(len(mutex_conflicts), 0,
+                          'Must identify as before_mutex conflict')
+        
+        conflict = mutex_conflicts[0]
+        self.assertIn('ord-1', conflict['responsible_rule_set'])
+        self.assertIn('ord-2', conflict['responsible_rule_set'])
+    
+    def test_before_mutex_reversed_conflict(self):
+        """Fix #2: before(A, B) + mutual_exclusion(B, A) is also a conflict.
+        
+        Same as before_mutex_conflict, but with mutex args reversed.
+        Should still be detected.
+        """
+        actions = [
+            {'id': 'a', 'requires': ['start'], 'adds': ['done_a']},
+            {'id': 'b', 'requires': ['start'], 'adds': ['complete']}
+        ]
+        workflow = make_workflow(actions, ordering_rules=[
+            make_rule('before', ['a', 'b'], rule_id='ord-1'),
+            make_rule('mutual_exclusion', ['b', 'a'], rule_id='ord-2')
+        ])
+        
+        from prompt_skill_linter.planner import explore
+        result = explore(workflow)
+        
+        diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Should detect the conflict
+        conflict_diags = [d for d in diags if d['code'] == 'ORDERING_RULES_CONFLICT']
+        mutex_conflicts = [c for c in conflict_diags 
+                          if c['witness']['conflict_type'] == 'before_mutex']
+        self.assertGreater(len(mutex_conflicts), 0,
+                          'Must detect before + mutex conflict regardless of arg order')
+    
+    def test_longer_cycle_detection(self):
+        """Fix #2: Detect cycles longer than 2 (4-cycle, 5-cycle, etc).
+        
+        Test that Tarjan's algorithm correctly finds SCCs of various sizes.
+        """
+        # 4-cycle: a before b, b before c, c before d, d before a (all required)
+        actions = [
+            {'id': 'a', 'requires': ['start'], 'adds': ['done_a']},
+            {'id': 'b', 'requires': ['start'], 'adds': ['done_b']},
+            {'id': 'c', 'requires': ['start'], 'adds': ['done_c']},
+            {'id': 'd', 'requires': ['start'], 'adds': ['complete']}
+        ]
+        workflow = make_workflow(actions, ordering_rules=[
+            make_rule('before', ['a', 'b'], rule_id='ord-1'),
+            make_rule('before', ['b', 'c'], rule_id='ord-2'),
+            make_rule('before', ['c', 'd'], rule_id='ord-3'),
+            make_rule('before', ['d', 'a'], rule_id='ord-4'),
+            make_rule('exactly_once', ['a'], rule_id='ord-5'),
+            make_rule('exactly_once', ['b'], rule_id='ord-6'),
+            make_rule('exactly_once', ['c'], rule_id='ord-7'),
+            make_rule('exactly_once', ['d'], rule_id='ord-8')
+        ])
+        
+        from prompt_skill_linter.planner import explore
+        result = explore(workflow)
+        
+        diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Should detect the 4-cycle
+        conflict_diags = [d for d in diags if d['code'] == 'ORDERING_RULES_CONFLICT']
+        self.assertGreater(len(conflict_diags), 0,
+                          'Must detect 4-cycle among required actions')
+        
+        conflict = conflict_diags[0]
+        self.assertEqual(conflict['witness']['conflict_type'], 'before_cycle_required')
+        self.assertEqual(len(conflict['witness']['cycle_actions']), 4,
+                        'Should identify all 4 actions in the cycle')
+    
+    def test_no_conflict_independent_rules(self):
+        """Fix #2: Independent before rules should not create false conflicts.
+        
+        Rules a before b and c before d are independent (no cycle).
+        Should not report any conflict.
+        """
+        actions = [
+            {'id': 'a', 'requires': ['start'], 'adds': ['done_a']},
+            {'id': 'b', 'requires': ['done_a'], 'adds': ['done_b']},
+            {'id': 'c', 'requires': ['start'], 'adds': ['done_c']},
+            {'id': 'd', 'requires': ['done_c'], 'adds': ['complete']}
+        ]
+        workflow = make_workflow(actions, ordering_rules=[
+            make_rule('before', ['a', 'b'], rule_id='ord-1'),
+            make_rule('before', ['c', 'd'], rule_id='ord-2')
+        ])
+        
+        from prompt_skill_linter.planner import explore
+        result = explore(workflow)
+        
+        diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Should NOT detect any conflict
+        conflict_diags = [d for d in diags if d['code'] == 'ORDERING_RULES_CONFLICT']
+        self.assertEqual(len(conflict_diags), 0,
+                        'Independent rules should not create false conflicts')
+
+
 if __name__ == '__main__':
     unittest.main()
