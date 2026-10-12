@@ -1,0 +1,104 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "id": "policy",
+      "path": "ordering-auth-pass-policy.txt"
+    }
+  ],
+  "rules": [
+    {
+      "id": "workflow-adv",
+      "source": {
+        "source_id": "policy",
+        "start_line": 1,
+        "end_line": 2,
+        "quote": "Authorization must complete before data access.\nUnauthorized data access is not allowed."
+      },
+      "priority": 100,
+      "kind": "requirement",
+      "scope": {
+        "entity": "agent",
+        "temporal": "session"
+      }
+    }
+  ],
+  "contexts": [
+    {
+      "id": "normal-session",
+      "facts": {
+        "mode": "interactive"
+      },
+      "active_skills": []
+    }
+  ],
+  "skills": [],
+  "assumptions": [
+    "This is a passing contract (fixed version of ordering-auth-violation).",
+    "The workflow model correctly requires authorization before data access."
+  ],
+  "workflows": [
+    {
+      "id": "data-access-workflow",
+      "advertisement_rule": "workflow-adv",
+      "initial": ["start"],
+      "goal": ["data_processed"],
+      "actions": [
+        {
+          "id": "check_auth",
+          "requires": ["start"],
+          "adds": ["auth_checked"],
+          "removes": []
+        },
+        {
+          "id": "grant_auth",
+          "requires": ["auth_checked"],
+          "adds": ["authorized"],
+          "removes": []
+        },
+        {
+          "id": "access_data",
+          "requires": ["authorized"],
+          "adds": ["data_accessed"],
+          "removes": [],
+          "provenance": {
+            "source_spans": [{
+              "source_id": "policy",
+              "start_line": 1,
+              "end_line": 2,
+              "quote": "Authorization must complete before data access.\nUnauthorized data access is not allowed."
+            }],
+            "assumptions": ["Data access requires prior authorization"]
+          }
+        },
+        {
+          "id": "process_data",
+          "requires": ["data_accessed"],
+          "adds": ["data_processed"],
+          "removes": []
+        }
+      ],
+      "ordering_rules": [
+        {
+          "id": "auth-before-data",
+          "kind": "before",
+          "actions": ["grant_auth", "access_data"],
+          "scope": {
+            "entity": "agent",
+            "temporal": "session"
+          },
+          "source": {
+            "source_id": "policy",
+            "start_line": 1,
+            "end_line": 1,
+            "quote": "Authorization must complete before data access."
+          },
+          "assumptions": [
+            "Ordering rule checked against finite-state workflow paths.",
+            "This contract passes: access_data requires authorized, enforcing the before rule."
+          ]
+        }
+      ]
+    }
+  ]
+}
