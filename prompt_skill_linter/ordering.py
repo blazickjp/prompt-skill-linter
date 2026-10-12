@@ -440,19 +440,20 @@ def _check_safety_property_independent(rule, initial_facts, goal_facts, actions,
                     result['observed_count'] = counterexample.count(rule['actions'][0])
                 return result
             
-            # Step monitor
+            # Step monitor and compute successor product state
             new_monitor = monitor.step(action_id)
             new_path = path + [action_id]
-            new_depth = depth + 1
-            
-            # Dedupe on full product state
             prod_state = (next_facts, new_monitor)
-            if prod_state in seen:
+            
+            # Check depth bound: at the bound, only mark cutoff if successor is unseen
+            # This matches trace.py's safer boundary behavior (lines 211-220)
+            if depth >= max_steps:
+                if prod_state not in seen:
+                    hit_depth_bound = True
                 continue
             
-            # Check depth bound: only mark cutoff if this unseen successor would be explored
-            if new_depth >= max_steps:
-                hit_depth_bound = True
+            # Dedupe on full product state
+            if prod_state in seen:
                 continue
             
             # Check state bound
@@ -462,7 +463,7 @@ def _check_safety_property_independent(rule, initial_facts, goal_facts, actions,
             
             seen.add(prod_state)
             visited_product_states += 1
-            queue.append((next_facts, new_monitor, new_path, new_depth))
+            queue.append((next_facts, new_monitor, new_path, depth + 1))
     
     # No violation found - check completeness
     if hit_depth_bound or hit_state_bound or not planner_exhaustive:
@@ -567,19 +568,20 @@ def _check_exactly_once_independent(rule, initial_facts, goal_facts, actions, co
             
             all_actions_seen.add(action_id)
             
-            # Step monitor
+            # Step monitor and compute successor product state
             new_monitor = monitor.step(action_id)
             new_path = path + [action_id]
-            new_depth = depth + 1
-            
-            # Dedupe on full product state
             prod_state = (next_facts, new_monitor)
-            if prod_state in seen:
+            
+            # Check depth bound: at the bound, only mark cutoff if successor is unseen
+            # This matches trace.py's safer boundary behavior
+            if depth >= max_steps:
+                if prod_state not in seen:
+                    hit_depth_bound = True
                 continue
             
-            # Check depth bound: only mark cutoff if this unseen successor would be explored
-            if new_depth >= max_steps:
-                hit_depth_bound = True
+            # Dedupe on full product state
+            if prod_state in seen:
                 continue
             
             # Check state bound
@@ -589,7 +591,7 @@ def _check_exactly_once_independent(rule, initial_facts, goal_facts, actions, co
             
             seen.add(prod_state)
             visited_product_states += 1
-            queue.append((next_facts, new_monitor, new_path, new_depth))
+            queue.append((next_facts, new_monitor, new_path, depth + 1))
     
     # Check liveness property at goal states
     for facts, monitor, path in goal_states:

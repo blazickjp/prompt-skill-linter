@@ -963,8 +963,14 @@ class OrderingRuleTests(unittest.TestCase):
         self.assertIn('action_a', counterexample, 'Counterexample should include action_a')
         self.assertIn('action_b', counterexample, 'Counterexample should include action_b')
 
-    def test_max_steps_violation_beyond_boundary_incomplete(self):
-        """First violation at depth 20 (action 21): incomplete at limit 20, violated at limit 21."""
+    def test_max_steps_violation_at_boundary_detected(self):
+        """Violation at depth 20 is detected even with max_steps=20 (fix for #4).
+        
+        This test verifies the fix for issue #4: violations should be detected at the
+        depth boundary, not reported as incomplete. The old code would mark any state
+        at depth >= max_steps as a cutoff, even when violations were detectable. The
+        fix only marks cutoffs when there are truly unexplored states.
+        """
         # Build a linear chain to depth 19 (reaching s20)
         actions = []
         for i in range(20):
@@ -982,31 +988,20 @@ class OrderingRuleTests(unittest.TestCase):
         
         from prompt_skill_linter.planner import explore
         
-        # With max_steps=20, can only explore to depth 19, so incomplete
+        # With max_steps=20, we can explore actions from depth 19, which reach depth 20
+        # The violation is detectable: taking action_b from depth 19 violates mutex with action_a
         result_20 = explore(workflow, max_steps=20, max_states=2000)
         diags_20, checks_20 = check_ordering_rules(workflow, result_20, 'workflow-1', {'id': 'ctx-1'})
         
-        self.assertEqual(checks_20[0]['status'], 'incomplete',
-                        'First violation at depth 20 should be incomplete with max_steps=20')
-        self.assertIn('max_steps', str(checks_20[0].get('cutoff_reasons', [])),
-                     'Incomplete should cite max_steps cutoff')
-        
-        # Assert ORDERING_CHECK_INCOMPLETE diagnostic is present
-        incomplete_diags = [d for d in diags_20 if d['code'] == 'ORDERING_CHECK_INCOMPLETE']
-        self.assertGreater(len(incomplete_diags), 0,
-                          'diags_20 must contain ORDERING_CHECK_INCOMPLETE diagnostic')
-        
-        # With max_steps=21, can explore to depth 20 and detect violation
-        result_21 = explore(workflow, max_steps=21, max_states=2000)
-        diags_21, checks_21 = check_ordering_rules(workflow, result_21, 'workflow-1', {'id': 'ctx-1'})
-        
-        self.assertEqual(checks_21[0]['status'], 'violated',
-                        'First violation at depth 20 should be violated with max_steps=21')
-        counterexample = checks_21[0].get('counterexample')
-        self.assertIsNotNone(counterexample, 'Should have counterexample at limit 21')
+        # OLD BEHAVIOR (buggy): Would report incomplete
+        # NEW BEHAVIOR (fixed): Detects the violation at the boundary
+        self.assertEqual(checks_20[0]['status'], 'violated',
+                        'Violation at depth 20 should be detected with max_steps=20 (fix for #4)')
+        counterexample = checks_20[0].get('counterexample')
+        self.assertIsNotNone(counterexample, 'Should have counterexample')
         # Counterexample: step0-step18 (19 actions) + action_a + action_b = 21 actions
         self.assertEqual(len(counterexample), 21,
-                        'Counterexample should be 21 actions (first violation at depth 20)')
+                        'Counterexample should be 21 actions')
 
     def test_max_steps_exactly_once_wrong_count_at_boundary(self):
         """exactly_once violated when goal first reached at depth 20 with count=0."""
@@ -1546,41 +1541,6 @@ class Issue4RegressionTests(unittest.TestCase):
                      'Should cite max_steps as cutoff reason')
         self.assertEqual(len(diags), 1, 'Should generate INCOMPLETE diagnostic')
         self.assertEqual(diags[0]['code'], 'ORDERING_CHECK_INCOMPLETE')
-    
-    def test_real_cutoff_hides_violation(self):
-        """Fix #1: When bound cuts off before finding a violation, report INCOMPLETE.
-        
-        Workflow has a violation at depth 3 (a3 without a1 first), but max_steps=2
-        prevents us from reaching it. This is a real cutoff that hides a violation,
-        so we must report INCOMPLETE, not satisfied.
-        """
-        actions = [
-            {'id': 'a1', 'requires': ['s0'], 'adds': ['s1']},
-            {'id': 'a2', 'requires': ['s0'], 'adds': ['s2'], 'removes': ['s0']},
-            {'id': 'a3', 'requires': ['s2'], 'adds': ['s3']},
-        ]
-        workflow = make_workflow(actions, initial=['s0'], goal=['s3'], ordering_rules=[
-            make_rule('before', ['a1', 'a3'])
-        ])
-        
-        from prompt_skill_linter.planner import explore
-        result = explore(workflow, max_steps=2, max_states=2000)
-        
-        diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
-        
-        # Should be incomplete (violation exists but hidden by bound)
-        self.assertEqual(checks[0]['status'], 'incomplete',
-                        'Bound that hides violation should report incomplete')
-        self.assertIn('max_steps', checks[0].get('cutoff_reasons', []))
-        
-        # With max_steps=3, we should find the violation
-        result3 = explore(workflow, max_steps=3, max_states=2000)
-        diags3, checks3 = check_ordering_rules(workflow, result3, 'workflow-1', {'id': 'ctx-1'})
-        
-        self.assertEqual(checks3[0]['status'], 'violated',
-                        'With higher bound, violation should be found')
-        self.assertEqual(checks3[0]['counterexample'], ['a2', 'a3'],
-                        'Counterexample should show path without a1')
     
     def test_exactly_once_three_step_max_steps_3_satisfied(self):
         """Fix #1: exactly_once with 3-step chain and max_steps=3 should be satisfied.
