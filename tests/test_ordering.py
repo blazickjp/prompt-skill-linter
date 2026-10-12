@@ -1772,7 +1772,11 @@ class Issue4RegressionTests(unittest.TestCase):
         conflict = mutex_conflicts[0]
         self.assertIn('ord-1', conflict['responsible_rule_set'])
         self.assertIn('ord-2', conflict['responsible_rule_set'])
+        self.assertIn('ord-3', conflict['responsible_rule_set'],
+                     'Must include exactly_once rule (ord-3) that supplies requiredness')
         self.assertEqual(conflict['witness']['blocked_action'], 'b')
+        # Verify the reason mentions goal-reaching
+        self.assertIn('goal', conflict['witness']['reason'].lower())
     
     def test_before_mutex_optional_weaker_warning(self):
         """Fix #2: before(A, B) + mutual_exclusion(A, B) with B optional is a weaker warning.
