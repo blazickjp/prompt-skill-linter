@@ -1573,6 +1573,43 @@ class Issue4RegressionTests(unittest.TestCase):
                         'Bad boundary event should mark cutoff even if returning to familiar facts')
         self.assertIn('max_steps', checks[0].get('cutoff_reasons', []))
     
+    def test_bad_boundary_event_same_product_incomplete(self):
+        """Bad boundary event returning to same product state marks incomplete.
+        
+        Minimal isolation of the is_bad guard: setup creates ready; b is a no-op that
+        violates before(a,b) and returns to the same product state. With max_steps=1,
+        planner is exhaustive but b at the boundary is a bad event, so ordering is
+        incomplete. With max_steps=2, the witness appears.
+        """
+        actions = [
+            {'id': 'setup', 'requires': ['start'], 'adds': ['ready'], 'removes': ['start']},
+            {'id': 'a', 'requires': ['never'], 'adds': []},  # Disabled
+            {'id': 'b', 'requires': ['ready'], 'adds': [], 'removes': []}  # No-op enabled at ready
+        ]
+        workflow = make_workflow(actions, initial=['start'], goal=['ready'], ordering_rules=[
+            make_rule('before', ['a', 'b'])
+        ])
+        
+        from prompt_skill_linter.planner import explore
+        # With max_steps=1: setup reaches goal; b at depth 1 is bad but returns to (ready, seen_a=false)
+        result1 = explore(workflow, max_steps=1, max_states=2000)
+        diags1, checks1 = check_ordering_rules(workflow, result1, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Should be incomplete: planner exhaustive but bad boundary event returns to seen product state
+        self.assertTrue(result1['search_exhaustive'], 'Planner should be exhaustive at max_steps=1')
+        self.assertEqual(checks1[0]['status'], 'incomplete',
+                        'Bad boundary event returning to same product state should mark cutoff')
+        self.assertIn('max_steps', checks1[0].get('cutoff_reasons', []))
+        
+        # With max_steps=2: witness [setup, b] appears
+        result2 = explore(workflow, max_steps=2, max_states=2000)
+        diags2, checks2 = check_ordering_rules(workflow, result2, 'workflow-1', {'id': 'ctx-1'})
+        
+        self.assertEqual(checks2[0]['status'], 'violated',
+                        'With max_steps=2, witness should appear')
+        self.assertEqual(checks2[0]['counterexample'], ['setup', 'b'],
+                        'Witness should be [setup, b]')
+    
     def test_safe_boundary_self_loop_satisfied(self):
         """Safe boundary self-loop doesn't cause false incomplete.
         
@@ -1916,11 +1953,11 @@ class Issue4RegressionTests(unittest.TestCase):
                         'Should be weaker warning (optional cycle, unrelated goal)')
     
     def test_no_goal_cycle_warning_only(self):
-        """Cycle with no goal is a warning, not hard conflict.
+        """SCC with required member but unreachable goal: goal-relative classification only.
         
-        exactly_once is goal-conditional: no-goal runs satisfy the obligation
-        vacuously. This shows goal-conditional obligations don't cause unconditional
-        UNSAT claims.
+        before_cycle_required classification is goal-relative and does not establish
+        unconditional UNSAT. When the goal is exhaustively unreachable, exactly_once
+        obligations are satisfied vacuously, so the cycle is a structural warning only.
         """
         actions = [
             {'id': 'a', 'requires': ['start'], 'adds': ['done_a']},
@@ -1929,10 +1966,10 @@ class Issue4RegressionTests(unittest.TestCase):
         ]
         # No action adds 'complete', so goal is unreachable
         workflow = make_workflow(actions, initial=['start'], goal=['complete'], ordering_rules=[
-            make_rule('before', ['a', 'b'], rule_id='ord-1'),
-            make_rule('before', ['b', 'c'], rule_id='ord-2'),
-            make_rule('before', ['c', 'a'], rule_id='ord-3'),
-            make_rule('exactly_once', ['a'], rule_id='ord-4')
+            make_rule('before', ['a', 'b'], rule_id='ord-1', source={'line': 1}),
+            make_rule('before', ['b', 'c'], rule_id='ord-2', source={'line': 2}),
+            make_rule('before', ['c', 'a'], rule_id='ord-3', source={'line': 3}),
+            make_rule('exactly_once', ['a'], rule_id='ord-4', source={'line': 4})
         ])
         
         from prompt_skill_linter.planner import explore
@@ -1940,16 +1977,31 @@ class Issue4RegressionTests(unittest.TestCase):
         
         diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
         
-        # Should detect cycle but not as hard conflict (goal unreachable, so exactly_once satisfied vacuously)
-        conflict_diags = [d for d in diags if d['code'] == 'ORDERING_RULES_CONFLICT']
+        # Goal must be exhaustively unreachable
+        self.assertIsNone(result['goal_path'], 'Goal should be unreachable')
+        self.assertTrue(result['search_exhaustive'], 'Planner should be exhaustive')
         
-        # The conflict detection looks at exactly_once rules, but the cycle doesn't block goal-reaching
-        # runs because no goal-reaching runs exist. This is structurally a warning.
-        if len(conflict_diags) > 0:
-            # If detected, should mention goal-conditional nature
-            conflict = conflict_diags[0]
-            self.assertIn('goal', conflict['witness']['reason'].lower(),
-                         'Conflict reason should mention goal-conditional nature')
+        # exactly_once check must be satisfied (vacuously)
+        self.assertEqual(len(checks), 4, 'Must have 4 checks (3 before, 1 exactly_once)')
+        self.assertEqual(checks[3]['status'], 'satisfied',
+                        'exactly_once should be satisfied vacuously')
+        
+        # Structural warning must be returned with the requirement premise
+        conflict_diags = [d for d in diags if d['code'] == 'ORDERING_RULES_CONFLICT']
+        self.assertEqual(len(conflict_diags), 1, 'Must detect SCC with required member')
+        
+        conflict = conflict_diags[0]
+        self.assertIn('goal', conflict['witness']['reason'].lower(),
+                     'Conflict reason must mention goal-conditional nature')
+        self.assertEqual(conflict['witness']['conflict_type'], 'before_cycle_required',
+                        'Must classify as before_cycle_required')
+        
+        # exactly_once rule ID and source span must be included in conflict evidence
+        self.assertIn('ord-4', conflict['responsible_rule_set'],
+                     'exactly_once rule ID must be in conflict evidence')
+        source_spans = conflict.get('source_spans', [])
+        self.assertIn({'line': 4}, source_spans,
+                     'exactly_once source span must be in conflict evidence')
     
     def test_no_conflict_independent_rules(self):
         """Fix #2: Independent before rules should not create false conflicts.

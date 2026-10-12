@@ -21,8 +21,9 @@ counterexample reconstruction with deterministic ordering.
 
 Returns 'violated' with a shortest counterexample, 'satisfied' when all runs within bounds
 obey the rule, or 'incomplete' when a bound cuts off exploration. A bound cuts off exploration
-only when an unseen product state (facts, monitor) remains reachable but unexplored. This is
-exact within configured bounds and stays small even with cycles.
+when an unseen product state (facts, monitor) or a bad boundary event returning to a seen
+product state remains reachable but unexplored. This is exact within configured bounds and
+stays small even with cycles.
 
 Conflict detection identifies structural patterns in rule sets:
 - Before-cycles (A before B, B before C, C before A) forbid all cycle actions in every
@@ -346,7 +347,7 @@ def check_ordering_rules(workflow, explored_result, workflow_id, context, forbid
             'responsible_rule_set': [r['id'] for r in conflict['rules']],
             'triggering_context': context,
             'witness': conflict,
-            'assumptions': ['Conflicting ordering rules detected via pairwise analysis.'],
+            'assumptions': ['Conflicting ordering rules detected via SCC-plus-cross-kind analysis.'],
             'repairs': [],
             'regression_case': {'context': context, 'expected_code': 'ORDERING_RULES_CONFLICT'},
             'provenance_limitations': []
@@ -405,8 +406,9 @@ def _check_safety_property_independent(rule, initial_facts, goal_facts, actions,
     
     Returns 'violated' with a shortest counterexample, 'satisfied' when all reachable runs
     within bounds obey the rule, or 'incomplete' when a bound cuts off exploration before a
-    conclusion can be reached. A bound cuts off exploration only when an unseen product state
-    (facts, monitor) remains reachable but unexplored.
+    conclusion can be reached. A bound cuts off exploration when an unseen product state
+    (facts, monitor) or a bad boundary event returning to a seen product state remains
+    reachable but unexplored.
     """
     # Product BFS: (facts, monitor, path, depth)
     queue = deque([(initial_facts, initial_monitor, [], 0)])
@@ -696,8 +698,8 @@ def _detect_conflicts(rules, checks):
     rules, so the cycle is not a hard conflict. Such cases are reported as weaker warnings.
     
     A 'before(A, B)' combined with 'mutual_exclusion(A, B)' is a conflict when B is required,
-    since the before rule requires B to occur (with A before it), but mutual exclusion forbids
-    B when A occurs.
+    since before(A, B) only constrains B if B occurs, but when B is required and does occur,
+    mutual exclusion forbids B when A occurs first.
     
     This analysis is structural and does not prove unrealizability; it identifies patterns that
     are likely to be mistakes in rule declarations.
