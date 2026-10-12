@@ -29,8 +29,13 @@ Conflict detection identifies structural patterns in rule sets:
   actions are required (e.g., in exactly_once rules), since they cannot all occur in any
   order. Cycles among optional actions are weaker warnings, since a run that omits them
   satisfies all rules.
-- before(A, B) + mutual_exclusion(A, B) conflicts, since before requires B after A, but
-  mutual exclusion forbids both.
+- before(A, B) + mutual_exclusion(A, B): If B is required, this is a hard conflict (B must
+  occur but cannot, since before needs A first and mutex forbids both). If B is optional,
+  it's a weaker warning (the rules together forbid B in every compliant run, but that's
+  acceptable since B wasn't required).
+
+Note: "Required" currently means "appears in an exactly_once rule". Actions required by
+every goal path are not yet considered (known limitation).
 """
 from collections import deque
 
@@ -746,6 +751,10 @@ def _detect_conflicts(rules, checks):
             })
     
     # Check for before + mutual_exclusion conflicts
+    # Note: before(A, B) does NOT require B to occur; it only constrains B IF B occurs.
+    # So before(A, B) + mutual_exclusion(A, B) means:
+    #   - If B is required (e.g., exactly_once), this is a hard conflict (B must occur but can't)
+    #   - If B is optional, it's a weaker warning (the rules together forbid B in every compliant run)
     mutex_rules = [(r, c) for r, c in zip(rules, checks) if r['kind'] == 'mutual_exclusion']
     
     for before_rule, before_check in before_rules_with_checks:
@@ -756,15 +765,31 @@ def _detect_conflicts(rules, checks):
             
             # Check if before(A, B) conflicts with mutual_exclusion(A, B) or (B, A)
             if (first == mutex_a and second == mutex_b) or (first == mutex_b and second == mutex_a):
-                # This is a conflict: before requires second to occur (with first before it),
-                # but mutual exclusion forbids them both occurring
-                conflicts.append({
-                    'rules': [before_rule, mutex_rule],
-                    'reason': f'before({first}, {second}) conflicts with mutual_exclusion({mutex_a}, {mutex_b}): '
-                             f'before requires {second} to occur after {first}, but mutual exclusion forbids both.',
-                    'conflict_type': 'before_mutex',
-                    'actions': sorted([first, second])
-                })
+                # The second action in the before rule is blocked by the mutual exclusion
+                # Check if the second action is required
+                second_required = second in required_actions
+                
+                if second_required:
+                    # Hard conflict: second must occur (required) but cannot (mutex forbids it)
+                    conflicts.append({
+                        'rules': [before_rule, mutex_rule],
+                        'reason': f'before({first}, {second}) + mutual_exclusion({mutex_a}, {mutex_b}): '
+                                 f'{second} is required but cannot occur (before needs {first} first, mutex forbids both).',
+                        'conflict_type': 'before_mutex_required',
+                        'blocked_action': second,
+                        'actions': sorted([first, second])
+                    })
+                else:
+                    # Weaker warning: second is optional, but these rules together forbid it
+                    conflicts.append({
+                        'rules': [before_rule, mutex_rule],
+                        'reason': f'before({first}, {second}) + mutual_exclusion({mutex_a}, {mutex_b}): '
+                                 f'{second} can never occur (before needs {first} first, mutex forbids both). '
+                                 f'This is not a hard conflict since {second} is optional.',
+                        'conflict_type': 'before_mutex_blocks_action',
+                        'blocked_action': second,
+                        'actions': sorted([first, second])
+                    })
     
     return conflicts
 

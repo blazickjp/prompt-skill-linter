@@ -1678,11 +1678,48 @@ class Issue4RegressionTests(unittest.TestCase):
         self.assertIn('b', conflict['witness']['optional_actions'])
         self.assertIn('c', conflict['witness']['optional_actions'])
     
-    def test_before_mutex_conflict(self):
-        """Fix #2: before(A, B) + mutual_exclusion(A, B) is a conflict.
+    def test_before_mutex_required_hard_conflict(self):
+        """Fix #2: before(A, B) + mutual_exclusion(A, B) with B required is a hard conflict.
         
-        before requires B to occur (with A before it), but mutual_exclusion
-        forbids both A and B from occurring. This is a conflict.
+        When B is required (has exactly_once rule), before(A, B) + mutual_exclusion(A, B)
+        is a hard conflict: B must occur but cannot (before needs A first, mutex forbids both).
+        """
+        actions = [
+            {'id': 'a', 'requires': ['start'], 'adds': ['done_a']},
+            {'id': 'b', 'requires': ['start'], 'adds': ['complete']}
+        ]
+        workflow = make_workflow(actions, ordering_rules=[
+            make_rule('before', ['a', 'b'], rule_id='ord-1'),
+            make_rule('mutual_exclusion', ['a', 'b'], rule_id='ord-2'),
+            make_rule('exactly_once', ['b'], rule_id='ord-3')  # B is required
+        ])
+        
+        from prompt_skill_linter.planner import explore
+        result = explore(workflow)
+        
+        diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
+        
+        # Should detect the before + mutex conflict as a hard conflict
+        conflict_diags = [d for d in diags if d['code'] == 'ORDERING_RULES_CONFLICT']
+        self.assertGreater(len(conflict_diags), 0,
+                          'Must detect before + mutex with required action')
+        
+        # Find the before_mutex_required conflict specifically
+        mutex_conflicts = [c for c in conflict_diags 
+                          if c['witness']['conflict_type'] == 'before_mutex_required']
+        self.assertGreater(len(mutex_conflicts), 0,
+                          'Must identify as before_mutex_required (hard conflict)')
+        
+        conflict = mutex_conflicts[0]
+        self.assertIn('ord-1', conflict['responsible_rule_set'])
+        self.assertIn('ord-2', conflict['responsible_rule_set'])
+        self.assertEqual(conflict['witness']['blocked_action'], 'b')
+    
+    def test_before_mutex_optional_weaker_warning(self):
+        """Fix #2: before(A, B) + mutual_exclusion(A, B) with B optional is a weaker warning.
+        
+        When B is optional (no exactly_once rule), before(A, B) + mutual_exclusion(A, B)
+        means B can never occur, but that's acceptable since B wasn't required.
         """
         actions = [
             {'id': 'a', 'requires': ['start'], 'adds': ['done_a']},
@@ -1691,6 +1728,7 @@ class Issue4RegressionTests(unittest.TestCase):
         workflow = make_workflow(actions, ordering_rules=[
             make_rule('before', ['a', 'b'], rule_id='ord-1'),
             make_rule('mutual_exclusion', ['a', 'b'], rule_id='ord-2')
+            # No exactly_once for b, so it's optional
         ])
         
         from prompt_skill_linter.planner import explore
@@ -1698,26 +1736,28 @@ class Issue4RegressionTests(unittest.TestCase):
         
         diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
         
-        # Should detect the before + mutex conflict
+        # Should detect the before + mutex as a weaker warning
         conflict_diags = [d for d in diags if d['code'] == 'ORDERING_RULES_CONFLICT']
         self.assertGreater(len(conflict_diags), 0,
-                          'Must detect before + mutex conflict')
+                          'Must detect before + mutex with optional action')
         
-        # Find the before_mutex conflict specifically
+        # Find the before_mutex_blocks_action conflict specifically
         mutex_conflicts = [c for c in conflict_diags 
-                          if c['witness']['conflict_type'] == 'before_mutex']
+                          if c['witness']['conflict_type'] == 'before_mutex_blocks_action']
         self.assertGreater(len(mutex_conflicts), 0,
-                          'Must identify as before_mutex conflict')
+                          'Must identify as before_mutex_blocks_action (weaker warning)')
         
         conflict = mutex_conflicts[0]
         self.assertIn('ord-1', conflict['responsible_rule_set'])
         self.assertIn('ord-2', conflict['responsible_rule_set'])
+        self.assertEqual(conflict['witness']['blocked_action'], 'b')
+        self.assertIn('optional', conflict['witness']['reason'].lower())
     
-    def test_before_mutex_reversed_conflict(self):
-        """Fix #2: before(A, B) + mutual_exclusion(B, A) is also a conflict.
+    def test_before_mutex_reversed_required(self):
+        """Fix #2: before(A, B) + mutual_exclusion(B, A) with B required is also a hard conflict.
         
-        Same as before_mutex_conflict, but with mutex args reversed.
-        Should still be detected.
+        Same as test_before_mutex_required_hard_conflict, but with mutex args reversed.
+        Should still be detected as a hard conflict.
         """
         actions = [
             {'id': 'a', 'requires': ['start'], 'adds': ['done_a']},
@@ -1725,7 +1765,8 @@ class Issue4RegressionTests(unittest.TestCase):
         ]
         workflow = make_workflow(actions, ordering_rules=[
             make_rule('before', ['a', 'b'], rule_id='ord-1'),
-            make_rule('mutual_exclusion', ['b', 'a'], rule_id='ord-2')
+            make_rule('mutual_exclusion', ['b', 'a'], rule_id='ord-2'),  # Reversed args
+            make_rule('exactly_once', ['b'], rule_id='ord-3')
         ])
         
         from prompt_skill_linter.planner import explore
@@ -1733,12 +1774,12 @@ class Issue4RegressionTests(unittest.TestCase):
         
         diags, checks = check_ordering_rules(workflow, result, 'workflow-1', {'id': 'ctx-1'})
         
-        # Should detect the conflict
+        # Should detect the conflict as hard regardless of mutex arg order
         conflict_diags = [d for d in diags if d['code'] == 'ORDERING_RULES_CONFLICT']
         mutex_conflicts = [c for c in conflict_diags 
-                          if c['witness']['conflict_type'] == 'before_mutex']
+                          if c['witness']['conflict_type'] == 'before_mutex_required']
         self.assertGreater(len(mutex_conflicts), 0,
-                          'Must detect before + mutex conflict regardless of arg order')
+                          'Must detect hard conflict regardless of mutex arg order')
     
     def test_longer_cycle_detection(self):
         """Fix #2: Detect cycles longer than 2 (4-cycle, 5-cycle, etc).
