@@ -7,22 +7,96 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
-
+import xml.etree.ElementTree as ET
 
 def run_specific_test(test_name):
-    """Run a specific test and return (passed, is_behavioral_failure)."""
-    result = subprocess.run(
-        [sys.executable, '-m', 'pytest', f'tests/test_vocabulary.py::{test_name}', '-xvs'],
-        capture_output=True,
-        text=True,
-        cwd=Path(__file__).parent.parent
-    )
-    passed = result.returncode == 0
+    """Run a specific test and return (passed, failure_type).
     
-    # Check if failure was due to collection/import/syntax error vs assertion failure
-    is_behavioral = 'FAILED' in result.stdout or 'AssertionError' in result.stdout or 'assert' in result.stdout.lower()
+    Returns:
+        tuple: (passed: bool, failure_type: str)
+        failure_type is one of:
+        - None: test passed
+        - 'assertion': test failed with AssertionError in call phase (behavioral kill)
+        - 'exception': test failed with non-assertion exception
+        - 'collection': test collection/import failed
+        - 'setup': test failed during setup
+        - 'teardown': test failed during teardown
+        - 'no_tests': no tests were selected/collected
+    """
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.xml', delete=False) as f:
+        junit_xml = f.name
     
-    return passed, is_behavioral
+    try:
+        result = subprocess.run(
+            [sys.executable, '-m', 'pytest', 
+             f'tests/test_vocabulary.py::{test_name}', 
+             '-xvs', 
+             f'--junit-xml={junit_xml}'],
+            capture_output=True,
+            text=True,
+            cwd=Path(__file__).parent.parent
+        )
+        
+        passed = result.returncode == 0
+        
+        # Parse JUnit XML to determine failure type
+        failure_type = None
+        if not passed:
+            try:
+                tree = ET.parse(junit_xml)
+                root = tree.getroot()
+                
+                # Check if any tests were collected
+                testsuite = root.find('testsuite')
+                if testsuite is not None:
+                    tests_count = int(testsuite.get('tests', '0'))
+                    if tests_count == 0:
+                        failure_type = 'no_tests'
+                    else:
+                        # Find the testcase
+                        testcase = testsuite.find('testcase')
+                        if testcase is not None:
+                            # Check for different failure types
+                            failure = testcase.find('failure')
+                            error = testcase.find('error')
+                            
+                            if failure is not None:
+                                # Failure in call phase - check if it's an AssertionError
+                                failure_msg = failure.get('message', '')
+                                failure_text = failure.text or ''
+                                
+                                if 'AssertionError' in failure_msg or 'AssertionError' in failure_text or 'assert ' in failure_text.lower():
+                                    failure_type = 'assertion'
+                                else:
+                                    failure_type = 'exception'
+                            elif error is not None:
+                                # Error can be collection, setup, or teardown
+                                error_msg = error.get('message', '')
+                                if 'collection' in error_msg.lower() or 'import' in error_msg.lower():
+                                    failure_type = 'collection'
+                                elif 'setup' in error_msg.lower():
+                                    failure_type = 'setup'
+                                elif 'teardown' in error_msg.lower():
+                                    failure_type = 'teardown'
+                                else:
+                                    failure_type = 'exception'
+                else:
+                    # No testsuite found - likely collection error
+                    failure_type = 'collection'
+            except Exception as e:
+                # If we can't parse XML, fall back to checking output
+                output = result.stdout + result.stderr
+                if 'collected 0 items' in output:
+                    failure_type = 'no_tests'
+                elif 'ERROR' in output and ('collection' in output.lower() or 'import' in output.lower()):
+                    failure_type = 'collection'
+                else:
+                    failure_type = 'exception'
+        
+        return passed, failure_type
+    finally:
+        # Clean up XML file
+        Path(junit_xml).unlink(missing_ok=True)
 
 
 def mutate_file(file_path, old_code, new_code):
@@ -66,9 +140,9 @@ def test_mutation_ambiguous_synonym():
     
     try:
         print("Testing that the test fails with the check removed...")
-        passed, is_behavioral = run_specific_test('VocabularyTests::test_ambiguous_synonym_equals_own_id')
+        passed, failure_type = run_specific_test('VocabularyTests::test_ambiguous_synonym_equals_own_id')
         assert not passed, "Test should fail after removing the check"
-        assert is_behavioral, "Failure must be behavioral (assertion), not syntax/collection error"
+        assert failure_type == 'assertion', f"Failure must be assertion-based kill, got: {failure_type}"
         print("✓ Test fails with check removed - behavioral kill confirmed!")
     finally:
         restore_file(engine_path, original)
@@ -103,9 +177,9 @@ def test_mutation_undefined_term():
     
     try:
         print("Testing that the test fails with the check removed...")
-        passed, is_behavioral = run_specific_test('VocabularyTests::test_undefined_literal_when_vocabulary_exists')
+        passed, failure_type = run_specific_test('VocabularyTests::test_undefined_literal_when_vocabulary_exists')
         assert not passed, "Test should fail after removing the check"
-        assert is_behavioral, "Failure must be behavioral (assertion), not syntax/collection error"
+        assert failure_type == 'assertion', f"Failure must be assertion-based kill, got: {failure_type}"
         print("✓ Test fails with check removed - behavioral kill confirmed!")
     finally:
         restore_file(engine_path, original)
@@ -135,9 +209,9 @@ def test_mutation_unused_vocabulary():
     
     try:
         print("Testing that the test fails with the check removed...")
-        passed, is_behavioral = run_specific_test('VocabularyTests::test_unused_vocabulary_entry')
+        passed, failure_type = run_specific_test('VocabularyTests::test_unused_vocabulary_entry')
         assert not passed, "Test should fail after removing the check"
-        assert is_behavioral, "Failure must be behavioral (assertion), not syntax/collection error"
+        assert failure_type == 'assertion', f"Failure must be assertion-based kill, got: {failure_type}"
         print("✓ Test fails with check removed - behavioral kill confirmed!")
     finally:
         restore_file(engine_path, original)
@@ -173,9 +247,9 @@ def test_mutation_type_mismatch():
     
     try:
         print("Testing that the test fails with the check removed...")
-        passed, is_behavioral = run_specific_test('VocabularyTests::test_type_mismatch_bool_declared_as_enum')
+        passed, failure_type = run_specific_test('VocabularyTests::test_type_mismatch_bool_declared_as_enum')
         assert not passed, "Test should fail after removing the check"
-        assert is_behavioral, "Failure must be behavioral (assertion), not syntax/collection error"
+        assert failure_type == 'assertion', f"Failure must be assertion-based kill, got: {failure_type}"
         print("✓ Test fails with check removed - behavioral kill confirmed!")
     finally:
         restore_file(engine_path, original)
@@ -212,9 +286,9 @@ def test_mutation_action_role():
     
     try:
         print("Testing that the test fails with the check removed...")
-        passed, is_behavioral = run_specific_test('VocabularyTests::test_action_role_mismatch_in_ordering_rule')
+        passed, failure_type = run_specific_test('VocabularyTests::test_action_role_mismatch_in_ordering_rule')
         assert not passed, "Test should fail after removing the check"
-        assert is_behavioral, "Failure must be behavioral (assertion), not syntax/collection error"
+        assert failure_type == 'assertion', f"Failure must be assertion-based kill, got: {failure_type}"
         print("✓ Test fails with check removed - behavioral kill confirmed!")
     finally:
         restore_file(engine_path, original)
@@ -247,9 +321,9 @@ def test_mutation_enum_value():
     
     try:
         print("Testing that the test fails with the check removed...")
-        passed, is_behavioral = run_specific_test('VocabularyTests::test_enum_value_invalid_in_when_condition')
+        passed, failure_type = run_specific_test('VocabularyTests::test_enum_value_invalid_in_when_condition')
         assert not passed, "Test should fail after removing the check"
-        assert is_behavioral, "Failure must be behavioral (assertion), not syntax/collection error"
+        assert failure_type == 'assertion', f"Failure must be assertion-based kill, got: {failure_type}"
         print("✓ Test fails with check removed - behavioral kill confirmed!")
     finally:
         restore_file(engine_path, original)
@@ -282,9 +356,9 @@ def test_mutation_int_value():
     
     try:
         print("Testing that the test fails with the check removed...")
-        passed, is_behavioral = run_specific_test('VocabularyTests::test_int_value_non_numeric_in_when')
+        passed, failure_type = run_specific_test('VocabularyTests::test_int_value_non_numeric_in_when')
         assert not passed, "Test should fail after removing the check"
-        assert is_behavioral, "Failure must be behavioral (assertion), not syntax/collection error"
+        assert failure_type == 'assertion', f"Failure must be assertion-based kill, got: {failure_type}"
         print("✓ Test fails with check removed - behavioral kill confirmed!")
     finally:
         restore_file(engine_path, original)
@@ -319,13 +393,85 @@ def test_mutation_action_state_conflation():
     
     try:
         print("Testing that the test fails with the check removed...")
-        passed, is_behavioral = run_specific_test('VocabularyTests::test_controlled_action_used_as_boolean_error')
+        passed, failure_type = run_specific_test('VocabularyTests::test_controlled_action_used_as_boolean_error')
         assert not passed, "Test should fail after removing the check"
-        assert is_behavioral, "Failure must be behavioral (assertion), not syntax/collection error"
+        assert failure_type == 'assertion', f"Failure must be assertion-based kill, got: {failure_type}"
         print("✓ Test fails with check removed - behavioral kill confirmed!")
     finally:
         restore_file(engine_path, original)
         print("✓ Restored original file")
+
+
+def test_negative_control_runtime_exception():
+    """Negative control: RuntimeError in mutated code should NOT be classified as behavioral kill."""
+    engine_path = Path(__file__).parent.parent / 'prompt_skill_linter' / 'engine.py'
+    
+    # Use the enum check mutation as the example
+    check_code = '''                    if declared_values and fact_value not in declared_values:
+                        diagnostics.append(diagnostic('TYPE_MISMATCH', 'exact', 'error', [rule], {},
+                            {'fact': fact_name, 'declared_type': 'enum', 'value': fact_value,
+                             'declared_values': sorted(declared_values),
+                             'rule_id': rule['id'], 'condition_type': 'when'}))'''
+    
+    # Mutant that raises RuntimeError instead of passing
+    mutated_code = '''                    if declared_values and fact_value not in declared_values:
+                        raise RuntimeError("unrelated mutation failure")'''
+    
+    print("\n=== Negative Control 1: RuntimeError (non-assertion) ===")
+    print("Testing that the test passes with the check present...")
+    passed, _ = run_specific_test('VocabularyTests::test_enum_value_invalid_in_when_condition')
+    assert passed, "Test should pass before mutation"
+    print("✓ Test passes with check present")
+    
+    print("\nMutating: replacing check with RuntimeError...")
+    original = mutate_file(engine_path, check_code, mutated_code)
+    
+    try:
+        print("Testing that the test fails but is NOT classified as behavioral kill...")
+        passed, failure_type = run_specific_test('VocabularyTests::test_enum_value_invalid_in_when_condition')
+        assert not passed, "Test should fail after mutation"
+        assert failure_type == 'exception', f"Should be classified as 'exception', got: {failure_type}"
+        print("✓ Test fails but correctly classified as non-assertion exception!")
+    finally:
+        restore_file(engine_path, original)
+        print("✓ Restored original file")
+
+
+def test_negative_control_collection_error():
+    """Negative control: Collection/import error should NOT be classified as behavioral kill."""
+    engine_path = Path(__file__).parent.parent / 'prompt_skill_linter' / 'engine.py'
+    
+    # Insert an import that will fail at collection time
+    # We'll add it after the existing imports
+    check_code = '''from collections import deque
+from itertools import combinations'''
+    mutated_code = '''from collections import deque
+from itertools import combinations
+import this_module_does_not_exist_and_will_cause_collection_failure  # Collection error'''
+    
+    print("\n=== Negative Control 2: Collection/Import Error ===")
+    print("Mutating: adding import error...")
+    original = mutate_file(engine_path, check_code, mutated_code)
+    
+    try:
+        print("Testing that collection fails and is NOT classified as behavioral kill...")
+        passed, failure_type = run_specific_test('VocabularyTests::test_enum_value_invalid_in_when_condition')
+        assert not passed, "Test should fail due to collection error"
+        assert failure_type == 'collection', f"Should be classified as 'collection', got: {failure_type}"
+        print("✓ Collection error correctly classified as non-behavioral!")
+    finally:
+        restore_file(engine_path, original)
+        print("✓ Restored original file")
+
+
+def test_negative_control_no_tests_selected():
+    """Negative control: No tests selected should be classified appropriately."""
+    print("\n=== Negative Control 3: No Tests Selected ===")
+    print("Running with non-existent test name...")
+    passed, failure_type = run_specific_test('VocabularyTests::test_that_does_not_exist')
+    assert not passed, "Should fail when test doesn't exist"
+    assert failure_type == 'no_tests', f"Should be classified as 'no_tests', got: {failure_type}"
+    print("✓ No tests selected correctly classified as non-behavioral!")
 
 
 if __name__ == '__main__':
@@ -342,7 +488,16 @@ if __name__ == '__main__':
     test_mutation_action_state_conflation()
     
     print("\n" + "=" * 60)
+    print("Running negative control tests...")
+    print("=" * 60)
+    
+    test_negative_control_runtime_exception()
+    test_negative_control_collection_error()
+    test_negative_control_no_tests_selected()
+    
+    print("\n" + "=" * 60)
     print("✓ All 8 mutation tests passed!")
+    print("✓ All 3 negative controls passed!")
     print("\nThis proves that each check is necessary:")
     print("1. AMBIGUOUS_SYNONYM - catches conflicting synonym mappings")
     print("2. UNDEFINED_TERM - catches terms used without vocabulary entries")
@@ -352,3 +507,7 @@ if __name__ == '__main__':
     print("6. TYPE_MISMATCH (enum) - catches enum values not in declared values list")
     print("7. TYPE_MISMATCH (int) - catches non-numeric values for int facts")
     print("8. ACTION_STATE_CONFLATION - catches controlled_action used as boolean")
+    print("\nNegative controls confirm the harness correctly rejects:")
+    print("- Non-assertion exceptions (RuntimeError, etc.)")
+    print("- Collection/import errors")
+    print("- No tests selected")
