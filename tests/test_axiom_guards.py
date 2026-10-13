@@ -2,8 +2,10 @@
 
 These tests verify that each guard in the axiom conflict implementation
 prevents its targeted error. They are not mutation tests (which would
-require mutating production code); they are regression tests that would
-fail if the corresponding guard were removed.
+require mutating production code); they are regression tests. Four guards
+(permission suppression, preference exclusion, scope separation, priority
+resolution) were locally disabled by the author and their tests failed;
+the remaining tests are regression tests without a reported disable experiment.
 """
 import tempfile
 from pathlib import Path
