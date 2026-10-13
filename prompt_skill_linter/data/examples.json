@@ -275,17 +275,7 @@
               "composition_line_2",
               "composition_line_3"
             ]
-          },
-          "vocabulary": [
-            {
-              "id": "a",
-              "type": "bool"
-            },
-            {
-              "id": "b",
-              "type": "bool"
-            }
-          ]
+          }
         },
         "sources": {
           "composition": "CLAUSE a\nCLAUSE b\nCLAUSE !a | !b\n"

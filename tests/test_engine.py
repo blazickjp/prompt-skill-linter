@@ -34,10 +34,6 @@ class EngineTests(unittest.TestCase):
 
     def codes(self):
         return [d['code'] for d in self.run_lint()['diagnostics']]
-    
-    def error_warning_codes(self):
-        """Get codes for errors and warnings only, excluding info diagnostics."""
-        return [d['code'] for d in self.run_lint()['diagnostics'] if d['severity'] in ('error', 'warning')]
 
     def bulk(self, budget=30, ns=None):
         c = json.loads((ROOT / 'examples/bulk.contract.json').read_text())
@@ -96,7 +92,7 @@ class EngineTests(unittest.TestCase):
 
     def test_hierarchy(self):
         self.rule('a'); self.rule('b', value=False, priority=1)
-        self.assertEqual(self.codes(), ['UNDEFINED_TERM', 'SHADOWED_RULE'])
+        self.assertEqual(self.codes(), ['SHADOWED_RULE'])
 
     def test_overridden_prohibition_cannot_shadow(self):
         self.rule('yes', priority=1); self.rule('no', priority=1, value=False)
@@ -105,26 +101,26 @@ class EngineTests(unittest.TestCase):
 
     def test_exception(self):
         self.rule('a'); self.rule('b', value=False, exceptions=[{}])
-        self.assertEqual(self.error_warning_codes(), [])
+        self.assertEqual(self.codes(), [])
 
     def test_coactivation(self):
         self.contract['skills'] = [{'id': 'one'}, {'id': 'two'}]
         self.contract['contexts'][0]['active_skills'] = ['one']
         self.rule('a', skills=['one']); self.rule('b', value=False, skills=['two'])
-        self.assertEqual(self.error_warning_codes(), [])
+        self.assertEqual(self.codes(), [])
 
     def test_scopes_do_not_alias(self):
         self.rule('a'); self.rule('b', value=False, scope={'entity': 'other', 'temporal': 'run'})
-        self.assertEqual(self.error_warning_codes(), [])
+        self.assertEqual(self.codes(), [])
 
     def test_missing_fact_does_not_activate(self):
         self.rule('a'); self.rule('b', value=False, when={'flag': False})
-        self.assertEqual(self.error_warning_codes(), ['UNRESOLVED_ACTIVATION'])
+        self.assertEqual(self.codes(), ['UNRESOLVED_ACTIVATION'])
 
     def test_boolean_and_integer_facts_not_equal(self):
         self.contract['contexts'][0]['facts'] = {'flag': 1}
         self.rule('a'); self.rule('b', value=False, when={'flag': True})
-        self.assertEqual(self.error_warning_codes(), [])
+        self.assertEqual(self.codes(), [])
 
     def test_broken_reference(self):
         self.rule('a', tool_call={'tool': 'missing', 'arguments': {}})
@@ -142,9 +138,7 @@ class EngineTests(unittest.TestCase):
     def test_semantic_warning_is_not_error(self):
         self.rule('a', semantic_warnings=['Meaning of promptly is unspecified.'])
         r = self.run_lint()
-        sem_warnings = [d for d in r['diagnostics'] if d['code'] == 'SEMANTIC_REVIEW_NEEDED']
-        self.assertEqual(len(sem_warnings), 1)
-        self.assertEqual(sem_warnings[0]['class'], 'semantic_warning')
+        self.assertEqual(r['diagnostics'][0]['class'], 'semantic_warning')
         self.assertEqual(r['summary']['error'], 0)
 
     def workflow(self, fallback=True):

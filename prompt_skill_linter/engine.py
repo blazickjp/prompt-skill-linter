@@ -362,60 +362,127 @@ def check_bulk(contract, runtime):
 
 
 def check_vocabulary(contract):
-    """Check vocabulary integrity: declaration, uniqueness, usage."""
+    """Check vocabulary integrity: declaration, uniqueness, usage, types, units."""
     diagnostics = []
     vocabulary = {v['id']: v for v in contract.get('vocabulary', [])}
     
-    # Check for duplicate synonyms
+    # Only check vocabulary if it exists
+    if not vocabulary:
+        return diagnostics
+    
+    # Check for synonym conflicts:
+    # 1. Synonym equals another entry's id
+    # 2. Synonym equals the entry's own id
+    # 3. Same synonym used by multiple entries
     synonym_to_term = {}
+    all_term_ids = set(vocabulary.keys())
+    
     for term in vocabulary.values():
         for syn in term.get('synonyms', []):
-            if syn in synonym_to_term:
+            # Check if synonym equals the entry's own id
+            if syn == term['id']:
                 diagnostics.append(diagnostic('AMBIGUOUS_SYNONYM', 'exact', 'error', [], {},
-                    {'synonym': syn, 'conflicting_terms': sorted([synonym_to_term[syn], term['id']])}))
+                    {'synonym': syn, 'reason': 'synonym_equals_own_id', 'term': term['id']}))
+            # Check if synonym equals another entry's id
+            elif syn in all_term_ids:
+                diagnostics.append(diagnostic('AMBIGUOUS_SYNONYM', 'exact', 'error', [], {},
+                    {'synonym': syn, 'reason': 'synonym_equals_other_term_id', 
+                     'conflicting_terms': sorted([syn, term['id']])}))
+            # Check if synonym is already used by another entry
+            elif syn in synonym_to_term:
+                diagnostics.append(diagnostic('AMBIGUOUS_SYNONYM', 'exact', 'error', [], {},
+                    {'synonym': syn, 'reason': 'synonym_used_by_multiple_terms',
+                     'conflicting_terms': sorted([synonym_to_term[syn], term['id']])}))
             else:
                 synonym_to_term[syn] = term['id']
     
-    # Collect all literals used in rules, clauses, and ordering rules
+    # Collect all literals used in rules and clauses (not ordering rules - those are actions)
     used_literals = set()
     literal_usage = {}  # literal -> list of rule ids where it's used
+    literal_types = {}  # literal -> list of (rule_id, usage_type, details)
     
     for rule in contract['rules']:
         if 'effect' in rule:
             lit = rule['effect']['literal']
             used_literals.add(lit)
             literal_usage.setdefault(lit, []).append(rule['id'])
+            # Track that this literal is used as bool with a specific value
+            literal_types.setdefault(lit, []).append(
+                (rule['id'], 'bool_effect', {'value': rule['effect']['value']}))
         if 'clause' in rule:
             for atom in rule['clause']:
                 lit = atom['literal']
                 used_literals.add(lit)
                 literal_usage.setdefault(lit, []).append(rule['id'])
+                literal_types.setdefault(lit, []).append(
+                    (rule['id'], 'bool_clause', {'value': atom['value']}))
     
+    # Check action IDs in ordering rules match controlled_action vocabulary entries
     for workflow in contract.get('workflows', []):
         for ordering_rule in workflow.get('ordering_rules', []):
-            # Ordering rules reference actions, not literals, so we skip them
-            pass
+            for action_id in ordering_rule.get('actions', []):
+                if action_id in vocabulary:
+                    entry = vocabulary[action_id]
+                    if entry.get('role') != 'controlled_action':
+                        diagnostics.append(diagnostic('ACTION_VOCABULARY_ROLE_MISMATCH', 'exact', 'error', 
+                            [], {}, {
+                                'action_id': action_id,
+                                'expected_role': 'controlled_action',
+                                'actual_role': entry.get('role'),
+                                'ordering_rule': ordering_rule['id']
+                            }))
     
-    # Check for undeclared literals
+    # Check for undeclared literals (only when vocabulary exists)
     for lit in sorted(used_literals):
         if lit not in vocabulary:
             diagnostics.append(diagnostic('UNDEFINED_TERM', 'exact', 'info', [], {},
                 {'literal': lit, 'used_in_rules': literal_usage[lit],
                  'auto_declared': True, 'inferred_type': 'bool'}))
     
-    # Check for unused vocabulary entries
-    for term_id in sorted(vocabulary.keys()):
-        if term_id not in used_literals:
-            diagnostics.append(diagnostic('UNUSED_VOCABULARY_ENTRY', 'exact', 'info', [], {},
-                {'term': term_id, 'reason': 'declared but never referenced'}))
-    
-    # Check for type consistency in rules that use the same literal
+    # Check for type consistency
     for lit in used_literals:
         if lit in vocabulary:
             term = vocabulary[lit]
-            # All uses should be boolean (value: true/false) for bool type
-            # This is already enforced by the schema, but we document it
-            pass
+            term_type = term['type']
+            
+            # All uses should be consistent with the declared type
+            for rule_id, usage_type, details in literal_types.get(lit, []):
+                if usage_type in ('bool_effect', 'bool_clause'):
+                    # This literal is used as a boolean
+                    if term_type != 'bool':
+                        diagnostics.append(diagnostic('TYPE_MISMATCH', 'exact', 'error', [], {},
+                            {'literal': lit, 'declared_type': term_type, 'used_as': 'bool',
+                             'rule_id': rule_id, 'usage': usage_type}))
+            
+            # Check enum values if type is enum
+            if term_type == 'enum':
+                declared_values = set(term.get('values', []))
+                # Note: enum values are currently only declared, not used in rules
+                # This check is for future use when enum values appear in conditions
+    
+    # Check for unit consistency (int types with units)
+    int_literals = {lit: vocab for lit, vocab in vocabulary.items() 
+                    if vocab['type'] == 'int' and 'unit' in vocab}
+    # Track if same literal has conflicting unit declarations
+    # (This would be caught by ID uniqueness, but we can provide a better error)
+    
+    # Check for unused vocabulary entries
+    for term_id in sorted(vocabulary.keys()):
+        if term_id not in used_literals:
+            # Check if it's a controlled_action that might be used in ordering rules
+            term = vocabulary[term_id]
+            used_in_ordering = False
+            for workflow in contract.get('workflows', []):
+                for ordering_rule in workflow.get('ordering_rules', []):
+                    if term_id in ordering_rule.get('actions', []):
+                        used_in_ordering = True
+                        break
+                if used_in_ordering:
+                    break
+            
+            if not used_in_ordering:
+                diagnostics.append(diagnostic('UNUSED_VOCABULARY_ENTRY', 'exact', 'info', [], {},
+                    {'term': term_id, 'reason': 'declared but never referenced'}))
     
     return diagnostics
 

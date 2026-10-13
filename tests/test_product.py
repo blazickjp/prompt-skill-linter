@@ -127,8 +127,7 @@ class ProductTests(unittest.TestCase):
 
     def test_cnf_three_way_core(self):
         b = reviewed('CLAUSE a\nCLAUSE b\nCLAUSE !a | !b')
-        diags = analyze(b)['diagnostics']
-        d = [x for x in diags if x['code'] == 'UNSATISFIABLE_CONSTRAINT_SET'][0]
+        d = analyze(b)['diagnostics'][0]
         self.assertEqual(d['code'], 'UNSATISFIABLE_CONSTRAINT_SET')
         self.assertTrue(d['witness']['minimality_checked'])
         self.assertEqual(len(d['responsible_rule_set']), 3)
@@ -248,8 +247,7 @@ class ProductTests(unittest.TestCase):
         b = reviewed('REQUIRE x=true\nREQUIRE x=false')
         b['contract']['rules'][0]['when'] = {'unknown': True}
         b['contract']['rules'][0]['exceptions'] = [{}]
-        diags = [d for d in analyze(b)['diagnostics'] if d['severity'] in ('error', 'warning')]
-        self.assertEqual(diags, [])
+        self.assertEqual(analyze(b)['diagnostics'], [])
 
     def test_unknown_workflow_policy_does_not_prove_completion(self):
         b = examples()['examples'][2]['bundle']

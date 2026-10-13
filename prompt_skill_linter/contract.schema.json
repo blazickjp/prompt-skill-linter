@@ -238,6 +238,13 @@
               "int"
             ]
           },
+          "role": {
+            "enum": [
+              "external_input",
+              "controlled_action",
+              "derived_fact"
+            ]
+          },
           "unit": {
             "type": "string"
           },
