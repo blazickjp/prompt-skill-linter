@@ -193,6 +193,37 @@ class AxiomGuardRegressionTests(unittest.TestCase):
         # Without it: all three requirements (x,y,z=true) conflict with axiom (not-x or not-y or not-z).
         self.assertNotIn('AXIOM_CONFLICT', codes,
                         "Scope separation should prevent false conflict")
+    
+    def test_guard_context_fact_without_external_input_role(self):
+        """GUARD: Context facts in axioms without external_input role trigger incomplete.
+        
+        Dots counterexample: context fact p=true, requirement x=true, axiom (not-p or not-x),
+        but p lacks external_input role (or vocabulary entry). Without the guard, SAT can
+        choose p=false and miss the conflict. With it, incomplete is emitted.
+        """
+        contract = self.make_contract(
+            [self.rule('r1', 'x', True)],
+            [self.axiom('ax1', [{'literal': 'p', 'value': False}, {'literal': 'x', 'value': False}])]
+        )
+        # Add context fact p=true but don't declare p in vocabulary (or don't give it external_input role)
+        contract['contexts'][0]['facts'] = {'p': True}
+        
+        result = lint(contract, self.tools, self.runtime, self.root)
+        codes = [d['code'] for d in result['diagnostics']]
+        
+        # Should emit AXIOM_CHECK_INCOMPLETE due to undeclared context fact
+        self.assertIn('AXIOM_CHECK_INCOMPLETE', codes,
+                     "Context facts in axioms without external_input role should trigger incomplete")
+        
+        # Should have incomplete coverage
+        self.assertTrue(result['coverage']['incomplete'])
+        self.assertIn('search_bounds', result['coverage']['incomplete_reasons'])
+        
+        # Verify witness contains context_fact_axioms
+        incomplete_diags = [d for d in result['diagnostics'] if d['code'] == 'AXIOM_CHECK_INCOMPLETE']
+        self.assertGreater(len(incomplete_diags), 0)
+        self.assertIn('context_fact_axioms', incomplete_diags[0]['witness'])
+        self.assertIn('ax1', incomplete_diags[0]['witness']['context_fact_axioms'])
 
 if __name__ == '__main__':
     unittest.main()

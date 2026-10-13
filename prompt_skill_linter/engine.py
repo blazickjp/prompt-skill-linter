@@ -1037,16 +1037,32 @@ def check_conditional_conflicts(contract):
         if axiom_literals & external_inputs:
             input_dependent_axioms.append(axiom['id'])
     
-    # If we have input-dependent axioms, emit an incomplete diagnostic
-    if input_dependent_axioms:
+    # Also detect context facts that overlap with axiom literals but lack external_input role
+    context_fact_axioms = []
+    all_context_facts = set()
+    for context in contract['contexts']:
+        all_context_facts.update(context.get('facts', {}).keys())
+    
+    for axiom in contract.get('axioms', []):
+        axiom_literals = {lit['literal'] for lit in axiom['clause']}
+        # Check if axiom references context facts that aren't declared as external_input
+        undeclared_context_refs = (axiom_literals & all_context_facts) - external_inputs
+        if undeclared_context_refs:
+            context_fact_axioms.append(axiom['id'])
+    
+    # If we have input-dependent axioms or context-fact overlap, emit an incomplete diagnostic
+    if input_dependent_axioms or context_fact_axioms:
         witness = {
             'input_dependent_axioms': input_dependent_axioms,
             'external_inputs_referenced': sorted(external_inputs & {lit['literal'] for ax in contract['axioms'] for lit in ax['clause']})
         }
+        if context_fact_axioms:
+            witness['context_fact_axioms'] = context_fact_axioms
+            witness['undeclared_context_facts'] = sorted((all_context_facts & {lit['literal'] for ax in contract['axioms'] for lit in ax['clause']}) - external_inputs)
         assumptions = [
-            'Axioms reference external_input variables; context facts are not substituted into axioms.',
+            'Axioms reference external_input variables or context facts; context facts are not substituted into axioms.',
             'The satisfiability check may miss conflicts where context facts would make axioms binding.',
-            'This is an unsupported case; input-dependent axiom checking requires existential witness search.'
+            'This is an unsupported case; input-dependent axiom checking is unsupported by this checker.'
         ]
         diag = diagnostic('AXIOM_CHECK_INCOMPLETE', 'model_based', 'warning',
                         [], {}, witness, assumptions)
