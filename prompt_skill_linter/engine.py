@@ -42,7 +42,7 @@ def validate(contract, manifest, runtime, root):
     for key in ('sources', 'rules', 'contexts'):
         if not isinstance(contract.get(key), list):
             raise ContractError(f'contract.{key} must be an array')
-    for group in ('sources', 'rules', 'contexts', 'skills', 'workflows', 'vocabulary'):
+    for group in ('sources', 'rules', 'contexts', 'skills', 'workflows', 'vocabulary', 'axioms'):
         items = contract.get(group, [])
         ids = [x.get('id') for x in items]
         if any(not isinstance(x, str) or not x for x in ids) or len(ids) != len(set(ids)):
@@ -242,6 +242,33 @@ def validate(contract, manifest, runtime, root):
             start, end = span['start_line'], span['end_line']
             if not 1 <= start <= end <= len(lines) or span['quote'] != '\n'.join(lines[start - 1:end]):
                 raise ContractError('Vocabulary quote does not match its exact line span.')
+    
+    # Validate axioms
+    for axiom in contract.get('axioms', []):
+        if not isinstance(axiom.get('clause'), list) or not axiom['clause']:
+            raise ContractError(f"Axiom '{axiom['id']}' must have a non-empty clause.")
+        if len(axiom['clause']) > 32:
+            raise ContractError(f"Axiom '{axiom['id']}' clause may contain at most 32 literals.")
+        for lit in axiom['clause']:
+            if not isinstance(lit.get('literal'), str) or type(lit.get('value')) is not bool:
+                raise ContractError(f"Axiom '{axiom['id']}' clause needs literal (string) and value (boolean).")
+        for span in axiom.get('source_spans', []):
+            if span['source_id'] not in sources:
+                raise ContractError(f"Axiom '{axiom['id']}' references unknown source.")
+            path = (root / sources[span['source_id']]['path']).resolve()
+            if not path.is_relative_to(root):
+                raise ContractError('Axiom source must stay within the contract directory.')
+            if path not in action_source_lines:
+                try:
+                    if path.stat().st_size > 1_500_000:
+                        raise ContractError('Axiom source exceeds the analysis limit.')
+                    action_source_lines[path] = path.read_text(encoding='utf-8').splitlines()
+                except (OSError, UnicodeError) as exc:
+                    raise ContractError('Cannot read axiom source.') from exc
+            lines = action_source_lines[path]
+            start, end = span['start_line'], span['end_line']
+            if not 1 <= start <= end <= len(lines) or span['quote'] != '\n'.join(lines[start - 1:end]):
+                raise ContractError('Axiom quote does not match its exact line span.')
     
     pair_budget = 0
     for context in contract['contexts']:
@@ -981,6 +1008,214 @@ def check_clauses(contract):
     return diagnostics, checks
 
 
+def check_conditional_conflicts(contract):
+    """Check unconditional Boolean effects + axioms for satisfiability.
+    
+    This is a partial step toward issue #6. It checks unconditional Boolean
+    effect rules combined with axioms in explicitly enumerated contexts.
+    Full conditional-conflict search (input-dependent axioms, numeric conditions,
+    existential witness inputs, feasible-input partitioning) is deferred.
+    """
+    diagnostics, checks = [], []
+    
+    # Only proceed if we have axioms
+    if not contract.get('axioms'):
+        return diagnostics, checks
+    
+    # Check for ID collisions between rules and axioms
+    rule_ids = {r['id'] for r in contract['rules']}
+    axiom_ids = {a['id'] for a in contract.get('axioms', [])}
+    collisions = rule_ids & axiom_ids
+    if collisions:
+        raise ContractError(f'Rule and axiom IDs must be disjoint; collisions: {sorted(collisions)}')
+    
+    # Detect input-dependent axioms (unsupported)
+    external_inputs = {v['id'] for v in contract.get('vocabulary', []) if v.get('role') == 'external_input'}
+    input_dependent_axioms = []
+    for axiom in contract.get('axioms', []):
+        axiom_literals = {lit['literal'] for lit in axiom['clause']}
+        if axiom_literals & external_inputs:
+            input_dependent_axioms.append(axiom['id'])
+    
+    # Also detect context facts that overlap with axiom literals but lack external_input role
+    context_fact_axioms = []
+    all_context_facts = set()
+    for context in contract['contexts']:
+        all_context_facts.update(context.get('facts', {}).keys())
+    
+    for axiom in contract.get('axioms', []):
+        axiom_literals = {lit['literal'] for lit in axiom['clause']}
+        # Check if axiom references context facts that aren't declared as external_input
+        undeclared_context_refs = (axiom_literals & all_context_facts) - external_inputs
+        if undeclared_context_refs:
+            context_fact_axioms.append(axiom['id'])
+    
+    # If we have input-dependent axioms or context-fact overlap, emit an incomplete diagnostic
+    if input_dependent_axioms or context_fact_axioms:
+        witness = {
+            'input_dependent_axioms': input_dependent_axioms,
+            'external_inputs_referenced': sorted(external_inputs & {lit['literal'] for ax in contract['axioms'] for lit in ax['clause']})
+        }
+        if context_fact_axioms:
+            witness['context_fact_axioms'] = context_fact_axioms
+            witness['undeclared_context_facts'] = sorted((all_context_facts & {lit['literal'] for ax in contract['axioms'] for lit in ax['clause']}) - external_inputs)
+        assumptions = [
+            'Axioms reference external_input variables or context facts; context facts are not substituted into axioms.',
+            'The satisfiability check may miss conflicts where context facts would make axioms binding.',
+            'This is an unsupported case; input-dependent axiom checking is unsupported by this checker.'
+        ]
+        diag = diagnostic('AXIOM_CHECK_INCOMPLETE', 'model_based', 'warning',
+                        [], {}, witness, assumptions)
+        diagnostics.append(diag)
+        # Return with incomplete coverage
+        return diagnostics, checks
+    
+    # Group rules by scope and context, using check_obligations semantics
+    for context in contract['contexts']:
+        groups = {}
+        for rule in contract['rules']:
+            # Use same filter as check_obligations: active, has effect, not preference
+            if active(rule, context) and 'effect' in rule and rule['kind'] != 'preference':
+                key = (rule['scope']['entity'], rule['scope']['temporal'])
+                groups.setdefault(key, []).append(rule)
+        
+        for scope, rules in groups.items():
+            # Skip if there are unresolved activations
+            unresolved = [r for r in contract['rules'] if 'effect' in r and 
+                         activation_status(r, context) == 'unknown' and 
+                         (r['scope']['entity'], r['scope']['temporal']) == scope]
+            if unresolved:
+                continue
+            
+            # Apply check_obligations priority resolution logic
+            # Permissions can suppress prohibitions; only requirements/prohibitions create obligations
+            effective = []
+            retained = []
+            for rule in sorted(rules, key=lambda r: -r['priority']):
+                value = rule['effect']['value'] if rule['kind'] != 'prohibition' else not rule['effect']['value']
+                stronger = [r for r in retained if r['priority'] > rule['priority'] and
+                           rule['effect']['literal'] == r['effect']['literal'] and (
+                               (r['kind'] == 'permission' and rule['kind'] == 'prohibition' and 
+                                r['effect']['value'] == rule['effect']['value'])
+                               or (r['kind'] in ('requirement', 'prohibition') and
+                                   (r['effect']['value'] if r['kind'] == 'requirement' else not r['effect']['value']) != value))]
+                if not stronger:
+                    retained.append(rule)
+                    if rule['kind'] != 'permission':
+                        effective.append((rule, value))
+            
+            if not effective:
+                continue
+            
+            # Convert effective obligations to CNF clauses (unconditional only)
+            rule_clauses = []
+            for rule, value in effective:
+                if not rule.get('when'):  # Only unconditional
+                    rule_clauses.append({
+                        'id': f'rule_{rule["id"]}',  # Tag to prevent collision
+                        'clause': [{'literal': rule['effect']['literal'], 'value': value}],
+                        'source': rule['source'],
+                        'original_id': rule['id']
+                    })
+            
+            # Add axioms to the clause set
+            axiom_clauses = []
+            for axiom in contract.get('axioms', []):
+                axiom_clauses.append({
+                    'id': f'axiom_{axiom["id"]}',  # Tag to prevent collision
+                    'clause': axiom['clause'],
+                    'source_spans': axiom.get('source_spans', []),
+                    'description': axiom.get('description', ''),
+                    'original_id': axiom['id']
+                })
+            
+            if not rule_clauses or not axiom_clauses:
+                continue
+            
+            # Check satisfiability
+            all_clauses = rule_clauses + axiom_clauses
+            core = checked_core(all_clauses)
+            result = core['result']
+            
+            if result['status'] == 'unsat':
+                # Extract original IDs from tagged IDs
+                conflicting_rule_ids = [c['original_id'] for c in rule_clauses if c['id'] in core['rule_ids']]
+                conflicting_axiom_ids = [c['original_id'] for c in axiom_clauses if c['id'] in core['rule_ids']]
+                
+                if conflicting_axiom_ids:  # Only report if axioms are involved
+                    responsible_rules = [r for r, v in effective if r['id'] in conflicting_rule_ids]
+                    responsible_axioms = [a for a in contract['axioms'] if a['id'] in conflicting_axiom_ids]
+                    
+                    witness = {
+                        'minimal_core': conflicting_rule_ids + conflicting_axiom_ids,
+                        'rules': conflicting_rule_ids,
+                        'axioms': conflicting_axiom_ids,
+                        'minimality_checked': core['minimality_checked'],
+                        'minimality_scope': 'Deletion witnesses apply to frozen resolved formula set; not source edits followed by priority re-resolution.',
+                        'removal_witnesses': {
+                            c['original_id']: core['removal_witnesses'].get(c['id'], {})
+                            for c in all_clauses if c['id'] in core['rule_ids']
+                        }
+                    }
+                    
+                    assumptions = [
+                        'Exact relative to confirmed Boolean formalization; says nothing about whether formalization matches prose.',
+                        'Axioms are author-confirmed bridge facts.',
+                        'Only unconditional Boolean effects checked in explicitly enumerated contexts; input-dependent axioms, numeric conditions, exception-aware search, and feasible-input witness queries are unsupported.',
+                        'Conflicts found after applying check_obligations priority resolution; permissions suppress prohibitions.',
+                        'Context facts not substituted into axioms; contradictory axiom assumptions are not distinguished from policy conflicts.'
+                    ]
+                    
+                    diag = diagnostic('AXIOM_CONFLICT', 'model_based', 'error',
+                                    responsible_rules, context, witness, assumptions)
+                    
+                    # Add axiom source spans
+                    for axiom in responsible_axioms:
+                        for span in axiom.get('source_spans', []):
+                            if span not in diag['source_spans']:
+                                diag['source_spans'].append(span)
+                    
+                    # Add axiom information to interpreted rules
+                    for axiom in responsible_axioms:
+                        diag['interpreted_rules'].append({
+                            'id': axiom['id'],
+                            'axiom': True,
+                            'description': axiom.get('description', ''),
+                            'clause': axiom['clause']
+                        })
+                    
+                    diagnostics.append(diag)
+                    
+                    checks.append({
+                        'context_id': context['id'],
+                        'scope': dict(zip(('entity', 'temporal'), scope)),
+                        'status': 'conflict',
+                        'core': conflicting_rule_ids + conflicting_axiom_ids
+                    })
+            elif result['status'] == 'unknown':
+                # Surface solver limits
+                witness = {
+                    'reason': result.get('reason', 'unknown'),
+                    'search_cutoff': True
+                }
+                assumptions = [
+                    'Solver reached search limit before determining satisfiability.',
+                    'At most 24 variables and configured node budget per call.'
+                ]
+                diag = diagnostic('AXIOM_CHECK_INCOMPLETE', 'model_based', 'warning',
+                                [], context, witness, assumptions)
+                diagnostics.append(diag)
+                
+                checks.append({
+                    'context_id': context['id'],
+                    'scope': dict(zip(('entity', 'temporal'), scope)),
+                    'status': 'unknown',
+                    'reason': result.get('reason', 'unknown')
+                })
+    
+    return diagnostics, checks
+
+
 def lint(contract, manifest, runtime, root, strict_providers=None):
     validate(contract, manifest, runtime, root)
     diagnostics = check_references(contract, manifest)
@@ -1049,6 +1284,7 @@ def lint(contract, manifest, runtime, root, strict_providers=None):
         warning['source_spans'] = interpretation.get('unsupported_spans', [])
         diagnostics.append(warning)
     diagnostics += check_obligations(contract)
+    diagnostics += check_conditional_conflicts(contract)[0]
     workflow_diags, workflow_checks = workflow_analysis(contract, manifest, runtime)
     diagnostics += workflow_diags
     field_diags, field_checks = field_analysis(contract)
@@ -1067,7 +1303,7 @@ def lint(contract, manifest, runtime, root, strict_providers=None):
     incomplete_reasons = []
     if interpretation.get('untranslated_line_count', 0) or interpretation.get('excluded_candidate_ids'):
         incomplete_reasons.append('source_coverage')
-    if any(d['code'] in ('PLAN_BOUND_EXHAUSTED', 'SOLVER_BOUND_EXHAUSTED', 'TRACE_ANALYSIS_UNKNOWN', 'TRACE_TRIGGER_COVERAGE_UNKNOWN', 'ORDERING_CHECK_INCOMPLETE') for d in diagnostics):
+    if any(d['code'] in ('PLAN_BOUND_EXHAUSTED', 'SOLVER_BOUND_EXHAUSTED', 'TRACE_ANALYSIS_UNKNOWN', 'TRACE_TRIGGER_COVERAGE_UNKNOWN', 'ORDERING_CHECK_INCOMPLETE', 'AXIOM_CHECK_INCOMPLETE') for d in diagnostics):
         incomplete_reasons.append('search_bounds')
     if any(d['class'] == 'semantic_warning' and d['code'] != 'INCOMPLETE_SOURCE_COVERAGE' for d in diagnostics):
         incomplete_reasons.append('semantic_review')
