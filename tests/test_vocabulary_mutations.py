@@ -208,6 +208,79 @@ def test_mutation_action_role():
         print("✓ Restored original file")
 
 
+def test_mutation_enum_value():
+    """Mutation test: removing INVALID_ENUM_VALUE check should fail its test."""
+    engine_path = Path(__file__).parent.parent / 'prompt_skill_linter' / 'engine.py'
+    
+    # The code that checks enum values
+    check_code = '''                # Enum value validation
+                if term_type == 'enum':
+                    declared_values = set(term.get('values', []))
+                    if declared_values and fact_value not in declared_values:
+                        diagnostics.append(diagnostic('INVALID_ENUM_VALUE', 'exact', 'error', [rule], {},
+                            {'fact': fact_name, 'value': fact_value, 
+                             'declared_values': sorted(declared_values), 
+                             'rule_id': rule['id'], 'condition_type': 'when'}))'''
+    
+    # Mutated version that removes the check
+    mutated_code = '''                # Mutation: removed INVALID_ENUM_VALUE check
+                pass'''
+    
+    print("\n=== Mutation Test 6: INVALID_ENUM_VALUE ===")
+    print("Testing that the test passes with the check present...")
+    assert run_specific_test('VocabularyTests::test_enum_value_invalid_in_when_condition'), \
+        "Test should pass before mutation"
+    print("✓ Test passes with check present")
+    
+    print("\nMutating: removing INVALID_ENUM_VALUE check logic...")
+    original = mutate_file(engine_path, check_code, mutated_code)
+    
+    try:
+        print("Testing that the test fails with the check removed...")
+        assert not run_specific_test('VocabularyTests::test_enum_value_invalid_in_when_condition'), \
+            "Test should fail after removing the check"
+        print("✓ Test fails with check removed - mutation test passed!")
+    finally:
+        restore_file(engine_path, original)
+        print("✓ Restored original file")
+
+
+def test_mutation_int_value():
+    """Mutation test: removing INVALID_INT_VALUE check should fail its test."""
+    engine_path = Path(__file__).parent.parent / 'prompt_skill_linter' / 'engine.py'
+    
+    # The code that checks int values
+    check_code = '''                # Int unit validation (check that value is numeric)
+                elif term_type == 'int':
+                    if type(fact_value) not in (int, type(None)):
+                        unit = term.get('unit', 'unspecified')
+                        diagnostics.append(diagnostic('INVALID_INT_VALUE', 'exact', 'error', [rule], {},
+                            {'fact': fact_name, 'value': fact_value, 'value_type': type(fact_value).__name__,
+                             'unit': unit, 'rule_id': rule['id'], 'condition_type': 'when'}))'''
+    
+    # Mutated version that removes the check
+    mutated_code = '''                # Mutation: removed INVALID_INT_VALUE check
+                pass'''
+    
+    print("\n=== Mutation Test 7: INVALID_INT_VALUE ===")
+    print("Testing that the test passes with the check present...")
+    assert run_specific_test('VocabularyTests::test_int_value_non_numeric_in_when'), \
+        "Test should pass before mutation"
+    print("✓ Test passes with check present")
+    
+    print("\nMutating: removing INVALID_INT_VALUE check logic...")
+    original = mutate_file(engine_path, check_code, mutated_code)
+    
+    try:
+        print("Testing that the test fails with the check removed...")
+        assert not run_specific_test('VocabularyTests::test_int_value_non_numeric_in_when'), \
+            "Test should fail after removing the check"
+        print("✓ Test fails with check removed - mutation test passed!")
+    finally:
+        restore_file(engine_path, original)
+        print("✓ Restored original file")
+
+
 if __name__ == '__main__':
     print("Running mutation tests for vocabulary checks...")
     print("=" * 60)
@@ -217,12 +290,16 @@ if __name__ == '__main__':
     test_mutation_unused_vocabulary()
     test_mutation_type_mismatch()
     test_mutation_action_role()
+    test_mutation_enum_value()
+    test_mutation_int_value()
     
     print("\n" + "=" * 60)
-    print("✓ All 5 mutation tests passed!")
+    print("✓ All 7 mutation tests passed!")
     print("\nThis proves that each check is necessary:")
     print("1. AMBIGUOUS_SYNONYM - catches conflicting synonym mappings")
     print("2. UNDEFINED_TERM - catches literals used without vocabulary entries")
     print("3. UNUSED_VOCABULARY_ENTRY - catches vocabulary entries never referenced")
     print("4. TYPE_MISMATCH - catches bool/enum/int type misuse")
     print("5. ACTION_VOCABULARY_ROLE_MISMATCH - catches wrong roles in ordering rules")
+    print("6. INVALID_ENUM_VALUE - catches enum values not in declared values list")
+    print("7. INVALID_INT_VALUE - catches non-numeric values for int facts")

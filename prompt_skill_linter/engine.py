@@ -417,6 +417,55 @@ def check_vocabulary(contract):
                 literal_types.setdefault(lit, []).append(
                     (rule['id'], 'bool_clause', {'value': atom['value']}))
     
+    # Check enum values and int unit usage in conditions (when/exceptions)
+    for rule in contract['rules']:
+        # Check 'when' conditions
+        for fact_name, fact_value in rule.get('when', {}).items():
+            if fact_name in vocabulary:
+                term = vocabulary[fact_name]
+                term_type = term['type']
+                
+                # Enum value validation
+                if term_type == 'enum':
+                    declared_values = set(term.get('values', []))
+                    if declared_values and fact_value not in declared_values:
+                        diagnostics.append(diagnostic('INVALID_ENUM_VALUE', 'exact', 'error', [rule], {},
+                            {'fact': fact_name, 'value': fact_value, 
+                             'declared_values': sorted(declared_values), 
+                             'rule_id': rule['id'], 'condition_type': 'when'}))
+                
+                # Int unit validation (check that value is numeric)
+                elif term_type == 'int':
+                    if type(fact_value) not in (int, type(None)):
+                        unit = term.get('unit', 'unspecified')
+                        diagnostics.append(diagnostic('INVALID_INT_VALUE', 'exact', 'error', [rule], {},
+                            {'fact': fact_name, 'value': fact_value, 'value_type': type(fact_value).__name__,
+                             'unit': unit, 'rule_id': rule['id'], 'condition_type': 'when'}))
+        
+        # Check 'exceptions' conditions
+        for exception in rule.get('exceptions', []):
+            for fact_name, fact_value in exception.items():
+                if fact_name in vocabulary:
+                    term = vocabulary[fact_name]
+                    term_type = term['type']
+                    
+                    # Enum value validation
+                    if term_type == 'enum':
+                        declared_values = set(term.get('values', []))
+                        if declared_values and fact_value not in declared_values:
+                            diagnostics.append(diagnostic('INVALID_ENUM_VALUE', 'exact', 'error', [rule], {},
+                                {'fact': fact_name, 'value': fact_value,
+                                 'declared_values': sorted(declared_values),
+                                 'rule_id': rule['id'], 'condition_type': 'exception'}))
+                    
+                    # Int unit validation
+                    elif term_type == 'int':
+                        if type(fact_value) not in (int, type(None)):
+                            unit = term.get('unit', 'unspecified')
+                            diagnostics.append(diagnostic('INVALID_INT_VALUE', 'exact', 'error', [rule], {},
+                                {'fact': fact_name, 'value': fact_value, 'value_type': type(fact_value).__name__,
+                                 'unit': unit, 'rule_id': rule['id'], 'condition_type': 'exception'}))
+    
     # Check action IDs in ordering rules match controlled_action vocabulary entries
     for workflow in contract.get('workflows', []):
         for ordering_rule in workflow.get('ordering_rules', []):
@@ -453,18 +502,6 @@ def check_vocabulary(contract):
                         diagnostics.append(diagnostic('TYPE_MISMATCH', 'exact', 'error', [], {},
                             {'literal': lit, 'declared_type': term_type, 'used_as': 'bool',
                              'rule_id': rule_id, 'usage': usage_type}))
-            
-            # Check enum values if type is enum
-            if term_type == 'enum':
-                declared_values = set(term.get('values', []))
-                # Note: enum values are currently only declared, not used in rules
-                # This check is for future use when enum values appear in conditions
-    
-    # Check for unit consistency (int types with units)
-    int_literals = {lit: vocab for lit, vocab in vocabulary.items() 
-                    if vocab['type'] == 'int' and 'unit' in vocab}
-    # Track if same literal has conflicting unit declarations
-    # (This would be caught by ID uniqueness, but we can provide a better error)
     
     # Check for unused vocabulary entries
     for term_id in sorted(vocabulary.keys()):

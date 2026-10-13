@@ -158,6 +158,75 @@ class VocabularyTests(unittest.TestCase):
         self.rule('r1', literal='authenticated', value=True)
         self.assertNotIn('TYPE_MISMATCH', self.codes())
     
+    # === Enum value checks ===
+    
+    def test_enum_value_invalid_in_when_condition(self):
+        """Using invalid enum value in when condition should error."""
+        self.vocab('status', 'enum', values=['pending', 'approved', 'rejected'])
+        self.rule('r1', when={'status': 'invalid_value'})
+        result = self.run_lint()
+        errors = [d for d in result['diagnostics'] if d['code'] == 'INVALID_ENUM_VALUE']
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(errors[0]['severity'], 'error')
+        self.assertEqual(errors[0]['witness']['value'], 'invalid_value')
+        self.assertIn('pending', errors[0]['witness']['declared_values'])
+    
+    def test_enum_value_valid_in_when_condition(self):
+        """Using valid enum value in when condition should not error."""
+        self.vocab('status', 'enum', values=['pending', 'approved', 'rejected'])
+        self.rule('r1', when={'status': 'pending'})
+        self.assertNotIn('INVALID_ENUM_VALUE', self.codes())
+    
+    def test_enum_value_invalid_in_exception(self):
+        """Using invalid enum value in exception should error."""
+        self.vocab('priority', 'enum', values=['low', 'medium', 'high'])
+        self.rule('r1', exceptions=[{'priority': 'critical'}])
+        result = self.run_lint()
+        errors = [d for d in result['diagnostics'] if d['code'] == 'INVALID_ENUM_VALUE']
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(errors[0]['witness']['condition_type'], 'exception')
+    
+    def test_enum_without_values_no_error(self):
+        """Enum without declared values should not error (values optional)."""
+        self.vocab('status', 'enum')
+        self.rule('r1', when={'status': 'any_value'})
+        self.assertNotIn('INVALID_ENUM_VALUE', self.codes())
+    
+    # === Int unit checks ===
+    
+    def test_int_value_non_numeric_in_when(self):
+        """Using non-numeric value for int fact in when should error."""
+        self.vocab('timeout', 'int', unit='seconds')
+        self.rule('r1', when={'timeout': 'thirty'})  # String instead of int
+        result = self.run_lint()
+        errors = [d for d in result['diagnostics'] if d['code'] == 'INVALID_INT_VALUE']
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(errors[0]['severity'], 'error')
+        self.assertEqual(errors[0]['witness']['value'], 'thirty')
+        self.assertEqual(errors[0]['witness']['value_type'], 'str')
+        self.assertEqual(errors[0]['witness']['unit'], 'seconds')
+    
+    def test_int_value_numeric_valid(self):
+        """Using numeric value for int fact should not error."""
+        self.vocab('timeout', 'int', unit='seconds')
+        self.rule('r1', when={'timeout': 30})
+        self.assertNotIn('INVALID_INT_VALUE', self.codes())
+    
+    def test_int_value_null_allowed(self):
+        """Null value for int fact should be allowed (missing fact)."""
+        self.vocab('count', 'int')
+        self.rule('r1', when={'count': None})
+        self.assertNotIn('INVALID_INT_VALUE', self.codes())
+    
+    def test_int_value_bool_in_exception(self):
+        """Using bool value for int fact in exception should error."""
+        self.vocab('retries', 'int')
+        self.rule('r1', exceptions=[{'retries': True}])  # Bool instead of int
+        result = self.run_lint()
+        errors = [d for d in result['diagnostics'] if d['code'] == 'INVALID_INT_VALUE']
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(errors[0]['witness']['condition_type'], 'exception')
+    
     # === Role checks (dots comment requirement) ===
     
     def test_controlled_action_role_in_ordering_rule(self):
