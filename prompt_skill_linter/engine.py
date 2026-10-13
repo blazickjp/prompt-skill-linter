@@ -1029,6 +1029,31 @@ def check_conditional_conflicts(contract):
     if collisions:
         raise ContractError(f'Rule and axiom IDs must be disjoint; collisions: {sorted(collisions)}')
     
+    # Detect input-dependent axioms (unsupported)
+    external_inputs = {v['id'] for v in contract.get('vocabulary', []) if v.get('role') == 'external_input'}
+    input_dependent_axioms = []
+    for axiom in contract.get('axioms', []):
+        axiom_literals = {lit['literal'] for lit in axiom['clause']}
+        if axiom_literals & external_inputs:
+            input_dependent_axioms.append(axiom['id'])
+    
+    # If we have input-dependent axioms, emit an incomplete diagnostic
+    if input_dependent_axioms:
+        witness = {
+            'input_dependent_axioms': input_dependent_axioms,
+            'external_inputs_referenced': sorted(external_inputs & {lit['literal'] for ax in contract['axioms'] for lit in ax['clause']})
+        }
+        assumptions = [
+            'Axioms reference external_input variables; context facts are not substituted into axioms.',
+            'The satisfiability check may miss conflicts where context facts would make axioms binding.',
+            'This is an unsupported case; input-dependent axiom checking requires existential witness search.'
+        ]
+        diag = diagnostic('AXIOM_CHECK_INCOMPLETE', 'model_based', 'warning',
+                        [], {}, witness, assumptions)
+        diagnostics.append(diag)
+        # Return with incomplete coverage
+        return diagnostics, checks
+    
     # Group rules by scope and context, using check_obligations semantics
     for context in contract['contexts']:
         groups = {}

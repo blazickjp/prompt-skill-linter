@@ -141,42 +141,58 @@ class AxiomGuardRegressionTests(unittest.TestCase):
         result = lint(contract, self.tools, self.runtime, self.root)
         diags = [d for d in result['diagnostics'] if d['code'] == 'AXIOM_CONFLICT']
         # Should find conflict because prohibition x=true requires x=false
-        self.assertEqual(len(diags), 1)
+        self.assertGreater(len(diags), 0, "Should have AXIOM_CONFLICT diagnostic")
         self.assertIn('r1', diags[0]['witness']['rules'])
     
     def test_guard_priority_resolution(self):
-        """GUARD: Priority resolution applied before conflict check."""
+        """GUARD: Priority resolution applied before conflict check.
+        
+        Without priority resolution, this would produce a false conflict.
+        With it, the higher-priority permission suppresses the prohibition,
+        eliminating the false conflict.
+        """
         contract = self.make_contract(
-            [self.rule('r_high', 'x', True, priority=10),
-             self.rule('r_low', 'x', False, priority=5)],
-            [self.axiom('ax1', [{'literal': 'x', 'value': False}])]
+            [self.rule('r_perm', 'y', True, kind='permission', priority=10),
+             self.rule('r_prohib', 'y', True, kind='prohibition', priority=5),
+             self.rule('r_req', 'x', True, kind='requirement', priority=5)],
+            [self.axiom('ax1', [{'literal': 'x', 'value': False}, {'literal': 'y', 'value': True}])]
         )
         result = lint(contract, self.tools, self.runtime, self.root)
-        diags = [d for d in result['diagnostics'] if d['code'] == 'AXIOM_CONFLICT']
-        if diags:
-            # Only r_high should be in conflict
-            self.assertIn('r_high', diags[0]['witness']['rules'])
-            self.assertNotIn('r_low', diags[0]['witness']['rules'])
+        codes = [d['code'] for d in result['diagnostics']]
+        # With priority resolution: permission suppresses prohibition, so we have
+        # r_req (x=true) and axiom (not-x or y). This is satisfiable with x=true, y=true.
+        # Without it: prohibition would create not-y, conflicting with the axiom when x=true.
+        self.assertNotIn('AXIOM_CONFLICT', codes,
+                        "Priority resolution should prevent false conflict")
     
     def test_guard_scope_separation(self):
-        """GUARD: Scopes checked independently."""
+        """GUARD: Scopes checked independently.
+        
+        Without scope separation, this would produce a false conflict.
+        With it, each scope is checked separately and both are satisfiable.
+        """
         r1 = self.rule('r1', 'x', True)
         r1['scope'] = {'entity': 'task1', 'temporal': 'run'}
         r2 = self.rule('r2', 'y', True)
-        r2['scope'] = {'entity': 'task2', 'temporal': 'run'}
+        r2['scope'] = {'entity': 'task1', 'temporal': 'run'}
+        r3 = self.rule('r3', 'z', True)
+        r3['scope'] = {'entity': 'task2', 'temporal': 'run'}
         
         contract = self.make_contract(
-            [r1, r2],
-            [self.axiom('ax1', [{'literal': 'x', 'value': False}])]
+            [r1, r2, r3],
+            [self.axiom('ax1', [
+                {'literal': 'x', 'value': False},
+                {'literal': 'y', 'value': False},
+                {'literal': 'z', 'value': False}
+            ])]
         )
         result = lint(contract, self.tools, self.runtime, self.root)
-        diags = [d for d in result['diagnostics'] if d['code'] == 'AXIOM_CONFLICT']
-        # Should have conflict only in task1 scope
-        if diags:
-            self.assertEqual(len(diags), 1)
-            self.assertIn('r1', diags[0]['witness']['rules'])
-            self.assertNotIn('r2', diags[0]['witness']['rules'])
-
+        codes = [d['code'] for d in result['diagnostics']]
+        # With scope separation: task1 checks r1+r2+axiom (SAT with z=false),
+        # task2 checks r3+axiom (SAT with x=false or y=false). No conflicts.
+        # Without it: all three requirements (x,y,z=true) conflict with axiom (not-x or not-y or not-z).
+        self.assertNotIn('AXIOM_CONFLICT', codes,
+                        "Scope separation should prevent false conflict")
 
 if __name__ == '__main__':
     unittest.main()

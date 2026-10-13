@@ -144,8 +144,8 @@ class AxiomConflictTests(unittest.TestCase):
         self.axiom('ax1', [{'literal': 'x', 'value': False}])
         result = self.run_lint()
         diags = [d for d in result['diagnostics'] if d['code'] == 'AXIOM_CONFLICT']
-        if diags:
-            self.assertIn('minimality_checked', diags[0]['witness'])
+        self.assertGreater(len(diags), 0, "Should have AXIOM_CONFLICT diagnostic")
+        self.assertIn('minimality_checked', diags[0]['witness'])
     
     def test_axiom_in_interpreted_rules(self):
         """Axioms appear in interpreted_rules field."""
@@ -153,10 +153,42 @@ class AxiomConflictTests(unittest.TestCase):
         self.axiom('ax1', [{'literal': 'x', 'value': False}])
         result = self.run_lint()
         diags = [d for d in result['diagnostics'] if d['code'] == 'AXIOM_CONFLICT']
-        if diags:
-            axiom_rules = [r for r in diags[0]['interpreted_rules'] if r.get('axiom')]
-            self.assertGreater(len(axiom_rules), 0)
-            self.assertEqual(axiom_rules[0]['id'], 'ax1')
+        self.assertGreater(len(diags), 0, "Should have AXIOM_CONFLICT diagnostic")
+        axiom_rules = [r for r in diags[0]['interpreted_rules'] if r.get('axiom')]
+        self.assertGreater(len(axiom_rules), 0)
+        self.assertEqual(axiom_rules[0]['id'], 'ax1')
+    
+    def test_input_dependent_axiom_unsupported(self):
+        """Regression: input-dependent axioms emit incomplete diagnostic."""
+        # Add vocabulary with external_input
+        self.contract['vocabulary'] = [
+            {'id': 'p', 'type': 'bool', 'role': 'external_input'}
+        ]
+        # Set context p=true
+        self.contract['contexts'][0]['facts'] = {'p': True}
+        # Unconditional requirement x=true
+        self.rule('r1', 'x', True)
+        # Axiom (not-p or not-x) - input-dependent
+        self.axiom('ax1', [{'literal': 'p', 'value': False}, {'literal': 'x', 'value': False}])
+        
+        result = self.run_lint()
+        codes = [d['code'] for d in result['diagnostics']]
+        
+        # Should get AXIOM_CHECK_INCOMPLETE for input-dependent axiom
+        self.assertIn('AXIOM_CHECK_INCOMPLETE', codes, 
+                     "Input-dependent axioms should emit incomplete diagnostic")
+        
+        # Should have incomplete coverage
+        self.assertTrue(result['coverage']['incomplete'],
+                       "Input-dependent axioms must set coverage.incomplete=true")
+        self.assertIn('search_bounds', result['coverage']['incomplete_reasons'],
+                     "Incomplete reason should include search_bounds")
+        
+        # Should NOT emit a false-clean result (no AXIOM_CONFLICT)
+        # Note: In this unsupported case, we return early with incomplete, not a false pass
+        incomplete_diags = [d for d in result['diagnostics'] if d['code'] == 'AXIOM_CHECK_INCOMPLETE']
+        self.assertGreater(len(incomplete_diags), 0)
+        self.assertIn('ax1', incomplete_diags[0]['witness']['input_dependent_axioms'])
 
 
 if __name__ == '__main__':
