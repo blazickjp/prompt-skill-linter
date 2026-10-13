@@ -121,6 +121,12 @@ class VocabularyTests(unittest.TestCase):
         self.assertEqual(len(ambig), 1)
         self.assertEqual(ambig[0]['severity'], 'error')
         self.assertEqual(ambig[0]['witness']['synonym'], 'PII')
+        
+        # Assert no false cross-owner diagnostics
+        cross_owner = [d for d in result['diagnostics'] if d['code'] == 'AMBIGUOUS_SYNONYM'
+                      and d['witness'].get('reason') == 'synonym_used_by_multiple_terms']
+        self.assertEqual(len(cross_owner), 0, 
+            "Duplicate within one entry should not emit cross-owner conflict")
     
     def test_ambiguous_synonym_equals_other_term_id(self):
         """Synonym that equals another entry's id should be an error."""
@@ -259,6 +265,90 @@ class VocabularyTests(unittest.TestCase):
         """Term used in context facts should not be reported unused."""
         self.vocab('api_version', 'int')
         self.contract['contexts'][0]['facts'] = {'api_version': 2}
+        result = self.run_lint()
+        unused = [d for d in result['diagnostics'] if d['code'] == 'UNUSED_VOCABULARY_ENTRY']
+        self.assertEqual(len(unused), 0)
+    
+    def test_context_facts_type_check_int_invalid(self):
+        """Context fact with wrong type for int should error."""
+        self.vocab('api_version', 'int')
+        self.contract['contexts'][0]['facts'] = {'api_version': 'two'}  # String instead of int
+        result = self.run_lint()
+        errors = [d for d in result['diagnostics'] if d['code'] == 'TYPE_MISMATCH'
+                  and d['witness'].get('location') == 'context_facts']
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(errors[0]['witness']['declared_type'], 'int')
+        self.assertEqual(errors[0]['witness']['value'], 'two')
+    
+    def test_context_facts_type_check_enum_invalid(self):
+        """Context fact with invalid enum value should error."""
+        self.vocab('status', 'enum', values=['pending', 'approved', 'rejected'])
+        self.contract['contexts'][0]['facts'] = {'status': 'bogus'}
+        result = self.run_lint()
+        errors = [d for d in result['diagnostics'] if d['code'] == 'TYPE_MISMATCH'
+                  and d['witness'].get('location') == 'context_facts']
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(errors[0]['witness']['value'], 'bogus')
+    
+    def test_context_facts_type_check_bool_invalid(self):
+        """Context fact with wrong type for bool should error."""
+        self.vocab('is_active', 'bool')
+        self.contract['contexts'][0]['facts'] = {'is_active': 'yes'}  # String instead of bool
+        result = self.run_lint()
+        errors = [d for d in result['diagnostics'] if d['code'] == 'TYPE_MISMATCH'
+                  and d['witness'].get('location') == 'context_facts']
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(errors[0]['witness']['declared_type'], 'bool')
+    
+    def test_bool_when_condition_invalid(self):
+        """Bool term with non-bool value in when should error."""
+        self.vocab('flag', 'bool')
+        self.rule('r1', when={'flag': 'yes'})  # String instead of bool
+        result = self.run_lint()
+        errors = [d for d in result['diagnostics'] if d['code'] == 'TYPE_MISMATCH'
+                  and d['witness'].get('declared_type') == 'bool'
+                  and d['witness'].get('condition_type') == 'when']
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(errors[0]['witness']['value'], 'yes')
+    
+    def test_bool_exception_condition_invalid(self):
+        """Bool term with non-bool value in exception should error."""
+        self.vocab('enabled', 'bool')
+        self.rule('r1', exceptions=[{'enabled': 1}])  # Int instead of bool
+        result = self.run_lint()
+        errors = [d for d in result['diagnostics'] if d['code'] == 'TYPE_MISMATCH'
+                  and d['witness'].get('declared_type') == 'bool'
+                  and d['witness'].get('condition_type') == 'exception']
+        self.assertEqual(len(errors), 1)
+    
+    def test_workflow_when_type_check_enum(self):
+        """Workflow.when with invalid enum value should error."""
+        self.vocab('mode', 'enum', values=['test', 'prod'])
+        self.rule('ad', literal='x')
+        self.contract['workflows'] = [{
+            'id': 'wf1',
+            'advertisement_rule': 'ad',
+            'when': {'mode': 'invalid'},  # Invalid enum value
+            'goal': ['done'],
+            'actions': []
+        }]
+        result = self.run_lint()
+        errors = [d for d in result['diagnostics'] if d['code'] == 'TYPE_MISMATCH'
+                  and d['witness'].get('condition_type') == 'workflow_when']
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(errors[0]['witness']['value'], 'invalid')
+    
+    def test_workflow_when_tracks_usage(self):
+        """Term used in workflow.when should not be unused."""
+        self.vocab('environment', 'enum', values=['dev', 'prod'])
+        self.rule('ad', literal='x')
+        self.contract['workflows'] = [{
+            'id': 'wf1',
+            'advertisement_rule': 'ad',
+            'when': {'environment': 'prod'},
+            'goal': ['done'],
+            'actions': []
+        }]
         result = self.run_lint()
         unused = [d for d in result['diagnostics'] if d['code'] == 'UNUSED_VOCABULARY_ENTRY']
         self.assertEqual(len(unused), 0)

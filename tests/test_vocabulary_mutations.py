@@ -10,14 +10,19 @@ from pathlib import Path
 
 
 def run_specific_test(test_name):
-    """Run a specific test and return True if it passes."""
+    """Run a specific test and return (passed, is_behavioral_failure)."""
     result = subprocess.run(
         [sys.executable, '-m', 'pytest', f'tests/test_vocabulary.py::{test_name}', '-xvs'],
         capture_output=True,
         text=True,
         cwd=Path(__file__).parent.parent
     )
-    return result.returncode == 0
+    passed = result.returncode == 0
+    
+    # Check if failure was due to collection/import/syntax error vs assertion failure
+    is_behavioral = 'FAILED' in result.stdout or 'AssertionError' in result.stdout or 'assert' in result.stdout.lower()
+    
+    return passed, is_behavioral
 
 
 def mutate_file(file_path, old_code, new_code):
@@ -52,8 +57,8 @@ def test_mutation_ambiguous_synonym():
     
     print("\n=== Mutation Test 1: AMBIGUOUS_SYNONYM (own id) ===")
     print("Testing that the test passes with the check present...")
-    assert run_specific_test('VocabularyTests::test_ambiguous_synonym_equals_own_id'), \
-        "Test should pass before mutation"
+    passed, _ = run_specific_test('VocabularyTests::test_ambiguous_synonym_equals_own_id')
+    assert passed, "Test should pass before mutation"
     print("✓ Test passes with check present")
     
     print("\nMutating: removing AMBIGUOUS_SYNONYM own-id check logic...")
@@ -61,9 +66,10 @@ def test_mutation_ambiguous_synonym():
     
     try:
         print("Testing that the test fails with the check removed...")
-        assert not run_specific_test('VocabularyTests::test_ambiguous_synonym_equals_own_id'), \
-            "Test should fail after removing the check"
-        print("✓ Test fails with check removed - mutation test passed!")
+        passed, is_behavioral = run_specific_test('VocabularyTests::test_ambiguous_synonym_equals_own_id')
+        assert not passed, "Test should fail after removing the check"
+        assert is_behavioral, "Failure must be behavioral (assertion), not syntax/collection error"
+        print("✓ Test fails with check removed - behavioral kill confirmed!")
     finally:
         restore_file(engine_path, original)
         print("✓ Restored original file")
@@ -88,8 +94,8 @@ def test_mutation_undefined_term():
     
     print("\n=== Mutation Test 2: UNDEFINED_TERM ===")
     print("Testing that the test passes with the check present...")
-    assert run_specific_test('VocabularyTests::test_undefined_literal_when_vocabulary_exists'), \
-        "Test should pass before mutation"
+    passed, _ = run_specific_test('VocabularyTests::test_undefined_literal_when_vocabulary_exists')
+    assert passed, "Test should pass before mutation"
     print("✓ Test passes with check present")
     
     print("\nMutating: removing UNDEFINED_TERM check logic...")
@@ -97,9 +103,10 @@ def test_mutation_undefined_term():
     
     try:
         print("Testing that the test fails with the check removed...")
-        assert not run_specific_test('VocabularyTests::test_undefined_literal_when_vocabulary_exists'), \
-            "Test should fail after removing the check"
-        print("✓ Test fails with check removed - mutation test passed!")
+        passed, is_behavioral = run_specific_test('VocabularyTests::test_undefined_literal_when_vocabulary_exists')
+        assert not passed, "Test should fail after removing the check"
+        assert is_behavioral, "Failure must be behavioral (assertion), not syntax/collection error"
+        print("✓ Test fails with check removed - behavioral kill confirmed!")
     finally:
         restore_file(engine_path, original)
         print("✓ Restored original file")
@@ -119,8 +126,8 @@ def test_mutation_unused_vocabulary():
     
     print("\n=== Mutation Test 3: UNUSED_VOCABULARY_ENTRY ===")
     print("Testing that the test passes with the check present...")
-    assert run_specific_test('VocabularyTests::test_unused_vocabulary_entry'), \
-        "Test should pass before mutation"
+    passed, _ = run_specific_test('VocabularyTests::test_unused_vocabulary_entry')
+    assert passed, "Test should pass before mutation"
     print("✓ Test passes with check present")
     
     print("\nMutating: removing UNUSED_VOCABULARY_ENTRY check logic...")
@@ -128,9 +135,10 @@ def test_mutation_unused_vocabulary():
     
     try:
         print("Testing that the test fails with the check removed...")
-        assert not run_specific_test('VocabularyTests::test_unused_vocabulary_entry'), \
-            "Test should fail after removing the check"
-        print("✓ Test fails with check removed - mutation test passed!")
+        passed, is_behavioral = run_specific_test('VocabularyTests::test_unused_vocabulary_entry')
+        assert not passed, "Test should fail after removing the check"
+        assert is_behavioral, "Failure must be behavioral (assertion), not syntax/collection error"
+        print("✓ Test fails with check removed - behavioral kill confirmed!")
     finally:
         restore_file(engine_path, original)
         print("✓ Restored original file")
@@ -156,8 +164,8 @@ def test_mutation_type_mismatch():
     
     print("\n=== Mutation Test 4: TYPE_MISMATCH (bool) ===")
     print("Testing that the test passes with the check present...")
-    assert run_specific_test('VocabularyTests::test_type_mismatch_bool_declared_as_enum'), \
-        "Test should pass before mutation"
+    passed, _ = run_specific_test('VocabularyTests::test_type_mismatch_bool_declared_as_enum')
+    assert passed, "Test should pass before mutation"
     print("✓ Test passes with check present")
     
     print("\nMutating: removing TYPE_MISMATCH check logic...")
@@ -165,9 +173,10 @@ def test_mutation_type_mismatch():
     
     try:
         print("Testing that the test fails with the check removed...")
-        assert not run_specific_test('VocabularyTests::test_type_mismatch_bool_declared_as_enum'), \
-            "Test should fail after removing the check"
-        print("✓ Test fails with check removed - mutation test passed!")
+        passed, is_behavioral = run_specific_test('VocabularyTests::test_type_mismatch_bool_declared_as_enum')
+        assert not passed, "Test should fail after removing the check"
+        assert is_behavioral, "Failure must be behavioral (assertion), not syntax/collection error"
+        print("✓ Test fails with check removed - behavioral kill confirmed!")
     finally:
         restore_file(engine_path, original)
         print("✓ Restored original file")
@@ -194,8 +203,8 @@ def test_mutation_action_role():
     
     print("\n=== Mutation Test 5: ACTION_VOCABULARY_ROLE_MISMATCH ===")
     print("Testing that the test passes with the check present...")
-    assert run_specific_test('VocabularyTests::test_action_role_mismatch_in_ordering_rule'), \
-        "Test should pass before mutation"
+    passed, _ = run_specific_test('VocabularyTests::test_action_role_mismatch_in_ordering_rule')
+    assert passed, "Test should pass before mutation"
     print("✓ Test passes with check present")
     
     print("\nMutating: removing ACTION_VOCABULARY_ROLE_MISMATCH check logic...")
@@ -203,9 +212,10 @@ def test_mutation_action_role():
     
     try:
         print("Testing that the test fails with the check removed...")
-        assert not run_specific_test('VocabularyTests::test_action_role_mismatch_in_ordering_rule'), \
-            "Test should fail after removing the check"
-        print("✓ Test fails with check removed - mutation test passed!")
+        passed, is_behavioral = run_specific_test('VocabularyTests::test_action_role_mismatch_in_ordering_rule')
+        assert not passed, "Test should fail after removing the check"
+        assert is_behavioral, "Failure must be behavioral (assertion), not syntax/collection error"
+        print("✓ Test fails with check removed - behavioral kill confirmed!")
     finally:
         restore_file(engine_path, original)
         print("✓ Restored original file")
@@ -215,24 +225,21 @@ def test_mutation_enum_value():
     """Mutation test: removing enum TYPE_MISMATCH check should fail its test."""
     engine_path = Path(__file__).parent.parent / 'prompt_skill_linter' / 'engine.py'
     
-    # The code that checks enum values
-    check_code = '''                # Type validation
-                if term_type == 'enum':
-                    declared_values = set(term.get('values', []))
-                    if declared_values and fact_value not in declared_values:
+    # The code that checks enum values - just the diagnostic emission
+    check_code = '''                    if declared_values and fact_value not in declared_values:
                         diagnostics.append(diagnostic('TYPE_MISMATCH', 'exact', 'error', [rule], {},
                             {'fact': fact_name, 'declared_type': 'enum', 'value': fact_value,
                              'declared_values': sorted(declared_values),
                              'rule_id': rule['id'], 'condition_type': 'when'}))'''
     
-    # Mutated version that removes the check
-    mutated_code = '''                # Mutation: removed enum TYPE_MISMATCH check
-                pass'''
+    # Mutated version that disables the check but preserves syntax
+    mutated_code = '''                    if declared_values and fact_value not in declared_values:
+                        pass  # Mutation: removed enum TYPE_MISMATCH check'''
     
     print("\n=== Mutation Test 6: TYPE_MISMATCH (enum) ===")
     print("Testing that the test passes with the check present...")
-    assert run_specific_test('VocabularyTests::test_enum_value_invalid_in_when_condition'), \
-        "Test should pass before mutation"
+    passed, _ = run_specific_test('VocabularyTests::test_enum_value_invalid_in_when_condition')
+    assert passed, "Test should pass before mutation"
     print("✓ Test passes with check present")
     
     print("\nMutating: removing enum TYPE_MISMATCH check logic...")
@@ -240,9 +247,10 @@ def test_mutation_enum_value():
     
     try:
         print("Testing that the test fails with the check removed...")
-        assert not run_specific_test('VocabularyTests::test_enum_value_invalid_in_when_condition'), \
-            "Test should fail after removing the check"
-        print("✓ Test fails with check removed - mutation test passed!")
+        passed, is_behavioral = run_specific_test('VocabularyTests::test_enum_value_invalid_in_when_condition')
+        assert not passed, "Test should fail after removing the check"
+        assert is_behavioral, "Failure must be behavioral (assertion), not syntax/collection error"
+        print("✓ Test fails with check removed - behavioral kill confirmed!")
     finally:
         restore_file(engine_path, original)
         print("✓ Restored original file")
@@ -252,22 +260,21 @@ def test_mutation_int_value():
     """Mutation test: removing int TYPE_MISMATCH check should fail its test."""
     engine_path = Path(__file__).parent.parent / 'prompt_skill_linter' / 'engine.py'
     
-    # The code that checks int values
-    check_code = '''                elif term_type == 'int':
-                    if type(fact_value) not in (int, type(None)):
+    # The code that checks int values - just the diagnostic emission
+    check_code = '''                    if type(fact_value) not in (int, type(None)):
                         diagnostics.append(diagnostic('TYPE_MISMATCH', 'exact', 'error', [rule], {},
                             {'fact': fact_name, 'declared_type': 'int', 'value': fact_value,
                              'value_type': type(fact_value).__name__,
                              'rule_id': rule['id'], 'condition_type': 'when'}))'''
     
-    # Mutated version that removes the check
-    mutated_code = '''                # Mutation: removed int TYPE_MISMATCH check
-                pass'''
+    # Mutated version that disables the check but preserves syntax
+    mutated_code = '''                    if type(fact_value) not in (int, type(None)):
+                        pass  # Mutation: removed int TYPE_MISMATCH check'''
     
     print("\n=== Mutation Test 7: TYPE_MISMATCH (int) ===")
     print("Testing that the test passes with the check present...")
-    assert run_specific_test('VocabularyTests::test_int_value_non_numeric_in_when'), \
-        "Test should pass before mutation"
+    passed, _ = run_specific_test('VocabularyTests::test_int_value_non_numeric_in_when')
+    assert passed, "Test should pass before mutation"
     print("✓ Test passes with check present")
     
     print("\nMutating: removing int TYPE_MISMATCH check logic...")
@@ -275,9 +282,10 @@ def test_mutation_int_value():
     
     try:
         print("Testing that the test fails with the check removed...")
-        assert not run_specific_test('VocabularyTests::test_int_value_non_numeric_in_when'), \
-            "Test should fail after removing the check"
-        print("✓ Test fails with check removed - mutation test passed!")
+        passed, is_behavioral = run_specific_test('VocabularyTests::test_int_value_non_numeric_in_when')
+        assert not passed, "Test should fail after removing the check"
+        assert is_behavioral, "Failure must be behavioral (assertion), not syntax/collection error"
+        print("✓ Test fails with check removed - behavioral kill confirmed!")
     finally:
         restore_file(engine_path, original)
         print("✓ Restored original file")
@@ -287,11 +295,8 @@ def test_mutation_action_state_conflation():
     """Mutation test: removing ACTION_STATE_CONFLATION check should fail its test."""
     engine_path = Path(__file__).parent.parent / 'prompt_skill_linter' / 'engine.py'
     
-    # The code that checks for action/state conflation
-    check_code = '''    # Check for controlled_action used as Boolean effect/clause
-    for term_id, term in vocabulary.items():
-        if term.get('role') == 'controlled_action':
-            if term_id in literal_types:
+    # The code that checks for action/state conflation - just the loop body
+    check_code = '''            if term_id in literal_types:
                 # This controlled_action is used as a boolean literal
                 usages = literal_types[term_id]
                 for rule_id, usage_type, _ in usages:
@@ -299,14 +304,14 @@ def test_mutation_action_state_conflation():
                         {'action_id': term_id, 'role': 'controlled_action',
                          'conflicting_usage': usage_type, 'rule_id': rule_id}))'''
     
-    # Mutated version that removes the check
-    mutated_code = '''    # Mutation: removed ACTION_STATE_CONFLATION check
-    pass'''
+    # Mutated version that disables the check but preserves syntax
+    mutated_code = '''            if term_id in literal_types:
+                pass  # Mutation: removed ACTION_STATE_CONFLATION check'''
     
     print("\n=== Mutation Test 8: ACTION_STATE_CONFLATION ===")
     print("Testing that the test passes with the check present...")
-    assert run_specific_test('VocabularyTests::test_controlled_action_used_as_boolean_error'), \
-        "Test should pass before mutation"
+    passed, _ = run_specific_test('VocabularyTests::test_controlled_action_used_as_boolean_error')
+    assert passed, "Test should pass before mutation"
     print("✓ Test passes with check present")
     
     print("\nMutating: removing ACTION_STATE_CONFLATION check logic...")
@@ -314,9 +319,10 @@ def test_mutation_action_state_conflation():
     
     try:
         print("Testing that the test fails with the check removed...")
-        assert not run_specific_test('VocabularyTests::test_controlled_action_used_as_boolean_error'), \
-            "Test should fail after removing the check"
-        print("✓ Test fails with check removed - mutation test passed!")
+        passed, is_behavioral = run_specific_test('VocabularyTests::test_controlled_action_used_as_boolean_error')
+        assert not passed, "Test should fail after removing the check"
+        assert is_behavioral, "Failure must be behavioral (assertion), not syntax/collection error"
+        print("✓ Test fails with check removed - behavioral kill confirmed!")
     finally:
         restore_file(engine_path, original)
         print("✓ Restored original file")

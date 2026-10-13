@@ -385,6 +385,9 @@ def check_vocabulary(contract):
             if syn in seen_synonyms:
                 diagnostics.append(diagnostic('AMBIGUOUS_SYNONYM', 'exact', 'error', [], {},
                     {'synonym': syn, 'reason': 'duplicate_spelling_in_entry', 'term': term['id']}))
+                # Skip cross-owner checks for duplicates within the same entry
+                seen_synonyms.add(syn)
+                continue
             seen_synonyms.add(syn)
             
             # Check if synonym equals the entry's own id
@@ -450,6 +453,12 @@ def check_vocabulary(contract):
                             {'fact': fact_name, 'declared_type': 'int', 'value': fact_value,
                              'value_type': type(fact_value).__name__,
                              'rule_id': rule['id'], 'condition_type': 'when'}))
+                elif term_type == 'bool':
+                    if type(fact_value) not in (bool, type(None)):
+                        diagnostics.append(diagnostic('TYPE_MISMATCH', 'exact', 'error', [rule], {},
+                            {'fact': fact_name, 'declared_type': 'bool', 'value': fact_value,
+                             'value_type': type(fact_value).__name__,
+                             'rule_id': rule['id'], 'condition_type': 'when'}))
         
         # Check 'exceptions' conditions
         for exception in rule.get('exceptions', []):
@@ -475,12 +484,74 @@ def check_vocabulary(contract):
                                 {'fact': fact_name, 'declared_type': 'int', 'value': fact_value,
                                  'value_type': type(fact_value).__name__,
                                  'rule_id': rule['id'], 'condition_type': 'exception'}))
+                    elif term_type == 'bool':
+                        if type(fact_value) not in (bool, type(None)):
+                            diagnostics.append(diagnostic('TYPE_MISMATCH', 'exact', 'error', [rule], {},
+                                {'fact': fact_name, 'declared_type': 'bool', 'value': fact_value,
+                                 'value_type': type(fact_value).__name__,
+                                 'rule_id': rule['id'], 'condition_type': 'exception'}))
     
-    # Track usage in context facts
+    # Track usage in context facts and validate types
     for context in contract['contexts']:
-        for fact_name in context.get('facts', {}):
+        for fact_name, fact_value in context.get('facts', {}).items():
             used_terms.add(fact_name)
             term_usage.setdefault(fact_name, []).append(('context', context['id']))
+            
+            if fact_name in vocabulary:
+                term = vocabulary[fact_name]
+                term_type = term['type']
+                
+                # Type validation for context facts
+                if term_type == 'enum':
+                    declared_values = set(term.get('values', []))
+                    if declared_values and fact_value not in declared_values:
+                        diagnostics.append(diagnostic('TYPE_MISMATCH', 'exact', 'error', [], {},
+                            {'fact': fact_name, 'declared_type': 'enum', 'value': fact_value,
+                             'declared_values': sorted(declared_values),
+                             'context_id': context['id'], 'location': 'context_facts'}))
+                elif term_type == 'int':
+                    if type(fact_value) not in (int, type(None)):
+                        diagnostics.append(diagnostic('TYPE_MISMATCH', 'exact', 'error', [], {},
+                            {'fact': fact_name, 'declared_type': 'int', 'value': fact_value,
+                             'value_type': type(fact_value).__name__,
+                             'context_id': context['id'], 'location': 'context_facts'}))
+                elif term_type == 'bool':
+                    if type(fact_value) not in (bool, type(None)):
+                        diagnostics.append(diagnostic('TYPE_MISMATCH', 'exact', 'error', [], {},
+                            {'fact': fact_name, 'declared_type': 'bool', 'value': fact_value,
+                             'value_type': type(fact_value).__name__,
+                             'context_id': context['id'], 'location': 'context_facts'}))
+    
+    # Track usage in workflow.when conditions and validate types
+    for workflow in contract.get('workflows', []):
+        for fact_name, fact_value in workflow.get('when', {}).items():
+            used_terms.add(fact_name)
+            term_usage.setdefault(fact_name, []).append(('workflow', workflow['id']))
+            
+            if fact_name in vocabulary:
+                term = vocabulary[fact_name]
+                term_type = term['type']
+                
+                # Type validation for workflow.when
+                if term_type == 'enum':
+                    declared_values = set(term.get('values', []))
+                    if declared_values and fact_value not in declared_values:
+                        diagnostics.append(diagnostic('TYPE_MISMATCH', 'exact', 'error', [], {},
+                            {'fact': fact_name, 'declared_type': 'enum', 'value': fact_value,
+                             'declared_values': sorted(declared_values),
+                             'workflow_id': workflow['id'], 'condition_type': 'workflow_when'}))
+                elif term_type == 'int':
+                    if type(fact_value) not in (int, type(None)):
+                        diagnostics.append(diagnostic('TYPE_MISMATCH', 'exact', 'error', [], {},
+                            {'fact': fact_name, 'declared_type': 'int', 'value': fact_value,
+                             'value_type': type(fact_value).__name__,
+                             'workflow_id': workflow['id'], 'condition_type': 'workflow_when'}))
+                elif term_type == 'bool':
+                    if type(fact_value) not in (bool, type(None)):
+                        diagnostics.append(diagnostic('TYPE_MISMATCH', 'exact', 'error', [], {},
+                            {'fact': fact_name, 'declared_type': 'bool', 'value': fact_value,
+                             'value_type': type(fact_value).__name__,
+                             'workflow_id': workflow['id'], 'condition_type': 'workflow_when'}))
     
     # Check for controlled_action used as Boolean effect/clause
     for term_id, term in vocabulary.items():
