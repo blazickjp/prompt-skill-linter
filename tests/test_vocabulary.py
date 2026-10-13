@@ -85,7 +85,7 @@ class VocabularyTests(unittest.TestCase):
         diags = [d for d in result['diagnostics'] if d['code'] == 'UNDEFINED_TERM']
         self.assertEqual(len(diags), 1)
         self.assertEqual(diags[0]['severity'], 'info')
-        self.assertEqual(diags[0]['witness']['literal'], 'authenticated')
+        self.assertEqual(diags[0]['witness']['term'], 'authenticated')
         self.assertTrue(diags[0]['witness']['auto_declared'])
     
     def test_unused_vocabulary_entry(self):
@@ -104,12 +104,23 @@ class VocabularyTests(unittest.TestCase):
         self.vocab('personal_data', 'bool', synonyms=['PII'])
         self.vocab('protected_info', 'bool', synonyms=['PII'])
         result = self.run_lint()
-        ambig = [d for d in result['diagnostics'] if d['code'] == 'AMBIGUOUS_SYNONYM']
+        ambig = [d for d in result['diagnostics'] if d['code'] == 'AMBIGUOUS_SYNONYM'
+                 and d['witness'].get('reason') == 'synonym_used_by_multiple_terms']
         self.assertEqual(len(ambig), 1)
         self.assertEqual(ambig[0]['severity'], 'error')
         self.assertEqual(ambig[0]['witness']['synonym'], 'PII')
         self.assertIn('personal_data', ambig[0]['witness']['conflicting_terms'])
         self.assertIn('protected_info', ambig[0]['witness']['conflicting_terms'])
+    
+    def test_ambiguous_synonym_duplicate_in_one_entry(self):
+        """Duplicate synonym within one entry should be an error."""
+        self.vocab('data', 'bool', synonyms=['PII', 'PII'])
+        result = self.run_lint()
+        ambig = [d for d in result['diagnostics'] if d['code'] == 'AMBIGUOUS_SYNONYM'
+                 and d['witness'].get('reason') == 'duplicate_spelling_in_entry']
+        self.assertEqual(len(ambig), 1)
+        self.assertEqual(ambig[0]['severity'], 'error')
+        self.assertEqual(ambig[0]['witness']['synonym'], 'PII')
     
     def test_ambiguous_synonym_equals_other_term_id(self):
         """Synonym that equals another entry's id should be an error."""
@@ -165,9 +176,10 @@ class VocabularyTests(unittest.TestCase):
         self.vocab('status', 'enum', values=['pending', 'approved', 'rejected'])
         self.rule('r1', when={'status': 'invalid_value'})
         result = self.run_lint()
-        errors = [d for d in result['diagnostics'] if d['code'] == 'INVALID_ENUM_VALUE']
+        errors = [d for d in result['diagnostics'] if d['code'] == 'TYPE_MISMATCH']
         self.assertEqual(len(errors), 1)
         self.assertEqual(errors[0]['severity'], 'error')
+        self.assertEqual(errors[0]['witness']['declared_type'], 'enum')
         self.assertEqual(errors[0]['witness']['value'], 'invalid_value')
         self.assertIn('pending', errors[0]['witness']['declared_values'])
     
@@ -175,14 +187,15 @@ class VocabularyTests(unittest.TestCase):
         """Using valid enum value in when condition should not error."""
         self.vocab('status', 'enum', values=['pending', 'approved', 'rejected'])
         self.rule('r1', when={'status': 'pending'})
-        self.assertNotIn('INVALID_ENUM_VALUE', self.codes())
+        self.assertNotIn('TYPE_MISMATCH', self.codes())
     
     def test_enum_value_invalid_in_exception(self):
         """Using invalid enum value in exception should error."""
         self.vocab('priority', 'enum', values=['low', 'medium', 'high'])
         self.rule('r1', exceptions=[{'priority': 'critical'}])
         result = self.run_lint()
-        errors = [d for d in result['diagnostics'] if d['code'] == 'INVALID_ENUM_VALUE']
+        errors = [d for d in result['diagnostics'] if d['code'] == 'TYPE_MISMATCH' 
+                  and d['witness'].get('declared_type') == 'enum']
         self.assertEqual(len(errors), 1)
         self.assertEqual(errors[0]['witness']['condition_type'], 'exception')
     
@@ -190,7 +203,19 @@ class VocabularyTests(unittest.TestCase):
         """Enum without declared values should not error (values optional)."""
         self.vocab('status', 'enum')
         self.rule('r1', when={'status': 'any_value'})
-        self.assertNotIn('INVALID_ENUM_VALUE', self.codes())
+        result = self.run_lint()
+        # No TYPE_MISMATCH for missing values list
+        type_errors = [d for d in result['diagnostics'] if d['code'] == 'TYPE_MISMATCH']
+        self.assertEqual(len(type_errors), 0)
+    
+    def test_enum_used_in_when_not_reported_unused(self):
+        """Enum used in when condition should not be reported as unused."""
+        self.vocab('status', 'enum', values=['pending', 'approved'])
+        self.contract['contexts'][0]['facts'] = {'status': 'pending'}
+        self.rule('r1', when={'status': 'pending'})
+        result = self.run_lint()
+        unused = [d for d in result['diagnostics'] if d['code'] == 'UNUSED_VOCABULARY_ENTRY']
+        self.assertEqual(len(unused), 0)
     
     # === Int unit checks ===
     
@@ -199,33 +224,44 @@ class VocabularyTests(unittest.TestCase):
         self.vocab('timeout', 'int', unit='seconds')
         self.rule('r1', when={'timeout': 'thirty'})  # String instead of int
         result = self.run_lint()
-        errors = [d for d in result['diagnostics'] if d['code'] == 'INVALID_INT_VALUE']
+        errors = [d for d in result['diagnostics'] if d['code'] == 'TYPE_MISMATCH'
+                  and d['witness'].get('declared_type') == 'int']
         self.assertEqual(len(errors), 1)
         self.assertEqual(errors[0]['severity'], 'error')
         self.assertEqual(errors[0]['witness']['value'], 'thirty')
         self.assertEqual(errors[0]['witness']['value_type'], 'str')
-        self.assertEqual(errors[0]['witness']['unit'], 'seconds')
     
     def test_int_value_numeric_valid(self):
         """Using numeric value for int fact should not error."""
         self.vocab('timeout', 'int', unit='seconds')
         self.rule('r1', when={'timeout': 30})
-        self.assertNotIn('INVALID_INT_VALUE', self.codes())
+        self.assertNotIn('TYPE_MISMATCH', self.codes())
     
     def test_int_value_null_allowed(self):
         """Null value for int fact should be allowed (missing fact)."""
         self.vocab('count', 'int')
         self.rule('r1', when={'count': None})
-        self.assertNotIn('INVALID_INT_VALUE', self.codes())
+        result = self.run_lint()
+        type_errors = [d for d in result['diagnostics'] if d['code'] == 'TYPE_MISMATCH']
+        self.assertEqual(len(type_errors), 0)
     
     def test_int_value_bool_in_exception(self):
         """Using bool value for int fact in exception should error."""
         self.vocab('retries', 'int')
         self.rule('r1', exceptions=[{'retries': True}])  # Bool instead of int
         result = self.run_lint()
-        errors = [d for d in result['diagnostics'] if d['code'] == 'INVALID_INT_VALUE']
+        errors = [d for d in result['diagnostics'] if d['code'] == 'TYPE_MISMATCH'
+                  and d['witness'].get('declared_type') == 'int']
         self.assertEqual(len(errors), 1)
         self.assertEqual(errors[0]['witness']['condition_type'], 'exception')
+    
+    def test_term_used_in_context_facts_not_unused(self):
+        """Term used in context facts should not be reported unused."""
+        self.vocab('api_version', 'int')
+        self.contract['contexts'][0]['facts'] = {'api_version': 2}
+        result = self.run_lint()
+        unused = [d for d in result['diagnostics'] if d['code'] == 'UNUSED_VOCABULARY_ENTRY']
+        self.assertEqual(len(unused), 0)
     
     # === Role checks (dots comment requirement) ===
     
@@ -302,6 +338,18 @@ class VocabularyTests(unittest.TestCase):
         }]
         # Should not trigger ACTION_VOCABULARY_ROLE_MISMATCH
         self.assertNotIn('ACTION_VOCABULARY_ROLE_MISMATCH', self.codes())
+    
+    def test_controlled_action_used_as_boolean_error(self):
+        """controlled_action ID used as boolean effect/clause should error."""
+        self.vocab('send_email', 'bool', role='controlled_action')
+        # Using it as a boolean effect - this is conflation
+        self.rule('r1', literal='send_email', value=True)
+        result = self.run_lint()
+        errors = [d for d in result['diagnostics'] if d['code'] == 'ACTION_STATE_CONFLATION']
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(errors[0]['severity'], 'error')
+        self.assertEqual(errors[0]['witness']['action_id'], 'send_email')
+        self.assertEqual(errors[0]['witness']['conflicting_usage'], 'bool_effect')
     
     # === Tests for dots requirements ===
     
@@ -411,8 +459,8 @@ class VocabularyTests(unittest.TestCase):
         undefined = [d for d in result['diagnostics'] if d['code'] == 'UNDEFINED_TERM']
         # Should have UNDEFINED_TERM for 'authenticated' and 'authorized'
         self.assertEqual(len(undefined), 2)
-        literals = {d['witness']['literal'] for d in undefined}
-        self.assertEqual(literals, {'authenticated', 'authorized'})
+        terms = {d['witness']['term'] for d in undefined}
+        self.assertEqual(terms, {'authenticated', 'authorized'})
 
 
 if __name__ == '__main__':

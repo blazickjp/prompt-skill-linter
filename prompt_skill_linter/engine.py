@@ -378,7 +378,15 @@ def check_vocabulary(contract):
     all_term_ids = set(vocabulary.keys())
     
     for term in vocabulary.values():
-        for syn in term.get('synonyms', []):
+        # Check for duplicate synonyms within the same entry
+        synonyms_list = term.get('synonyms', [])
+        seen_synonyms = set()
+        for syn in synonyms_list:
+            if syn in seen_synonyms:
+                diagnostics.append(diagnostic('AMBIGUOUS_SYNONYM', 'exact', 'error', [], {},
+                    {'synonym': syn, 'reason': 'duplicate_spelling_in_entry', 'term': term['id']}))
+            seen_synonyms.add(syn)
+            
             # Check if synonym equals the entry's own id
             if syn == term['id']:
                 diagnostics.append(diagnostic('AMBIGUOUS_SYNONYM', 'exact', 'error', [], {},
@@ -396,75 +404,94 @@ def check_vocabulary(contract):
             else:
                 synonym_to_term[syn] = term['id']
     
-    # Collect all literals used in rules and clauses (not ordering rules - those are actions)
-    used_literals = set()
-    literal_usage = {}  # literal -> list of rule ids where it's used
+    # Collect all vocabulary terms used anywhere (effects, clauses, conditions, context facts)
+    used_terms = set()
+    term_usage = {}  # term -> list of (rule_id, usage_location)
     literal_types = {}  # literal -> list of (rule_id, usage_type, details)
     
+    # Track usage in effects and clauses (boolean usage)
     for rule in contract['rules']:
         if 'effect' in rule:
             lit = rule['effect']['literal']
-            used_literals.add(lit)
-            literal_usage.setdefault(lit, []).append(rule['id'])
-            # Track that this literal is used as bool with a specific value
+            used_terms.add(lit)
+            term_usage.setdefault(lit, []).append((rule['id'], 'effect'))
             literal_types.setdefault(lit, []).append(
                 (rule['id'], 'bool_effect', {'value': rule['effect']['value']}))
         if 'clause' in rule:
             for atom in rule['clause']:
                 lit = atom['literal']
-                used_literals.add(lit)
-                literal_usage.setdefault(lit, []).append(rule['id'])
+                used_terms.add(lit)
+                term_usage.setdefault(lit, []).append((rule['id'], 'clause'))
                 literal_types.setdefault(lit, []).append(
                     (rule['id'], 'bool_clause', {'value': atom['value']}))
     
-    # Check enum values and int unit usage in conditions (when/exceptions)
+    # Track usage in when/exceptions (condition usage) and validate types
     for rule in contract['rules']:
         # Check 'when' conditions
         for fact_name, fact_value in rule.get('when', {}).items():
+            used_terms.add(fact_name)
+            term_usage.setdefault(fact_name, []).append((rule['id'], 'when'))
+            
             if fact_name in vocabulary:
                 term = vocabulary[fact_name]
                 term_type = term['type']
                 
-                # Enum value validation
+                # Type validation
                 if term_type == 'enum':
                     declared_values = set(term.get('values', []))
                     if declared_values and fact_value not in declared_values:
-                        diagnostics.append(diagnostic('INVALID_ENUM_VALUE', 'exact', 'error', [rule], {},
-                            {'fact': fact_name, 'value': fact_value, 
-                             'declared_values': sorted(declared_values), 
+                        diagnostics.append(diagnostic('TYPE_MISMATCH', 'exact', 'error', [rule], {},
+                            {'fact': fact_name, 'declared_type': 'enum', 'value': fact_value,
+                             'declared_values': sorted(declared_values),
                              'rule_id': rule['id'], 'condition_type': 'when'}))
-                
-                # Int unit validation (check that value is numeric)
                 elif term_type == 'int':
                     if type(fact_value) not in (int, type(None)):
-                        unit = term.get('unit', 'unspecified')
-                        diagnostics.append(diagnostic('INVALID_INT_VALUE', 'exact', 'error', [rule], {},
-                            {'fact': fact_name, 'value': fact_value, 'value_type': type(fact_value).__name__,
-                             'unit': unit, 'rule_id': rule['id'], 'condition_type': 'when'}))
+                        diagnostics.append(diagnostic('TYPE_MISMATCH', 'exact', 'error', [rule], {},
+                            {'fact': fact_name, 'declared_type': 'int', 'value': fact_value,
+                             'value_type': type(fact_value).__name__,
+                             'rule_id': rule['id'], 'condition_type': 'when'}))
         
         # Check 'exceptions' conditions
         for exception in rule.get('exceptions', []):
             for fact_name, fact_value in exception.items():
+                used_terms.add(fact_name)
+                term_usage.setdefault(fact_name, []).append((rule['id'], 'exception'))
+                
                 if fact_name in vocabulary:
                     term = vocabulary[fact_name]
                     term_type = term['type']
                     
-                    # Enum value validation
+                    # Type validation
                     if term_type == 'enum':
                         declared_values = set(term.get('values', []))
                         if declared_values and fact_value not in declared_values:
-                            diagnostics.append(diagnostic('INVALID_ENUM_VALUE', 'exact', 'error', [rule], {},
-                                {'fact': fact_name, 'value': fact_value,
+                            diagnostics.append(diagnostic('TYPE_MISMATCH', 'exact', 'error', [rule], {},
+                                {'fact': fact_name, 'declared_type': 'enum', 'value': fact_value,
                                  'declared_values': sorted(declared_values),
                                  'rule_id': rule['id'], 'condition_type': 'exception'}))
-                    
-                    # Int unit validation
                     elif term_type == 'int':
                         if type(fact_value) not in (int, type(None)):
-                            unit = term.get('unit', 'unspecified')
-                            diagnostics.append(diagnostic('INVALID_INT_VALUE', 'exact', 'error', [rule], {},
-                                {'fact': fact_name, 'value': fact_value, 'value_type': type(fact_value).__name__,
-                                 'unit': unit, 'rule_id': rule['id'], 'condition_type': 'exception'}))
+                            diagnostics.append(diagnostic('TYPE_MISMATCH', 'exact', 'error', [rule], {},
+                                {'fact': fact_name, 'declared_type': 'int', 'value': fact_value,
+                                 'value_type': type(fact_value).__name__,
+                                 'rule_id': rule['id'], 'condition_type': 'exception'}))
+    
+    # Track usage in context facts
+    for context in contract['contexts']:
+        for fact_name in context.get('facts', {}):
+            used_terms.add(fact_name)
+            term_usage.setdefault(fact_name, []).append(('context', context['id']))
+    
+    # Check for controlled_action used as Boolean effect/clause
+    for term_id, term in vocabulary.items():
+        if term.get('role') == 'controlled_action':
+            if term_id in literal_types:
+                # This controlled_action is used as a boolean literal
+                usages = literal_types[term_id]
+                for rule_id, usage_type, _ in usages:
+                    diagnostics.append(diagnostic('ACTION_STATE_CONFLATION', 'exact', 'error', [], {},
+                        {'action_id': term_id, 'role': 'controlled_action',
+                         'conflicting_usage': usage_type, 'rule_id': rule_id}))
     
     # Check action IDs in ordering rules match controlled_action vocabulary entries
     for workflow in contract.get('workflows', []):
@@ -481,23 +508,24 @@ def check_vocabulary(contract):
                                 'ordering_rule': ordering_rule['id']
                             }))
     
-    # Check for undeclared literals (only when vocabulary exists)
-    for lit in sorted(used_literals):
-        if lit not in vocabulary:
+    # Check for undeclared terms (only when vocabulary exists)
+    for term in sorted(used_terms):
+        if term not in vocabulary:
+            usage_list = [f"{rid}:{loc}" for rid, loc in term_usage[term]]
             diagnostics.append(diagnostic('UNDEFINED_TERM', 'exact', 'info', [], {},
-                {'literal': lit, 'used_in_rules': literal_usage[lit],
+                {'term': term, 'usage': usage_list[:5],  # Limit to first 5
                  'auto_declared': True, 'inferred_type': 'bool'}))
     
-    # Check for type consistency
-    for lit in used_literals:
+    # Check for type consistency in boolean usage (effects/clauses)
+    for lit in literal_types:
         if lit in vocabulary:
             term = vocabulary[lit]
             term_type = term['type']
             
-            # All uses should be consistent with the declared type
-            for rule_id, usage_type, details in literal_types.get(lit, []):
+            # All boolean uses should be consistent with the declared type
+            for rule_id, usage_type, details in literal_types[lit]:
                 if usage_type in ('bool_effect', 'bool_clause'):
-                    # This literal is used as a boolean
+                    # This term is used as a boolean
                     if term_type != 'bool':
                         diagnostics.append(diagnostic('TYPE_MISMATCH', 'exact', 'error', [], {},
                             {'literal': lit, 'declared_type': term_type, 'used_as': 'bool',
@@ -505,7 +533,7 @@ def check_vocabulary(contract):
     
     # Check for unused vocabulary entries
     for term_id in sorted(vocabulary.keys()):
-        if term_id not in used_literals:
+        if term_id not in used_terms:
             # Check if it's a controlled_action that might be used in ordering rules
             term = vocabulary[term_id]
             used_in_ordering = False
