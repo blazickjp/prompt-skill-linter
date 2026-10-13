@@ -303,6 +303,73 @@
         "additionalProperties": false
       }
     },
+    "axioms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "clause": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "literal": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "literal",
+                "value"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "source_spans": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "source_id": {
+                  "type": "string"
+                },
+                "start_line": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "end_line": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "quote": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "source_id",
+                "start_line",
+                "end_line",
+                "quote"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "id",
+          "clause"
+        ],
+        "additionalProperties": false
+      }
+    },
     "skills": {
       "type": "array",
       "items": {

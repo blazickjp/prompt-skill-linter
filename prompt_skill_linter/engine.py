@@ -42,7 +42,7 @@ def validate(contract, manifest, runtime, root):
     for key in ('sources', 'rules', 'contexts'):
         if not isinstance(contract.get(key), list):
             raise ContractError(f'contract.{key} must be an array')
-    for group in ('sources', 'rules', 'contexts', 'skills', 'workflows', 'vocabulary'):
+    for group in ('sources', 'rules', 'contexts', 'skills', 'workflows', 'vocabulary', 'axioms'):
         items = contract.get(group, [])
         ids = [x.get('id') for x in items]
         if any(not isinstance(x, str) or not x for x in ids) or len(ids) != len(set(ids)):
@@ -242,6 +242,33 @@ def validate(contract, manifest, runtime, root):
             start, end = span['start_line'], span['end_line']
             if not 1 <= start <= end <= len(lines) or span['quote'] != '\n'.join(lines[start - 1:end]):
                 raise ContractError('Vocabulary quote does not match its exact line span.')
+    
+    # Validate axioms
+    for axiom in contract.get('axioms', []):
+        if not isinstance(axiom.get('clause'), list) or not axiom['clause']:
+            raise ContractError(f"Axiom '{axiom['id']}' must have a non-empty clause.")
+        if len(axiom['clause']) > 32:
+            raise ContractError(f"Axiom '{axiom['id']}' clause may contain at most 32 literals.")
+        for lit in axiom['clause']:
+            if not isinstance(lit.get('literal'), str) or type(lit.get('value')) is not bool:
+                raise ContractError(f"Axiom '{axiom['id']}' clause needs literal (string) and value (boolean).")
+        for span in axiom.get('source_spans', []):
+            if span['source_id'] not in sources:
+                raise ContractError(f"Axiom '{axiom['id']}' references unknown source.")
+            path = (root / sources[span['source_id']]['path']).resolve()
+            if not path.is_relative_to(root):
+                raise ContractError('Axiom source must stay within the contract directory.')
+            if path not in action_source_lines:
+                try:
+                    if path.stat().st_size > 1_500_000:
+                        raise ContractError('Axiom source exceeds the analysis limit.')
+                    action_source_lines[path] = path.read_text(encoding='utf-8').splitlines()
+                except (OSError, UnicodeError) as exc:
+                    raise ContractError('Cannot read axiom source.') from exc
+            lines = action_source_lines[path]
+            start, end = span['start_line'], span['end_line']
+            if not 1 <= start <= end <= len(lines) or span['quote'] != '\n'.join(lines[start - 1:end]):
+                raise ContractError('Axiom quote does not match its exact line span.')
     
     pair_budget = 0
     for context in contract['contexts']:
@@ -981,6 +1008,143 @@ def check_clauses(contract):
     return diagnostics, checks
 
 
+def check_conditional_conflicts(contract):
+    """Search for witness inputs where rules + axioms are jointly impossible.
+    
+    This implements the CONDITIONAL_CONFLICT diagnostic from issue #6.
+    Only Boolean-only fragment is supported in this implementation.
+    Z3/SMT support for numeric conditions is deferred.
+    """
+    diagnostics, checks = [], []
+    
+    # Only proceed if we have axioms
+    if not contract.get('axioms'):
+        return diagnostics, checks
+    
+    # Group rules by scope and context
+    for context in contract['contexts']:
+        groups = {}
+        for rule in contract['rules']:
+            # Only consider rules with effects (not tool_call, forbid_action, etc.)
+            if 'effect' in rule and active(rule, context):
+                key = (rule['scope']['entity'], rule['scope']['temporal'])
+                groups.setdefault(key, []).append(rule)
+        
+        for scope, rules in groups.items():
+            # Skip if there are unresolved activations
+            unresolved = [r for r in contract['rules'] if 'effect' in r and activation_status(r, context) == 'unknown' and (r['scope']['entity'], r['scope']['temporal']) == scope]
+            if unresolved:
+                continue
+            
+            # Apply priority resolution to get effective rules
+            effective_rules = []
+            for rule in sorted(rules, key=lambda r: -r['priority']):
+                # Skip permissions - they don't create obligations
+                if rule['kind'] == 'permission':
+                    continue
+                
+                # Check if this rule is shadowed by higher-priority rules
+                value = rule['effect']['value'] if rule['kind'] == 'requirement' else not rule['effect']['value']
+                stronger = [r for r in effective_rules if r['priority'] > rule['priority'] and
+                           r['effect']['literal'] == rule['effect']['literal'] and
+                           (r['kind'] in ('requirement', 'prohibition') and
+                            (r['effect']['value'] if r['kind'] == 'requirement' else not r['effect']['value']) != value)]
+                if not stronger:
+                    effective_rules.append(rule)
+            
+            if not effective_rules:
+                continue
+            
+            # Convert effective rules to CNF clauses
+            # For requirements with effects, we encode: when -> effect
+            # For prohibitions, we encode: when -> not effect
+            # This is a simplified Boolean-only encoding
+            rule_clauses = []
+            for rule in effective_rules:
+                literal = rule['effect']['literal']
+                value = rule['effect']['value'] if rule['kind'] == 'requirement' else not rule['effect']['value']
+                # For now, only unconditional rules (no when clause)
+                if not rule.get('when'):
+                    rule_clauses.append({
+                        'id': rule['id'],
+                        'clause': [{'literal': literal, 'value': value}],
+                        'source': rule['source']
+                    })
+            
+            # Add axioms to the clause set
+            axiom_clauses = []
+            for axiom in contract.get('axioms', []):
+                axiom_clauses.append({
+                    'id': axiom['id'],
+                    'clause': axiom['clause'],
+                    'source_spans': axiom.get('source_spans', []),
+                    'description': axiom.get('description', '')
+                })
+            
+            if not rule_clauses or not axiom_clauses:
+                continue
+            
+            # Search for conflicts: try to find witnesses where rules + axioms are UNSAT
+            all_clauses = rule_clauses + axiom_clauses
+            
+            # Try to find a conflict
+            core = checked_core(all_clauses)
+            result = core['result']
+            
+            if result['status'] == 'unsat':
+                # Found a conflict! The core contains the minimal conflicting set
+                conflicting_rule_ids = [rid for rid in core['rule_ids'] if any(r['id'] == rid for r in rule_clauses)]
+                conflicting_axiom_ids = [rid for rid in core['rule_ids'] if any(a['id'] == rid for a in axiom_clauses)]
+                
+                if conflicting_axiom_ids:  # Only report if axioms are involved
+                    responsible_rules = [r for r in effective_rules if r['id'] in conflicting_rule_ids]
+                    responsible_axioms = [a for a in contract['axioms'] if a['id'] in conflicting_axiom_ids]
+                    
+                    witness = {
+                        'minimal_core': core['rule_ids'],
+                        'rules': conflicting_rule_ids,
+                        'axioms': conflicting_axiom_ids,
+                        'minimality_checked': core['minimality_checked'],
+                        'removal_witnesses': core['removal_witnesses']
+                    }
+                    
+                    assumptions = [
+                        'Exact relative to the confirmed Boolean formalization; says nothing about whether the formalization matches prose.',
+                        'Axioms are bridge facts confirmed by the author; they connect vocabulary terms.',
+                        'Only Boolean fragment checked; numeric and enum conditions deferred.',
+                        'Conflicts found after applying priority resolution and exception handling.'
+                    ]
+                    
+                    diag = diagnostic('CONDITIONAL_CONFLICT', 'model_based', 'error',
+                                    responsible_rules, context, witness, assumptions)
+                    
+                    # Add axiom source spans
+                    for axiom in responsible_axioms:
+                        for span in axiom.get('source_spans', []):
+                            if span not in diag['source_spans']:
+                                diag['source_spans'].append(span)
+                    
+                    # Add axiom information to interpreted rules
+                    for axiom in responsible_axioms:
+                        diag['interpreted_rules'].append({
+                            'id': axiom['id'],
+                            'axiom': True,
+                            'description': axiom.get('description', ''),
+                            'clause': axiom['clause']
+                        })
+                    
+                    diagnostics.append(diag)
+                    
+                    checks.append({
+                        'context_id': context['id'],
+                        'scope': dict(zip(('entity', 'temporal'), scope)),
+                        'status': 'conflict',
+                        'core': core['rule_ids']
+                    })
+    
+    return diagnostics, checks
+
+
 def lint(contract, manifest, runtime, root, strict_providers=None):
     validate(contract, manifest, runtime, root)
     diagnostics = check_references(contract, manifest)
@@ -1049,6 +1213,7 @@ def lint(contract, manifest, runtime, root, strict_providers=None):
         warning['source_spans'] = interpretation.get('unsupported_spans', [])
         diagnostics.append(warning)
     diagnostics += check_obligations(contract)
+    diagnostics += check_conditional_conflicts(contract)[0]
     workflow_diags, workflow_checks = workflow_analysis(contract, manifest, runtime)
     diagnostics += workflow_diags
     field_diags, field_checks = field_analysis(contract)
