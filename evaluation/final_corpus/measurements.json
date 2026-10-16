@@ -1,0 +1,223 @@
+{
+  "all_results": [
+    {
+      "id": "anthropic_01",
+      "label_has_issue": false,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "anthropic_02",
+      "label_has_issue": true,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "anthropic_03",
+      "label_has_issue": false,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "anthropic_04",
+      "label_has_issue": false,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "anthropic_05",
+      "label_has_issue": false,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "anthropic_06",
+      "label_has_issue": false,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "anthropic_07",
+      "label_has_issue": false,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "anthropic_08",
+      "label_has_issue": false,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "cursor_01",
+      "label_has_issue": true,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "cursor_02",
+      "label_has_issue": false,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "cursor_03",
+      "label_has_issue": true,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "cursor_04",
+      "label_has_issue": false,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "cursor_05",
+      "label_has_issue": false,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "cursor_06",
+      "label_has_issue": false,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "cursor_07",
+      "label_has_issue": false,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "cursor_08",
+      "label_has_issue": false,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "cursor_09",
+      "label_has_issue": false,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "cursor_10",
+      "label_has_issue": false,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "langchain_01",
+      "label_has_issue": false,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "langchain_02",
+      "label_has_issue": false,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "langchain_03",
+      "label_has_issue": false,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "langchain_04",
+      "label_has_issue": false,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "langchain_05",
+      "label_has_issue": false,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "langchain_06",
+      "label_has_issue": false,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "oss_01",
+      "label_has_issue": true,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "oss_02",
+      "label_has_issue": false,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "oss_03",
+      "label_has_issue": false,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "oss_04",
+      "label_has_issue": true,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "oss_05",
+      "label_has_issue": false,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "oss_06",
+      "label_has_issue": false,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "oss_07",
+      "label_has_issue": false,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    },
+    {
+      "id": "oss_08",
+      "label_has_issue": false,
+      "linter_found_error": false,
+      "error": "$.contexts[0]: missing active_skills"
+    }
+  ],
+  "dev": {
+    "tp": 0,
+    "fp": 0,
+    "tn": 19,
+    "fn": 3,
+    "precision": null,
+    "recall": 0.0,
+    "false_positives": [],
+    "misses": [
+      "anthropic_02",
+      "cursor_03",
+      "oss_01"
+    ]
+  },
+  "held_out": {
+    "tp": 0,
+    "fp": 0,
+    "tn": 8,
+    "fn": 2,
+    "precision": null,
+    "recall": 0.0,
+    "false_positives": [],
+    "misses": [
+      "cursor_01",
+      "oss_04"
+    ]
+  }
+}
