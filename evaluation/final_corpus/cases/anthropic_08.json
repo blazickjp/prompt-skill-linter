@@ -1,0 +1,13 @@
+{
+  "id": "anthropic_08",
+  "source": {
+    "url": "https://docs.anthropic.com/claude/prompt-engineering",
+    "license": "Various (see URL)",
+    "type": "text"
+  },
+  "text": "Be clear and direct. Being specific about desired output enhances results.",
+  "label": {
+    "issue": false
+  },
+  "created_at": "2026-10-16T22:31:48.917680+00:00"
+}

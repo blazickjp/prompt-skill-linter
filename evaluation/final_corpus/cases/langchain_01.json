@@ -1,0 +1,13 @@
+{
+  "id": "langchain_01",
+  "source": {
+    "url": "https://github.com/langchain-ai/langchain/blob/master/libs/langchain/langchain_classic/agents/mrkl/prompt.py",
+    "license": "Various (see URL)",
+    "type": "text"
+  },
+  "text": "Format: Question, Thought, Action (one of tool_names), Action Input, Observation. Repeat N times. Final Answer.",
+  "label": {
+    "issue": false
+  },
+  "created_at": "2026-10-16T22:31:48.917710+00:00"
+}

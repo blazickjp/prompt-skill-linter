@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "seed": 42,
+  "dev": [
+    "anthropic_01",
+    "anthropic_02",
+    "anthropic_03",
+    "anthropic_04",
+    "anthropic_05",
+    "anthropic_06",
+    "anthropic_07",
+    "anthropic_08",
+    "cursor_02",
+    "cursor_03",
+    "cursor_06",
+    "cursor_07",
+    "cursor_10",
+    "langchain_01",
+    "langchain_02",
+    "langchain_03",
+    "langchain_05",
+    "oss_01",
+    "oss_02",
+    "oss_03",
+    "oss_05",
+    "oss_07"
+  ],
+  "held_out": [
+    "cursor_01",
+    "cursor_04",
+    "cursor_05",
+    "cursor_08",
+    "cursor_09",
+    "langchain_04",
+    "langchain_06",
+    "oss_04",
+    "oss_06",
+    "oss_08"
+  ]
+}

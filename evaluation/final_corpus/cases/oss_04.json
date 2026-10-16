@@ -1,0 +1,14 @@
+{
+  "id": "oss_04",
+  "source": {
+    "url": "https://github.com/EliFuzz/awesome-system-prompts",
+    "license": "Various (see URL)",
+    "type": "text"
+  },
+  "text": "SEARCH section must match existing code exactly. REPLACE shows modified code.",
+  "label": {
+    "issue": true,
+    "type": "undefined"
+  },
+  "created_at": "2026-10-16T22:31:48.918091+00:00"
+}

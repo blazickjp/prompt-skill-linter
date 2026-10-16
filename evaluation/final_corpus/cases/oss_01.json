@@ -1,0 +1,14 @@
+{
+  "id": "oss_01",
+  "source": {
+    "url": "https://github.com/tallesborges/agentic-system-prompts",
+    "license": "Various (see URL)",
+    "type": "text"
+  },
+  "text": "Write detailed commit messages explaining changes made.",
+  "label": {
+    "issue": true,
+    "type": "vague"
+  },
+  "created_at": "2026-10-16T22:31:48.917967+00:00"
+}

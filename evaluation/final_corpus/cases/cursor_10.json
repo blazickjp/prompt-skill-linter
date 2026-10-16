@@ -1,0 +1,13 @@
+{
+  "id": "cursor_10",
+  "source": {
+    "url": "https://cursor.com/skills/bdk-create-agent",
+    "license": "Various (see URL)",
+    "type": "text"
+  },
+  "text": "Model turns need CURSOR_API_KEY, then CURSOR_API_KEY_FILE, then CURSOR_SERVICE_ACCOUNT_KEY, then login.",
+  "label": {
+    "issue": false
+  },
+  "created_at": "2026-10-16T22:31:48.917347+00:00"
+}

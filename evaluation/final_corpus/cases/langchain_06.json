@@ -1,0 +1,13 @@
+{
+  "id": "langchain_06",
+  "source": {
+    "url": "https://github.com/langchain-ai/langchain/blob/master/libs/langchain/langchain_classic/agents/conversational_chat/prompt.py",
+    "license": "Various (see URL)",
+    "type": "text"
+  },
+  "text": "Action to take must be one of tool_names. Action input is string input to the action.",
+  "label": {
+    "issue": false
+  },
+  "created_at": "2026-10-16T22:31:48.917929+00:00"
+}

@@ -1,0 +1,13 @@
+{
+  "id": "oss_02",
+  "source": {
+    "url": "https://github.com/tallesborges/agentic-system-prompts",
+    "license": "Various (see URL)",
+    "type": "text"
+  },
+  "text": "MUST get user permission before: running commands affecting filesystem, making code changes.",
+  "label": {
+    "issue": false
+  },
+  "created_at": "2026-10-16T22:31:48.918006+00:00"
+}

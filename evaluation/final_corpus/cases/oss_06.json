@@ -1,0 +1,13 @@
+{
+  "id": "oss_06",
+  "source": {
+    "url": "https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools",
+    "license": "Various (see URL)",
+    "type": "text"
+  },
+  "text": "Test changes before committing. Run relevant test suite to verify.",
+  "label": {
+    "issue": false
+  },
+  "created_at": "2026-10-16T22:31:48.918167+00:00"
+}

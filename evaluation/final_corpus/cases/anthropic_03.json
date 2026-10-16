@@ -1,0 +1,13 @@
+{
+  "id": "anthropic_03",
+  "source": {
+    "url": "https://docs.anthropic.com/claude/prompt-engineering",
+    "license": "Various (see URL)",
+    "type": "text"
+  },
+  "text": "Claude 4.6+: prefilled responses on last assistant turn unsupported. Returns 400 error. Earlier models still support.",
+  "label": {
+    "issue": false
+  },
+  "created_at": "2026-10-16T22:31:48.917515+00:00"
+}

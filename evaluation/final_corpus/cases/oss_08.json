@@ -1,0 +1,13 @@
+{
+  "id": "oss_08",
+  "source": {
+    "url": "https://github.com/tallesborges/agentic-system-prompts",
+    "license": "Various (see URL)",
+    "type": "text"
+  },
+  "text": "If unsure about correct approach, propose multiple options with trade-offs.",
+  "label": {
+    "issue": false
+  },
+  "created_at": "2026-10-16T22:31:48.918240+00:00"
+}
