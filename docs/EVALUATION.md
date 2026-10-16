@@ -110,3 +110,28 @@ a discovered path plus an independent modeled error is also an abstention.
 Untranslated source coverage remains attached even when the projected path is
 reachable. Scores retain ambiguous references and separate origin and workflow
 family. A new native-model call is a new observation, not reproduced by Python.
+
+## Real public prompt corpus (Oct 16 2024)
+
+A **32-case corpus** from diverse public sources measures existing check coverage against natural prompt texts. The corpus is 31% Cursor (10 cases), 25% Anthropic docs (8), 19% LangChain (6), and 25% other OSS (8). All cases have verifiable URLs. Split: 22 dev, 10 held-out (seed 42, fixed).
+
+Contracts hand-written per `evaluation/CORPUS_RUBRIC.md` with modal-verb → modality mapping, consistent scope/priority, and exact source quotes. Commit order on branch `cursor/eval-corpus-1a6e`:
+1. Rubric: `26cdad9`
+2. Labels (32 cases): `55c017d`
+3. Hand-written contracts: `1d9ca11`
+4. Measurements: `c020c8d`
+
+Labels committed before contracts; contracts before linter execution.
+
+### Check-only results (hand-written contracts)
+
+| Split | TP | FP | TN | FN | Precision | Recall |
+|-------|----|----|----|----|-----------|--------|
+| **Dev** | 0 | 0 | 19 | 3 | N/A | 0% |
+| **Held-out** | 0 | 0 | 8 | 2 | N/A | 0% |
+
+**Dev misses**: `anthropic_02`, `cursor_03`, `oss_01`. No false positives.
+
+**Interpretation**: Existing checks (conflict, unreachable paths, axiom violations) don't match labeled text-level issues (vague directives, tensions, undefined terms). High specificity (no FPs), but 0% recall shows a check-family gap. The corpus uses natural text; no end-to-end extraction numbers reported because `extraction.extract()` requires explicit `REQUIRE`/`FORBID` annotations absent in these prompts.
+
+**Limitations**: 32 cases insufficient for robust measurement. Check families for vague/ambiguous/undefined patterns needed. Corpus location: `evaluation/final_corpus/`.
