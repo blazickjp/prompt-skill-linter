@@ -1,0 +1,1 @@
+Processes never survive snapshot. Anything running belongs in start, not install.

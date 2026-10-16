@@ -1,0 +1,1 @@
+Embed all data inline. No fetch(), no network calls.

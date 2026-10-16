@@ -1,0 +1,13 @@
+{
+  "id": "cursor_08",
+  "source": {
+    "url": "https://cursor.com/skills/canvas",
+    "license": "Various (see URL)",
+    "type": "text"
+  },
+  "text": "Import only from cursor/canvas. No relative imports, no npm packages.",
+  "label": {
+    "issue": false
+  },
+  "created_at": "2026-10-16T22:31:48.917222+00:00"
+}

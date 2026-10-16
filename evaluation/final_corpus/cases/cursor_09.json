@@ -1,0 +1,13 @@
+{
+  "id": "cursor_09",
+  "source": {
+    "url": "https://cursor.com/skills/env-setup",
+    "license": "Various (see URL)",
+    "type": "text"
+  },
+  "text": "Processes never survive snapshot. Anything running belongs in start, not install.",
+  "label": {
+    "issue": false
+  },
+  "created_at": "2026-10-16T22:31:48.917254+00:00"
+}

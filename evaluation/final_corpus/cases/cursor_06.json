@@ -1,0 +1,13 @@
+{
+  "id": "cursor_06",
+  "source": {
+    "url": "https://cursor.com/skills/env-setup",
+    "license": "Various (see URL)",
+    "type": "text"
+  },
+  "text": "Resolution order: 1. repo .cursor/environment.json 2. Personal 3. Team. First wins.",
+  "label": {
+    "issue": false
+  },
+  "created_at": "2026-10-16T22:31:48.917151+00:00"
+}

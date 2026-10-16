@@ -1,0 +1,13 @@
+{
+  "id": "oss_05",
+  "source": {
+    "url": "https://github.com/tallesborges/agentic-system-prompts",
+    "license": "Various (see URL)",
+    "type": "text"
+  },
+  "text": "Before making changes, analyze codebase to understand structure and patterns.",
+  "label": {
+    "issue": false
+  },
+  "created_at": "2026-10-16T22:31:48.918132+00:00"
+}

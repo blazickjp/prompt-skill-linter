@@ -1,0 +1,14 @@
+{
+  "id": "anthropic_02",
+  "source": {
+    "url": "https://docs.anthropic.com/claude/prompt-engineering",
+    "license": "Various (see URL)",
+    "type": "text"
+  },
+  "text": "Examples: Relevant - mirror use case. Diverse - cover edge cases, vary to avoid unintended patterns.",
+  "label": {
+    "issue": true,
+    "type": "tension"
+  },
+  "created_at": "2026-10-16T22:31:48.917474+00:00"
+}

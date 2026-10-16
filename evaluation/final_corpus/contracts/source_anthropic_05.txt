@@ -1,0 +1,1 @@
+Providing context or motivation helps Claude understand goals better.

@@ -1,0 +1,14 @@
+{
+  "id": "cursor_03",
+  "source": {
+    "url": "https://cursor.com/skills/bdk-create-agent",
+    "license": "Various (see URL)",
+    "type": "text"
+  },
+  "text": "If the plan grows past ~10 files, cut scope.",
+  "label": {
+    "issue": true,
+    "type": "vague"
+  },
+  "created_at": "2026-10-16T22:31:48.917037+00:00"
+}
