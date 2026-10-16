@@ -1,0 +1,1 @@
+install: package installs, compilation. Must exit. start: daemons, dev servers.

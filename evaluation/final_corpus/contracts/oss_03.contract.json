@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "id": "src1",
+      "path": "source_oss_03.txt"
+    }
+  ],
+  "rules": [
+    {
+      "id": "r1",
+      "kind": "prohibition",
+      "priority": 10,
+      "scope": {
+        "entity": "system",
+        "temporal": "always"
+      },
+      "when": {},
+      "exceptions": [],
+      "source": {
+        "source_id": "src1",
+        "start_line": 1,
+        "end_line": 1,
+        "quote": "Never assume user intent. Always ask clarification when requirements ambiguous."
+      }
+    }
+  ],
+  "contexts": [
+    {
+      "id": "ctx1",
+      "facts": {}
+    }
+  ],
+  "assumptions": [
+    "Hand-written per CORPUS_RUBRIC.md"
+  ],
+  "workflows": []
+}

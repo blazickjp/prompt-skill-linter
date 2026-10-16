@@ -1,0 +1,1 @@
+Format: Question, Thought, Action (one of tool_names), Action Input, Observation. Repeat N times. Final Answer.

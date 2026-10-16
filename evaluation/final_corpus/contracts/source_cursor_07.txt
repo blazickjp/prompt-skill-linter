@@ -1,0 +1,1 @@
+tsx does not typecheck. Tool execute must return JSON-shaped values.

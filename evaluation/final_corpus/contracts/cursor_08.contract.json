@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "id": "src1",
+      "path": "source_cursor_08.txt"
+    }
+  ],
+  "rules": [
+    {
+      "id": "r1",
+      "kind": "prohibition",
+      "priority": 10,
+      "scope": {
+        "entity": "system",
+        "temporal": "always"
+      },
+      "when": {},
+      "exceptions": [],
+      "source": {
+        "source_id": "src1",
+        "start_line": 1,
+        "end_line": 1,
+        "quote": "Import only from cursor/canvas. No relative imports, no npm packages."
+      }
+    }
+  ],
+  "contexts": [
+    {
+      "id": "ctx1",
+      "facts": {}
+    }
+  ],
+  "assumptions": [
+    "Hand-written per CORPUS_RUBRIC.md"
+  ],
+  "workflows": []
+}

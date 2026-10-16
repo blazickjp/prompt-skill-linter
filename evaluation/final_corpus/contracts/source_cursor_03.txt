@@ -1,0 +1,1 @@
+If the plan grows past ~10 files, cut scope.

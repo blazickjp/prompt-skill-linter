@@ -1,0 +1,1 @@
+XML tags help parse complex prompts. Wrap each content type in tags like <instructions>, <context>.

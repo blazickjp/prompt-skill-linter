@@ -1,0 +1,1 @@
+If tool calls depend on previous calls for parameters, do NOT call in parallel. Never use placeholders.

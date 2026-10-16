@@ -1,0 +1,1 @@
+Model turns need CURSOR_API_KEY, then CURSOR_API_KEY_FILE, then CURSOR_SERVICE_ACCOUNT_KEY, then login.

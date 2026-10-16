@@ -1,0 +1,1 @@
+Golden rule: Show prompt to colleague with minimal context. If confused, Claude will be too.
