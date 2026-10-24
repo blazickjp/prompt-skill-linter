@@ -1,0 +1,13 @@
+{
+  "id": "oss_03",
+  "source": {
+    "url": "https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools",
+    "license": "Various (see URL)",
+    "type": "text"
+  },
+  "text": "Never assume user intent. Always ask clarification when requirements ambiguous.",
+  "label": {
+    "issue": false
+  },
+  "created_at": "2026-10-16T22:31:48.918049+00:00"
+}

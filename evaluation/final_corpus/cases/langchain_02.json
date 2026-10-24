@@ -1,0 +1,13 @@
+{
+  "id": "langchain_02",
+  "source": {
+    "url": "https://github.com/langchain-ai/langchain/blob/master/libs/langchain/langchain_classic/agents/conversational_chat/prompt.py",
+    "license": "Various (see URL)",
+    "type": "text"
+  },
+  "text": "Assistant is large language model trained by OpenAI, designed to assist with wide range of tasks.",
+  "label": {
+    "issue": false
+  },
+  "created_at": "2026-10-16T22:31:48.917777+00:00"
+}

@@ -1,0 +1,1 @@
+Before making changes, analyze codebase to understand structure and patterns.

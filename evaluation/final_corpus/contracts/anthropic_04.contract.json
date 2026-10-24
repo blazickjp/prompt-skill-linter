@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "id": "src1",
+      "path": "source_anthropic_04.txt"
+    }
+  ],
+  "rules": [
+    {
+      "id": "r1",
+      "kind": "preference",
+      "priority": 5,
+      "scope": {
+        "entity": "task",
+        "temporal": "run"
+      },
+      "when": {},
+      "exceptions": [],
+      "source": {
+        "source_id": "src1",
+        "start_line": 1,
+        "end_line": 1,
+        "quote": "XML tags help parse complex prompts. Wrap each content type in tags like <instru"
+      }
+    }
+  ],
+  "contexts": [
+    {
+      "id": "ctx1",
+      "facts": {}
+    }
+  ],
+  "assumptions": [
+    "Hand-written per CORPUS_RUBRIC.md"
+  ],
+  "workflows": []
+}

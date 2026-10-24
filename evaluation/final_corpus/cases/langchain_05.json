@@ -1,0 +1,13 @@
+{
+  "id": "langchain_05",
+  "source": {
+    "url": "https://github.com/langchain-ai/langchain/blob/master/libs/langchain/langchain_classic/agents/mrkl/prompt.py",
+    "license": "Various (see URL)",
+    "type": "text"
+  },
+  "text": "Answer following questions as best you can. You have access to following tools.",
+  "label": {
+    "issue": false
+  },
+  "created_at": "2026-10-16T22:31:48.917893+00:00"
+}

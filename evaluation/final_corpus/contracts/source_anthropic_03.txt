@@ -1,0 +1,1 @@
+Claude 4.6+: prefilled responses on last assistant turn unsupported. Returns 400 error. Earlier models still support.

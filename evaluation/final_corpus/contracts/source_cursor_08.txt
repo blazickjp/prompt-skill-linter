@@ -1,0 +1,1 @@
+Import only from cursor/canvas. No relative imports, no npm packages.

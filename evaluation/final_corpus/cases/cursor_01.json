@@ -1,0 +1,14 @@
+{
+  "id": "cursor_01",
+  "source": {
+    "url": "https://cursor.com/skills/env-setup",
+    "license": "Various (see URL)",
+    "type": "text"
+  },
+  "text": "terminals: Named tmux sessions launched alongside start; ignored when start is absent.",
+  "label": {
+    "issue": true,
+    "type": "missing_requirement"
+  },
+  "created_at": "2026-10-16T22:31:48.916834+00:00"
+}

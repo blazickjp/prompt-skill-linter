@@ -1,0 +1,13 @@
+{
+  "id": "anthropic_06",
+  "source": {
+    "url": "https://docs.anthropic.com/claude/prompt-engineering",
+    "license": "Various (see URL)",
+    "type": "text"
+  },
+  "text": "Golden rule: Show prompt to colleague with minimal context. If confused, Claude will be too.",
+  "label": {
+    "issue": false
+  },
+  "created_at": "2026-10-16T22:31:48.917617+00:00"
+}

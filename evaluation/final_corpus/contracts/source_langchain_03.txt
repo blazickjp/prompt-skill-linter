@@ -1,0 +1,1 @@
+If using tool information, mention explicitly without tool names - I have forgotten all TOOL RESPONSES!

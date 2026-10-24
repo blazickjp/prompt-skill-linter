@@ -1,0 +1,13 @@
+{
+  "id": "cursor_02",
+  "source": {
+    "url": "https://cursor.com/skills/canvas",
+    "license": "Various (see URL)",
+    "type": "text"
+  },
+  "text": "Embed all data inline. No fetch(), no network calls.",
+  "label": {
+    "issue": false
+  },
+  "created_at": "2026-10-16T22:31:48.916981+00:00"
+}

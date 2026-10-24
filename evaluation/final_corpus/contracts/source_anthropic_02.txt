@@ -1,0 +1,1 @@
+Examples: Relevant - mirror use case. Diverse - cover edge cases, vary to avoid unintended patterns.

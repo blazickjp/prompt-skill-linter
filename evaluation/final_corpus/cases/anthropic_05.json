@@ -1,0 +1,13 @@
+{
+  "id": "anthropic_05",
+  "source": {
+    "url": "https://docs.anthropic.com/claude/prompt-engineering",
+    "license": "Various (see URL)",
+    "type": "text"
+  },
+  "text": "Providing context or motivation helps Claude understand goals better.",
+  "label": {
+    "issue": false
+  },
+  "created_at": "2026-10-16T22:31:48.917586+00:00"
+}
