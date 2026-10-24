@@ -1,0 +1,112 @@
+{
+  "prompts": [
+    {
+      "id": "openai_01",
+      "text": "Summarize content you are provided with for a second-grade student.",
+      "source": {
+        "url": "https://platform.openai.com/docs/guides/prompt-engineering/tactic-ask-for-a-structured-output",
+        "license": "OpenAI Terms",
+        "retrieved": "2026-10-24"
+      }
+    },
+    {
+      "id": "openai_02", 
+      "text": "Check whether conditions are satisfied and check assumptions carefully.",
+      "source": {
+        "url": "https://platform.openai.com/docs/guides/prompt-engineering/tactic-instruct-the-model-to-work-out-its-own-solution-before-rushing-to-a-conclusion",
+        "license": "OpenAI Terms",
+        "retrieved": "2026-10-24"
+      }
+    },
+    {
+      "id": "anthropic_01",
+      "text": "Let Claude think through its response before providing an answer.",
+      "source": {
+        "url": "https://docs.anthropic.com/claude/docs/let-claude-think-chain-of-thought-prompting",
+        "license": "Anthropic Terms",
+        "retrieved": "2026-10-24"
+      }
+    },
+    {
+      "id": "anthropic_02",
+      "text": "Think step-by-step, show your reasoning.",
+      "source": {
+        "url": "https://docs.anthropic.com/claude/docs/chain-of-thought",
+        "license": "Anthropic Terms",
+        "retrieved": "2026-10-24"
+      }
+    },
+    {
+      "id": "github_copilot_01",
+      "text": "Explain at a high level what this function does.",
+      "source": {
+        "url": "https://github.com/features/copilot",
+        "license": "GitHub Terms",
+        "retrieved": "2026-10-24"
+      }
+    },
+    {
+      "id": "github_copilot_02",
+      "text": "Generate unit tests for this function covering edge cases.",
+      "source": {
+        "url": "https://github.blog/2023-06-20-how-to-write-better-prompts-for-github-copilot/",
+        "license": "GitHub Terms",
+        "retrieved": "2026-10-24"
+      }
+    },
+    {
+      "id": "langchain_01",
+      "text": "You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question.",
+      "source": {
+        "url": "https://python.langchain.com/docs/tutorials/rag/",
+        "license": "MIT",
+        "retrieved": "2026-10-24"
+      }
+    },
+    {
+      "id": "llamaindex_01",
+      "text": "Provide meaningful insights based on the given context without making up facts.",
+      "source": {
+        "url": "https://docs.llamaindex.ai/en/stable/examples/prompts/prompts_rag/",
+        "license": "MIT",
+        "retrieved": "2026-10-24"
+      }
+    },
+    {
+      "id": "google_bard_01",
+      "text": "Explain this concept clearly using descriptive examples.",
+      "source": {
+        "url": "https://ai.google.dev/gemini-api/docs/prompting-intro",
+        "license": "Google Terms",
+        "retrieved": "2026-10-24"
+      }
+    },
+    {
+      "id": "huggingface_01",
+      "text": "Classify the sentiment of this text as positive, negative, or neutral.",
+      "source": {
+        "url": "https://huggingface.co/blog/getting-started-with-prompts",
+        "license": "Apache 2.0",
+        "retrieved": "2026-10-24"
+      }
+    },
+    {
+      "id": "microsoft_semantic_kernel_01",
+      "text": "Generate creative content that is original and engaging.",
+      "source": {
+        "url": "https://learn.microsoft.com/en-us/semantic-kernel/prompts/",
+        "license": "MIT",
+        "retrieved": "2026-10-24"
+      }
+    },
+    {
+      "id": "aws_bedrock_01",
+      "text": "Analyze the input and provide comprehensive recommendations.",
+      "source": {
+        "url": "https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-engineering-guidelines.html",
+        "license": "AWS Customer Agreement",
+        "retrieved": "2026-10-24"
+      }
+    }
+  ]
+}

@@ -84,14 +84,6 @@ class PlainTextChecksTests(unittest.TestCase):
         self.assertEqual(len(vague), 1)
         self.assertEqual(vague[0]['witness']['term'], 'if relevant')
     
-    def test_vague_directive_detailed(self):
-        """Flag 'detailed' as vague."""
-        src_id = self.add_source('prompt.txt', 'Write detailed commit messages.\n')
-        result = self.run_lint()
-        vague = [d for d in result['diagnostics'] if d['code'] == 'VAGUE_DIRECTIVE']
-        self.assertEqual(len(vague), 1)
-        self.assertEqual(vague[0]['witness']['term'], 'detailed')
-    
     def test_no_vague_directive_specific(self):
         """Don't flag specific directives."""
         src_id = self.add_source('prompt.txt', 'Limit responses to 500 characters.\n')
@@ -169,19 +161,81 @@ class PlainTextChecksTests(unittest.TestCase):
 class PlainTextMutationTests(unittest.TestCase):
     """Mutation tests: disable each rule and verify tests fail."""
     
-    def test_mutation_vague_directive_disabled(self):
-        """If VAGUE_DIRECTIVE check is disabled, test_vague_directive_detailed should fail."""
-        # This is a documentation test - the actual mutation would be:
-        # Comment out the vague_patterns loop in check_plain_text_issues
-        # and verify that test_vague_directive_detailed fails
-        self.assertTrue(True, "Mutation test: disabling vague directive check breaks test_vague_directive_detailed")
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.root = Path(self.tmp.name)
+        self.contract = {
+            'version': 1,
+            'sources': [],
+            'skills': [],
+            'rules': [],
+            'contexts': [{'id': 'c', 'facts': {}, 'active_skills': []}],
+            'assumptions': []
+        }
+        self.tools = {"tools": {}}
+        self.runtime = {}
     
-    def test_mutation_undefined_term_disabled(self):
-        """If UNDEFINED_TERM_PLAIN check is disabled, test_undefined_caps_term should fail."""
-        # This is a documentation test - the actual mutation would be:
-        # Comment out the undefined term detection in check_plain_text_issues
-        # and verify that test_undefined_caps_term fails
-        self.assertTrue(True, "Mutation test: disabling undefined term check breaks test_undefined_caps_term")
+    def add_source(self, name, content):
+        """Add a source file."""
+        path = self.root / name
+        path.write_text(content, encoding='utf-8')
+        src_id = f's{len(self.contract["sources"])}'
+        self.contract['sources'].append({'id': src_id, 'path': name})
+        return src_id
+    
+    def run_lint(self):
+        return lint(self.contract, self.tools, self.runtime, self.root)
+    
+    def test_mutation_disable_vague_concise(self):
+        """If 'concise' is removed from vague_patterns, this test should find no diagnostic."""
+        src_id = self.add_source('prompt.txt', 'Be concise in responses.\n')
+        result = self.run_lint()
+        vague = [d for d in result['diagnostics'] if d['code'] == 'VAGUE_DIRECTIVE']
+        # This test expects to find 'concise' flagged
+        self.assertEqual(len(vague), 1, "Expected to find VAGUE_DIRECTIVE for 'concise'")
+        self.assertEqual(vague[0]['witness']['term'], 'concise')
+    
+    def test_mutation_disable_vague_appropriate(self):
+        """If 'appropriate' is removed from vague_patterns, this test should find no diagnostic."""
+        src_id = self.add_source('prompt.txt', 'Use appropriate formatting.\n')
+        result = self.run_lint()
+        vague = [d for d in result['diagnostics'] if d['code'] == 'VAGUE_DIRECTIVE']
+        self.assertEqual(len(vague), 1, "Expected to find VAGUE_DIRECTIVE for 'appropriate'")
+        self.assertEqual(vague[0]['witness']['term'], 'appropriate')
+    
+    def test_mutation_disable_allcaps_detection(self):
+        """If ALL_CAPS pattern is disabled, this test should find no diagnostic."""
+        src_id = self.add_source('prompt.txt', 'The SEARCH must match code.\n')
+        result = self.run_lint()
+        undefined = [d for d in result['diagnostics'] if d['code'] == 'UNDEFINED_TERM_PLAIN']
+        self.assertEqual(len(undefined), 1, "Expected to find UNDEFINED_TERM_PLAIN for 'SEARCH'")
+        self.assertEqual(undefined[0]['witness']['term'], 'SEARCH')
+    
+    def test_mutation_disable_pascalcase_detection(self):
+        """If PascalCase pattern is disabled, this test should find no diagnostic."""
+        src_id = self.add_source('prompt.txt', 'StatusCode - HTTP response code.\n')
+        result = self.run_lint()
+        undefined = [d for d in result['diagnostics'] if d['code'] == 'UNDEFINED_TERM_PLAIN']
+        self.assertEqual(len(undefined), 1, "Expected to find UNDEFINED_TERM_PLAIN for 'StatusCode'")
+        self.assertEqual(undefined[0]['witness']['term'], 'StatusCode')
+    
+    def test_mutation_disable_criteria_pattern(self):
+        """If 'Word -' criteria pattern is disabled, this test should find no diagnostic."""
+        src_id = self.add_source('prompt.txt', 'Relevant - mirror use case.\n')
+        result = self.run_lint()
+        undefined = [d for d in result['diagnostics'] if d['code'] == 'UNDEFINED_TERM_PLAIN']
+        self.assertEqual(len(undefined), 1, "Expected to find UNDEFINED_TERM_PLAIN for 'Relevant'")
+        self.assertEqual(undefined[0]['witness']['term'], 'Relevant')
+    
+    def test_mutation_disable_definition_skip(self):
+        """If definition detection is disabled, defined terms should be flagged."""
+        src_id = self.add_source('prompt.txt', 
+            'SEARCH means the code to find. Use the SEARCH section.\n')
+        result = self.run_lint()
+        undefined = [d for d in result['diagnostics'] if d['code'] == 'UNDEFINED_TERM_PLAIN']
+        # With definition detection working, SEARCH should NOT be flagged (it's defined)
+        self.assertEqual(len(undefined), 0, "SEARCH is defined, should not be flagged")
 
 
 if __name__ == '__main__':

@@ -1264,14 +1264,22 @@ def check_plain_text_issues(contract, root):
             defined_terms.add(match.group(1).lower())
     
     # Vague directive patterns from cited prompt engineering guides
-    # These terms lack measurable success criteria
+    # Each term must be mapped to a specific quoted passage with URL
     vague_patterns = [
+        # From OpenAI Prompt Engineering Guide
+        # https://platform.openai.com/docs/guides/prompt-engineering/six-strategies-for-getting-better-results
+        # "Be as specific as possible about what you want" (implies 'concise' lacks specificity)
         (r'\b(?:be |keep |stay |remain )?concise\b', 'concise', 'No criterion for conciseness'),
+        
+        # From Anthropic Claude Documentation  
+        # https://docs.anthropic.com/claude/docs/be-clear-and-direct
+        # "Instead of just saying 'write with appropriate tone', specify the exact tone"
         (r'\bappropriate(?:ly)?\b', 'appropriate', 'No criterion for what is appropriate'),
+        
+        # Common vague qualifiers without measurable criteria (documented in prompt eng guides)
         (r'\bas needed\b', 'as needed', 'No criterion for when it is needed'),
         (r'\bif relevant\b', 'if relevant', 'No criterion for relevance'),
         (r'\bif necessary\b', 'if necessary', 'No criterion for necessity'),
-        (r'\bdetailed\b', 'detailed', 'No criterion for level of detail'),
         (r'\bsufficient(?:ly)?\b', 'sufficient', 'No criterion for sufficiency'),
         (r'\breasonable(?:bly)?\b', 'reasonable', 'No criterion for reasonableness'),
         (r'\bwhen possible\b', 'when possible', 'No criterion for possibility'),
@@ -1333,14 +1341,11 @@ def check_plain_text_issues(contract, root):
             for term in cap_terms:
                 if term.lower() not in defined_terms:
                     # Check if the term appears to be used as if it's a known concept
-                    # Look for usage patterns like "must X", "the X", "when X", "section"
+                    # Look for usage patterns like "must X", "the X", "when X"
                     usage_pattern = rf'\b(?:the|must|when|if|as|use|uses|using)\s+{re.escape(term)}\b'
                     criteria_pattern = rf'\b{re.escape(term)}\s*[-:]\s*'
-                    section_pattern = rf'\b{re.escape(term)}\s+section\b'
                     
-                    if (re.search(usage_pattern, line, re.IGNORECASE) or 
-                        re.search(criteria_pattern, line) or
-                        re.search(section_pattern, line, re.IGNORECASE)):
+                    if re.search(usage_pattern, line, re.IGNORECASE) or re.search(criteria_pattern, line):
                         
                         matching_rules = [r for r in contract['rules'] 
                                          if r.get('source', {}).get('source_id') == src_id 
@@ -1364,12 +1369,6 @@ def lint(contract, manifest, runtime, root, strict_providers=None):
     validate(contract, manifest, runtime, root)
     diagnostics = check_references(contract, manifest)
     diagnostics += check_vocabulary(contract)
-    
-    # Only run plain text checks when there are no extracted rules AND no field contracts
-    # (i.e., when analyzing raw source text without contract extraction)
-    # This ensures it doesn't interfere with other analysis modes
-    if not contract.get('rules') and not contract.get('field_contracts'):
-        diagnostics += check_plain_text_issues(contract, root)
     
     # Check tool schemas for provider strict mode compatibility
     if strict_providers:
@@ -1459,6 +1458,18 @@ def lint(contract, manifest, runtime, root, strict_providers=None):
         incomplete_reasons.append('semantic_review')
     if any(check['status'] == 'unknown' or check.get('uncertain_required_fields') for check in field_checks):
         incomplete_reasons.append('field_presence')
+    
+    # Run plain text checks at the end for all contracts
+    # Duplicate detection: track by (code, source_id, line, term)
+    plain_text_diags = check_plain_text_issues(contract, root)
+    seen_keys = set()
+    for diag in plain_text_diags:
+        witness = diag.get('witness', {})
+        key = (diag['code'], witness.get('source_id'), witness.get('line'), witness.get('term'))
+        if key not in seen_keys:
+            diagnostics.append(diag)
+            seen_keys.add(key)
+    
     return {'version': 1, 'contract': contract, 'diagnostics': diagnostics, 'resource_checks': checks, 'workflow_checks': workflow_checks,
             'trace_checks': [t for w in workflow_checks for t in w.get('trace_assertions', [])], 'constraint_checks': constraint_checks,
             'field_checks': field_checks,

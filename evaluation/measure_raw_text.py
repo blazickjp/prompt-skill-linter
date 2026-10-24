@@ -5,10 +5,14 @@ Runs on raw case text without requiring contracts.
 Scores TP only when diagnostic type matches label type.
 """
 import json
+import sys
 from pathlib import Path
+
+# Add parent to path
+sys.path.insert(0, str(Path(__file__).parent.parent))
 from prompt_skill_linter.engine import lint
 
-ROOT = Path(__file__).parent
+ROOT = Path(__file__).parent.parent
 
 def load_cases():
     """Load all evaluation cases."""
