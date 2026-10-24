@@ -1216,10 +1216,145 @@ def check_conditional_conflicts(contract):
     return diagnostics, checks
 
 
+def check_plain_text_issues(contract, root):
+    """Check for undefined terms and vague directives in plain prompt/skill text.
+    
+    This check works on source text directly, without requiring vocabulary annotations.
+    It flags:
+    (a) Undefined terms: domain-specific or capitalized/quoted terms used as if defined
+    (b) Vague directives: ambiguous instructions with no clear criterion
+    
+    Emits warnings (not errors) with source spans and reasons.
+    """
+    diagnostics = []
+    sources = {s['id']: s for s in contract['sources']}
+    root = Path(root).resolve()
+    
+    # Read all source files once
+    source_texts = {}
+    for src_id, src in sources.items():
+        path = (root / src['path']).resolve()
+        if path.is_file() and path.is_relative_to(root):
+            try:
+                source_texts[src_id] = path.read_text(encoding='utf-8')
+            except (OSError, UnicodeError):
+                continue
+    
+    # Track terms that are explicitly defined in the text
+    defined_terms = set()
+    
+    # Patterns for defined terms (look for definitional context)
+    # e.g., "X means...", "X is defined as...", "X refers to...", "X: a definition"
+    import re
+    
+    for src_id, text in source_texts.items():
+        # Find terms that appear to be defined
+        # Pattern 1: "TERM means/is/refers to"
+        for match in re.finditer(r'\b([A-Z][A-Za-z_]+)\s+(?:means|is|refers to|denotes|represents)\b', text):
+            defined_terms.add(match.group(1).lower())
+        
+        # Pattern 2: "TERM: some definition" (colon-based definition)
+        for match in re.finditer(r'\b([A-Z][A-Za-z_]+)\s*:\s*(?:a |an |the |[A-Z])?[a-z]', text):
+            defined_terms.add(match.group(1).lower())
+    
+    # Now check each rule's source for issues
+    for rule in contract['rules']:
+        src = rule.get('source', {})
+        src_id = src.get('source_id')
+        if not src_id or src_id not in source_texts:
+            continue
+        
+        quote = src.get('quote', '')
+        start_line = src.get('start_line', 1)
+        end_line = src.get('end_line', 1)
+        
+        # Check for vague directives
+        vague_patterns = [
+            (r'\b(?:be |keep |stay |remain )?concise\b', 'concise', 'No criterion for conciseness'),
+            (r'\bappropriate(?:ly)?\b', 'appropriate', 'No criterion for what is appropriate'),
+            (r'\bas needed\b', 'as needed', 'No criterion for when it is needed'),
+            (r'\bif relevant\b', 'if relevant', 'No criterion for relevance'),
+            (r'\bif necessary\b', 'if necessary', 'No criterion for necessity'),
+            (r'\bdetailed\b', 'detailed', 'No criterion for level of detail'),
+            (r'\bsufficient(?:ly)?\b', 'sufficient', 'No criterion for sufficiency'),
+            (r'\breasonable(?:bly)?\b', 'reasonable', 'No criterion for reasonableness'),
+            (r'\bwhen possible\b', 'when possible', 'No criterion for possibility'),
+            (r'\bcut\s+\w+\b(?!\s+(?:to|by|from)\s+)', 'cut [something]', 'No criterion for reduction'),
+        ]
+        
+        for pattern, term, reason in vague_patterns:
+            if re.search(pattern, quote, re.IGNORECASE):
+                diagnostics.append(diagnostic(
+                    'VAGUE_DIRECTIVE', 'exact', 'warning', [rule], {},
+                    {'term': term, 'reason': reason, 'quote_excerpt': quote[:100]},
+                    ['Deterministic pattern match on source text; directive lacks measurable criterion.']
+                ))
+                break  # Only report one vague directive per rule
+        
+        # Check for undefined capitalized terms
+        # Look for capitalized terms (ALL_CAPS or PascalCase or capitalized words) used as if defined
+        cap_terms = set()
+        
+        # Find ALL_CAPS terms (2+ chars, exclude common words)
+        common_caps = {'I', 'API', 'URL', 'HTTP', 'HTTPS', 'JSON', 'XML', 'SQL', 'ID', 'UUID', 'CLI', 'UI', 'UX'}
+        for match in re.finditer(r'\b[A-Z][A-Z_]+\b', quote):
+            term = match.group(0)
+            if len(term) >= 2 and term not in common_caps:
+                cap_terms.add(term)
+        
+        # Find PascalCase terms 
+        for match in re.finditer(r'\b[A-Z][a-z]+(?:[A-Z][a-z]+)+\b', quote):
+            cap_terms.add(match.group(0))
+        
+        # Find capitalized single words used as criteria (e.g., "Relevant", "Diverse")
+        # Look for pattern: "Word - description" or "Word: description"
+        for match in re.finditer(r'\b([A-Z][a-z]+)\s*[-:]\s*[a-z]', quote):
+            cap_terms.add(match.group(1))
+        
+        # Check if these terms are used in a definitional way (not defined)
+        for term in cap_terms:
+            if term.lower() not in defined_terms:
+                # Check if the term appears to be used as if it's a known concept
+                # Look for usage patterns like "must X", "the X", "when X", etc.
+                usage_pattern = rf'\b(?:the|must|when|if|as|use|uses|using)\s+{re.escape(term)}\b'
+                criteria_pattern = rf'\b{re.escape(term)}\s*[-:]\s*'
+                
+                if re.search(usage_pattern, quote, re.IGNORECASE) or re.search(criteria_pattern, quote):
+                    diagnostics.append(diagnostic(
+                        'UNDEFINED_TERM_PLAIN', 'exact', 'warning', [rule], {},
+                        {'term': term, 'reason': 'Capitalized term used as criterion but not defined in visible text'},
+                        ['Deterministic pattern match; term appears domain-specific but lacks definition.']
+                    ))
+                    break  # Only report one undefined term per rule
+        
+        # Also check for lowercase undefined terms in colon-definition contexts
+        # Pattern: "word: definition" where word is lowercase and looks like a technical term
+        for match in re.finditer(r'\b([a-z]+)\s*:\s*[A-Z][^.;]*(?:[.;]|$)', quote):
+            term = match.group(1)
+            # Only flag if it looks like a technical term (not common words)
+            common_words = {'example', 'note', 'tip', 'warning', 'info', 'hint', 'see', 'e.g', 'i.e'}
+            if term not in common_words and len(term) > 3 and term.lower() not in defined_terms:
+                # Check if this term is used elsewhere as if defined
+                if src_id in source_texts:
+                    full_text = source_texts[src_id]
+                    # Look for other references to this term
+                    references = re.findall(rf'\b(?:the|when|if|use)\s+{re.escape(term)}\b', full_text, re.IGNORECASE)
+                    if references:
+                        diagnostics.append(diagnostic(
+                            'UNDEFINED_TERM_PLAIN', 'exact', 'warning', [rule], {},
+                            {'term': term, 'reason': 'Term used as if defined but not defined in visible text'},
+                            ['Deterministic pattern match; term appears domain-specific but lacks definition.']
+                        ))
+                        break
+    
+    return diagnostics
+
+
 def lint(contract, manifest, runtime, root, strict_providers=None):
     validate(contract, manifest, runtime, root)
     diagnostics = check_references(contract, manifest)
     diagnostics += check_vocabulary(contract)
+    diagnostics += check_plain_text_issues(contract, root)
     
     # Check tool schemas for provider strict mode compatibility
     if strict_providers:
