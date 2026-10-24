@@ -1269,7 +1269,8 @@ def check_plain_text_issues(contract, root):
         # From OpenAI Prompt Engineering Guide
         # https://platform.openai.com/docs/guides/prompt-engineering/six-strategies-for-getting-better-results
         # "Be as specific as possible about what you want" (implies 'concise' lacks specificity)
-        (r'\b(?:be |keep |stay |remain )?concise\b', 'concise', 'No criterion for conciseness'),
+        # Only match as imperative directive, not as adjective (e.g., not "a concise plan")
+        (r'\b(?:be|keep|stay|remain)\s+concise\b', 'concise', 'No criterion for conciseness'),
         
         # From Anthropic Claude Documentation  
         # https://docs.anthropic.com/claude/docs/be-clear-and-direct
@@ -1314,7 +1315,7 @@ def check_plain_text_issues(contract, root):
             cap_terms = set()
             
             # Find ALL_CAPS terms (2+ chars, exclude common words)
-            common_caps = {'I', 'API', 'URL', 'HTTP', 'HTTPS', 'JSON', 'XML', 'SQL', 'ID', 'UUID', 'CLI', 'UI', 'UX'}
+            common_caps = {'I', 'API', 'URL', 'HTTP', 'HTTPS', 'JSON', 'XML', 'SQL', 'ID', 'UUID', 'CLI', 'UI', 'UX', 'PR', 'SHA', 'CI', 'CD', 'AWS', 'GCP'}
             for match in re.finditer(r'\b[A-Z][A-Z_]+\b', line):
                 term = match.group(0)
                 # Skip if: too short, common acronym, or part of emphatic text (multiple ALL_CAPS in a row)
