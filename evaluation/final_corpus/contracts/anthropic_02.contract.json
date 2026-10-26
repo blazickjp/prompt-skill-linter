@@ -21,14 +21,15 @@
         "source_id": "src1",
         "start_line": 1,
         "end_line": 1,
-        "quote": "Examples: Relevant - mirror use case. Diverse - cover edge cases, vary to avoid "
+        "quote": "Examples: Relevant - mirror use case. Diverse - cover edge cases, vary to avoid unintended patterns."
       }
     }
   ],
   "contexts": [
     {
       "id": "ctx1",
-      "facts": {}
+      "facts": {},
+      "active_skills": []
     }
   ],
   "assumptions": [

@@ -21,14 +21,15 @@
         "source_id": "src1",
         "start_line": 1,
         "end_line": 1,
-        "quote": "Assistant is large language model trained by OpenAI, designed to assist with wid"
+        "quote": "Assistant is large language model trained by OpenAI, designed to assist with wide range of tasks."
       }
     }
   ],
   "contexts": [
     {
       "id": "ctx1",
-      "facts": {}
+      "facts": {},
+      "active_skills": []
     }
   ],
   "assumptions": [

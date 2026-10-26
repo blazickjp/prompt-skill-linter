@@ -21,14 +21,15 @@
         "source_id": "src1",
         "start_line": 1,
         "end_line": 1,
-        "quote": "Action to take must be one of tool_names. Action input is string input to the ac"
+        "quote": "Action to take must be one of tool_names. Action input is string input to the action."
       }
     }
   ],
   "contexts": [
     {
       "id": "ctx1",
-      "facts": {}
+      "facts": {},
+      "active_skills": []
     }
   ],
   "assumptions": [

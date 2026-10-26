@@ -21,14 +21,15 @@
         "source_id": "src1",
         "start_line": 1,
         "end_line": 1,
-        "quote": "If tool calls depend on previous calls for parameters, do NOT call in parallel. "
+        "quote": "If tool calls depend on previous calls for parameters, do NOT call in parallel. Never use placeholders."
       }
     }
   ],
   "contexts": [
     {
       "id": "ctx1",
-      "facts": {}
+      "facts": {},
+      "active_skills": []
     }
   ],
   "assumptions": [

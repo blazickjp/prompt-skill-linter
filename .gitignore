@@ -7,3 +7,4 @@ dist/
 
 web/qa-artifacts/
 artifacts/
+*.tmp.json
