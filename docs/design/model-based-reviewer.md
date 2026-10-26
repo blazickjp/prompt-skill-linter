@@ -347,9 +347,9 @@ Use the existing 32-case corpus from merged PR #20 located at `evaluation/final_
 - **Held-out split**: 10 cases (from `evaluation/final_corpus/split.json`)
 - Split seed: 42 (fixed)
 
-#### Held-Out Set Lock
+#### Held-Out Set Protection
 
-The 10 held-out cases and split definition are locked to prevent tuning. Hashes recorded from main branch at commit `73c232551714e49c80e638fd9aeb46d4095574c7`:
+The 10 held-out cases and split definition are recorded here; enforced by the check the implementation PR adds. Hashes recorded from main branch at commit `73c232551714e49c80e638fd9aeb46d4095574c7`:
 
 | File | SHA256 |
 |------|--------|
@@ -365,11 +365,15 @@ The 10 held-out cases and split definition are locked to prevent tuning. Hashes 
 | oss_06.json | `73e275ff098ebfb7fa50169831d39480ca7a348864d661af5a1e5e40207b0e7c` |
 | oss_08.json | `f7c6d5f993710fbab34c5434dde0f31a13f6fd12ecd354e4860b1a7333cbd683` |
 
-**Implementation requirement**: The implementation PR will add an automated check that fails if:
-- Any held-out case file hash changes
-- The `held_out` list in split.json changes
+**Note**: The split.json hash is informational only. The enforced rules (in the future implementation PR) are:
+1. The `held_out` list in split.json is unchanged
+2. Each held-out case's per-file hash matches
 
-**Adding cases**: Growing the corpus requires updating split.json. If adding dev cases only, the split.json hash changes but the implementation check will verify the `held_out` list itself is unchanged. Adding held-out cases requires a standalone re-hash PR before any reviewer code.
+Adding dev cases changes split.json's hash, and that's allowed as long as the `held_out` list itself remains unchanged.
+
+**Implementation requirement**: The implementation PR will add an automated check that fails if either rule is violated.
+
+**Adding cases**: Growing the corpus requires updating split.json. Adding dev cases only changes the split.json hash but the held-out list remains unchanged. Adding held-out cases requires a standalone re-hash PR before any reviewer code.
 
 #### Labeled Issues in Corpus
 
@@ -408,7 +412,7 @@ A true positive requires BOTH:
 - Corpus expanded to 20+ labeled positives from real fetched sources with URLs
 - Per-case reporting with 95% Wilson confidence intervals
 - Documented precision/recall on expanded dev split
-- Single locked held-out run on expanded held-out split
+- Single held-out run on expanded held-out split (no re-tuning after)
 
 **Per-case reporting required**: Report results per case with Wilson score confidence intervals. Example:
 
@@ -606,7 +610,7 @@ prompt-skill-linter sources/ --check-text-quality anthropic
 
 Options:
 - `--check-text-quality anthropic`: Use Anthropic/Claude (including Bedrock)
-- `--check-text-quality openai`: Use OpenAI GPT-4
+- `--check-text-quality openai`: Use the configured OpenAI model
 - `--check-text-quality mock`: Use deterministic mock (tests only)
 - Omit flag: Skip text quality checks entirely (default)
 
@@ -791,10 +795,6 @@ All factual claims below cite real paths or verified URLs:
   - `split.json`: Dev/held-out split (seed 42)
   - `cases/*.json`: 32 labeled cases
   - `measurements.json`: PR #20 baseline results
-  - `corpus.lock`: Per-file manifest with individual case hashes
-  - `corpus.lock.sha256`: Cryptographic lock on entire corpus (cases + split)
-  - `update_corpus_lock.sh`: Script to regenerate manifest when cases are added
-  - `check_corpus_lock.sh`: Script to verify corpus integrity
 
 ### External Documentation
 
