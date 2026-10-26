@@ -825,7 +825,7 @@ All dev split examples cite `evaluation/final_corpus/cases/*.json` from base com
 - `anthropic_03.json`: Negative example (dev split)
 - `langchain_01.json`: Negative example (dev split)
 
-**Held-out examples**: Not disclosed in this design to prevent tuning. See `evaluation/final_corpus/split.json` for the authoritative held-out list.
+**Held-out examples**: The 10 held-out case IDs are listed above for hashing, but their contents and labels are not disclosed in this design to prevent tuning.
 
 **Invented examples**: Clearly marked as "invented" where dev split lacks positive cases for UNDEFINED_TERM and MISSING_REQUIREMENT.
 
