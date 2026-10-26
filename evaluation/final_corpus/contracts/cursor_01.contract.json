@@ -21,14 +21,15 @@
         "source_id": "src1",
         "start_line": 1,
         "end_line": 1,
-        "quote": "terminals: Named tmux sessions launched alongside start; ignored when start is a"
+        "quote": "terminals: Named tmux sessions launched alongside start; ignored when start is absent."
       }
     }
   ],
   "contexts": [
     {
       "id": "ctx1",
-      "facts": {}
+      "facts": {},
+      "active_skills": []
     }
   ],
   "assumptions": [

@@ -28,7 +28,8 @@
   "contexts": [
     {
       "id": "ctx1",
-      "facts": {}
+      "facts": {},
+      "active_skills": []
     }
   ],
   "assumptions": [

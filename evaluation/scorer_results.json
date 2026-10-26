@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "scorer_type": "type_matched_main_engine",
+  "label_to_code_mapping": {
+    "vague": [],
+    "undefined": [
+      "UNDEFINED_TERM"
+    ],
+    "tension": [
+      "INCOMPATIBLE_OBLIGATIONS",
+      "AXIOM_CONFLICT"
+    ],
+    "missing_requirement": [
+      "INCOMPLETE_SOURCE_COVERAGE"
+    ]
+  },
+  "dev": {
+    "tp": 0,
+    "fp": 0,
+    "tn": 19,
+    "fn": 3,
+    "precision": null,
+    "recall": 0.0
+  },
+  "held_out": {
+    "tp": 0,
+    "fp": 0,
+    "tn": 8,
+    "fn": 2,
+    "precision": null,
+    "recall": 0.0
+  }
+}
