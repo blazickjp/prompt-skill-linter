@@ -95,7 +95,11 @@ def run_linter_on_case(case_id):
 
 
 def evaluate():
-    """Evaluate on all cases with type-matched scoring."""
+    """Evaluate on all cases with type-matched scoring.
+    
+    Scoring rule: A wrong-code diagnostic on a labeled case counts as both
+    FN (missed the right type) and FP (wrong-type hit).
+    """
     cases = load_cases()
     split = load_split()
     
@@ -131,12 +135,23 @@ def evaluate():
             type_match = bool(expected_codes and found_codes & expected_codes) if expected_codes is not None else False
             
             if label_has_issue and type_match:
+                # Correct diagnostic type for a labeled case: TP
                 results[split_name]['tp'] += 1
                 outcome = 'TP'
-            elif not label_has_issue and found_issue:
+            elif label_has_issue and found_issue and not type_match:
+                # Wrong-code diagnostic on a labeled case: both FN and FP
+                results[split_name]['fn'] += 1
                 results[split_name]['fp'] += 1
-                outcome = 'FP'
-            elif label_has_issue and not type_match:
+                outcome = 'FN+FP'
+                results[split_name]['misses'].append({
+                    'case_id': case_id,
+                    'label_type': label_type,
+                    'expected_codes': list(expected_codes) if expected_codes else [],
+                    'found_codes': list(found_codes),
+                    'reason': 'type_mismatch'
+                })
+            elif label_has_issue and not found_issue:
+                # No diagnostic on a labeled case: FN only
                 results[split_name]['fn'] += 1
                 outcome = 'FN'
                 results[split_name]['misses'].append({
@@ -144,9 +159,14 @@ def evaluate():
                     'label_type': label_type,
                     'expected_codes': list(expected_codes) if expected_codes else [],
                     'found_codes': list(found_codes),
-                    'reason': 'type_mismatch' if found_issue else 'not_detected'
+                    'reason': 'not_detected'
                 })
+            elif not label_has_issue and found_issue:
+                # Diagnostic on an unlabeled case: FP
+                results[split_name]['fp'] += 1
+                outcome = 'FP'
             else:
+                # No diagnostic on an unlabeled case: TN
                 results[split_name]['tn'] += 1
                 outcome = 'TN'
             

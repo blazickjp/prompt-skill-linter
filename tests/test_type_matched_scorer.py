@@ -34,8 +34,11 @@ class TestTypeMatchedScorer(unittest.TestCase):
         This test ensures type-matched scoring: finding ANY diagnostic is not
         sufficient for a TP; the diagnostic CODE must match the label TYPE.
         
+        Scoring rule: A wrong-code diagnostic on a labeled case counts as both
+        FN (missed the right type) and FP (wrong-type hit).
+        
         This test calls evaluate() with run_linter_on_case patched to return
-        a wrong-code diagnostic, and verifies it's scored as FN, not TP.
+        a wrong-code diagnostic, and verifies it's scored as FN+FP, not TP.
         """
         # Find a case with label type 'vague' (expects no codes in main)
         cases = load_cases()
@@ -60,17 +63,22 @@ class TestTypeMatchedScorer(unittest.TestCase):
         with patch('evaluation.score_type_matched.run_linter_on_case', side_effect=mock_run_linter):
             results = evaluate()
         
-        # The case should be counted as FN (miss), not TP
-        # Because UNDEFINED_TERM doesn't match the expected codes for 'vague' (which is empty set)
+        # The wrong-code diagnostic should count as BOTH FN and FP
+        # FN: missed the correct type for the label
+        # FP: found a wrong-type diagnostic
         self.assertEqual(results['dev']['tp'], 0, 
                         "Wrong diagnostic type should not count as TP")
+        self.assertEqual(results['dev']['fn'], 3,
+                        "Should have 3 FN: anthropic_02, oss_01 (no diags), cursor_03 (wrong type)")
+        self.assertEqual(results['dev']['fp'], 1,
+                        "cursor_03 wrong-type diagnostic should also count as FP")
         
         # Check that cursor_03 specifically is in misses with type_mismatch
         cursor_03_misses = [m for m in results['dev']['misses'] if m['case_id'] == test_case_id]
         self.assertEqual(len(cursor_03_misses), 1,
                         f"{test_case_id} should be in misses")
         self.assertEqual(cursor_03_misses[0]['reason'], 'type_mismatch',
-                        f"{test_case_id} should be type_mismatch, not TP")
+                        f"{test_case_id} should be type_mismatch")
     
     def test_baseline_matches_measurements_json(self):
         """The scorer should reproduce the baseline metrics.
@@ -82,6 +90,11 @@ class TestTypeMatchedScorer(unittest.TestCase):
         measurements_file = Path(__file__).parent.parent / 'evaluation/final_corpus/measurements.json'
         with open(measurements_file) as f:
             baseline = json.load(f)
+        
+        # Verify no error fields in measurements (contracts should all validate)
+        for result in baseline['all_results']:
+            self.assertNotIn('error', result,
+                           f"{result['id']} should not have an error field (contracts should validate)")
         
         # Run the scorer
         results = evaluate()
