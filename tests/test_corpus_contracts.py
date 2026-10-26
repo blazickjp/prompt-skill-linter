@@ -27,18 +27,14 @@ class TestCorpusContracts(unittest.TestCase):
                                     f"{contract_file.name}: active_skills must be a list")
     
     def test_corpus_contracts_validate_without_error(self):
-        """Corpus contracts should validate and lint without schema errors.
+        """All 32 corpus contracts should validate and lint without any errors.
         
         This test ensures that the active_skills fix allows the linter to run
         on evaluation corpus contracts. It fails without the fix.
         """
         corpus_dir = Path(__file__).parent.parent / 'evaluation/final_corpus'
         contracts_dir = corpus_dir / 'contracts'
-        
-        # Test one representative contract
-        contract_file = contracts_dir / 'anthropic_01.contract.json'
-        with open(contract_file) as f:
-            contract = json.load(f)
+        cases_dir = corpus_dir / 'cases'
         
         # Prepare minimal manifest and runtime
         manifest = {"tools": {}}
@@ -48,16 +44,26 @@ class TestCorpusContracts(unittest.TestCase):
             "max_plan_steps": 10
         }
         
-        # This should not raise a validation error about missing active_skills
-        try:
-            result = lint(contract, manifest, runtime, contracts_dir)
-            # If we got here, validation passed
-            self.assertIsInstance(result, dict)
-            self.assertIn('diagnostics', result)
-        except Exception as e:
-            # If there's an error, make sure it's not about missing active_skills
-            self.assertNotIn('missing active_skills', str(e).lower(),
-                           f"Contract validation failed with active_skills error: {e}")
+        # Test all 32 contracts
+        errors = []
+        for case_file in sorted(cases_dir.glob('*.json')):
+            case_id = case_file.stem
+            contract_file = contracts_dir / f"{case_id}.contract.json"
+            
+            with open(contract_file) as f:
+                contract = json.load(f)
+            
+            # This should not raise any exception at all
+            try:
+                result = lint(contract, manifest, runtime, contracts_dir)
+                self.assertIsInstance(result, dict)
+                self.assertIn('diagnostics', result)
+            except Exception as e:
+                errors.append((case_id, str(e)))
+        
+        if errors:
+            error_msg = "\n".join([f"  {case_id}: {err}" for case_id, err in errors])
+            self.fail(f"Failed to lint {len(errors)} contracts:\n{error_msg}")
 
 
 if __name__ == '__main__':

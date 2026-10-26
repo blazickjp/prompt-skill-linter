@@ -21,7 +21,7 @@
         "source_id": "src1",
         "start_line": 1,
         "end_line": 1,
-        "quote": "MUST get user permission before: running commands affecting filesystem, making c"
+        "quote": "MUST get user permission before: running commands affecting filesystem, making code changes."
       }
     }
   ],

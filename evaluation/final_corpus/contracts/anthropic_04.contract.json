@@ -21,7 +21,7 @@
         "source_id": "src1",
         "start_line": 1,
         "end_line": 1,
-        "quote": "XML tags help parse complex prompts. Wrap each content type in tags like <instru"
+        "quote": "XML tags help parse complex prompts. Wrap each content type in tags like <instructions>, <context>."
       }
     }
   ],

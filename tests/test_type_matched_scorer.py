@@ -5,6 +5,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from evaluation.score_type_matched import (
+    LABEL_TO_CODES,
     map_label_to_diagnostic_codes,
     evaluate,
     load_cases,
@@ -32,51 +33,44 @@ class TestTypeMatchedScorer(unittest.TestCase):
         
         This test ensures type-matched scoring: finding ANY diagnostic is not
         sufficient for a TP; the diagnostic CODE must match the label TYPE.
+        
+        This test calls evaluate() with run_linter_on_case patched to return
+        a wrong-code diagnostic, and verifies it's scored as FN, not TP.
         """
-        # Mock a case with label type 'vague' (expects no codes in main)
-        mock_case = {
-            'id': 'test_case',
-            'text': 'Be concise.',
-            'label': {
-                'issue': True,
-                'type': 'vague'
-            }
-        }
+        # Find a case with label type 'vague' (expects no codes in main)
+        cases = load_cases()
+        split = load_split()
         
-        # Mock diagnostics that don't match the vague type
-        mock_diags = [
-            {'code': 'UNDEFINED_TERM', 'severity': 'info', 'witness': {}}
-        ]
+        # cursor_03 has label type 'vague' in dev split
+        test_case_id = 'cursor_03'
+        self.assertEqual(cases[test_case_id]['label']['type'], 'vague')
+        self.assertIn(test_case_id, split['dev'])
         
-        # Simulate the scoring logic
-        label_has_issue = mock_case['label']['issue']
-        label_type = mock_case['label'].get('type')
-        expected_codes = map_label_to_diagnostic_codes(label_type)
+        # Mock run_linter_on_case to return a wrong diagnostic
+        # (UNDEFINED_TERM instead of something that matches 'vague')
+        def mock_run_linter(case_id):
+            if case_id == test_case_id:
+                # Return UNDEFINED_TERM diagnostic (wrong type for 'vague')
+                return [
+                    {'code': 'UNDEFINED_TERM', 'severity': 'info', 'witness': {}}
+                ]
+            # For other cases, return empty (no diagnostics)
+            return []
         
-        found_codes = {d['code'] for d in mock_diags}
-        found_issue = len(found_codes) > 0
+        with patch('evaluation.score_type_matched.run_linter_on_case', side_effect=mock_run_linter):
+            results = evaluate()
         
-        # Type match: diagnostic code must be in expected codes
-        type_match = bool(expected_codes and found_codes & expected_codes) if expected_codes is not None else False
+        # The case should be counted as FN (miss), not TP
+        # Because UNDEFINED_TERM doesn't match the expected codes for 'vague' (which is empty set)
+        self.assertEqual(results['dev']['tp'], 0, 
+                        "Wrong diagnostic type should not count as TP")
         
-        # This should be a FALSE NEGATIVE, not a TRUE POSITIVE
-        self.assertTrue(label_has_issue)
-        self.assertTrue(found_issue)
-        self.assertFalse(type_match, 
-                        "Finding UNDEFINED_TERM should not match label type 'vague'")
-        
-        # The outcome should be FN (miss), not TP
-        if label_has_issue and type_match:
-            outcome = 'TP'
-        elif not label_has_issue and found_issue:
-            outcome = 'FP'
-        elif label_has_issue and not type_match:
-            outcome = 'FN'
-        else:
-            outcome = 'TN'
-        
-        self.assertEqual(outcome, 'FN',
-                        "Type mismatch should result in FN, not TP")
+        # Check that cursor_03 specifically is in misses with type_mismatch
+        cursor_03_misses = [m for m in results['dev']['misses'] if m['case_id'] == test_case_id]
+        self.assertEqual(len(cursor_03_misses), 1,
+                        f"{test_case_id} should be in misses")
+        self.assertEqual(cursor_03_misses[0]['reason'], 'type_mismatch',
+                        f"{test_case_id} should be type_mismatch, not TP")
     
     def test_baseline_matches_measurements_json(self):
         """The scorer should reproduce the baseline metrics.
@@ -91,6 +85,10 @@ class TestTypeMatchedScorer(unittest.TestCase):
         
         # Run the scorer
         results = evaluate()
+        
+        # Should have zero execution errors
+        self.assertEqual(len(results['execution_errors']), 0,
+                        "Should have no execution errors on any case")
         
         # Compare dev metrics
         self.assertEqual(results['dev']['tp'], baseline['dev']['tp'],

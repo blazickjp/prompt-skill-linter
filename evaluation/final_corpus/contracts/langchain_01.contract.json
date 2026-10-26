@@ -21,7 +21,7 @@
         "source_id": "src1",
         "start_line": 1,
         "end_line": 1,
-        "quote": "Format: Question, Thought, Action (one of tool_names), Action Input, Observation"
+        "quote": "Format: Question, Thought, Action (one of tool_names), Action Input, Observation. Repeat N times. Final Answer."
       }
     }
   ],

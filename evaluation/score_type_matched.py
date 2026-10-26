@@ -17,6 +17,24 @@ from prompt_skill_linter.engine import lint
 
 ROOT = Path(__file__).parent.parent
 
+# Label-to-diagnostic-code mapping table
+# Each entry maps a label type to the set of diagnostic codes that would
+# correctly identify that issue type.
+LABEL_TO_CODES = {
+    # Vague directives: currently no diagnostic in main's engine
+    'vague': set(),
+    
+    # Undefined terms: UNDEFINED_TERM from vocabulary checks
+    'undefined': {'UNDEFINED_TERM'},
+    
+    # Tension between rules: INCOMPATIBLE_OBLIGATIONS, AXIOM_CONFLICT
+    'tension': {'INCOMPATIBLE_OBLIGATIONS', 'AXIOM_CONFLICT'},
+    
+    # Missing requirements: several diagnostics could catch this
+    # INCOMPLETE_SOURCE_COVERAGE suggests untranslated requirements
+    'missing_requirement': {'INCOMPLETE_SOURCE_COVERAGE'},
+}
+
 
 def load_cases():
     """Load all evaluation cases."""
@@ -38,28 +56,10 @@ def load_split():
 def map_label_to_diagnostic_codes(label_type):
     """Map evaluation label types to expected diagnostic codes.
     
-    This is an explicit mapping table for label-to-diagnostic correspondence.
-    Each entry maps a label type to the set of diagnostic codes that would
-    correctly identify that issue type.
-    
     Returns:
         set of diagnostic codes, or None if no mapping exists
     """
-    mapping = {
-        # Vague directives: currently no diagnostic in main's engine
-        'vague': set(),
-        
-        # Undefined terms: UNDEFINED_TERM from vocabulary checks
-        'undefined': {'UNDEFINED_TERM'},
-        
-        # Tension between rules: INCOMPATIBLE_OBLIGATIONS, AXIOM_CONFLICT
-        'tension': {'INCOMPATIBLE_OBLIGATIONS', 'AXIOM_CONFLICT'},
-        
-        # Missing requirements: several diagnostics could catch this
-        # INCOMPLETE_SOURCE_COVERAGE suggests untranslated requirements
-        'missing_requirement': {'INCOMPLETE_SOURCE_COVERAGE'},
-    }
-    return mapping.get(label_type, None)
+    return LABEL_TO_CODES.get(label_type, None)
 
 
 def run_linter_on_case(case_id):
@@ -69,29 +69,29 @@ def run_linter_on_case(case_id):
         case_id: The case identifier (e.g., 'anthropic_01')
     
     Returns:
-        List of diagnostics, or None on error
+        List of diagnostics
+    
+    Raises:
+        Exception: If linting fails for any reason
     """
     contracts_dir = ROOT / "evaluation/final_corpus/contracts"
     contract_file = contracts_dir / f"{case_id}.contract.json"
     
     if not contract_file.exists():
-        return None
+        raise FileNotFoundError(f"Contract file not found: {contract_file}")
     
-    try:
-        with open(contract_file) as f:
-            contract = json.load(f)
-        
-        manifest = {"tools": {}}
-        runtime = {
-            "service_call_budget": 30,
-            "request_sizes": [],
-            "max_plan_steps": 10
-        }
-        
-        result = lint(contract, manifest, runtime, contracts_dir)
-        return result.get('diagnostics', [])
-    except Exception as e:
-        return None
+    with open(contract_file) as f:
+        contract = json.load(f)
+    
+    manifest = {"tools": {}}
+    runtime = {
+        "service_call_budget": 30,
+        "request_sizes": [],
+        "max_plan_steps": 10
+    }
+    
+    result = lint(contract, manifest, runtime, contracts_dir)
+    return result.get('diagnostics', [])
 
 
 def evaluate():
@@ -101,7 +101,8 @@ def evaluate():
     
     results = {
         'dev': {'tp': 0, 'fp': 0, 'tn': 0, 'fn': 0, 'hits': [], 'misses': []},
-        'held_out': {'tp': 0, 'fp': 0, 'tn': 0, 'fn': 0, 'hits': [], 'misses': []}
+        'held_out': {'tp': 0, 'fp': 0, 'tn': 0, 'fn': 0, 'hits': [], 'misses': []},
+        'execution_errors': []
     }
     
     for split_name in ['dev', 'held_out']:
@@ -111,19 +112,15 @@ def evaluate():
             label_type = case['label'].get('type')
             expected_codes = map_label_to_diagnostic_codes(label_type) if label_type else None
             
-            diags = run_linter_on_case(case_id)
-            
-            if diags is None:
-                # Execution error - count as miss if labeled
-                if label_has_issue:
-                    results[split_name]['fn'] += 1
-                    results[split_name]['misses'].append({
-                        'case_id': case_id,
-                        'label_type': label_type,
-                        'reason': 'execution_error'
-                    })
-                else:
-                    results[split_name]['tn'] += 1
+            try:
+                diags = run_linter_on_case(case_id)
+            except Exception as e:
+                results['execution_errors'].append({
+                    'case_id': case_id,
+                    'split': split_name,
+                    'error': str(e)
+                })
+                # Don't count as TN/FN, just skip
                 continue
             
             # Get diagnostic codes from results
@@ -175,6 +172,13 @@ def format_results(results):
     output = []
     output.append("=== Type-Matched Evaluation (Main Engine) ===\n")
     
+    # Report execution errors first if any
+    if results['execution_errors']:
+        output.append("=== EXECUTION ERRORS ===")
+        for err in results['execution_errors']:
+            output.append(f"  {err['case_id']} ({err['split']}): {err['error']}")
+        output.append("")
+    
     for split_name in ['dev', 'held_out']:
         split_results = results[split_name]
         tp, fp, tn, fn = split_results['tp'], split_results['fp'], split_results['tn'], split_results['fn']
@@ -216,6 +220,11 @@ def main():
     results = evaluate()
     print(format_results(results))
     
+    # Exit non-zero if there were execution errors
+    if results['execution_errors']:
+        print(f"\n❌ {len(results['execution_errors'])} execution error(s) occurred", file=sys.stderr)
+        sys.exit(1)
+    
     # Calculate metrics for JSON output
     metrics = {}
     for split_name in ['dev', 'held_out']:
@@ -229,20 +238,15 @@ def main():
             'recall': tp / (tp + fn) if (tp + fn) > 0 else 0.0
         }
     
-    # Save to JSON
+    # Save to JSON (use .tmp path so it doesn't dirty the working tree)
     output = {
         'version': 1,
         'scorer_type': 'type_matched_main_engine',
-        'label_to_code_mapping': {
-            'vague': [],
-            'undefined': ['UNDEFINED_TERM'],
-            'tension': ['INCOMPATIBLE_OBLIGATIONS', 'AXIOM_CONFLICT'],
-            'missing_requirement': ['INCOMPLETE_SOURCE_COVERAGE']
-        },
+        'label_to_code_mapping': {k: list(v) for k, v in LABEL_TO_CODES.items()},
         **metrics
     }
     
-    output_file = ROOT / 'evaluation/scorer_results.json'
+    output_file = ROOT / 'evaluation/scorer_results.tmp.json'
     with open(output_file, 'w') as f:
         json.dump(output, f, indent=2)
         f.write('\n')

@@ -21,7 +21,7 @@
         "source_id": "src1",
         "start_line": 1,
         "end_line": 1,
-        "quote": "Model turns need CURSOR_API_KEY, then CURSOR_API_KEY_FILE, then CURSOR_SERVICE_A"
+        "quote": "Model turns need CURSOR_API_KEY, then CURSOR_API_KEY_FILE, then CURSOR_SERVICE_ACCOUNT_KEY, then login."
       }
     }
   ],
