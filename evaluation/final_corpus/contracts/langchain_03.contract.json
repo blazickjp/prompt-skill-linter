@@ -21,14 +21,15 @@
         "source_id": "src1",
         "start_line": 1,
         "end_line": 1,
-        "quote": "If using tool information, mention explicitly without tool names - I have forgot"
+        "quote": "If using tool information, mention explicitly without tool names - I have forgotten all TOOL RESPONSES!"
       }
     }
   ],
   "contexts": [
     {
       "id": "ctx1",
-      "facts": {}
+      "facts": {},
+      "active_skills": []
     }
   ],
   "assumptions": [
